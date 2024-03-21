@@ -11,7 +11,7 @@
         <a href="/vat-validator" wire:navigate>VAT Validator</a>
         <a href="/" wire:navigate>Countries</a>
 
-        <a href="" class="w-6">
+        <a href="https://github.com/eimkasp/eu-vat.info" target="_blank" class="w-6">
             @svg('feathericon-github')
         </a>
     </nav>
