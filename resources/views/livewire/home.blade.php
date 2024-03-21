@@ -11,6 +11,7 @@
         <div class="border rounded-lg overflow-hidden">
             <div class="flex items-center space-x-3 p-3">
                 <input
+                    wire:model.live="search"
                     class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 flex-1"
                     placeholder="Search countries or VAT rates" type="search">
             </div>
@@ -28,10 +29,12 @@
                         </th>
                         <tbody class="[&amp;_tr:last-child]:border-0">
                             @foreach ($euCountries as $country)
-                                <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                <tr class="hover:bg-gray-100 border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
                                     <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
-                                        <a href="{{ route('country.show', $country->id) }}"
-                                            class="text-blue-600 hover:underline">
+                                        <a href="{{ route('country.show', $country->slug) }}"
+                                            class="flex items-center gap-6 text-blue-600 hover:underline">
+                                            
+                                            <img class="mb-3 h-9 rounded" src="https://flagcdn.com/h80/{{ $country->iso_code }}.jpg" />
                                             {{ $country->name }}
                                         </a>
                                     </td>

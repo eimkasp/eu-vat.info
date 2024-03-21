@@ -7,13 +7,14 @@ use Livewire\Component;
 class Home extends Component
 {
     public $euCountries = [];
+    public $search = '';
 
     public function mount()
     {
-        $this->euCountries = \App\Models\Country::all();
     }
     public function render()
     {
+        $this->euCountries = \App\Models\Country::where('name', 'like', '%'.$this->search.'%')->orderBy('standard_rate', 'ASC')->get();
         return view('livewire.home');
     }
 }

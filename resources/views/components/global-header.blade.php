@@ -1,7 +1,15 @@
-<header>
-    <nav>
+<header class="bg-gray-50">
+<div class="flex justify-between mx-auto max-w-6xl py-6">
+<div class="logo">
+    <a class="font-extrabold text-xl" href="/" wire:navigate>
+        EU VAT Info
+    </a>
+</div>
+ <nav class="flex gap-6">
         <a href="/" wire:navigate>Home</a>
-        <a href="/counter" wire:navigate>Counter</a>
-        <a href="/countries" wire:navigate>Countries</a>
+        <a href="/" wire:navigate>Countries</a>
     </nav>
+</div>
+
+   
 </header>

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Country;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use League\Csv\Reader;
@@ -39,7 +40,7 @@ class CountriesTableSeeder extends Seeder
                 $standardRate = null;
             }
 
-            DB::table('countries')->insert([
+            Country::create([
                 'name' => $record['Country'],
                 'iso_code' => $record['Country'],
                 'super_reduced_rate' => $superReducedRate,

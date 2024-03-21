@@ -18,6 +18,7 @@ return new class extends Migration
         Schema::create('countries', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('slug'); // Field name same as your `saveSlugsTo`
             $table->decimal('super_reduced_rate', 5, 2)->nullable();
             /* Reduced rate is string because it can be such value 5-10% */
             $table->string('reduced_rate')->nullable();
