@@ -10,6 +10,10 @@
         <a href="/vat-calculator" wire:navigate>VAT Calculator</a>
         <a href="/vat-validator" wire:navigate>VAT Validator</a>
         <a href="/" wire:navigate>Countries</a>
+
+        <a href="" class="w-6">
+            @svg('feathericon-github')
+        </a>
     </nav>
 </div>
 

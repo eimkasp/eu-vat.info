@@ -8,6 +8,7 @@
                 Standard VAT rates for goods and services in EU member states
             </p>
         </div>
+        {{-- How to implement recently viewed countries --}}
         <div class="border rounded-lg overflow-hidden">
             <div class="flex items-center space-x-3 p-3">
                 <input wire:model.live="search"

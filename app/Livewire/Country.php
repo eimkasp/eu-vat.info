@@ -6,6 +6,7 @@ use Livewire\Component;
 
 class Country extends Component
 {
+    
     public $slug;
     public $country;
  
@@ -13,7 +14,7 @@ class Country extends Component
     {
         $this->country = \App\Models\Country::where('slug', $slug)->first();
     }
-    
+
     public function render()
     {
         return view('livewire.country');
