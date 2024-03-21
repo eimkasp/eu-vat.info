@@ -12,7 +12,7 @@ class VatCalculator extends Component
     public $total = 0;
 
     public $countries;
-    public function mount($country)
+    public function mount($country = null)
     {
         $this->country = $country;
         $this->countries = \App\Models\Country::orderBy('name', 'ASC')->get();
