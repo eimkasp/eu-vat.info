@@ -12,7 +12,7 @@
 <body>
     <x-global-header></x-global-header>
     
-    <div>
+    <div class="bg-gray-50">
         {{ $slot }}
     </div>
 

@@ -32,25 +32,7 @@
     <div class="relative w-full mt-2 content">
         <div :id="$id(tabId + '-content')" x-show="tabContentActive($el)" class="relative">
             <!-- Tab Content 1 - Replace with your content -->
-            <div>
-                <h3 class="text-base font-semibold leading-6 text-gray-900">Available VAT rates</h3>
-                <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
-                    <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
-                        <dt class="truncate text-sm font-medium text-gray-500">Standard rate</dt>
-                        <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
-                            {{ $country->standard_rate }}%
-                        </dd>
-                    </div>
-                    <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
-                        <dt class="truncate text-sm font-medium text-gray-500">Avg. Open Rate</dt>
-                        <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">58.16%</dd>
-                    </div>
-                    <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
-                        <dt class="truncate text-sm font-medium text-gray-500">Avg. Click Rate</dt>
-                        <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">24.57%</dd>
-                    </div>
-                </dl>
-            </div>
+            <x-country-rates :country="$country" />
 
             <!-- End Tab Content 1 -->
         </div>

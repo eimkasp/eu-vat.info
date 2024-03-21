@@ -13,10 +13,12 @@
                </div>
                <div class="flex-none self-end px-6 pt-4">
                    <dt class="sr-only">Status</dt>
-                   <dd
-                       class="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
+                   <a
+                   href="/"
+                   wire:navigate
+                       class="hover:bg-green-600 hover:text-white inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
                        VAT Rank: {{ $country->countryRank() }}
-                   </dd>
+                   </a>
                </div>
                <div class="mt-6 flex w-full flex-none gap-x-4 border-t border-gray-900/5 px-6 pt-6">
                    <dt class="flex-none">
