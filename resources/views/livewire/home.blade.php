@@ -21,11 +21,12 @@
                         <tr
                             class=" h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
 
-                                <th class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 min-w-[200px]">Country
-                                </th>
-                                <th class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">VAT Rate</th>
-                                <th class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">Special Rates</th>
-                                <th class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">Info</th>
+                            <th class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 min-w-[200px]">Country
+                            </th>
+                            <th class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">VAT Rate</th>
+                            <th class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 min-w-[200px]">Special Rates
+                            </th>
+                            <th class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">Info</th>
                         </tr>
                         <tbody class="[&amp;_tr:last-child]:border-0">
                             @foreach ($euCountries as $key => $country)
@@ -47,28 +48,33 @@
 
                                     </td>
                                     <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
-
-                                        <div>
-                                            <small class="text-muted text-muted">Reduced Rate</small>
-                                            {{ $country->reduced_rate }}% - {{ $country->super_reduced_rate }}
-                                        </div>
-                                        <div>
-                                            <small class="text-muted text-muted">Parking Rate</small>
-                                            {{ $country->parking_rate }}%
-                                        </div>
-                                    </td>
-                                    </td>
-                                    <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
-                                        Rank: #{{ $key + 1 }}
-                                         <img class="border mb-3 h-6 rounded"
-                                                src="https://flagcdn.com/h80/{{ $country->iso_code }}.jpg" />
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                                        <div class="flex gap-3">
+                                            <div>
+                                                <small class="text-muted text-muted">Reduced Rate</small> <br>
+                                                {{ $country->reduced_rate }}% @if ($country->super_reduced_rate)
+                                                    - {{ $country->super_reduced_rate }}%
+                                                @endif
+                                            </div>
+                                            <div>
+                                                @if ($country->parking_rate)
+                                                    <small class="text-muted text-muted">Parking Rate</small> <br>
+                                                    {{ $country->parking_rate }}%
+                                            </div>
+                            @endif
                 </div>
+
+                </td>
+                </td>
+                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
+                    Rank: #{{ $key + 1 }}
+                    <img class="border mb-3 h-6 rounded" src="https://flagcdn.com/h80/{{ $country->iso_code }}.jpg" />
+                </td>
+                </tr>
+                @endforeach
+                </tbody>
+                </table>
             </div>
         </div>
     </div>
+</div>
 </div>
