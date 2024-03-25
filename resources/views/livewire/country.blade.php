@@ -33,7 +33,7 @@
 
                             <section>
                                 <h2>Introduction to VAT in {{ $country->name }} </h2>
-                                <p> {{ $country->name }} , while not a member of the European Union, has its
+                                <p> {{ $country->name }} , as a member of the European Union, has its
                                     unique VAT
                                     system that businesses and consumers need to navigate. The standard VAT
                                     rate in {{ $country->name }} is {{ $country->standard_rate }}, one of
