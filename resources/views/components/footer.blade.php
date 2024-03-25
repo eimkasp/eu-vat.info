@@ -27,7 +27,7 @@
           <div class="mt-10 md:mt-0">
             <h3 class="text-sm font-semibold leading-6 text-gray-900">Tools</h3>
             <ul role="list" class="mt-6 space-y-4">
-              <a href="https://stats.businesspress.io/eu-vat.info/">Website stats</a>
+              <a target="_blank" href="https://stats.businesspress.io/eu-vat.info/">Website stats</a>
               {{-- <li>
                 <a href="/vat-calculator" class="text-sm leading-6 text-gray-600 hover:text-gray-900">VAT Calculator</a>
               </li>
