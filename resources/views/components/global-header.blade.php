@@ -6,10 +6,10 @@
             </a>
         </div>
         <nav class="flex gap-6">
-            <a href="/" wire:navigate>Main Page</a>
-            <a href="/vat-calculator" wire:navigate>VAT Calculator</a>
-            <a href="/vat-validator" wire:navigate>VAT Validator</a>
             <a href="/" wire:navigate>Countries</a>
+            {{-- <a href="/vat-calculator" wire:navigate>VAT Calculator</a> --}}
+            {{-- <a href="/vat-validator" wire:navigate>VAT Validator</a> --}}
+            {{-- <a href="/" wire:navigate>Countries</a> --}}
 
             <a href="https://github.com/eimkasp/eu-vat.info" target="_blank" class="w-6">
                 @svg('feathericon-github')
