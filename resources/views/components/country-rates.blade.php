@@ -13,18 +13,22 @@
                   {{ $country->reduced_rate }}%
               </dd>
           </div>
-          <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
-              <dt class="truncate text-sm font-medium text-gray-500">Parking rate</dt>
-              <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
-                  {{ $country->parking_rate }}%
-              </dd>
-          </div>
+          @if ($country->parking_rate)
+              <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
+                  <dt class="truncate text-sm font-medium text-gray-500">Parking rate</dt>
+                  <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
+                      {{ $country->parking_rate }}%
+                  </dd>
+              </div>
+          @endif
 
-          <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
-              <dt class="truncate text-sm font-medium text-gray-500">Super Reduced rate</dt>
-              <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
-                  {{ $country->super_reduced_rate }}%
-              </dd>
-          </div>
+          @if ($country->super_reduced_rate)
+              <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
+                  <dt class="truncate text-sm font-medium text-gray-500">Super Reduced rate</dt>
+                  <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
+                      {{ $country->super_reduced_rate }}%
+                  </dd>
+              </div>
+          @endif
       </dl>
   </div>
