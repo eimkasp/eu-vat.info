@@ -9,6 +9,7 @@ class Country extends Component
     
     public $slug;
     public $country;
+
  
     public function mount($slug) 
     {

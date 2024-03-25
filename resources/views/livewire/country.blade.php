@@ -1,4 +1,6 @@
 <div class="mx-auto max-w-6xl py-6">
+@section('title', 'EU VAT Info - ' . $country->name)
+@section('description', 'Learn about VAT rates, exceptions, and compliance in ' . $country->name . '. Use our VAT calculator to calculate VAT for transactions in ' . $country->name . '.')
     <div class="">
         <div class="relative w-full">
             <div class="grid sm:grid-cols-12 gap-9">
