@@ -15,7 +15,7 @@
                               VAT rates for goods and services in {{ $country->name }}
                         </h1>
                         <p class="text-gray-500 dark:text-gray-400">
-                          
+                            
                         </p>
                     </div>
                     <div class="mb-6">
