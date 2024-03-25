@@ -15,7 +15,7 @@
                               VAT rates for goods and services in {{ $country->name }}
                         </h1>
                         <p class="text-gray-500 dark:text-gray-400">
-                            
+
                         </p>
                     </div>
                     <div class="mb-6">
@@ -101,7 +101,7 @@
                                         href="/vat-registration/{{ $country->slug }}">VAT Registration in
                                         {{ $country->name }} </a> walks you through the process,
                                     documentation, and
-                                    how to stay compliant with Swiss VAT laws.</p>
+                                    how to stay compliant with European VAT laws in {{ $country->name }}.</p>
                             </section>
 
                             <section>
