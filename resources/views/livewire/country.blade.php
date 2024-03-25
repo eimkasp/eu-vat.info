@@ -7,7 +7,7 @@
                 <div class="sm:col-span-12">
                     {{-- <x-country-rates :country="$country" /> --}}
                 </div>
-                <div class="sm:col-span-4 sticky top-[-1px] sticky-element" style="align-self: flex-start">
+                <div class="sm:col-span-4 sm:sticky top-[-1px] sticky-element" style="align-self: flex-start">
                     <x-country-stats :country="$country" />
                 </div>
 
