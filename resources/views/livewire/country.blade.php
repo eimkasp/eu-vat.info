@@ -24,16 +24,7 @@
                         <x-country-rates :country="$country" />
                     </div>
 
-                    <div class="mb-3">
-                        <h3 class="text-xl font-medium">
-                            {{ $country->name }} VAT Exceptions
-                        </h3>
-                        <ul>
-                            <li>
-                                Medical and dental care Exempt
-                            </li>
-                        </ul>
-                    </div>
+                
 
                     <div class="country-content">
 
@@ -129,6 +120,17 @@
                         </article>
 
 
+                    </div>
+
+                        <div class="mb-3">
+                        <h3 class="text-xl font-medium">
+                            {{ $country->name }} VAT Exceptions
+                        </h3>
+                        <ul>
+                            <li>
+                                Coming Soon
+                            </li>
+                        </ul>
                     </div>
 
                 </div>
