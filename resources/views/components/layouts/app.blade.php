@@ -91,6 +91,7 @@
     </div>
 
     <x-footer></x-footer>
+    <script defer data-domain="eu-vat.info" src="https://stats.businesspress.io/js/script.js"></script>
 
 </body>
 

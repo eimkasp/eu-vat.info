@@ -1,5 +1,5 @@
 <div class="mx-auto max-w-4xl px-4 py-12 ">
-    <div class="flex flex-col gap-2 bg-white p-6">
+    <div class="flex flex-col gap-2 bg-white p-6 rounded shadow-xl">
         <div class="text-center">
             <h1 class="text-3xl font-bold">
                 Value-Added Tax (VAT) Rates in the European Union
