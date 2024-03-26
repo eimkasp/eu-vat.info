@@ -34,9 +34,8 @@
                                     class="hover:bg-gray-100 border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
 
                                     <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
-                                        <a 
-                                        title="{{ $country->name }} VAT rates"
-                                        href="{{ route('country.show', $country->slug) }}"
+                                        <a title="{{ $country->name }} VAT rates"
+                                            href="{{ route('country.show', $country->slug) }}"
                                             class="font-medium flex items-center gap-6 text-blue-600 hover:underline">
                                             {{ $country->name }}
                                         </a>
@@ -69,10 +68,8 @@
                 </td>
                 <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
                     Rank: #{{ $key + 1 }}
-                    <img 
-                    alt="{{ $country->name }} flag"
-                    loading="lazy"
-                    class="border mb-3 h-6 rounded" src="https://flagcdn.com/h80/{{ $country->iso_code }}.jpg" />
+                    <img alt="{{ $country->name }} flag" loading="lazy" class="border mb-3 h-6 rounded"
+                        src="https://flagcdn.com/h80/{{ $country->iso_code }}.jpg" />
                 </td>
                 </tr>
                 @endforeach
