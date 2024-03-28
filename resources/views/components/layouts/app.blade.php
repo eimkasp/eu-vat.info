@@ -8,8 +8,10 @@
 
     <title>@yield('title', 'EU VAT Info')</title>
     <meta name="description" content="@yield('meta_description', 'Our goal is to provide you with the most up-to-date information on VAT in the European Union. And help you guide VAT compliance landscape')">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3925599852702124"
-        crossorigin="anonymous"></script>
+    @if (config('app.adsense_id'))
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ config('app.adsense_id') }}"
+            crossorigin="anonymous"></script>
+    @endif
 </head>
 
 <body>
