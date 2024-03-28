@@ -1,2 +1,25 @@
 User-agent: *
-Disallow:
+Disallow: /vendor/
+Disallow: /node_modules/
+Disallow: /storage/
+Disallow: /bootstrap/cache/
+Disallow: /config/
+Disallow: /database/
+Disallow: /resources/
+Disallow: /routes/
+Disallow: /tests/
+Disallow: /env
+Disallow: /.env
+Disallow: /.git
+Disallow: /phpunit.xml
+Disallow: /webpack.mix.js
+Disallow: /composer.json
+Disallow: /composer.lock
+Disallow: /package.json
+Disallow: /package-lock.json
+Disallow: /yarn.lock
+
+# Allow indexing of your public directory
+Allow: /storage/app/public/
+
+Sitemap: https://eu-vat.info/sitemap.xml
