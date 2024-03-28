@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SitemapController;
 use App\Livewire\Home;
 use App\Livewire\Tools;
 use App\Livewire\VatCalculator;
@@ -17,3 +18,4 @@ Route::get('/counter', Counter::class);
 Route::get('/tools', Tools::class);
 
 Route::get('/vat-calculator', VatCalculator::class);
+Route::get('/sitemap/generate', [SitemapController::class, 'index'])->name('sitemap.generate');
