@@ -1,4 +1,4 @@
-<div class="mx-auto max-w-4xl px-4 py-12 ">
+<div class="mx-auto max-w-4xl px-4 py-9 sm:py-12 ">
     <div class="flex flex-col gap-2 bg-white p-6 rounded shadow-xl">
         <div class="text-center">
             <h1 class="text-3xl font-bold">

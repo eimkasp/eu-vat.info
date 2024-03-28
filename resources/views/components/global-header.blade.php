@@ -1,5 +1,5 @@
 <header class="bg-[#003399] text-white sticky top-0 z-[99] shadow-xl">
-    <div class="flex justify-between mx-auto max-w-6xl py-6">
+    <div class="flex justify-between mx-auto max-w-6xl py-6 px-6 sm:px-0">
         <div class="logo">
             <a class="font-extrabold text-xl" href="/" wire:navigate>
                 EU VAT Info

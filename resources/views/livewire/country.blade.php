@@ -1,4 +1,4 @@
-<div class="mx-auto max-w-6xl py-6">
+<div class="mx-auto max-w-6xl sm:py-6">
     @section('title', 'EU VAT Info - ' . $country->name)
     @section('description',
         'Learn about VAT rates, exceptions, and compliance in ' .
@@ -8,7 +8,7 @@
         $country->name .
         '.')
         <div class="">
-            <div class="relative w-full">
+            <div class="relative w-full  px-6 sm:px-0">
                 <div class="grid sm:grid-cols-12 gap-9">
                     <div class="sm:col-span-12">
                         {{-- <x-country-rates :country="$country" /> --}}
