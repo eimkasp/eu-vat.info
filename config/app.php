@@ -124,5 +124,6 @@ return [
     ],
 
     'adsense_id' => env('ADSENSE_ID', null),
+    'cookiebot_id' => env('COOKIEBOT_ID', null),
 
 ];
