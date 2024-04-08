@@ -12,6 +12,8 @@
         "laravel/tinker": "^2.9",
         "league/csv": "^9.15",
         "livewire/livewire": "^3.4",
+        "livewire/volt": "^1.6",
+        "robsontenorio/mary": "^1.26",
         "spatie/laravel-sitemap": "^7.2",
         "spatie/laravel-sluggable": "^3.6"
     },

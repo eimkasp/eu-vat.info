@@ -17,5 +17,6 @@ Route::get('/country/{slug}/vat-guide', Country::class)->name('country.vat.guide
 Route::get('/counter', Counter::class);
 Route::get('/tools', Tools::class);
 
-Route::get('/vat-calculator', VatCalculator::class);
+Route::get('/vat-calculator', VatCalculator::class)->name('vat-calculator');
+Route::get('/vat-calculator/{slug}', VatCalculator::class)->name('vat-calculator.country');
 Route::get('/sitemap/generate', [SitemapController::class, 'index'])->name('sitemap.generate');

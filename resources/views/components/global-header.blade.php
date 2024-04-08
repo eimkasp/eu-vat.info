@@ -7,7 +7,7 @@
         </div>
         <nav class="flex gap-6">
             <a href="/" wire:navigate>Countries</a>
-            {{-- <a href="/vat-calculator" wire:navigate>VAT Calculator</a> --}}
+            <a href="/vat-calculator" wire:navigate>VAT Calculator</a>
             {{-- <a href="/vat-validator" wire:navigate>VAT Validator</a> --}}
             {{-- <a href="/" wire:navigate>Countries</a> --}}
 

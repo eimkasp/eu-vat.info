@@ -15,6 +15,19 @@
                     </div>
                     <div class="sm:col-span-4 sm:sticky top-[-1px] sticky-element" style="align-self: flex-start">
                         <x-country-stats :country="$country" />
+
+                        <div class="mt-3">
+                            <h4>VAT Tools</h4>
+
+                            <div>
+                                <a 
+                                class="text-blue-700 underline"
+                                wire:navigate="/vat-calculator/{{ $country->slug }}"
+                                href="/vat-calculator/{{ $country->slug }}">VAT Calculator
+                                
+                                </a>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="sm:col-span-8">
@@ -64,7 +77,7 @@
                                         <li><strong>Special Rate for Accommodation Services:</strong>
                                             {{ $country->special_rate }}%</li>
                                     </ul>
-                                    
+
                                 </section>
 
                                 <section>
