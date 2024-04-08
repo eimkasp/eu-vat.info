@@ -12,9 +12,10 @@
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ config('app.adsense_id') }}"
             crossorigin="anonymous"></script>
     @endif
-    
-    @if (config('app.cookiebot_id'))
-       <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="{{ config('app.cookiebot_id') }}" data-blockingmode="auto" type="text/javascript"></script>
+
+    @if (config('app.cookiebot_id') && app()->isProduction())
+        <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="{{ config('app.cookiebot_id') }}"
+            data-blockingmode="auto" type="text/javascript"></script>
     @endif
 </head>
 
@@ -26,6 +27,7 @@
     </div>
 
     <x-footer></x-footer>
+    <x-toast />
     <script defer data-domain="eu-vat.info" src="https://stats.businesspress.io/js/script.js"></script>
 
 </body>

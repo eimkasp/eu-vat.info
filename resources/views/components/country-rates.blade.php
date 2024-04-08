@@ -1,5 +1,5 @@
   <div>
-      <h3 class="text-base font-semibold leading-6 text-gray-900">Available VAT rates</h3>
+      <h3 class="text-base font-semibold leading-6 text-gray-900">Available VAT rates in {{ $country->name }}</h3>
       <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2">
           <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
               <dt class="truncate text-sm font-medium text-gray-500">Standard rate</dt>

@@ -34,6 +34,6 @@ class Country extends Model implements Sitemapable
     public function toSitemapTag(): Url|string|array
     {
         // Simple return:
-        return route('country.show', $this->slug);
+        return [route('country.show', $this->slug), route('vat-calculator.country', $this->slug)];
     }
 }
