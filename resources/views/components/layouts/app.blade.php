@@ -8,7 +8,7 @@
 
     <title>@yield('title', 'EU VAT Info')</title>
     <meta name="description" content="@yield('meta_description', 'Our goal is to provide you with the most up-to-date information on VAT in the European Union. And help you guide VAT compliance landscape')">
-    @if (config('app.adsense_id'))
+    @if (config('app.adsense_id') && app()->isProduction())
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ config('app.adsense_id') }}"
             crossorigin="anonymous"></script>
     @endif
@@ -28,8 +28,9 @@
 
     <x-footer></x-footer>
     <x-toast />
-    <script defer data-domain="eu-vat.info" src="https://stats.businesspress.io/js/script.js"></script>
-
+    @if (config('app.data_domain') && app()->isProduction())
+        <script defer data-domain="{{ config('app.data_domain') }}" src="{{ config('app.plausible_script') }}"></script>
+    @endif
 </body>
 
 </html>

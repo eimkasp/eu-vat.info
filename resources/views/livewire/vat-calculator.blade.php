@@ -1,6 +1,6 @@
 <div class="container py-12 mt-12 pb-12 sm:grid-cols-2 grid gap-9">
     <div>
-        <h1 class="text-2xl font-bold pt-12 mb-3">
+        <h1 class="text-4xl font-bold pt-12 sm:mb-3">
 
             VAT Calculator
 
@@ -8,23 +8,33 @@
                 - {{ $selectedCountryObject->name }}
             @endif
         </h1>
-        <p>
+        <h2 class="text-xl">
+            @if ($selectedCountryObject && $total)
+                {{ Number::currency($amount, 'EUR') }} with VAT @if($vat_included == 'include') included @else excluded @endif
+                
+                 In {{ $selectedCountryObject->name }} =  {{ Number::currency($total, 'EUR') }} 
+            @endif
+        </h2>
+        <p class="">
             This is a simple VAT calculator for {{ $selectedCountryObject->name }}.
             Our goal is to help you calculate the VAT amount
         </p>
         @if ($selectedCountryObject)
-            <div class="mb-3">
-                <x-country-rates :country="$selectedCountryObject" />
+            {{-- Desktop only --}}
+            <div class="hidden sm:block">
+                <div class="mb-3">
+                    <x-country-rates :country="$selectedCountryObject" />
+                </div>
+                <a wire:navigate="{{ route('country.show', $selectedCountryObject->slug) }}"
+                    href="{{ route('country.show', $selectedCountryObject->slug) }}" class="text-blue-500">
+                    Learn More about VAT in
+                    {{ $selectedCountryObject->name }}</a>
             </div>
-            <a wire:navigate="{{ route('country.show', $selectedCountryObject->slug) }}"
-                href="{{ route('country.show', $selectedCountryObject->slug) }}" class="text-blue-500">
-                Learn More about VAT in
-                {{ $selectedCountryObject->name }}</a>
         @endif
 
     </div>
 
-    <div class="font-medium mt-6">
+    <div class="font-medium sm:mt-6">
         <x-form class="bg-blue-50 p-6 rounded shadow-xl" wire:submit="calculate">
 
             <div class="grid sm:grid-cols-1 gap-3">
@@ -39,8 +49,7 @@
                 </div>
 
                 <div class="sm:col-span-6 grid gap-3">
-                    <x-input label="Amount" wire:change="calculate" wire:model.live="amount" suffix="EUR (€)" money
-                         />
+                    <x-input label="Amount" wire:change="calculate" wire:model.live="amount" suffix="EUR (€)" money />
 
                     <div class="grid grid-cols-1 gap-3">
                         @if ($selectedCountryObject)
@@ -49,7 +58,7 @@
 
                             <x-radio wire:change="calculate" label="VAT Included?" :options="$vat_options"
                                 option-value="value" option-label="name" wire:model="vat_included" hint="Choose wisely"
-                                class="bg-red-50" />
+                                class="bg-blue-50" />
                         @endif
 
 
@@ -101,15 +110,15 @@
         @if ($saved_searches)
             @if (count($saved_searches) > 0)
                 <div class="pb-9 pt-9">
-                    <div class="flex justify-between mb-6">
+                    <div class="flex justify-between items-center mb-6">
                         <h3>Saved Calculations ({{ count($saved_searches) }}) </h3>
 
-                        <div class="ml-4">
+                        <div class="">
                             <x-button label="Clear" class="btn-outline" wire:click="clearSearch" />
                         </div>
                     </div>
                     @if ($saved_searches)
-                        <div class="grid grid-cols-4 gap-6">
+                        <div class="grid sm:grid-cols-4 gap-6">
                             @foreach ($saved_searches as $search)
                                 @php
                                     $saved_country = $countries->where('slug', $search['selectedCountry1'])->first();

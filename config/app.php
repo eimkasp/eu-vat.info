@@ -125,5 +125,7 @@ return [
 
     'adsense_id' => env('ADSENSE_ID', null),
     'cookiebot_id' => env('COOKIEBOT_ID', null),
+    'data_domain' => env('DATA_DOMAIN', null),
+    'plausible_script' => env('PLAUSIBLE_SCRIPT', null),
 
 ];

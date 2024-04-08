@@ -1,7 +1,7 @@
    <div class="lg:col-start-3 lg:row-end-1 ">
        <h2 class="sr-only">Summary</h2>
        <div class="rounded-lg bg-gray-800 shadow-sm ring-1 ring-gray-900/5">
-           <dl class="flex flex-wrap">
+           <dl class="grid">
                <div class="flex-auto px-6 pt-6">
                    <div class="flex justify-between items-center align-center">
                        <div>
