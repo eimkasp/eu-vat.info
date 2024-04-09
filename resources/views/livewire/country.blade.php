@@ -55,7 +55,7 @@
                                     <p> {{ $country->name }} , as a member of the European Union, has its
                                         unique VAT
                                         system that businesses and consumers need to navigate. The standard VAT
-                                        rate in {{ $country->name }} is {{ $country->standard_rate }}, one of
+                                        rate in {{ $country->name }} is {{ $country->standard_rate }}%, one of
                                         the lowest in Europe, affecting
                                         goods and services across the country. For detailed VAT rates and
                                         exceptions, use our <a 
