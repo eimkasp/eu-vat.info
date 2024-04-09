@@ -32,9 +32,9 @@
                      excluded
                  @endif
 
-                 In {{ $selectedCountryObject->name }} 
-                 @if($total)
-                 = {{ Number::currency($total, 'EUR') }}
+                 In {{ $selectedCountryObject->name }}
+                 @if ($total)
+                     = {{ Number::currency($total, 'EUR') }}
                  @endif
              @endisset
          </h2>
@@ -145,5 +145,12 @@
      <div class="sm:col-span-2 pb-9">
          <x-country-calculator-list>
          </x-country-calculator-list>
+     </div>
+
+     <div class="sm:col-span-2 pb-9">
+         @isset($selectedCountryObject)
+             <x-vat-history :country="$selectedCountryObject">
+             </x-vat-history>
+         @endisset
      </div>
  </div>

@@ -15,6 +15,7 @@ class Country extends Model implements Sitemapable
     use HasFactory;
     use HasSlug;
 
+    public $with = ['vatHistory'];
     /**
      * Get the options for generating the slug.
      */
@@ -35,5 +36,10 @@ class Country extends Model implements Sitemapable
     {
         // Simple return:
         return [route('country.show', $this->slug), route('vat-calculator.country', $this->slug)];
+    }
+
+    public function vatHistory()
+    {
+        return $this->hasMany(VatHistory::class, 'country_id', 'id')->orderBy('year', 'DESC');
     }
 }

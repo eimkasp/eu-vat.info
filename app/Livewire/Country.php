@@ -14,6 +14,7 @@ class Country extends Component
     public function mount($slug) 
     {
         $this->country = \App\Models\Country::where('slug', $slug)->first();
+       
     }
 
     public function render()
