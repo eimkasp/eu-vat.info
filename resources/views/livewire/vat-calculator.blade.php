@@ -1,7 +1,7 @@
  @isset($selectedCountryObject)
      @section('title', 'VAT Calculator - ' . $selectedCountryObject->name)
- @section('description',
-     'Calculate VAT amount for' .
+ @section('meta_description',
+     'Calculate VAT amount for ' .
      $selectedCountryObject->name .
      '. Use our VAT
      calculator to easily calculate VAT for transactions in ' .
@@ -9,7 +9,7 @@
      '.')
  @else
  @section('title', 'VAT Calculator - EU-VAT.info')
- @section('description',
+ @section('meta_description',
      'Calculate VAT amount for different countries. Use our VAT
      calculator to easily calculate VAT for transactions in different countries.')
  @endisset

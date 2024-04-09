@@ -1,7 +1,7 @@
 <div class="mx-auto max-w-6xl sm:py-6">
-    @section('title', 'EU VAT Info - ' . $country->name)
-    @section('description',
-        'Learn about VAT rates, exceptions, and compliance in ' .
+    @section('title', 'VAT Rates in ' . $country->name . '- EU VAT Info')
+    @section('meta_description',
+        'The standard VAT rate in '. $country->name . ' is ' .$country->standard_rate .'%. Learn about VAT rates, exceptions, and compliance in ' .
         $country->name .
         '. Use our VAT
         calculator to calculate VAT for transactions in ' .
