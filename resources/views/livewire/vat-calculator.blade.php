@@ -4,12 +4,12 @@
 
             VAT Calculator
 
-            @if ($selectedCountryObject)
+            @isset ($selectedCountryObject)
                 - {{ $selectedCountryObject->name }}
-            @endif
+            @endisset
         </h1>
         <h2 class="text-xl">
-            @if ($selectedCountryObject && $total)
+            @isset ($selectedCountryObject)
                 {{ Number::currency($amount, 'EUR') }} with VAT @if ($vat_included == 'include')
                     included
                 @else
@@ -17,13 +17,21 @@
                 @endif
 
                 In {{ $selectedCountryObject->name }} = {{ Number::currency($total, 'EUR') }}
-            @endif
+            @endisset
         </h2>
+        @isset ($selectedCountryObject)
+
         <p class="">
             This is a simple VAT calculator for {{ $selectedCountryObject->name }}.
-            Our goal is to help you calculate the VAT amount
+            Our goal is to help you calculate the VAT amount for transactions in {{ $selectedCountryObject->name }}.
         </p>
-        @if ($selectedCountryObject)
+        @else
+        <p class="">
+            This is a simple VAT calculator.
+            Our goal is to help you calculate the VAT amount for transactions in different countries.
+        </p>
+        @endisset
+        @isset ($selectedCountryObject)
             {{-- Desktop only --}}
             <div class="hidden sm:block">
                 <div class="mb-3">
@@ -34,7 +42,7 @@
                     Learn More about VAT in
                     {{ $selectedCountryObject->name }}</a>
             </div>
-        @endif
+        @endisset
 
     </div>
 
@@ -56,14 +64,14 @@
                     <x-input label="Amount" wire:change="calculate" wire:model.live="amount" suffix="EUR (€)" money />
 
                     <div class="grid grid-cols-1 gap-3">
-                        @if ($selectedCountryObject)
+                        @isset ($selectedCountryObject)
                             <x-radio wire:change="calculate" option-value="value" option-name="name"
                                 label="Select VAT Rate" :options="$rates" wire:model="selectedRate" />
 
                             <x-radio wire:change="calculate" label="VAT Included?" :options="$vat_options"
                                 option-value="value" option-label="name" wire:model="vat_included" hint="Choose wisely"
                                 class="bg-blue-50" />
-                        @endif
+                        @endisset
 
 
                     </div>
