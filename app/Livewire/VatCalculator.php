@@ -95,7 +95,13 @@ class VatCalculator extends Component
         $this->success('Your search has been cleared!', 'Success',  position: 'toast-bottom toast-start');
         // Triger re-render
         $this->saved_searches = [];
+    }
 
+    public function updatedSelectedCountry()
+    {
+        $this->selectedRate = null;
+        $this->getRates();
+        $this->calculateVat();
     }
 
     public function calculate()

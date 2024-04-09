@@ -10,9 +10,13 @@
         </h1>
         <h2 class="text-xl">
             @if ($selectedCountryObject && $total)
-                {{ Number::currency($amount, 'EUR') }} with VAT @if($vat_included == 'include') included @else excluded @endif
-                
-                 In {{ $selectedCountryObject->name }} =  {{ Number::currency($total, 'EUR') }} 
+                {{ Number::currency($amount, 'EUR') }} with VAT @if ($vat_included == 'include')
+                    included
+                @else
+                    excluded
+                @endif
+
+                In {{ $selectedCountryObject->name }} = {{ Number::currency($total, 'EUR') }}
             @endif
         </h2>
         <p class="">
@@ -64,25 +68,28 @@
 
                     </div>
                     @if ($total)
-                        <div class="results bg-gray-100 rounded p-3">
+                        <div class="results text-lg bg-gray-50 rounded p-3">
                             <div class="text-gray-700">
-                                Amount : {{ Number::currency($amount, 'EUR') }}
+                                Starting amount : {{ Number::currency($amount, 'EUR') }}
                             </div>
                             @if ($vat_included == 'include')
                                 +
                             @else
                             @endif
-                            {{ Number::currency($vat_amount, 'EUR') }} (VAT - {{ $selectedRate }}%)
+                            {{ Number::currency($vat_amount, 'EUR') }} <span class="text-sm text-gray-800">(VAT: {{ $selectedRate }}%) </span>
 
                             <div>
 
                             </div>
-                            <div class="text-xl">
+                            <div class="pt-3 border-t mt-3">
                                 @if ($vat_included == 'include')
-                                    Total with VAT included: {{ Number::currency($total, 'EUR') }}
+                                    Total with VAT included: 
                                 @else
-                                    Total with VAT excluded: {{ Number::currency($total, 'EUR') }}
+                                    Total with VAT excluded: 
                                 @endif
+                                <div class='text-2xl font-bold mt-2 '>
+                                {{ Number::currency($total, 'EUR') }}
+                                </div>
                             </div>
                         </div>
                     @endif
@@ -107,47 +114,10 @@
 
     </div>
     <div class="sm:col-span-2">
-        @if ($saved_searches)
-            @if (count($saved_searches) > 0)
-                <div class="pb-9 pt-9">
-                    <div class="flex justify-between items-center mb-6">
-                        <h3>Saved Calculations ({{ count($saved_searches) }}) </h3>
-
-                        <div class="">
-                            <x-button label="Clear" class="btn-outline" wire:click="clearSearch" />
-                        </div>
-                    </div>
-                    @if ($saved_searches)
-                        <div class="grid sm:grid-cols-4 gap-6">
-                            @foreach ($saved_searches as $search)
-                                @php
-                                    $saved_country = $countries->where('slug', $search['selectedCountry1'])->first();
-                                    $saved_link = route('vat-calculator', [
-                                        'selectedCountry1' => $search['selectedCountry1'],
-                                        'amount' => $search['amount'],
-                                        'selectedRate' => $search['selectedRate'],
-                                        'vat_included' => $search['vat_included'],
-                                    ]);
-                                @endphp
-                                <a href="{{ $saved_link }}" wire.navigate="{{ $saved_link }}">
-                                    <div class="card p-6 bg-white shadow-xl">
-                                        {{ $saved_country->name }}
-                                        <div class="text-sm text-green-600">
-                                            {{ Number::currency($search['amount'], 'EUR') }}
-                                            ({{ $search['selectedRate'] }}%)
-                                            -
-                                            {{ $search['vat_included'] }}
-                                        </div>
-                                    </div>
-                                </a>
-                            @endforeach
-                        </div>
-                    @endif
-
-                </div>
-            @else
-                Your saved searches will appear here.
-            @endif
-        @endif
+       <x-saved-searches></x-saved-searches>
+    </div>
+    <div class="sm:col-span-2 pb-9">
+        <x-country-calculator-list>
+        </x-country-calculator-list>
     </div>
 </div>
