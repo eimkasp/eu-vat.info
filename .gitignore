@@ -21,3 +21,4 @@ yarn-error.log
 
 !/bootstrap/cache/index.php
 !/storage/framework/cache/index.php
+ads.txt
