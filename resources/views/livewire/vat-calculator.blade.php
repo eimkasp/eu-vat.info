@@ -32,7 +32,10 @@
                      excluded
                  @endif
 
-                 In {{ $selectedCountryObject->name }} = {{ Number::currency($total, 'EUR') }}
+                 In {{ $selectedCountryObject->name }} 
+                 @if($total)
+                 = {{ Number::currency($total, 'EUR') }}
+                 @endif
              @endisset
          </h2>
          @isset($selectedCountryObject)
