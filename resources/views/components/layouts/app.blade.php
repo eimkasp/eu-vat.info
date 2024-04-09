@@ -13,10 +13,7 @@
             crossorigin="anonymous"></script>
     @endif
 
-    @if (config('app.cookiebot_id') && app()->isProduction())
-        <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="{{ config('app.cookiebot_id') }}"
-            data-blockingmode="auto" type="text/javascript"></script>
-    @endif
+
 </head>
 
 <body>
@@ -30,6 +27,10 @@
     <x-toast />
     @if (config('app.data_domain') && app()->isProduction())
         <script defer data-domain="{{ config('app.data_domain') }}" src="{{ config('app.plausible_script') }}"></script>
+    @endif
+    @if (config('app.cookiebot_id') && app()->isProduction())
+        <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="{{ config('app.cookiebot_id') }}"
+            data-blockingmode="auto" type="text/javascript"></script>
     @endif
 </body>
 
