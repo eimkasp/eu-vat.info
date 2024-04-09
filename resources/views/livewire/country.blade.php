@@ -58,7 +58,9 @@
                                         rate in {{ $country->name }} is {{ $country->standard_rate }}, one of
                                         the lowest in Europe, affecting
                                         goods and services across the country. For detailed VAT rates and
-                                        exceptions, use our <a href="/vat-calculator">VAT Calculator</a> to see
+                                        exceptions, use our <a 
+                                        wire:navigate="/vat-calculator/{{ $country->slug }}"
+                                        href="/vat-calculator/{{ $country->slug }}">VAT Calculator for {{ $country->name }}</a> to see
                                         how much VAT you need to pay or reclaim for transactions in
                                         {{ $country->name }} .
                                     </p>
