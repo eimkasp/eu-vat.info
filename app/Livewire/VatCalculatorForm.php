@@ -13,6 +13,9 @@ class VatCalculatorForm extends VatCalculator
         $this->country = $country;
         if ($slug) {
             $this->selectedCountry1 = $slug;
+        } else {
+            $this->slug = 'lithuania-lt';
+            $this->selectedCountry1 = 'lithuania-lt';
         }
 
         $this->selectedCountryObject = Country::where('slug', $this->selectedCountry1)->first();

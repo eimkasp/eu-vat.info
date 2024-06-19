@@ -15,7 +15,7 @@ class VatCalculator extends Component
     public $amount = 100;
     public $country = null;
     public $vat = 0;
-    public $slug;
+    public $slug = 'lithuania-lt';
 
     public $vat_amount = 0;
 
@@ -65,7 +65,7 @@ class VatCalculator extends Component
         }
 
 
-        $this->selectedCountryObject = Country::where('slug', $this->selectedCountry1)->first();
+        $this->selectedCountryObject = Country::where('slug', $this->slug)->first();
         $this->getRates();
         $this->saved_searches = session()->get('saved_searched');
 
@@ -121,7 +121,6 @@ class VatCalculator extends Component
     }
     public function render()
     {
-        $this->selectedCountryObject = Country::where('slug', $this->selectedCountry1)->first();
         return view('livewire.vat-calculator');
     }
 

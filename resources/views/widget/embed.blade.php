@@ -51,7 +51,7 @@
             <div>
                 <div class="bg-white p-4 rounded-lg shadow-md">
                     <h2 class="text-xl font-bold mb-4">Widget Preview</h2>
-                    <livewire:vat-calculator-form />
+                    <livewire:vat-calculator-form slug="united-kingdom-gb" />
                     <div class="mt-3 text-right">
                         Powered by <a href="https://eu-vat.info" target="_blank" class="text-blue-500">EU-VAT.info</a>
                     </div>
