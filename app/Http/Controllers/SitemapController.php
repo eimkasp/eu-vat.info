@@ -14,10 +14,16 @@ class SitemapController extends Controller
     //
     public function index()
     {
-        Sitemap::create()
+       $sitemap =  Sitemap::create()
             ->add(Country::all())
             ->add('/embed')
-            ->add('/')
-            ->writeToFile('sitemap.xml');
+            ->add('/');
+
+            foreach(Country::all() as $country) {
+                $sitemap->add(Url::create('/embed/' . $country->slug)->setLastModificationDate(Carbon::now()));
+            }
+
+        $sitemap->writeToFile('sitemap.xml');
+           
     }
 }
