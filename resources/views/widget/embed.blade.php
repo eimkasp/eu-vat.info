@@ -10,7 +10,7 @@
                     <pre id="embed-code" class="bg-gray-100 p-4 rounded-lg w-full break-all whitespace-pre-wrap">&lt;iframe src="{{ route('widget.iframe') }}" style="border:none;outline: none;background: transparent;box-shadow: none;" width="100%" height="400px" frameborder="0"&gt;&lt;/iframe&gt;
         </pre>
                     <div class="flex items-center justify-between mt-6">
-                        <div class="btn btn-primary" x-data="{}" @click="navigator.clipboard.writeText(document.getElementById('embed-code').innerText)"
+                        <div class="btn btn-primary plausible-event-name=CopyCode" x-data="{}" @click="navigator.clipboard.writeText(document.getElementById('embed-code').innerText)"
 
                         >Copy code
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"

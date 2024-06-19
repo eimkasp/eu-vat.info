@@ -15,6 +15,7 @@ class VatCalculator extends Component
     public $amount = 100;
     public $country = null;
     public $vat = 0;
+    public $slug;
 
     public $vat_amount = 0;
 
@@ -40,7 +41,7 @@ class VatCalculator extends Component
     ];
 
     #[Url]
-    public $selectedCountry1 = 'lithuania-lt';
+    public $selectedCountry1;
     public $selectedCountry2 = null;
     public $selectedCountryObject = null;
 
@@ -57,10 +58,13 @@ class VatCalculator extends Component
         });
         if ($slug) {
             $this->selectedCountry1 = $slug;
+            $this->slug = $slug;
         }
         if ($this->selectedCountry1 == '') {
             $this->selectedCountry1 = null;
         }
+
+
         $this->selectedCountryObject = Country::where('slug', $this->selectedCountry1)->first();
         $this->getRates();
         $this->saved_searches = session()->get('saved_searched');
@@ -71,6 +75,7 @@ class VatCalculator extends Component
         } else {
             $this->saved_searches = [];
         }
+
 
 
     }
@@ -106,7 +111,7 @@ class VatCalculator extends Component
 
     public function calculate()
     {
-        $this->selectedCountryObject = Country::where('slug', $this->selectedCountry1)->first();
+        $this->selectedCountryObject = Country::where('slug', $this->slug)->first();
         if ($this->selectedCountryObject) {
             $this->getRates();
             $this->vat = $this->selectedCountryObject->standard_rate;
@@ -116,6 +121,7 @@ class VatCalculator extends Component
     }
     public function render()
     {
+        $this->selectedCountryObject = Country::where('slug', $this->selectedCountry1)->first();
         return view('livewire.vat-calculator');
     }
 
@@ -136,7 +142,6 @@ class VatCalculator extends Component
     private function getRates()
     {
         if (isset($this->selectedCountryObject)) {
-
 
             $this->rates = [
                 [

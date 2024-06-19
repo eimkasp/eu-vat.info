@@ -127,5 +127,6 @@ return [
     'cookiebot_id' => env('COOKIEBOT_ID', null),
     'data_domain' => env('DATA_DOMAIN', null),
     'plausible_script' => env('PLAUSIBLE_SCRIPT', null),
+    'plausible_outbound_script' => env('PLAUSIBLE_OUTBOUND_SCRIPT', null),
 
 ];

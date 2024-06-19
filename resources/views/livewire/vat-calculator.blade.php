@@ -67,7 +67,7 @@
          @endisset
 
      </div>
-    <livewire:vat-calculator-form />
+    <livewire:vat-calculator-form :slug="$selectedCountryObject->slug" />
   
      <div class="sm:col-span-2">
          <x-saved-searches></x-saved-searches>

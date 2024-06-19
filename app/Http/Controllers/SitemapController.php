@@ -16,6 +16,8 @@ class SitemapController extends Controller
     {
         Sitemap::create()
             ->add(Country::all())
+            ->add('/embed')
+            ->add('/')
             ->writeToFile('sitemap.xml');
     }
 }

@@ -1,38 +1,45 @@
-<div class="mx-auto max-w-6xl sm:py-6">
+<div class="container">
     @section('title', 'VAT Rates in ' . $country->name . '- EU VAT Info')
     @section('meta_description',
-        'The standard VAT rate in '. $country->name . ' is ' .$country->standard_rate .'%. Learn about VAT rates, exceptions, and compliance in ' .
+        'The standard VAT rate in ' .
+        $country->name .
+        ' is ' .
+        $country->standard_rate .
+        '%. Learn about VAT rates, exceptions, and compliance in ' .
         $country->name .
         '. Use our VAT
         calculator to calculate VAT for transactions in ' .
         $country->name .
         '.')
         <div class="">
-            <div class="relative w-full  px-6 sm:px-0">
+            <div class="relative w-full">
                 <div class="grid sm:grid-cols-12 gap-9">
                     <div class="sm:col-span-12">
                         {{-- <x-country-rates :country="$country" /> --}}
                     </div>
                     <div class="sm:col-span-4 sm:sticky top-[-1px] sticky-element" style="align-self: flex-start">
+                        <a href="/" class="mb-3 block flex items-center gap-3 hover:text-blue-700">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M11 19l-7-7 7-7m8 14l-7-7 7-7"></path>
+                            </svg>
+                            Back to all countries
+                        </a>
                         <x-country-stats :country="$country" />
-
-                        <div class="mt-3">
+                        <div class="mt-9 space-y-3 sm:mb-12 border-t pt-3">
                             <h4>VAT Tools</h4>
 
                             <div>
-                                <a 
-                                class="text-blue-700 underline"
-                                wire:navigate="/vat-calculator/{{ $country->slug }}"
-                                href="/vat-calculator/{{ $country->slug }}">VAT Calculator
-                                
+                                <a class="text-blue-600 hover:underline" wire:navigate="/vat-calculator/{{ $country->slug }}"
+                                    href="/vat-calculator/{{ $country->slug }}">VAT Calculator for {{ $country->name }}
+
                                 </a>
                             </div>
 
                             <div>
-                                <a 
-                                class="text-blue-700 underline"
-                                wire:navigate="/vat-calculator/{{ $country->slug }}"
-                                href="/embed/{{ $country->slug }}">Embed {{ $country->name }} VAT Widget
+                                <a class="text-blue-600 hover:underline" wire:navigate="/vat-calculator/{{ $country->slug }}"
+                                    href="/embed/{{ $country->slug }}">Embed {{ $country->name }} VAT Widget
                                     {{-- TODO: add a new badge  --}}
                                     <span class="badge badge-info ml-2">New</span>
                                 </a>
@@ -40,9 +47,9 @@
                         </div>
                     </div>
 
-                    <div class="sm:col-span-8">
+                    <div class="sm:col-span-8 pb-12">
                         <div class="space-y-3">
-                            <h1 class="text-3xl font-bold">
+                            <h1 class="text-2xl lg:text-3xl font-bold">
                                 VAT rates for goods and services in {{ $country->name }}
                             </h1>
                             <p class="text-gray-500 dark:text-gray-400">
@@ -68,9 +75,9 @@
                                         rate in {{ $country->name }} is {{ $country->standard_rate }}%, one of
                                         the lowest in Europe, affecting
                                         goods and services across the country. For detailed VAT rates and
-                                        exceptions, use our <a 
-                                        wire:navigate="/vat-calculator/{{ $country->slug }}"
-                                        href="/vat-calculator/{{ $country->slug }}">VAT Calculator for {{ $country->name }}</a> to see
+                                        exceptions, use our <a wire:navigate="/vat-calculator/{{ $country->slug }}"
+                                            href="/vat-calculator/{{ $country->slug }}">VAT Calculator for
+                                            {{ $country->name }}</a> to see
                                         how much VAT you need to pay or reclaim for transactions in
                                         {{ $country->name }} .
                                     </p>

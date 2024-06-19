@@ -1,13 +1,11 @@
 <div>
    <div class="font-medium">
          <x-form class="bg-blue-50 p-6 rounded shadow-xl" wire:submit="calculate">
-
              <div class="grid sm:grid-cols-1 gap-3">
                  <div class="sm:col-span-6 gap-3 grid">
                      <x-select wire:change="calculate" label="Country" :options="$countries" option-value="slug"
                          option-label="name" placeholder="Select a country" {{-- Set a value for placeholder. Default is `null` --}}
                          wire:model.live="selectedCountry1" />
-
                      {{-- <x-select label="Country from" :options="$countries" option-value="slug" option-label="name"
                         placeholder="Select a country" placeholder-value="0"
                         hint="Select one, please." wire:model="selectedCountry2" /> --}}
@@ -63,9 +61,9 @@
 
 
              <x-slot:actions>
-                 <x-button label="Save calculation" class="btn-outline" wire:click="saveSearch" />
+                 <x-button label="Save calculation" class="btn-outline plausible-event-name=Save" wire:click="saveSearch" />
 
-                 <x-button label="Calculate" class="btn-primary" type="submit" />
+                 <x-button label="Calculate" class="btn-primary plausible-event-name=Calculate" type="submit" />
              </x-slot:actions>
 
 
