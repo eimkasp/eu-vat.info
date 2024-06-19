@@ -1,4 +1,6 @@
 @extends('components.layouts.app')
+@section('title', 'Embed VAT Calculator to your website - EU VAT Info')
+@section('meta_description', 'Embed this VAT Calculator widget on your website to show the current VAT rates for all EU countries. Customization options available.')
 @section('content')
     <div class="container mx-auto !py-12">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-9">
