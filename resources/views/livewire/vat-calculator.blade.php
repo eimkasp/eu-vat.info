@@ -32,9 +32,9 @@
                      excluded
                  @endif
 
-                 In {{ $selectedCountryObject->name }} 
-                 @if($total)
-                 = {{ Number::currency($total, 'EUR') }}
+                 In {{ $selectedCountryObject->name }}
+                 @if ($total)
+                     = {{ Number::currency($total, 'EUR') }}
                  @endif
              @endisset
          </h2>
@@ -55,9 +55,10 @@
                  <div class="mb-3">
                      <x-country-rates :country="$selectedCountryObject" />
 
-                     Embed this calculator on your website:
-                     <a href="{{ route('widget.embed', $selectedCountryObject->slug) }}"
-                         class="text-blue-500">Embed</a>
+                     <div class="mt-6">
+                         <a href="{{ route('widget.embed', $selectedCountryObject->slug) }}" class="text-blue-500">Embed this
+                             calculator on your website</a>
+                     </div>
                  </div>
                  <a wire:navigate="{{ route('country.show', $selectedCountryObject->slug) }}"
                      href="{{ route('country.show', $selectedCountryObject->slug) }}" class="text-blue-500">
@@ -67,8 +68,8 @@
          @endisset
 
      </div>
-    <livewire:vat-calculator-form :slug="$selectedCountryObject->slug" />
-  
+     <livewire:vat-calculator-form :slug="$selectedCountryObject->slug" />
+
      <div class="sm:col-span-2">
          <x-saved-searches></x-saved-searches>
      </div>
