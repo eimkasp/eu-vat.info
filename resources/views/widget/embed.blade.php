@@ -21,7 +21,7 @@
                 </div>
 
                 {{-- TODO: Add customization options --}}
-                <div class="mt-6 bg-white p-4 rounded-lg shadow-md">
+                <div class="mt-6 bg-white p-4 rounded-lg shadow-md hidden">
                     <h2 class="text-xl font-bold mb-4">Customize:</h2>
                     <div class="mb-3">
                         <x-select wire:change="calculate" label="Default Country" option-value="slug" option-label="name"
