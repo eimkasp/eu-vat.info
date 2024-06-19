@@ -32,6 +32,10 @@
 
                             </li>
                             <li>
+                                <a href="/embed" class="">Embed VAT Calculator</a>
+
+                            </li>
+                            <li>
                                 <a target="_blank" href="https://stats.businesspress.io/eu-vat.info/">Website stats</a>
                             </li>
 

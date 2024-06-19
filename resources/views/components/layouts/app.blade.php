@@ -20,7 +20,11 @@
     <x-global-header></x-global-header>
 
     <div class="bg-gray-50">
-        {{ $slot }}
+        @isset($slot)
+            {{ $slot }}
+        @else
+            @yield('content')
+        @endisset
     </div>
     <!-- Default -->
     <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-3925599852702124" data-ad-slot="1306180870"

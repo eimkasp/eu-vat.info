@@ -2,23 +2,18 @@
 
 namespace App\View\Components;
 
-use App\Models\Country;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class CountryRates extends Component
+class AnnouncementBar extends Component
 {
-    public $country;
     /**
      * Create a new component instance.
      */
-    public function __construct($country = null)
+    public function __construct()
     {
-        $this->country = $country;
-        if($this->country == null) {
-            $this->country = Country::first();
-        }
+        //
     }
 
     /**
@@ -26,6 +21,6 @@ class CountryRates extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.country-rates');
+        return view('components.announcement-bar');
     }
 }
