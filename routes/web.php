@@ -24,4 +24,5 @@ Route::get('/vat-calculator/{slug}', VatCalculator::class)->name('vat-calculator
 Route::get('/sitemap/generate', [SitemapController::class, 'index'])->name('sitemap.generate');
 
 Route::get('/embed/{country?}', [EmbedController::class, 'index'])->name('widget.embed');
+Route::get('/public/embed/{country?}', [EmbedController::class, 'iframe'])->name('widget.iframe');
 Route::get('/embed/preview/{country?}', [EmbedController::class, 'preview'])->name('widget.preview');

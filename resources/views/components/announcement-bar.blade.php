@@ -1,5 +1,5 @@
-<div class="bg-blue-600">
-  <div class="container py-3">
+<div class="bg-blue-600 hidden sm:block">
+  <div class="container !py-3">
     <div class="flex flex-wrap items-center justify-between">
       <div class="flex w-0 flex-1 items-center">
         <span class="flex rounded-lg bg-indigo-800 p-2">

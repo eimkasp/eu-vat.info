@@ -2,17 +2,15 @@
     <h2 id="footer-heading" class="sr-only">Footer</h2>
     <div class="mx-auto max-w-6xl pb-8 pt-16">
         <div class="xl:grid xl:grid-cols-3 xl:gap-8">
-            <div class="space-y-8">
+            <div class="space-y-3">
                 <strong>EU-VAT.info</strong>
                 <p class="text-sm leading-6 text-gray-600">
                     Our goal is to provide simple and easy way to navigate VAT rates in Europe.
                 </p>
-                <div class="flex space-x-6">
-                    {{-- TODO: Add Socials Here --}}
-                </div>
+                
             </div>
-            <div class="mt-16 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0">
-                <div class="md:grid md:grid-cols-2 md:gap-8">
+            <div class="sm:mt-16 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0">
+                <div class="md:grid md:grid-cols-2 md:gap-8 hidden sm:block">
                     <div>
 
                     </div>
@@ -21,11 +19,11 @@
                     </div>
                 </div>
                 <div class="md:grid md:grid-cols-2 md:gap-8">
-                    <div>
+                    <div class="hidden sm:block">
 
                     </div>
                     <div class="mt-10 md:mt-0">
-                        <h3 class="text-sm font-semibold leading-6 text-gray-900">Tools</h3>
+                        <h3 class="text-lg sm:text-sm font-semibold leading-6 text-gray-900">Tools</h3>
                         <ul role="list" class="mt-6 space-y-4">
                             <li>
                                 <a href="/vat-calculator" class="">VAT Calculator</a>

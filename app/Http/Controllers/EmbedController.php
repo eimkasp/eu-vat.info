@@ -15,4 +15,13 @@ class EmbedController extends Controller
         }
         return view('widget.embed', compact('country'));
     }
+
+    public function iframe(Request $request)
+    {
+        $country = $request->country;
+        if($country == null) {
+            $country = 'united-kingdom';
+        }
+        return view('widget.iframe', compact('country'));
+    }
 }

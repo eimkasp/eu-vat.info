@@ -7,7 +7,7 @@
                 <p class="mb-4">Embed this widget on your website to show the current VAT rates for all EU countries.</p>
                 <div class="bg-white p-4 rounded-lg shadow-md">
                     <h2 class="text-xl font-bold mb-4">Embed code</h2>
-                    <pre class="bg-gray-100 p-4 rounded-lg w-full break-all whitespace-pre-wrap">&lt;iframe src="{{ route('widget.embed') }}" style="border:none;outline: none;background: transparent;box-shadow: none;" width="100%" height="400px" frameborder="0"&gt;&lt;/iframe&gt;
+                    <pre class="bg-gray-100 p-4 rounded-lg w-full break-all whitespace-pre-wrap">&lt;iframe src="{{ route('widget.iframe') }}" style="border:none;outline: none;background: transparent;box-shadow: none;" width="100%" height="400px" frameborder="0"&gt;&lt;/iframe&gt;
         </pre>
                     <div class="flex items-center justify-between mt-6">
                         <div class="btn btn-primary">Copy code

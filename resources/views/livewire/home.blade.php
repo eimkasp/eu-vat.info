@@ -1,6 +1,6 @@
-<div class="mx-auto max-w-4xl px-4 py-9 sm:py-12 ">
+<div class="mx-auto max-w-4xl px-4 py-6 sm:py-12 ">
     <div class="flex flex-col gap-2 bg-white p-6 rounded shadow-xl">
-        <div class="text-center">
+        <div class="sm:text-center">
             <h1 class="text-3xl font-bold">
                 Value-Added Tax (VAT) Rates in the European Union
             </h1>
@@ -21,7 +21,7 @@
                         <tr
                             class=" h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
 
-                            <th class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 min-w-[200px]">Country
+                            <th class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 min-w-[120px] sm:min-w-[200px]">Country
                             </th>
                             <th class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">VAT Rate</th>
                             <th class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 min-w-[200px]">Special Rates
