@@ -20,14 +20,20 @@
     <x-global-header></x-global-header>
 
     <div class="bg-gray-50">
-        {{ $slot }}
+        @isset($slot)
+            {{ $slot }}
+        @else
+            @yield('content')
+        @endisset
     </div>
-    <!-- Default -->
-    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-3925599852702124" data-ad-slot="1306180870"
-        data-ad-format="auto" data-full-width-responsive="true"></ins>
-    <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
+    @if (config('app.adsense_id') && app()->isProduction())
+        <!-- Default -->
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-3925599852702124" data-ad-slot="1306180870"
+            data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    @endif
     <x-footer></x-footer>
     <x-toast />
     @if (config('app.data_domain') && app()->isProduction())

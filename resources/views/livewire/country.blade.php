@@ -27,6 +27,16 @@
                                 
                                 </a>
                             </div>
+
+                            <div>
+                                <a 
+                                class="text-blue-700 underline"
+                                wire:navigate="/vat-calculator/{{ $country->slug }}"
+                                href="/embed/{{ $country->slug }}">Embed {{ $country->name }} VAT Widget
+                                    {{-- TODO: add a new badge  --}}
+                                    <span class="badge badge-info ml-2">New</span>
+                                </a>
+                            </div>
                         </div>
                     </div>
 
