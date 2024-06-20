@@ -1,3 +1,6 @@
+[![Laravel Forge Site Deployment Status](https://img.shields.io/endpoint?url=https%3A%2F%2Fforge.laravel.com%2Fsite-badges%2F516661be-8281-4b22-b780-b3a98db5eb8c%3Fdate%3D1%26commit%3D1&style=flat)](https://forge.laravel.com/servers/773218/sites/2296001)
+
+
 ## EU VAT Info
 
 EU VAT Info is a hobby project to try out capabilities of Laravel 11, while also providing a useful tool for developers and businesses in the EU.
