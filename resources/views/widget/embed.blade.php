@@ -1,5 +1,11 @@
 @extends('components.layouts.app')
+ @isset($selectedCountry->name)
+@section('title', 'Embed VAT Calculator for '. $selectedCountry->name . ' to your website - EU VAT Info')
+
+@else
 @section('title', 'Embed VAT Calculator to your website - EU VAT Info')
+
+@endisset
 @section('meta_description', 'Embed this VAT Calculator widget on your website to show the current VAT rates for all EU
     countries. Customization options available.')
 @section('content')
