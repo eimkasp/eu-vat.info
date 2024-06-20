@@ -1,6 +1,6 @@
 <footer class="bg-white  px-6 sm:px-0" aria-labelledby="footer-heading">
-    <h2 id="footer-heading" class="sr-only">Footer</h2>
-    <div class="mx-auto max-w-6xl pb-8 pt-16">
+    <div class="container !pb-8 !pt-16">
+        <h2 id="footer-heading" class="sr-only">EU VAT Calculator Footer</h2>
         <div class="xl:grid xl:grid-cols-3 xl:gap-8">
             <div class="space-y-3">
                 <strong>EU-VAT.info</strong>
