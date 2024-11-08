@@ -8,22 +8,10 @@ use Livewire\Component;
 
 class VatCalculatorForm extends VatCalculator
 {
-  
     public function mount($country = null, $slug = null) {
-        $this->country = $country;
-        if ($slug) {
-            $this->selectedCountry1 = $slug;
-        } else {
-            $this->slug = 'lithuania-lt';
-            $this->selectedCountry1 = 'lithuania-lt';
-        }
-
-        $this->selectedCountryObject = Country::where('slug', $this->selectedCountry1)->first();
-
-        $this->countries = Cache::remember('all_countries', 600, function () {
-            return Country::orderBy('name', 'ASC')->get();
-        });
+        parent::mount($country, $slug);
     }
+
     public function render()
     {
         return view('livewire.vat-calculator-form');

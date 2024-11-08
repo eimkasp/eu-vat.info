@@ -56,28 +56,31 @@ class VatCalculator extends Component
         $this->countries = Cache::remember('all_countries', 600, function () {
             return Country::orderBy('name', 'ASC')->get();
         });
+        
         if ($slug) {
             $this->selectedCountry1 = $slug;
             $this->slug = $slug;
+        } else {
+            $this->selectedCountry1 = 'lithuania-lt';
+            $this->slug = 'lithuania-lt';
         }
-        if ($this->selectedCountry1 == '') {
-            $this->selectedCountry1 = null;
-        }
-
 
         $this->selectedCountryObject = Country::where('slug', $this->slug)->first();
         $this->getRates();
-        $this->saved_searches = session()->get('saved_searched');
-
-        if (is_array($this->saved_searches)) {
-            $this->saved_searches = array_reverse($this->saved_searches);
-            $this->saved_searches = array_slice($this->saved_searches, 0, 8);
-        } else {
-            $this->saved_searches = [];
+        
+        // Set initial rate
+        if (!$this->selectedRate && count($this->rates) > 0) {
+            $this->selectedRate = $this->rates[array_key_first($this->rates)]['value'];
         }
+        
+        // Calculate initial values
+        $this->calculateVat();
 
-
-
+        // Load saved searches
+        $this->saved_searches = session()->get('saved_searched', []);
+        if (is_array($this->saved_searches)) {
+            $this->saved_searches = array_slice(array_reverse($this->saved_searches), 0, 8);
+        }
     }
 
     public function saveSearch()
@@ -107,7 +110,19 @@ class VatCalculator extends Component
         $this->saved_searches = [];
     }
 
-
+    public function updated($property)
+    {
+        if ($property === 'selectedCountry1') {
+            $this->slug = $this->selectedCountry1;
+            $this->selectedCountryObject = Country::where('slug', $this->slug)->first();
+            $this->getRates();
+            // Reset rate to standard rate when changing country
+            if (count($this->rates) > 0) {
+                $this->selectedRate = $this->rates[array_key_first($this->rates)]['value'];
+            }
+            $this->calculateVat();
+        }
+    }
 
     public function calculate()
     {
@@ -126,56 +141,42 @@ class VatCalculator extends Component
 
     private function calculateVat()
     {
-        if ($this->vat_included == 'include') {
-            $this->total = $this->amount * (1 + $this->selectedRate / 100);
-
-            $this->vat_amount = $this->amount - $this->total;
-        } else {
-            $this->total = $this->amount / (1 + $this->selectedRate / 100);
-
+        if (!$this->amount || !$this->selectedRate) {
+            $this->total = 0;
+            $this->vat_amount = 0;
+            return;
         }
 
-        $this->vat_amount = $this->total - $this->amount;
+        if ($this->vat_included == 'include') {
+            $this->total = $this->amount * (1 + $this->selectedRate / 100);
+            $this->vat_amount = $this->total - $this->amount;
+        } else {
+            $this->total = $this->amount;
+            $this->vat_amount = $this->amount * ($this->selectedRate / 100);
+        }
     }
 
     private function getRates()
     {
-        if (isset($this->selectedCountryObject)) {
-
-            $this->rates = [
-                [
-                    'id' => 1,
-                    'name' => $this->selectedCountryObject->standard_rate . '%',
-                    'value' => $this->selectedCountryObject->standard_rate,
-                ],
-                [
-                    'id' => 2,
-                    'name' => $this->selectedCountryObject->reduced_rate . '%',
-                    'value' => $this->selectedCountryObject->reduced_rate,
-                ],
-                [
-                    'id' => 3,
-                    'name' => $this->selectedCountryObject->zero_rate . '%',
-                    'value' => $this->selectedCountryObject->zero_rate,
-                ],
-                [
-                    'id' => 4,
-                    'name' => $this->selectedCountryObject->super_reduced_rate . '%',
-                    'value' => $this->selectedCountryObject->zero_rate,
-                ],
-
-
+        $this->rates = [];
+        if ($this->selectedCountryObject) {
+            $possibleRates = [
+                ['name' => 'Standard rate', 'value' => $this->selectedCountryObject->standard_rate],
+                ['name' => 'Reduced rate', 'value' => $this->selectedCountryObject->reduced_rate],
+                ['name' => 'Zero rate', 'value' => $this->selectedCountryObject->zero_rate],
+                ['name' => 'Super reduced rate', 'value' => $this->selectedCountryObject->super_reduced_rate],
             ];
-        } else {
-            $this->rates = [];
-        }
 
-        $this->rates = array_filter($this->rates, function ($rate) {
-            return $rate['value'] > 0;
-        });
-
-        if (!$this->selectedRate && count($this->rates) > 0) {
-            $this->selectedRate = $this->rates[0]['value'];
+            $id = 1;
+            foreach ($possibleRates as $rate) {
+                if ($rate['value'] > 0) {
+                    $this->rates[] = [
+                        'id' => $id++,
+                        'name' => $rate['value'] . '%',
+                        'value' => $rate['value'],
+                    ];
+                }
+            }
         }
     }
 }
