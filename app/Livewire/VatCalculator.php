@@ -3,6 +3,8 @@
 namespace App\Livewire;
 
 use App\Models\Country;
+use App\Models\CountryAnalytic;
+use App\Services\CountryAnalyticsService;
 use Illuminate\Support\Facades\Cache;
 use Livewire\Component;
 use Livewire\Attributes\Url;
@@ -20,6 +22,7 @@ class VatCalculator extends Component
     public $vat_amount = 0;
 
     public $total = 0;
+    public $result = 0; // Add this property
     #[Url]
     public $selectedRate = 0;
     #[Url]
@@ -50,8 +53,20 @@ class VatCalculator extends Component
     public $countries;
 
     use Toast;
+
+    private CountryAnalyticsService $analyticsService;
+
+    public function boot(CountryAnalyticsService $analyticsService)
+    {
+        $this->analyticsService = $analyticsService;
+    }
+
     public function mount($country = null, $slug = null)
     {
+        if ($slug) {
+            $this->country = Country::where('slug', $slug)->firstOrFail();
+            // Remove tracking from here
+        }
         $this->country = $country;
         $this->countries = Cache::remember('all_countries', 600, function () {
             return Country::orderBy('name', 'ASC')->get();
@@ -75,6 +90,7 @@ class VatCalculator extends Component
         
         // Calculate initial values
         $this->calculateVat();
+        $this->result = $this->total; // Initialize result
 
         // Load saved searches
         $this->saved_searches = session()->get('saved_searched', []);
@@ -92,6 +108,21 @@ class VatCalculator extends Component
             'selectedRate' => $this->selectedRate,
             'vat_included' => $this->vat_included,
         ]);
+
+        // Track saved search
+        if ($this->country) {
+            $this->analyticsService->trackView(
+                $this->country,
+                request(),
+                'saved',
+                [
+                    'amount' => $this->amount,
+                    'rate_used' => $this->selectedRate,
+                    'result' => $this->total,
+                    'vat_included' => $this->vat_included
+                ]
+            );
+        }
 
         $this->success('Your search has been saved!', 'Success', position: 'toast-bottom toast-start');
         // Triger re-render
@@ -128,9 +159,11 @@ class VatCalculator extends Component
     {
         $this->selectedCountryObject = Country::where('slug', $this->slug)->first();
         if ($this->selectedCountryObject) {
+            $this->country = $this->selectedCountryObject; // Ensure country is set
             $this->getRates();
             $this->vat = $this->selectedCountryObject->standard_rate;
             $this->calculateVat();
+            $this->trackVisit(); // Keep tracking here
         }
 
     }
@@ -178,5 +211,21 @@ class VatCalculator extends Component
                 }
             }
         }
+    }
+
+    protected function trackVisit()
+    {
+        if (!$this->country) return;
+
+        $this->analyticsService->trackView(
+            $this->country,
+            request(),
+            'calculator',
+            [
+                'amount' => $this->amount,
+                'rate_used' => $this->selectedRate,
+                'result' => $this->total // Changed from $this->result to $this->total
+            ]
+        );
     }
 }
