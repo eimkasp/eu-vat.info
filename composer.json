@@ -17,7 +17,9 @@
         "livewire/volt": "^1.6",
         "robsontenorio/mary": "^1.26",
         "spatie/laravel-sitemap": "^7.2",
-        "spatie/laravel-sluggable": "^3.6"
+        "spatie/laravel-sluggable": "^3.6",
+        "stevebauman/location": "^7.4",
+        "tapp/filament-auditing": "^3.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.13",
