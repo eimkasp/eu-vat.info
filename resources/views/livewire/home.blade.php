@@ -35,7 +35,7 @@
 
                                     <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
                                         <a title="{{ $country->name }} VAT rates"
-                                            href="{{ route('country.show', $country->slug) }}"
+                                            href="{{ route('vat-calculator.country', $country->slug) }}"
                                             class="font-medium flex items-center gap-6 text-blue-600 hover:underline">
                                             {{ $country->name }}
                                         </a>
