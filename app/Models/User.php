@@ -9,9 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use OwenIt\Auditing\Contracts\Auditable;
-use OwenIt\Auditing\Contracts\Auditable;
 
-class User extends Authenticatable implements Auditable
 class User extends Authenticatable implements Auditable, FilamentUser
 {
     use HasFactory, Notifiable;
@@ -21,10 +19,6 @@ class User extends Authenticatable implements Auditable, FilamentUser
         'id',
     ];
     use \OwenIt\Auditing\Auditable;
-
-    protected $auditExclude = [
-        'id',
-    ];
 
     public function canAccessPanel(Panel $panel): bool
     {
