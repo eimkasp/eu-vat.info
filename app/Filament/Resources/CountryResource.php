@@ -29,7 +29,7 @@ class CountryResource extends Resource
     /**
      * The resource icon.
      */
-    // protected static ?string $navigationIcon = 'heroicon-o-globe';
+    protected static ?string $navigationIcon = 'heroicon-o-globe';
 
     /**
      * Get the form for the resource.
