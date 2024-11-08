@@ -3,9 +3,9 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\CountryResource\Pages;
+use App\Filament\Resources\CountryResource\RelationManagers\AnalyticsRelationManager;
 use App\Models\Country;
 use Filament\Forms;
-use Filament\Forms\Components\Builder;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
@@ -13,36 +13,24 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
+use Tapp\FilamentAuditing\RelationManagers\AuditsRelationManager;
+use Illuminate\Database\Eloquent\Builder;
 
 class CountryResource extends Resource
 {
-    /**
-     * The resource record title.
-     */
     protected static ?string $recordTitleAttribute = 'name';
-
-    /**
-     * The resource model.
-     */
     protected static ?string $model = Country::class;
+    protected static ?string $navigationIcon = 'heroicon-o-globe-europe-africa';
 
-    /**
-     * The resource icon.
-     */
-    protected static ?string $navigationIcon = 'heroicon-o-globe';
-
-    /**
-     * Get the form for the resource.
-     */
     public static function form(Form $form): Form
     {
-        return $form
-            ->schema([
-                Forms\Components\Grid::make()
-                    ->columns(2)
-                    ->schema([
-                        Forms\Components\Section::make('Country Information')
-                            ->schema([
+        return $form->schema([
+            Forms\Components\Tabs::make('Country')
+                ->tabs([
+                    Forms\Components\Tabs\Tab::make('Basic Information')
+                        ->icon('heroicon-m-information-circle')
+                        ->schema([
+                            Forms\Components\Section::make([
                                 Forms\Components\TextInput::make('name')
                                     ->required()
                                     ->maxLength(255)
@@ -51,10 +39,8 @@ class CountryResource extends Resource
                                         if (($get('slug') ?? '') !== Str::slug($old) || $operation !== 'create') {
                                             return;
                                         }
-
                                         $set('slug', Str::slug($state));
-                                    })
-                                    ->autofocus(),
+                                    }),
 
                                 Forms\Components\TextInput::make('slug')
                                     ->required()
@@ -62,127 +48,162 @@ class CountryResource extends Resource
                                     ->unique(ignoreRecord: true)
                                     ->maxLength(255),
 
-                                Forms\Components\TextInput::make('super_reduced_rate')
+                                Forms\Components\TextInput::make('iso_code')
+                                    ->required()
+                                    ->length(2)
+                                    ->formatStateUsing(fn ($state) => strtoupper($state))
+                                    ->rules(['required', 'size:2', 'alpha']),
+
+                                Forms\Components\TextInput::make('flag')
+                                    ->prefix('flag-')
+                                    ->suffix('.svg')
+                                    ->helperText('Flag icon identifier'),
+                            ])->columns(2),
+                        ]),
+
+                    Forms\Components\Tabs\Tab::make('VAT Rates')
+                        ->icon('heroicon-m-currency-euro')
+                        ->schema([
+                            Forms\Components\Section::make([
+                                Forms\Components\TextInput::make('standard_rate')
                                     ->numeric()
-                                    ->nullable(),
+                                    ->required()
+                                    ->suffix('%')
+                                    ->minValue(0)
+                                    ->maxValue(100),
 
                                 Forms\Components\TextInput::make('reduced_rate')
-                                    ->nullable(),
+                                    ->helperText('Can be a range like "5 / 9"')
+                                    ->suffix('%'),
+
+                                Forms\Components\TextInput::make('super_reduced_rate')
+                                    ->numeric()
+                                    ->suffix('%')
+                                    ->minValue(0)
+                                    ->maxValue(100),
 
                                 Forms\Components\TextInput::make('parking_rate')
                                     ->numeric()
-                                    ->nullable(),
+                                    ->suffix('%')
+                                    ->minValue(0)
+                                    ->maxValue(100),
+                            ])->columns(2),
+                        ]),
 
-                                Forms\Components\TextInput::make('standard_rate')
-                                    ->numeric()
-                                    ->nullable(),
-
+                    Forms\Components\Tabs\Tab::make('Currency')
+                        ->icon('heroicon-m-banknotes')
+                        ->schema([
+                            Forms\Components\Section::make([
                                 Forms\Components\TextInput::make('currency')
-                                    ->nullable(),
+                                    ->required(),
 
                                 Forms\Components\TextInput::make('currency_code')
-                                    ->nullable(),
+                                    ->required()
+                                    ->length(3)
+                                    ->formatStateUsing(fn ($state) => strtoupper($state))
+                                    ->rules(['required', 'size:3', 'alpha']),
 
                                 Forms\Components\TextInput::make('currency_symbol')
-                                    ->nullable(),
-
-                                Forms\Components\TextInput::make('flag')
-                                    ->nullable(),
-
-                                Forms\Components\TextInput::make('iso_code')
-                                    ->nullable(),
-                            ])
-                            ->columnSpan(1),
-
-                        Forms\Components\Section::make('Meta Information')
-                            ->schema([
-                                Forms\Components\DatePicker::make('created_at')
-                                    ->disabled()
-                                    ->dehydrated(false),
-
-                                Forms\Components\DatePicker::make('updated_at')
-                                    ->disabled()
-                                    ->dehydrated(false),
-                            ])
-                            ->columnSpan(1),
-                    ]),
-            ]);
+                                    ->required()
+                                    ->maxLength(5),
+                            ])->columns(2),
+                        ]),
+                ])
+                ->columnSpanFull()
+        ]);
     }
 
-    /**
-     * Get the table for the resource.
-     */
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->sortable()
-                    ->searchable(),
+                    ->searchable()
+                    ->weight('bold'),
 
-                Tables\Columns\TextColumn::make('slug')
+                Tables\Columns\TextColumn::make('iso_code')
+                    ->badge()
                     ->sortable()
                     ->searchable(),
 
-                Tables\Columns\TextColumn::make('super_reduced_rate'),
-
-                Tables\Columns\TextColumn::make('reduced_rate'),
-
-                Tables\Columns\TextColumn::make('parking_rate'),
-
-                Tables\Columns\TextColumn::make('standard_rate'),
-
-                Tables\Columns\TextColumn::make('currency'),
-
-                Tables\Columns\TextColumn::make('currency_code'),
-
-                Tables\Columns\TextColumn::make('currency_symbol'),
-
-                Tables\Columns\TextColumn::make('flag'),
-
-                Tables\Columns\TextColumn::make('iso_code'),
-
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
+                    Tables\Columns\TextColumn::make('analytics_count')
+                    ->counts('analytics')
+                    ->label('Calculations')
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->badge()
+                    ->color('success'),
 
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
+                Tables\Columns\TextColumn::make('standard_rate')
+                    ->numeric()
+                    ->suffix('%')
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->alignCenter(),
+
+                Tables\Columns\TextColumn::make('reduced_rate')
+                    ->suffix('%')
+                    ->alignCenter(),
+
+                // Tables\Columns\TextColumn::make('currency_code')
+                //     ->badge()
+                //     ->color('success'),
+
+                // Tables\Columns\TextColumn::make('updated_at')
+                //     ->dateTime()
+                //     ->sortable()
+                //     ->toggleable(),
+
+                
             ])
             ->filters([
-                // Define any filters if necessary
+                Tables\Filters\SelectFilter::make('has_reduced_rate')
+                    ->options([
+                        true => 'With reduced rate',
+                        false => 'Without reduced rate',
+                    ])
+                    ->query(function ($query, $data) {
+                        if ($data['value'] === true) {
+                            return $query->whereNotNull('reduced_rate');
+                        }
+                        if ($data['value'] === false) {
+                            return $query->whereNull('reduced_rate');
+                        }
+                    }),
+                Tables\Filters\Filter::make('high_vat')
+                    ->query(fn ($query) => $query->where('standard_rate', '>=', 20)),
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->defaultSort('analytics_count', 'desc');
     }
 
-    /**
-     * Get the relationships for the resource.
-     */
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->withCount('analytics');
+    }
+
     public static function getRelations(): array
     {
         return [
-            // Define any relationships if necessary
+            AuditsRelationManager::class,
+            AnalyticsRelationManager::class,
         ];
     }
 
-    /**
-     * Get the pages for the resource.
-     */
     public static function getPages(): array
     {
         return [
             'index' => Pages\ListCountries::route('/'),
             'create' => Pages\CreateCountry::route('/create'),
+            'view' => Pages\ViewCountry::route('/{record}'),
             'edit' => Pages\EditCountry::route('/{record}/edit'),
         ];
     }
