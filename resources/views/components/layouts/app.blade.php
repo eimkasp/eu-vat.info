@@ -21,12 +21,16 @@
 <body>
     <x-global-header></x-global-header>
 
-    <div class="bg-gray-50">
+    <div class="bg-gray-100">
+    <div class="absolute top-0 left-0 w-full h-[100px] opacity-20 z-0">
+    </div>
+    <div class="relative z-[2]">
         @isset($slot)
             {{ $slot }}
         @else
             @yield('content')
         @endisset
+        </div>
     </div>
     @if (config('app.adsense_id') && app()->isProduction())
         <!-- Default -->

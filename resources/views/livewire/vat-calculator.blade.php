@@ -66,6 +66,9 @@
                      {{ $selectedCountryObject->name }}</a>
              </div>
          @endisset
+            <div class="mt-6 bg-white p-6 rounded-xl shadow-xl">
+          <livewire:europe-map />
+          </div>
 
      </div>
      <livewire:vat-calculator-form :slug="$selectedCountryObject->slug" />
@@ -73,6 +76,8 @@
      <div class="sm:col-span-2">
          <x-saved-searches></x-saved-searches>
      </div>
+
+     
      <div class="sm:col-span-2 pb-9">
          <x-country-calculator-list>
          </x-country-calculator-list>

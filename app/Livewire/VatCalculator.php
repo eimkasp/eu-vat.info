@@ -9,10 +9,12 @@ use Illuminate\Support\Facades\Cache;
 use Livewire\Component;
 use Livewire\Attributes\Url;
 use Mary\Traits\Toast;
-
+use App\Traits\TracksCountryViews;
 
 class VatCalculator extends Component
 {
+    use Toast, TracksCountryViews;
+
     #[Url]
     public $amount = 100;
     public $country = null;
@@ -52,8 +54,6 @@ class VatCalculator extends Component
 
     public $countries;
 
-    use Toast;
-
     private CountryAnalyticsService $analyticsService;
 
     public function boot(CountryAnalyticsService $analyticsService)
@@ -65,7 +65,8 @@ class VatCalculator extends Component
     {
         if ($slug) {
             $this->country = Country::where('slug', $slug)->firstOrFail();
-            // Remove tracking from here
+            // Track the view when mounting with a slug
+            $this->trackCountryView($this->country, 'calculator-view');
         }
         $this->country = $country;
         $this->countries = Cache::remember('all_countries', 600, function () {

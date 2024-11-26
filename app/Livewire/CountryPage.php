@@ -6,7 +6,7 @@ use App\Models\Country;
 use Livewire\Component;
 use App\Traits\TracksCountryViews;
 
-class Country extends Component
+class CountryPage extends Component
 {
     use TracksCountryViews;
     
