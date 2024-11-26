@@ -1,4 +1,4 @@
- @isset($selectedCountryObject)
+@isset($selectedCountryObject)
      @section('title', 'VAT Calculator - ' . $selectedCountryObject->name)
  @section('meta_description',
      'Calculate VAT amount for ' .
@@ -55,20 +55,25 @@
                  <div class="mb-3">
                      <x-country-rates :country="$selectedCountryObject" />
 
-                     <div class="mt-6">
-                         <a href="{{ route('widget.embed', $selectedCountryObject->slug) }}" class="text-blue-500">Embed this
-                             calculator on your website</a>
-                     </div>
+
                  </div>
-                 <a wire:navigate="{{ route('country.show', $selectedCountryObject->slug) }}"
-                     href="{{ route('country.show', $selectedCountryObject->slug) }}" class="text-blue-500">
-                     Learn More about VAT in
-                     {{ $selectedCountryObject->name }}</a>
+                 
+
              </div>
          @endisset
-            <div class="mt-6 bg-white p-6 rounded-xl shadow-xl">
-          <livewire:europe-map />
-          </div>
+         <div class="mt-6 bg-white p-6 rounded-xl shadow-xl">
+             <livewire:europe-map :activeCountry="$selectedCountryObject" />
+         </div>
+
+         <div class="mt-6">
+                     <a href="{{ route('widget.embed', $selectedCountryObject->slug) }}" class="text-blue-500">Embed this
+                         calculator on your website</a>
+                        <br>
+                     <a wire:navigate="{{ route('country.show', $selectedCountryObject->slug) }}"
+                         href="{{ route('country.show', $selectedCountryObject->slug) }}" class="text-blue-500">
+                         Learn More about VAT in
+                         {{ $selectedCountryObject->name }}</a>
+                 </div>
 
      </div>
      <livewire:vat-calculator-form :slug="$selectedCountryObject->slug" />
@@ -77,7 +82,7 @@
          <x-saved-searches></x-saved-searches>
      </div>
 
-     
+
      <div class="sm:col-span-2 pb-9">
          <x-country-calculator-list>
          </x-country-calculator-list>

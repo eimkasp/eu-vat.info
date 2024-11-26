@@ -9,12 +9,14 @@ use Livewire\Component;
 class EuropeMap extends Component
 {
     public $countries;
-    public $countryData; // Add this property
+    public $countryData;
     public $maxRate = 0;
     public $minRate = 100;
+    public $activeCountry = null;
 
-    public function mount()
+    public function mount($activeCountry = null)
     {
+        $this->activeCountry = $activeCountry;
         $this->countries = Cache::remember('map_countries', 600, function () {
             $countries = Country::all();
             foreach($countries as $country) {
@@ -37,6 +39,7 @@ class EuropeMap extends Component
                     'rate' => $country->standard_rate,
                     'reduced_rate' => $country->reduced_rate,
                     'slug' => $country->slug,
+                    'active' => $this->activeCountry && $this->activeCountry->id === $country->id,
                 ],
             ];
         });

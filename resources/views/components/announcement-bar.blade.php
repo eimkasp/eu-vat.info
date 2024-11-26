@@ -9,12 +9,12 @@
         </span>
         <p class="block mb-0 pb-0 ml-3 truncate font-600 text-white">
           {{-- <span class="md:hidden">Embed VAT Calculator on your website</span> --}}
-          <span class="hidden md:inline"><strong>New feature!</strong> Embed VAT Calculator on your website. Forever free!</span>
+          <span class="hidden md:inline"><strong>New feature!</strong> VAT Map. Explore VAT rates in Europe</span>
         </p>
       </div>
       <div class="order-3 mt-2 w-full flex-shrink-0 sm:order-2 sm:mt-0 sm:w-auto">
-        <a href="/embed" class="flex items-center justify-center rounded-md border border-transparent bg-white px-4 py-2 text-sm font-medium text-indigo-600 shadow-sm hover:bg-indigo-50">
-            Try VAT Widget
+        <a href="/vat-map" class="flex items-center justify-center rounded-md border border-transparent bg-white px-4 py-2 text-sm font-medium text-indigo-600 shadow-sm hover:bg-indigo-50">
+           View map
         </a>
       </div>
       <div class="order-2 flex-shrink-0 sm:order-3 sm:ml-3">

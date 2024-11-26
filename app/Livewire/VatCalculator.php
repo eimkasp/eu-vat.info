@@ -182,11 +182,14 @@ class VatCalculator extends Component
         }
 
         if ($this->vat_included == 'include') {
-            $this->total = $this->amount * (1 + $this->selectedRate / 100);
+            // When including VAT, split the amount into base and VAT
+            $vatMultiplier = (1 + ($this->selectedRate / 100));
+            $this->total = $this->amount * $vatMultiplier;
             $this->vat_amount = $this->total - $this->amount;
         } else {
-            $this->total = $this->amount;
-            $this->vat_amount = $this->amount * ($this->selectedRate / 100);
+            // When excluding VAT, we subtract VAT from the amount to get the total
+            $this->vat_amount = ($this->amount * $this->selectedRate) / (100 + $this->selectedRate);
+            $this->total = $this->amount - $this->vat_amount;
         }
     }
 

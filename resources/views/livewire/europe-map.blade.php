@@ -3,7 +3,7 @@
     <div class="max-w-7xl mx-auto">
         <div class="eu-map-container relative" x-data="{
             hoveredCountry: null,
-            selectedCountry: null,
+            selectedCountry: @if($activeCountry) {{ json_encode($countryData[strtoupper($activeCountry->iso_code)] ?? null) }} @else null @endif,
             mouseX: 0,
             mouseY: 0,
             countryData: @entangle('countryData'),
@@ -29,7 +29,13 @@
                 const country = countryData[countryCode];
             
                 if (country) {
-                    path.style.fill = getColor(country.rate);
+                    // Set initial color based on active state or rate
+                    if (country.active) {
+                        path.style.fill = '#3b82f6';
+                        selectedCountry = country;
+                    } else {
+                        path.style.fill = getColor(country.rate);
+                    }
             
                     path.addEventListener('mouseover', () => {
                         if (!selectedCountry) {
