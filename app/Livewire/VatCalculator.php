@@ -10,6 +10,7 @@ use Livewire\Component;
 use Livewire\Attributes\Url;
 use Mary\Traits\Toast;
 use App\Traits\TracksCountryViews;
+use Illuminate\Support\Number;
 
 class VatCalculator extends Component
 {
@@ -55,6 +56,8 @@ class VatCalculator extends Component
     public $countries;
 
     private CountryAnalyticsService $analyticsService;
+
+    public $error_message = null;
 
     public function boot(CountryAnalyticsService $analyticsService)
     {
@@ -175,21 +178,55 @@ class VatCalculator extends Component
 
     private function calculateVat()
     {
-        if (!$this->amount || !$this->selectedRate) {
+        $this->error_message = null;
+
+        // Clean and validate amount
+        try {
+            // Replace comma with dot and remove any non-numeric characters except dot
+            $cleanAmount = str_replace(',', '.', (string)$this->amount);
+            $cleanAmount = preg_replace('/[^0-9.]/', '', $cleanAmount);
+            
+            // Convert to float and format to 2 decimal places
+            $amount = round(floatval($cleanAmount), 2);
+            
+            // Validate the amount is a valid number
+            if (!is_numeric($amount) || $amount < 0) {
+                $this->error_message = "Please enter a valid positive number";
+                $this->total = 0;
+                $this->vat_amount = 0;
+                $this->amount = 0; // Reset amount to ensure it's numeric
+                return;
+            }
+
+            $this->amount = $amount; // Update the amount with cleaned value
+
+            if (!$this->selectedRate) {
+                $this->total = 0;
+                $this->vat_amount = 0;
+                return;
+            }
+
+            $rate = floatval($this->selectedRate);
+
+            if ($this->vat_included == 'include') {
+                $vatMultiplier = (1 + ($rate / 100));
+                $this->total = round($amount * $vatMultiplier, 2);
+                $this->vat_amount = round($this->total - $amount, 2);
+            } else {
+                $this->vat_amount = round(($amount * $rate) / (100 + $rate), 2);
+                $this->total = round($amount - $this->vat_amount, 2);
+            }
+
+            // Ensure all numeric values are floats
+            $this->amount = (float)$this->amount;
+            $this->total = (float)$this->total;
+            $this->vat_amount = (float)$this->vat_amount;
+
+        } catch (\Exception $e) {
+            $this->error_message = "Invalid number format. Please enter a valid number.";
             $this->total = 0;
             $this->vat_amount = 0;
-            return;
-        }
-
-        if ($this->vat_included == 'include') {
-            // When including VAT, split the amount into base and VAT
-            $vatMultiplier = (1 + ($this->selectedRate / 100));
-            $this->total = $this->amount * $vatMultiplier;
-            $this->vat_amount = $this->total - $this->amount;
-        } else {
-            // When excluding VAT, we subtract VAT from the amount to get the total
-            $this->vat_amount = ($this->amount * $this->selectedRate) / (100 + $this->selectedRate);
-            $this->total = $this->amount - $this->vat_amount;
+            $this->amount = 0; // Reset amount to ensure it's numeric
         }
     }
 

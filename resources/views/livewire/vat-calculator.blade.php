@@ -17,12 +17,10 @@
  <div class="container py-12 mt-12 pb-12 sm:grid-cols-2 grid gap-9">
      <div>
          <h1 class="text-4xl font-bold pt-12 sm:mb-3">
-
-             VAT Calculator
-
              @isset($selectedCountryObject)
-                 - {{ $selectedCountryObject->name }}
+                 {{ $selectedCountryObject->name }} - 
              @endisset
+             VAT Calculator
          </h1>
          <h2 class="text-xl">
              @isset($selectedCountryObject)

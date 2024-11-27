@@ -13,10 +13,12 @@ class EuropeMap extends Component
     public $maxRate = 0;
     public $minRate = 100;
     public $activeCountry = null;
+    public $layout = 'single'; // Add layout property: 'single' or 'split'
 
-    public function mount($activeCountry = null)
+    public function mount($activeCountry = null, $layout = 'single')
     {
         $this->activeCountry = $activeCountry;
+        $this->layout = $layout;
         $this->countries = Cache::remember('map_countries', 600, function () {
             $countries = Country::all();
             foreach($countries as $country) {
