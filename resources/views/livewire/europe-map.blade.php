@@ -1,9 +1,5 @@
-<div class="relative">
-    <h2 class="text-2xl font-bold mb-6">VAT Rates Map</h2>
-    <div class="max-w-7xl mx-auto">
-        <div class="{{ $layout === 'split' ? 'grid grid-cols-1 md:grid-cols-2 gap-6' : '' }}">
-            <!-- Map Container -->
-            <div class="eu-map-container relative" x-data="{
+<div class="relative"
+ x-data="{
                 hoveredCountry: null,
                 selectedCountry: @if($activeCountry) {{ json_encode($countryData[strtoupper($activeCountry->iso_code)] ?? null) }} @else null @endif,
                 mouseX: 0,
@@ -19,6 +15,25 @@
                     if (rate >= 19) return 'rgb(144, 238, 144)';  // Light green
                     if (rate < 19) return 'rgb(152, 251, 152)';   // Pale green
                     return '#ececec'; // Default color for no data
+                },
+                resetAllPaths() {
+                    const paths = $el.querySelectorAll('path[id]');
+                    paths.forEach(path => {
+                        const countryCode = path.id.toUpperCase();
+                        const country = this.countryData[countryCode];
+                        if (country) {
+                            path.style.fill = this.getColor(country.rate);
+                        }
+                    });
+                },
+                highlightCountry(country) {
+                    this.resetAllPaths();
+                    if (country) {
+                        const path = $el.querySelector(`path#${country.iso_code.toLowerCase()}`);
+                        if (path) {
+                            path.style.fill = '#3b82f6';
+                        }
+                    }
                 }
             }"
                 @mousemove="
@@ -26,40 +41,51 @@
                     mouseX = $event.clientX - rect.left;
                     mouseY = $event.clientY - rect.top;
                 "
-                x-init="const paths = $el.querySelectorAll('path[id]');
-                paths.forEach(path => {
-                    const countryCode = path.id.toUpperCase();
-                    const country = countryData[countryCode];
-                
-                    if (country) {
-                        // Set initial color based on active state or rate
-                        if (country.active) {
-                            path.style.fill = '#3b82f6';
-                            selectedCountry = country;
-                        } else {
-                            path.style.fill = getColor(country.rate);
-                        }
-                
-                        path.addEventListener('mouseover', () => {
-                            if (!selectedCountry) {
-                                path.style.fill = '#3b82f6';
-                                hoveredCountry = country;
-                            }
-                        });
-                
-                        path.addEventListener('mouseout', () => {
-                            if (!selectedCountry) {
+                x-init="
+                    $nextTick(() => {
+                        const paths = $el.querySelectorAll('path[id]');
+                        paths.forEach(path => {
+                            const countryCode = path.id.toUpperCase();
+                            const country = countryData[countryCode];
+                        
+                            if (country) {
+                                // Set initial color based on active state or rate
                                 path.style.fill = getColor(country.rate);
-                                hoveredCountry = null;
+                                
+                                // If this is the active country, highlight it
+                                if (country.active) {
+                                    selectedCountry = country;
+                                    path.style.fill = '#3b82f6';
+                                }
+                        
+                                path.addEventListener('mouseover', () => {
+                                    if (!selectedCountry || selectedCountry.iso_code !== country.iso_code) {
+                                        path.style.fill = '#3b82f6';
+                                        hoveredCountry = country;
+                                    }
+                                });
+                        
+                                path.addEventListener('mouseout', () => {
+                                    if (!selectedCountry || selectedCountry.iso_code !== country.iso_code) {
+                                        path.style.fill = getColor(country.rate);
+                                        hoveredCountry = null;
+                                    }
+                                });
+                        
+                                path.addEventListener('click', () => {
+                                    selectedCountry = country;
+                                    highlightCountry(country);
+                                    hoveredCountry = null;
+                                });
                             }
                         });
-                
-                        path.addEventListener('click', () => {
-                            selectedCountry = country;
-                            hoveredCountry = null;
-                        });
-                    }
-                });">
+                    });"
+>
+    <h2 class="text-2xl font-bold mb-6">VAT Rates Map</h2>
+    <div class="max-w-7xl mx-auto">
+        <div class="{{ $layout === 'split' ? 'grid grid-cols-1 md:grid-cols-2 gap-6' : '' }}">
+            <!-- Map Container -->
+            <div class="eu-map-container relative">
 
                 <!-- Add Legend on top of the map -->
                 <div class="absolute top-0 right-0 z-10 bg-white/90 p-2 rounded-lg shadow-sm border backdrop-blur-sm">
@@ -105,24 +131,23 @@
                         top: (mouseY - 10) + 'px',
                         transform: 'translateY(-100%)'
                     }">
-                    <div class="flex items-center gap-2">
-                        <!-- Add null check for hoveredCountry -->
-                        <template x-if="hoveredCountry">
-                            <img :src="'https://flagcdn.com/h20/' + hoveredCountry.iso_code.toLowerCase() + '.jpg'"
-                                :alt="hoveredCountry.name + ' flag'" class="h-4 rounded border">
-                        </template>
-                        <div class="font-semibold" x-text="hoveredCountry ? hoveredCountry.name : ''"></div>
-                    </div>
-                    <div>
-                        <!-- Add null checks for hoveredCountry properties -->
-                        <div x-show="hoveredCountry && hoveredCountry.rate">
-                            Standard VAT: <span x-text="hoveredCountry.rate + '%'"></span>
+                    <template x-if="hoveredCountry">
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <img :src="'https://flagcdn.com/h20/' + hoveredCountry.iso_code.toLowerCase() + '.jpg'"
+                                    :alt="hoveredCountry.name + ' flag'" class="h-4 rounded border">
+                                <div class="font-semibold" x-text="hoveredCountry.name"></div>
+                            </div>
+                            <div>
+                                <div x-show="hoveredCountry.rate !== undefined">
+                                    Standard VAT: <span x-text="hoveredCountry.rate + '%'"></span>
+                                </div>
+                                <div x-show="hoveredCountry.reduced_rate">
+                                    Reduced VAT: <span x-text="hoveredCountry.reduced_rate + '%'"></span>
+                                </div>
+                            </div>
                         </div>
-                        <div x-show="hoveredCountry && hoveredCountry.reduced_rate">
-                            Reduced VAT: <span x-text="hoveredCountry.reduced_rate + '%'"></span>
-                        </div>
-                    </div>
-
+                    </template>
                 </div>
 
                 <!-- Remove the old legend -->
@@ -133,48 +158,49 @@
             <!-- Selected Country Details - Show inline for split layout -->
             <div x-show="selectedCountry" x-cloak 
                 class="{{ $layout === 'split' ? 'md:mt-0' : 'mt-6' }} bg-white p-6 rounded-lg shadow-lg border">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="flex items-center gap-3">
-                        <img :src="'https://flagcdn.com/h40/' + selectedCountry?.iso_code.toLowerCase() + '.jpg'"
-                            :alt="selectedCountry?.name + ' flag'" class="h-8 rounded border">
-                        <h3 class="text-xl font-bold" x-text="selectedCountry?.name"></h3>
-                    </div>
-                </div>
-                
-                <!-- Enhanced country details for split layout -->
-                <div class="grid grid-cols-2 gap-4">
+                <template x-if="selectedCountry">
                     <div>
-                        <div class="text-sm text-gray-600">Standard Rate</div>
-                        <div class="font-semibold" x-text="selectedCountry?.rate + '%'"></div>
-                    </div>
-                    <div>
-                        <div class="text-sm text-gray-600">Reduced Rate</div>
-                        <div class="font-semibold"
-                            x-text="selectedCountry?.reduced_rate ? selectedCountry?.reduced_rate + '%' : 'N/A'"></div>
-                    </div>
-                </div>
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center gap-3">
+                                <img :src="'https://flagcdn.com/h40/' + selectedCountry.iso_code.toLowerCase() + '.jpg'"
+                                    :alt="selectedCountry.name + ' flag'" class="h-8 rounded border">
+                                <h3 class="text-xl font-bold" x-text="selectedCountry.name"></h3>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <div class="text-sm text-gray-600">Standard Rate</div>
+                                <div class="font-semibold" x-text="selectedCountry.rate ? selectedCountry.rate + '%' : 'N/A'"></div>
+                            </div>
+                            <div>
+                                <div class="text-sm text-gray-600">Reduced Rate</div>
+                                <div class="font-semibold" x-text="selectedCountry.reduced_rate ? selectedCountry.reduced_rate + '%' : 'N/A'"></div>
+                            </div>
+                        </div>
 
-                <!-- Additional details for split layout -->
-                <template x-if="'{{ $layout }}' === 'split'">
-                    <div class="mt-4 pt-4 border-t">
-                        <h4 class="font-medium mb-2">VAT Information</h4>
-                        <p class="text-sm text-gray-600">
-                            Click the button below to access detailed VAT information, rates, and calculation tools for this country.
-                        </p>
+                        <template x-if="'{{ $layout }}' === 'split'">
+                            <div class="mt-4 pt-4 border-t">
+                                <h4 class="font-medium mb-2">VAT Information</h4>
+                                <p class="text-sm text-gray-600">
+                                    Click the button below to access detailed VAT information, rates, and calculation tools for this country.
+                                </p>
+                            </div>
+                        </template>
+
+                        <div class="mt-4">
+                            <a :href="'/vat-calculator/' + selectedCountry.slug"
+                                class="inline-block bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">
+                                Open VAT Calculator
+                            </a>
+                        </div>
                     </div>
                 </template>
-
-                <div class="mt-4">
-                    <a :href="'/vat-calculator/' + selectedCountry?.slug"
-                        class="inline-block bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">
-                        Open VAT Calculator
-                    </a>
-                </div>
             </div>
         </div>
 
         <!-- Explore button - Only show for single layout -->
-        <div x-show="'{{ $layout }}' === 'single'" class="text-center mt-3">
+        <div x-show="'{{ $layout }}' === 'single'" class="text-center mt-3 mb-3">
             <a href="/vat-map" class="inline-block bg-gray-800 text-white px-4 py-2 rounded hover:bg-blue-600 transition">
                 Explore VAT Map 🗺️
             </a>

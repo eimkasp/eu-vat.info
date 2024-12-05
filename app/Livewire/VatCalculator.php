@@ -180,54 +180,69 @@ class VatCalculator extends Component
     {
         $this->error_message = null;
 
-        // Clean and validate amount
         try {
-            // Replace comma with dot and remove any non-numeric characters except dot
-            $cleanAmount = str_replace(',', '.', (string)$this->amount);
-            $cleanAmount = preg_replace('/[^0-9.]/', '', $cleanAmount);
-            
-            // Convert to float and format to 2 decimal places
+            // Improved number format handling
+            $cleanAmount = $this->normalizeNumber($this->amount);
             $amount = round(floatval($cleanAmount), 2);
             
-            // Validate the amount is a valid number
-            if (!is_numeric($amount) || $amount < 0) {
-                $this->error_message = "Please enter a valid positive number";
-                $this->total = 0;
-                $this->vat_amount = 0;
-                $this->amount = 0; // Reset amount to ensure it's numeric
-                return;
+            if (!$this->isValidAmount($amount)) {
+                throw new \InvalidArgumentException("Please enter a valid positive number");
             }
 
-            $this->amount = $amount; // Update the amount with cleaned value
+            $this->amount = $amount;
 
             if (!$this->selectedRate) {
-                $this->total = 0;
-                $this->vat_amount = 0;
+                $this->resetCalculation();
                 return;
             }
 
             $rate = floatval($this->selectedRate);
-
-            if ($this->vat_included == 'include') {
-                $vatMultiplier = (1 + ($rate / 100));
-                $this->total = round($amount * $vatMultiplier, 2);
-                $this->vat_amount = round($this->total - $amount, 2);
-            } else {
-                $this->vat_amount = round(($amount * $rate) / (100 + $rate), 2);
-                $this->total = round($amount - $this->vat_amount, 2);
-            }
-
-            // Ensure all numeric values are floats
-            $this->amount = (float)$this->amount;
-            $this->total = (float)$this->total;
-            $this->vat_amount = (float)$this->vat_amount;
+            $this->calculateTotals($amount, $rate);
 
         } catch (\Exception $e) {
-            $this->error_message = "Invalid number format. Please enter a valid number.";
-            $this->total = 0;
-            $this->vat_amount = 0;
-            $this->amount = 0; // Reset amount to ensure it's numeric
+            $this->handleCalculationError($e->getMessage());
         }
+    }
+
+    private function normalizeNumber($input): string 
+    {
+        // Handle European number format
+        $cleaned = str_replace(['.', ','], ['', '.'], $input);
+        return preg_replace('/[^0-9.]/', '', $cleaned);
+    }
+
+    private function isValidAmount($amount): bool
+    {
+        return is_numeric($amount) && $amount >= 0;
+    }
+
+    private function calculateTotals($amount, $rate)
+    {
+        if ($this->vat_included == 'include') {
+            $vatMultiplier = (1 + ($rate / 100));
+            $this->total = round($amount * $vatMultiplier, 2);
+            $this->vat_amount = round($this->total - $amount, 2);
+        } else {
+            $this->vat_amount = round(($amount * $rate) / (100 + $rate), 2);
+            $this->total = round($amount - $this->vat_amount, 2);
+        }
+
+        $this->amount = (float)$amount;
+        $this->total = (float)$this->total;
+        $this->vat_amount = (float)$this->vat_amount;
+    }
+
+    private function resetCalculation()
+    {
+        $this->total = 0;
+        $this->vat_amount = 0;
+    }
+
+    private function handleCalculationError($message)
+    {
+        $this->error_message = $message;
+        $this->resetCalculation();
+        $this->amount = 0;
     }
 
     private function getRates()

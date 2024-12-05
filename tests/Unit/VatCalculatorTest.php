@@ -23,6 +23,37 @@ it('calculates VAT correctly when VAT is included', function () {
         ->assertSet('error_message', null);
 });
 
+// Add more test cases
+it('handles zero amount correctly', function () {
+    $country = Country::factory()
+        ->withRates(21, 9)
+        ->create();
+
+    Livewire::test(VatCalculator::class, ['slug' => $country->slug])
+        ->set('amount', '0')
+        ->set('vat_included', 'include')
+        ->set('selectedRate', 21)
+        ->call('calculate')
+        ->assertSet('total', 0.00)
+        ->assertSet('vat_amount', 0.00)
+        ->assertSet('error_message', null);
+});
+
+it('handles large numbers correctly', function () {
+    $country = Country::factory()
+        ->withRates(21, 9)
+        ->create();
+
+    Livewire::test(VatCalculator::class, ['slug' => $country->slug])
+        ->set('amount', '999999.99')
+        ->set('vat_included', 'include')
+        ->set('selectedRate', 21)
+        ->call('calculate')
+        ->assertSet('total', 1209999.99)
+        ->assertSet('vat_amount', 210000.00)
+        ->assertSet('error_message', null);
+});
+
 // Test input validation for invalid numbers
 it('handles invalid numeric input gracefully', function () {
     $country = Country::factory()->create([

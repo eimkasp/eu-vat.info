@@ -7,7 +7,7 @@
                         Standard VAT rates for goods and services in EU member states
                     </p>
                 </div>
-    <div class="grid md:grid-cols-12 gap-12">
+    <div class="md:grid md:grid-cols-12 gap-12">
         
 
         <div class="md:col-span-8 lg:col-span-7">
