@@ -27,7 +27,7 @@
              </h1>
              <h2 class="text-xl">
                  @isset($selectedCountryObject)
-                     {{ Number::currency($amount, 'EUR') }} with VAT @if ($vat_included == 'include')
+                     {{ number_format($amount, 2) }} EUR with VAT @if ($vat_included == 'include')
                          included
                      @else
                          excluded
@@ -35,7 +35,7 @@
 
                      In {{ $selectedCountryObject->name }}
                      @if ($total)
-                         = {{ Number::currency($total, 'EUR') }}
+                         = {{ number_format($total, 2) }} EUR
                      @endif
                  @endisset
              </h2>

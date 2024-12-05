@@ -10,7 +10,9 @@ use Livewire\Component;
 use Livewire\Attributes\Url;
 use Mary\Traits\Toast;
 use App\Traits\TracksCountryViews;
-use Illuminate\Support\Number;
+
+// Remove the Number import if it exists
+// use Illuminate\Support\Number;
 
 class VatCalculator extends Component
 {

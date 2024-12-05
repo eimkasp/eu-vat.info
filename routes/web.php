@@ -11,7 +11,7 @@ use App\Livewire\Counter;
 use App\Livewire\CountryPage;
 use League\CommonMark\Extension\Embed\Embed;
 
-Route::get('/', Home::class);
+Route::get('/', Home::class)->name('home');
 Route::get('/country/{slug}', CountryPage::class)->name('country.show');
 Route::get('/country/{slug}/history', CountryPage::class)->name('country.vat.history');
 Route::get('/country/{slug}/vat-guide', CountryPage::class)->name('country.vat.guide');

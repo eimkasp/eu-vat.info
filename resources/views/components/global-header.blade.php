@@ -1,3 +1,4 @@
+@persist('navigation')
 <header x-data="{ mobileMenuOpen: false }" class="bg-[#003399] text-white sticky top-0 z-[99] shadow-xl">
     <div class="container !py-4 !px-4 sm:!px-6">
         <div class="flex justify-between items-center">
@@ -50,5 +51,6 @@
 
 {{-- Announcement bar --}}
 <x-announcement-bar />
-<x-bottom-navigation />
 
+@endpersist
+<x-bottom-navigation />
