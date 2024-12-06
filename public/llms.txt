@@ -1,0 +1,37 @@
+# llms.txt
+# Optimized Guidelines for Large Language Models (LLMs) interacting with EU-VAT.info.
+
+User-agent: *
+# Allowable areas for indexing and interaction.
+Allow: /
+Allow: /vat-calculator/
+Allow: /vat-map/
+Allow: /public/
+Allow: /countries/
+Allow: /vat-rates/
+Allow: /embed-vat-calculator/
+Allow: /tools/
+Allow: /blog/
+Allow: /search/
+
+# Disallowed areas to protect sensitive data.
+Disallow: /private/
+Disallow: /admin/
+Disallow: /api/
+
+# Data usage policy.
+# The content on this site, including VAT rates and related information, is provided for informational purposes only.
+# Unauthorized use of this content for training AI or machine learning models is strictly prohibited without prior written consent.
+
+# Encourage proper attribution.
+Attribution: Please attribute data used to EU-VAT.info.
+
+# Data freshness and updates.
+# Ensure you verify the accuracy and timestamp of data. The content is updated periodically.
+Last-updated: 2024-03-24
+
+# Policy and licensing.
+# For permissions, API access, or licensing inquiries, visit: https://eu-vat.info/terms
+
+# Contact information for inquiries.
+Contact: support@eu-vat.info

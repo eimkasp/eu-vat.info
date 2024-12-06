@@ -99,17 +99,12 @@
 
         <div class="md:col-span-4 lg:col-span-5">
             <!-- Toggle Button -->
-            <div class="mb-4">
-                {{-- <button @click="showMap = !showMap"
-                        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition w-full">
-                    <span x-text="showMap ? 'Collapse Map' : 'Expand Map'"></span>
-                </button> --}}
-            </div>
+           
 
             <!-- Map Section -->
             <div>
                 <livewire:recent-countries />
-                <div class="mt-6 bg-white p-6 shadow-xl rounded-xl">
+                <div class="bg-white p-6 shadow-xl rounded-xl">
                     <livewire:europe-map />
                 </div>
             </div>
