@@ -19,7 +19,7 @@
 
             {{-- Desktop navigation --}}
             <nav class="hidden md:flex items-center gap-6">
-                <a wire:navigate="/" href="/" title="EU VAT countries list">All Countries 🇪��</a>
+                <a wire:navigate="/" href="/" title="EU VAT countries list">All Countries</a>
                 <a wire:navigate="/vat-calculator" href="/vat-calculator">VAT Calculator 💶</a>
                 <a wire:navigate="{{ route('widget.embed')}}" href="{{ route('widget.embed')}}">VAT Widget</a>
                 <a wire:navigate={{ route('vat-map') }} href="{{ route('vat-map')}}">VAT Map 🌍</a>
@@ -38,7 +38,7 @@
              x-transition:leave-start="opacity-100 translate-y-0"
              x-transition:leave-end="opacity-0 -translate-y-2"
              class="md:hidden mt-4 space-y-3">
-            <a wire:navigate="/" href="/" class="block py-2" title="EU VAT countries list">All Countries 🇪🇺</a>
+            <a wire:navigate="/" href="/" class="block py-2" title="EU VAT countries list">All Countries</a>
             <a wire:navigate="/vat-calculator" href="/vat-calculator" class="block py-2">VAT Calculator 💶</a>
             <a wire:navigate="{{ route('widget.embed')}}" href="{{ route('widget.embed')}}" class="block py-2">VAT Widget</a>
             <a wire:navigate={{ route('vat-map') }} href="{{ route('vat-map')}}" class="block py-2">VAT Map 🌍</a>

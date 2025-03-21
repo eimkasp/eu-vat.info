@@ -7,7 +7,17 @@
                 <p class="text-sm leading-6 text-gray-600">
                     Our goal is to provide simple and easy way to navigate VAT rates in Europe.
                 </p>
+
+                <p class="flex text-sm leading-6 text-[600] text-gray-600">
+               
+               <div>
+                Powered by: 
                 
+                <a href="https://businesspress.io" target="_blank">
+                <img alt="BusinessPress CMS" class="w-[150px] mt-2 h-auto" src="https://bp-bucket.dev-wesaas.com/uploads/businesspress-prod/1707617729_1695153057_BP_logo(1).png" />
+                </a>
+                </div>
+                </p>
             </div>
             <div class="sm:mt-16 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0">
                 <div class="md:grid md:grid-cols-2 md:gap-8 hidden sm:block">
