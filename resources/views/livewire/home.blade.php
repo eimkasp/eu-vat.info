@@ -132,13 +132,11 @@
         <div class="md:col-span-4 lg:col-span-5">
             <!-- Calculator Widget -->
             @if($selectedCountry)
-                <div class="bg-white p-6 shadow-xl rounded-xl mb-6">
-                    <h3 class="text-lg font-bold mb-4">
-                        VAT Calculator - {{ $selectedCountry->name }}
-                    </h3>
+                <div class="mb-6">
+                   
                     <livewire:vat-calculator-form :slug="$selectedCountry->slug" :key="'calc-'.$selectedCountry->id" />
                     
-                    <div class="mt-4 pt-4 border-t">
+                    <div class="mt-2 pt-2 border-t">
                         <a href="{{ route('vat-calculator.country', $selectedCountry->slug) }}" 
                            class="text-blue-600 hover:underline text-sm">
                             View full calculator & history →

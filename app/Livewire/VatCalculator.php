@@ -66,13 +66,8 @@ class VatCalculator extends Component
         $this->analyticsService = $analyticsService;
     }
 
-    #[Url]
-    public $date;
-
     public function mount($country = null, $slug = null)
     {
-        $this->date = now()->format('Y-m-d');
-        
         if ($slug) {
             $this->country = Country::where('slug', $slug)->firstOrFail();
             // Track the view when mounting with a slug
@@ -152,11 +147,11 @@ class VatCalculator extends Component
 
     public function updated($property)
     {
-        if ($property === 'selectedCountry1' || $property === 'date') {
+        if ($property === 'selectedCountry1') {
             $this->slug = $this->selectedCountry1;
             $this->selectedCountryObject = Country::where('slug', $this->slug)->first();
             $this->getRates();
-            // Reset rate to standard rate when changing country or date
+            // Reset rate to standard rate when changing country
             if (count($this->rates) > 0) {
                 // Try to keep the same rate value if possible, otherwise reset
                 $currentRateValue = $this->selectedRate;
@@ -266,8 +261,8 @@ class VatCalculator extends Component
     {
         $this->rates = [];
         if ($this->selectedCountryObject) {
-            // Try to get rates from VatRate model for the selected date
-            $date = $this->date ?: now()->format('Y-m-d');
+            // Try to get rates from VatRate model for the current date
+            $date = now()->format('Y-m-d');
             
             $historicalRates = \App\Models\VatRate::where('country_id', $this->selectedCountryObject->id)
                 ->where('effective_from', '<=', $date)

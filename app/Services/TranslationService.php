@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use DeepL\Translator;
+use App\Jobs\TranslateText;
 use App\Models\Translation;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
@@ -80,19 +81,8 @@ class TranslationService
             
             // Auto-translate if enabled
             if (config('translation.auto_translate', true)) {
-                $translated = $this->translate($key, $locale, $fallback);
-                
-                if ($translated) {
-                    // Store translation
-                    Translation::create([
-                        'key' => $key,
-                        'locale' => $locale,
-                        'value' => $translated,
-                        'group' => $group,
-                    ]);
-                    
-                    return $translated;
-                }
+                // Dispatch job for background translation
+                TranslateText::dispatch($key, $locale, $fallback, $group);
             }
             
             // Return original key as fallback
