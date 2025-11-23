@@ -5,6 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\VatRate;
 use App\Models\Country;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Livewire\WithPagination;
 
@@ -25,22 +26,24 @@ class VatChangesHistory extends Component
     public function loadCountryStats()
     {
         // Calculate stability indicator (number of changes per country since 2000)
-        $this->countryStats = Country::withCount(['vatRates' => function ($query) {
-            $query->where('effective_from', '>=', '2000-01-01');
-        }])
-        ->get()
-        ->map(function ($country) {
-            return [
-                'id' => $country->id,
-                'name' => $country->name,
-                'slug' => $country->slug,
-                'iso_code' => $country->iso_code,
-                'changes_count' => $country->vat_rates_count,
-                'stability' => $this->getStabilityRating($country->vat_rates_count)
-            ];
-        })
-        ->sortBy('changes_count')
-        ->values();
+        $this->countryStats = Cache::remember('vat_stats_history', 3600, function () {
+            return Country::withCount(['vatRates' => function ($query) {
+                $query->where('effective_from', '>=', '2000-01-01');
+            }])
+            ->get()
+            ->map(function ($country) {
+                return [
+                    'id' => $country->id,
+                    'name' => $country->name,
+                    'slug' => $country->slug,
+                    'iso_code' => $country->iso_code,
+                    'changes_count' => $country->vat_rates_count,
+                    'stability' => $this->getStabilityRating($country->vat_rates_count)
+                ];
+            })
+            ->sortBy('changes_count')
+            ->values();
+        });
     }
 
     private function getStabilityRating($changesCount)

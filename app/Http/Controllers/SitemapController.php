@@ -46,13 +46,22 @@ class SitemapController extends Controller
         $sitemap .= '<priority>0.7</priority>';
         $sitemap .= '</url>';
         
-        // Country-specific calculator pages
+        // Country-specific calculator pages & detail pages
         foreach ($countries as $country) {
+            // Calculator Page
             $sitemap .= '<url>';
             $sitemap .= '<loc>' . route('vat-calculator.country', $country->slug) . '</loc>';
             $sitemap .= '<lastmod>' . $country->updated_at->toAtomString() . '</lastmod>';
             $sitemap .= '<changefreq>monthly</changefreq>';
             $sitemap .= '<priority>0.8</priority>';
+            $sitemap .= '</url>';
+
+            // Detail Page
+            $sitemap .= '<url>';
+            $sitemap .= '<loc>' . route('country.show', $country->slug) . '</loc>';
+            $sitemap .= '<lastmod>' . $country->updated_at->toAtomString() . '</lastmod>';
+            $sitemap .= '<changefreq>monthly</changefreq>';
+            $sitemap .= '<priority>0.9</priority>';
             $sitemap .= '</url>';
         }
         

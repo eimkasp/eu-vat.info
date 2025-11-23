@@ -24,7 +24,7 @@
                 <a wire:navigate="{{ route('widget.embed')}}" href="{{ route('widget.embed')}}">VAT Widget</a>
                 <a wire:navigate={{ route('vat-map') }} href="{{ route('vat-map')}}">VAT Map</a>
                 <a wire:navigate={{ route('vat-changes') }} href="{{ route('vat-changes')}}">VAT Changelog</a>
-                <a wire:navigate={{ route('vat-navigator') }} href="{{ route('vat-navigator')}}">VAT Navigator</a>
+                {{-- <a wire:navigate={{ route('vat-navigator') }} href="{{ route('vat-navigator')}}">VAT Navigator</a> --}}
                 <a href="https://github.com/eimkasp/eu-vat.info" target="_blank" class="w-6">
                     @svg('feathericon-github')
                 </a>
@@ -45,7 +45,7 @@
             <a wire:navigate="{{ route('widget.embed')}}" href="{{ route('widget.embed')}}" class="block py-2">VAT Widget</a>
             <a wire:navigate={{ route('vat-map') }} href="{{ route('vat-map')}}" class="block py-2">VAT Map 🌍</a>
             <a wire:navigate={{ route('vat-changes') }} href="{{ route('vat-changes')}}" class="block py-2">VAT Changelog 📈</a>
-            <a wire:navigate={{ route('vat-navigator') }} href="{{ route('vat-navigator')}}" class="block py-2">VAT Navigator 🧭</a>
+            {{-- <a wire:navigate={{ route('vat-navigator') }} href="{{ route('vat-navigator')}}" class="block py-2">VAT Navigator 🧭</a> --}}
             <a href="https://github.com/eimkasp/eu-vat.info" target="_blank" class="block py-2">
                 GitHub @svg('feathericon-github', 'inline-block w-5 h-5 ml-1')
             </a>

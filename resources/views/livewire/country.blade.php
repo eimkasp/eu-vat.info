@@ -65,10 +65,10 @@
                             <x-country-rates :country="$country" />
                         </div>
 
-                        <!-- VAT Validator Widget -->
+                        {{-- <!-- VAT Validator Widget -->
                         <div class="mb-12">
                             <livewire:vat-validator :country="$country" />
-                        </div>
+                        </div> --}}
 
                         <div class="country-content">
 

@@ -1,64 +1,45 @@
-<footer class="bg-white  px-6 sm:px-0" aria-labelledby="footer-heading">
-    <div class="container !pb-8 !pt-16">
-        <h2 id="footer-heading" class="sr-only">EU VAT Calculator Footer</h2>
-        <div class="xl:grid xl:grid-cols-3 xl:gap-8">
-            <div class="space-y-3">
-                <strong>EU-VAT.info</strong>
-                <p class="text-sm leading-6 text-gray-600">
-                    Our goal is to provide simple and easy way to navigate VAT rates in Europe.
+<footer class="bg-gray-900 text-gray-400 py-12 mt-12 border-t border-gray-800">
+    <div class="mx-auto max-w-7xl px-4">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+            <div class="col-span-1 md:col-span-2">
+                <div class="text-white text-xl font-bold mb-4">EU VAT Info</div>
+                <p class="mb-4 text-sm">
+                    Your trusted source for current VAT rates, calculations, and compliance information across all 27 European Union member states.
                 </p>
-
-                <p class="flex text-sm leading-6 text-[600] text-gray-600">
-               
-               <div>
-                Powered by: 
-                
-                <a href="https://businesspress.io" target="_blank">
-                <img alt="BusinessPress CMS" class="w-[150px] mt-2 h-auto" src="https://bp-bucket.dev-wesaas.com/uploads/businesspress-prod/1707617729_1695153057_BP_logo(1).png" />
-                </a>
+                <div class="flex space-x-4">
+                    <a href="https://github.com/eimkasp/eu-vat.info" target="_blank" class="hover:text-white transition-colors">
+                        @svg('feathericon-github', 'w-6 h-6')
+                    </a>
                 </div>
-                </p>
             </div>
-            <div class="sm:mt-16 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0">
-                <div class="md:grid md:grid-cols-2 md:gap-8 hidden sm:block">
-                    <div>
+            
+            <div>
+                <h3 class="text-white font-semibold mb-4">Tools</h3>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="{{ route('vat-calculator') }}" class="hover:text-white transition-colors">VAT Calculator</a></li>
+                    <li><a href="{{ route('vat-map') }}" class="hover:text-white transition-colors">VAT Map</a></li>
+                    <li><a href="{{ route('vat-changes') }}" class="hover:text-white transition-colors">Rate Changes</a></li>
+                    {{-- <li><a href="{{ route('vat-navigator') }}" class="hover:text-white transition-colors">VAT Navigator</a></li> --}}
+                </ul>
+            </div>
 
-                    </div>
-                    <div class="mt-10 md:mt-0">
-
-                    </div>
-                </div>
-                <div class="md:grid md:grid-cols-2 md:gap-8">
-                    <div class="hidden sm:block">
-
-                    </div>
-                    <div class="mt-10 md:mt-0">
-                        <h3 class="text-lg sm:text-sm font-semibold leading-6 text-gray-900">Tools</h3>
-                        <ul role="list" class="mt-6 space-y-4">
-                            <li>
-                                <a href="/vat-calculator" class="">VAT Calculator</a>
-
-                            </li>
-                            <li>
-                                <a href="/embed" class="">Embed VAT Calculator</a>
-
-                            </li>
-                            <li>
-                                <a target="_blank" href="https://stats.businesspress.io/eu-vat.info/">Website stats</a>
-                            </li>
-
-                            <li>
-                                <a target="_blank" href="https://github.com/eimkasp/eu-vat.info">Github</a>
-                            </li>
-
-
-                        </ul>
-                    </div>
-                </div>
+            <div>
+                <h3 class="text-white font-semibold mb-4">Resources</h3>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="{{ route('widget.embed') }}" class="hover:text-white transition-colors">Embed Widget</a></li>
+                    <li><a href="/llms.txt" class="hover:text-white transition-colors">API for AI/LLMs</a></li>
+                    <li><a href="/sitemap.xml" class="hover:text-white transition-colors">Sitemap</a></li>
+                </ul>
             </div>
         </div>
-        <div class="mt-16 border-t border-gray-900/10 pt-8 sm:mt-20 lg:mt-24">
-            <p class="text-xs leading-5 text-gray-500">&copy; Data as of: 2024 March 24 EU-VAT.info</p>
+        
+        <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-sm">
+            <div class="mb-4 md:mb-0">
+                &copy; {{ date('Y') }} EU VAT Info. All rights reserved.
+            </div>
+            <div class="flex space-x-6">
+                <span class="text-gray-600">Data updated daily</span>
+            </div>
         </div>
     </div>
 </footer>
