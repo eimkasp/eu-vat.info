@@ -24,6 +24,7 @@ class Country extends Model implements Sitemapable , Auditable
 
     protected $fillable = [
     'iso_code',
+    'iso_code_2',
     'name',
     'slug',
     'standard_rate',
@@ -62,5 +63,10 @@ class Country extends Model implements Sitemapable , Auditable
     public function analytics()
     {
         return $this->hasMany(CountryAnalytic::class);
+    }
+
+    public function vatRates()
+    {
+        return $this->hasMany(VatRate::class);
     }
 }

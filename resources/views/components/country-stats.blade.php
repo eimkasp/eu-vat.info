@@ -8,7 +8,7 @@
                            <h2 class="text-lg text-white !mt-0"> {{ $country->name }} </h2>
                        </div>
                        <div>
-                           <img class="mb-3 h-9 rounded" src="https://flagcdn.com/h80/{{ $country->iso_code }}.jpg" />
+                           <img class="mb-3 h-9 rounded" src="https://flagcdn.com/h80/{{ strtolower($country->iso_code_2) }}.jpg" />
                        </div>
                    </div>
                    <dt class="text-sm font-semibold leading-6 text-gray-100">

@@ -3,31 +3,30 @@
 namespace App\Livewire;
 
 use Livewire\Component;
+use App\Models\Country;
+use Illuminate\Support\Facades\Cache;
 
 class Home extends Component
 {
     public $euCountries = [];
     public $search = '';
     public $selectedCountryIso = null;
+    public $selectedCountry = null;
 
     public function mount()
     {
-        $this->listenForCountrySelection();
+        // Set default country (Lithuania)
+        $this->selectedCountry = Country::where('slug', 'lithuania-lt')->first();
     }
 
-    public function listenForCountrySelection()
+    public function selectCountry($slug)
     {
-       
-    }
-
-    public function countrySelected($isoCode)
-    {
-        $this->selectedCountryIso = $isoCode;
+        $this->selectedCountry = Country::where('slug', $slug)->first();
     }
 
     public function render()
     {
-        $this->euCountries = \App\Models\Country::where('name', 'like', '%'.$this->search.'%')->orderBy('standard_rate', 'ASC')->get();
+        $this->euCountries = Country::where('name', 'like', '%'.$this->search.'%')->orderBy('standard_rate', 'ASC')->get();
         return view('livewire.home');
     }
 }

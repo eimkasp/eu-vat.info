@@ -22,7 +22,9 @@ Route::get('/tools', Tools::class);
 Route::get('/vat-calculator', VatCalculator::class)->name('vat-calculator');
 Route::get('/vat-map', VatMap::class)->name('vat-map');
 Route::get('/vat-calculator/{slug}', VatCalculator::class)->name('vat-calculator.country');
+Route::get('/vat-changes', \App\Livewire\VatChangesHistory::class)->name('vat-changes');
 Route::get('/sitemap/generate', [SitemapController::class, 'index'])->name('sitemap.generate');
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
 Route::get('/embed/{country?}', [EmbedController::class, 'index'])->name('widget.embed');
 Route::get('/public/embed/{country?}', [EmbedController::class, 'iframe'])->name('widget.iframe');

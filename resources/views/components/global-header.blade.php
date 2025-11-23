@@ -20,9 +20,9 @@
             {{-- Desktop navigation --}}
             <nav class="hidden md:flex items-center gap-6">
                 <a wire:navigate="/" href="/" title="EU VAT countries list">All Countries</a>
-                <a wire:navigate="/vat-calculator" href="/vat-calculator">VAT Calculator 💶</a>
+                <a wire:navigate="/vat-calculator" href="/vat-calculator">VAT Calculator</a>
                 <a wire:navigate="{{ route('widget.embed')}}" href="{{ route('widget.embed')}}">VAT Widget</a>
-                <a wire:navigate={{ route('vat-map') }} href="{{ route('vat-map')}}">VAT Map 🌍</a>
+                <a wire:navigate={{ route('vat-map') }} href="{{ route('vat-map')}}">VAT Map</a>
                 <a href="https://github.com/eimkasp/eu-vat.info" target="_blank" class="w-6">
                     @svg('feathericon-github')
                 </a>

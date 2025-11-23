@@ -1,3 +1,29 @@
+@section('seo')
+    <x-seo-meta 
+        title="EU VAT Info - VAT Rates Calculator & Information for All EU Countries"
+        description="Current VAT rates for all 27 EU countries. Free online calculator, historical data from 2000, rate change alerts, and compliance guides. Updated daily."
+        type="website"
+    >
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "name": "EU VAT Info",
+            "url": "{{ url('/') }}",
+            "description": "VAT rates and calculator for all EU countries",
+            "potentialAction": {
+                "@type": "SearchAction",
+                "target": {
+                    "@type": "EntryPoint",
+                    "urlTemplate": "{{ url('/') }}?search={search_term_string}"
+                },
+                "query-input": "required name=search_term_string"
+            }
+        }
+        </script>
+    </x-seo-meta>
+@endsection
+
 <div class="mx-auto max-w-7xl px-4 py-6 sm:py-12" x-data="{ showMap: true }">
  <div class="sm:text-center">
                     <h1 class="text-3xl font-bold">
@@ -46,11 +72,12 @@
                                                 class="hover:bg-gray-100 border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
 
                                                 <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
-                                                    <a title="{{ $country->name }} VAT rates"
-                                                        href="{{ route('vat-calculator.country', $country->slug) }}"
-                                                        class="font-medium flex items-center gap-6 text-blue-600 hover:underline">
+                                                    <button 
+                                                        wire:click="selectCountry('{{ $country->slug }}')"
+                                                        class="font-medium flex items-center gap-6 text-blue-600 hover:underline text-left"
+                                                        title="Show {{ $country->name }} calculator">
                                                         {{ $country->name }}
-                                                    </a>
+                                                    </button>
                                                 </td>
                                                 <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
                                                     <div>
@@ -82,9 +109,14 @@
                             </td>
                             </td>
                             <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
+                                <a href="{{ route('vat-calculator.country', $country->slug) }}"
+                                   class="text-blue-600 hover:underline text-sm mb-2 block"
+                                   title="View full {{ $country->name }} VAT page">
+                                    View Details →
+                                </a>
                                 Rank: #{{ $country->countryRank() }}
                                 <img alt="{{ $country->name }} flag" loading="lazy" class="border mb-3 h-6 rounded"
-                                    src="https://flagcdn.com/h80/{{ $country->iso_code }}.jpg" />
+                                    src="https://flagcdn.com/h80/{{ strtolower($country->iso_code_2) }}.jpg" />
                             </td>
                             </tr>
                             @endforeach
@@ -98,10 +130,30 @@
         </div>
 
         <div class="md:col-span-4 lg:col-span-5">
-            <!-- Toggle Button -->
-           
-
-            <!-- Map Section -->
+            <!-- Calculator Widget -->
+            @if($selectedCountry)
+                <div class="bg-white p-6 shadow-xl rounded-xl mb-6">
+                    <h3 class="text-lg font-bold mb-4">
+                        VAT Calculator - {{ $selectedCountry->name }}
+                    </h3>
+                    <livewire:vat-calculator-form :slug="$selectedCountry->slug" :key="'calc-'.$selectedCountry->id" />
+                    
+                    <div class="mt-4 pt-4 border-t">
+                        <a href="{{ route('vat-calculator.country', $selectedCountry->slug) }}" 
+                           class="text-blue-600 hover:underline text-sm">
+                            View full calculator & history →
+                        </a>
+                    </div>
+                </div>
+            @endif
+            
+            <!-- VAT Rate Changes Widget -->
+            <livewire:vat-rate-changes />
+            
+            <!-- Useful Links Widget -->
+            <x-useful-vat-links />
+            
+            <!-- Recent Countries & Map -->
             <div>
                 <livewire:recent-countries />
                 <div class="bg-white p-6 shadow-xl rounded-xl">

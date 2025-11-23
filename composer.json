@@ -7,6 +7,7 @@
     "require": {
         "php": "^8.2",
         "brunocfalcao/blade-feather-icons": "^4.0",
+        "deeplcom/deepl-php": "^1.14",
         "filament/filament": "^3.2",
         "laravel/framework": "^11.0",
         "laravel/pulse": "^1.0@beta",

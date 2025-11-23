@@ -66,8 +66,13 @@ class VatCalculator extends Component
         $this->analyticsService = $analyticsService;
     }
 
+    #[Url]
+    public $date;
+
     public function mount($country = null, $slug = null)
     {
+        $this->date = now()->format('Y-m-d');
+        
         if ($slug) {
             $this->country = Country::where('slug', $slug)->firstOrFail();
             // Track the view when mounting with a slug
@@ -135,8 +140,6 @@ class VatCalculator extends Component
         $this->saved_searches = session()->get('saved_searched');
         $this->saved_searches = array_reverse($this->saved_searches);
         $this->saved_searches = array_slice($this->saved_searches, 0, 8);
-
-
     }
 
     public function clearSearch()
@@ -149,13 +152,25 @@ class VatCalculator extends Component
 
     public function updated($property)
     {
-        if ($property === 'selectedCountry1') {
+        if ($property === 'selectedCountry1' || $property === 'date') {
             $this->slug = $this->selectedCountry1;
             $this->selectedCountryObject = Country::where('slug', $this->slug)->first();
             $this->getRates();
-            // Reset rate to standard rate when changing country
+            // Reset rate to standard rate when changing country or date
             if (count($this->rates) > 0) {
-                $this->selectedRate = $this->rates[array_key_first($this->rates)]['value'];
+                // Try to keep the same rate value if possible, otherwise reset
+                $currentRateValue = $this->selectedRate;
+                $rateExists = false;
+                foreach ($this->rates as $rate) {
+                    if ($rate['value'] == $currentRateValue) {
+                        $rateExists = true;
+                        break;
+                    }
+                }
+                
+                if (!$rateExists) {
+                    $this->selectedRate = $this->rates[array_key_first($this->rates)]['value'];
+                }
             }
             $this->calculateVat();
         }
@@ -171,8 +186,8 @@ class VatCalculator extends Component
             $this->calculateVat();
             $this->trackVisit(); // Keep tracking here
         }
-
     }
+
     public function render()
     {
         return view('livewire.vat-calculator');
@@ -251,21 +266,45 @@ class VatCalculator extends Component
     {
         $this->rates = [];
         if ($this->selectedCountryObject) {
-            $possibleRates = [
-                ['name' => 'Standard rate', 'value' => $this->selectedCountryObject->standard_rate],
-                ['name' => 'Reduced rate', 'value' => $this->selectedCountryObject->reduced_rate],
-                ['name' => 'Zero rate', 'value' => $this->selectedCountryObject->zero_rate],
-                ['name' => 'Super reduced rate', 'value' => $this->selectedCountryObject->super_reduced_rate],
-            ];
+            // Try to get rates from VatRate model for the selected date
+            $date = $this->date ?: now()->format('Y-m-d');
+            
+            $historicalRates = \App\Models\VatRate::where('country_id', $this->selectedCountryObject->id)
+                ->where('effective_from', '<=', $date)
+                ->where(function ($query) use ($date) {
+                    $query->where('effective_to', '>=', $date)
+                          ->orWhereNull('effective_to');
+                })
+                ->get();
 
-            $id = 1;
-            foreach ($possibleRates as $rate) {
-                if ($rate['value'] > 0) {
+            if ($historicalRates->isNotEmpty()) {
+                $id = 1;
+                foreach ($historicalRates as $rate) {
+                    $name = ucfirst(str_replace('_', ' ', $rate->type)) . ' rate';
                     $this->rates[] = [
                         'id' => $id++,
-                        'name' => $rate['value'] . '%',
-                        'value' => $rate['value'],
+                        'name' => $name . ' (' . $rate->rate . '%)',
+                        'value' => $rate->rate,
                     ];
+                }
+            } else {
+                // Fallback to Country model current rates
+                $possibleRates = [
+                    ['name' => 'Standard rate', 'value' => $this->selectedCountryObject->standard_rate],
+                    ['name' => 'Reduced rate', 'value' => $this->selectedCountryObject->reduced_rate],
+                    ['name' => 'Zero rate', 'value' => $this->selectedCountryObject->zero_rate],
+                    ['name' => 'Super reduced rate', 'value' => $this->selectedCountryObject->super_reduced_rate],
+                ];
+
+                $id = 1;
+                foreach ($possibleRates as $rate) {
+                    if ($rate['value'] > 0) {
+                        $this->rates[] = [
+                            'id' => $id++,
+                            'name' => $rate['name'] . ' (' . $rate['value'] . '%)',
+                            'value' => $rate['value'],
+                        ];
+                    }
                 }
             }
         }

@@ -134,7 +134,7 @@
                     <template x-if="hoveredCountry">
                         <div>
                             <div class="flex items-center gap-2">
-                                <img :src="'https://flagcdn.com/h20/' + hoveredCountry.iso_code.toLowerCase() + '.jpg'"
+                                <img :src="'https://flagcdn.com/h20/' + hoveredCountry.iso_code + '.jpg'"
                                     :alt="hoveredCountry.name + ' flag'" class="h-4 rounded border">
                                 <div class="font-semibold" x-text="hoveredCountry.name"></div>
                             </div>

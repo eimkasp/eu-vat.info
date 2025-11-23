@@ -7,11 +7,56 @@
      calculator to easily calculate VAT for transactions in ' .
      $selectedCountryObject->name .
      '.')
+     @section('seo')
+         <x-seo-meta 
+             :title="'VAT Calculator - ' . $selectedCountryObject->name . ' | EU VAT Info'"
+             :description="'Calculate VAT for ' . $selectedCountryObject->name . '. Standard rate: ' . $selectedCountryObject->standard_rate . '%. Historical data from 2000. Free calculator with real-time rates.'"
+             :url="route('vat-calculator.country', $selectedCountryObject->slug)"
+         >
+             <!-- Schema.org JSON-LD -->
+             <script type="application/ld+json">
+             {
+                 "@context": "https://schema.org",
+                 "@type": "WebApplication",
+                 "name": "{{ $selectedCountryObject->name }} VAT Calculator",
+                 "description": "Calculate VAT for {{ $selectedCountryObject->name }}. Standard rate: {{ $selectedCountryObject->standard_rate }}%",
+                 "url": "{{ route('vat-calculator.country', $selectedCountryObject->slug) }}",
+                 "applicationCategory": "FinanceApplication",
+                 "operatingSystem": "Web",
+                 "offers": {
+                     "@type": "Offer",
+                     "price": "0",
+                     "priceCurrency": "USD"
+                 },
+                 "provider": {
+                     "@type": "Organization",
+                     "name": "EU VAT Info",
+                     "url": "{{ url('/') }}"
+                 },
+                 "about": {
+                     "@type": "GovernmentService",
+                     "name": "{{ $selectedCountryObject->name }} VAT",
+                     "serviceType": "Value Added Tax",
+                     "areaServed": {
+                         "@type": "Country",
+                         "name": "{{ $selectedCountryObject->name }}"
+                     }
+                 }
+             }
+             </script>
+         </x-seo-meta>
+     @endsection
  @else
  @section('title', 'VAT Calculator - EU-VAT.info')
  @section('meta_description',
      'Calculate VAT amount for different countries. Use our VAT
      calculator to easily calculate VAT for transactions in different countries.')
+     @section('seo')
+         <x-seo-meta 
+             title="VAT Calculator - EU Countries | EU VAT Info"
+             description="Calculate VAT for all EU countries. Free online calculator with current rates, historical data, and comparison tools."
+         />
+     @endsection
  @endisset
 
  <div class="container py-12 mt-12 pb-12">
@@ -63,6 +108,8 @@
              <div class="mt-6 bg-white p-6 rounded-xl shadow-xl lg:block hidden">
                  <livewire:europe-map :activeCountry="$selectedCountryObject" />
              </div>
+
+             <livewire:vat-rate-history-chart :country="$selectedCountryObject" />
 
              <div class="mt-6">
                  <a href="{{ route('widget.embed', $selectedCountryObject->slug) }}" class="text-blue-500">Embed this

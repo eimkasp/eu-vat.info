@@ -9,6 +9,7 @@
                 </div>
 
                 <div class="sm:col-span-6 grid gap-3">
+                    <x-input label="Date" wire:change="calculate" wire:model.live="date" type="date" />
                     <x-input label="Amount" wire:change="calculate" wire:model.lazy="amount" type="" suffix="EUR (€)" money />
 
                     @if($error_message)
