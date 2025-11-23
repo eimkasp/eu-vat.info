@@ -8,7 +8,7 @@
                 @foreach($futureChanges as $change)
                     <div class="flex items-center justify-between p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors border border-blue-100">
                         <div class="flex items-center gap-3 flex-1">
-                            <img src="https://flagcdn.com/h40/{{ strtolower($change->country->iso_code_2) }}.jpg" 
+                            <img src="https://flagcdn.com/h40/{{ strtolower($change->country->iso_code) }}.jpg" 
                                  alt="{{ $change->country->name }} flag" 
                                  class="w-8 h-5 object-cover rounded shadow-sm">
                             <div class="flex-1">
@@ -45,7 +45,7 @@
                 @foreach($recentChanges as $change)
                     <div class="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors border border-transparent hover:border-gray-200">
                         <div class="flex items-center gap-3 flex-1">
-                            <img src="https://flagcdn.com/h40/{{ strtolower($change->country->iso_code_2) }}.jpg" 
+                            <img src="https://flagcdn.com/h40/{{ strtolower($change->country->iso_code) }}.jpg" 
                                  alt="{{ $change->country->name }} flag" 
                                  class="w-8 h-5 object-cover rounded shadow-sm">
                             <div class="flex-1">

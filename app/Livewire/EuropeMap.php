@@ -32,11 +32,11 @@ class EuropeMap extends Component
             return $countries;
         });
 
-        // Initialize countryData with uppercase keys using iso_code_2
+        // Initialize countryData with uppercase keys using iso_code
         $this->countryData = $this->countries->mapWithKeys(function ($country) {
             return [
-                strtoupper($country->iso_code_2) => [
-                    'iso_code' => $country->iso_code_2,
+                strtoupper($country->iso_code) => [
+                    'iso_code' => $country->iso_code,
                     'name' => $country->name,
                     'rate' => $country->standard_rate,
                     'reduced_rate' => $country->reduced_rate,

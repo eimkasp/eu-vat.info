@@ -38,12 +38,12 @@ class VatCalculator extends Component
     public $vat_options = [
         [
             'id' => 1,
-            'name' => 'Include VAT',
+            'name' => 'Price includes VAT',
             'value' => 'include',
         ],
         [
             'id' => 2,
-            'name' => 'Exclude VAT',
+            'name' => 'Price excludes VAT (Add VAT)',
             'value' => 'exclude',
         ],
     ];
@@ -231,12 +231,15 @@ class VatCalculator extends Component
     private function calculateTotals($amount, $rate)
     {
         if ($this->vat_included == 'include') {
-            $vatMultiplier = (1 + ($rate / 100));
-            $this->total = round($amount * $vatMultiplier, 2);
-            $this->vat_amount = round($this->total - $amount, 2);
+            // Input is Gross (Total)
+            // Formula: VAT = Total - (Total / (1 + rate/100))
+            $this->vat_amount = round($amount - ($amount / (1 + ($rate / 100))), 2);
+            $this->total = round($amount, 2);
         } else {
-            $this->vat_amount = round(($amount * $rate) / (100 + $rate), 2);
-            $this->total = round($amount - $this->vat_amount, 2);
+            // Input is Net
+            // Formula: VAT = Net * (rate/100)
+            $this->vat_amount = round($amount * ($rate / 100), 2);
+            $this->total = round($amount + $this->vat_amount, 2);
         }
 
         $this->amount = (float)$amount;
@@ -272,35 +275,60 @@ class VatCalculator extends Component
                 })
                 ->get();
 
-            if ($historicalRates->isNotEmpty()) {
-                $id = 1;
-                foreach ($historicalRates as $rate) {
-                    $name = ucfirst(str_replace('_', ' ', $rate->type)) . ' rate';
-                    $this->rates[] = [
-                        'id' => $id++,
-                        'name' => $name . ' (' . $rate->rate . '%)',
-                        'value' => $rate->rate,
-                    ];
-                }
-            } else {
-                // Fallback to Country model current rates
-                $possibleRates = [
-                    ['name' => 'Standard rate', 'value' => $this->selectedCountryObject->standard_rate],
-                    ['name' => 'Reduced rate', 'value' => $this->selectedCountryObject->reduced_rate],
-                    ['name' => 'Zero rate', 'value' => $this->selectedCountryObject->zero_rate],
-                    ['name' => 'Super reduced rate', 'value' => $this->selectedCountryObject->super_reduced_rate],
-                ];
+            $id = 1;
+            $addedTypes = [];
 
-                $id = 1;
-                foreach ($possibleRates as $rate) {
-                    if ($rate['value'] > 0) {
+            // 1. Add rates from VatRate table (Historical/Specific)
+            if ($historicalRates->isNotEmpty()) {
+                foreach ($historicalRates as $rate) {
+                    $type = strtolower($rate->type);
+                    if (!in_array($type, $addedTypes)) {
+                        $name = ucfirst(str_replace('_', ' ', $rate->type)) . ' rate';
                         $this->rates[] = [
                             'id' => $id++,
-                            'name' => $rate['name'] . ' (' . $rate['value'] . '%)',
-                            'value' => $rate['value'],
+                            'name' => $name . ' (' . $rate->rate . '%)',
+                            'value' => $rate->rate,
                         ];
+                        $addedTypes[] = $type;
                     }
                 }
+            }
+
+            // 2. Add rates from Country model (Current snapshot) if not already added
+            $snapshotRates = [
+                'standard' => ['name' => 'Standard rate', 'value' => $this->selectedCountryObject->standard_rate],
+                'reduced' => ['name' => 'Reduced rate', 'value' => $this->selectedCountryObject->reduced_rate],
+                'zero' => ['name' => 'Zero rate', 'value' => $this->selectedCountryObject->zero_rate],
+                'super_reduced' => ['name' => 'Super reduced rate', 'value' => $this->selectedCountryObject->super_reduced_rate],
+                'parking' => ['name' => 'Parking rate', 'value' => $this->selectedCountryObject->parking_rate],
+            ];
+
+            foreach ($snapshotRates as $type => $data) {
+                // Check if type already added (fuzzy match for types like 'standard_rate' vs 'standard')
+                $alreadyAdded = false;
+                foreach ($addedTypes as $addedType) {
+                    if (str_contains($addedType, $type) || str_contains($type, $addedType)) {
+                        $alreadyAdded = true;
+                        break;
+                    }
+                }
+
+                if (!$alreadyAdded && $data['value'] !== null && $data['value'] > 0) {
+                    $this->rates[] = [
+                        'id' => $id++,
+                        'name' => $data['name'] . ' (' . $data['value'] . '%)',
+                        'value' => $data['value'],
+                    ];
+                }
+            }
+
+            // If absolutely no rates found, default to 0
+            if (empty($this->rates)) {
+                $this->rates[] = [
+                    'id' => 1,
+                    'name' => 'Standard rate (0%)',
+                    'value' => 0,
+                ];
             }
         }
     }

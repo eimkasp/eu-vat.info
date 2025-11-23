@@ -6,7 +6,7 @@
         @foreach($recentCountries as $country)
         <a href="{{ route('country.show', $country->slug) }}" 
            class="flex flex-col items-center p-3 rounded-lg hover:bg-gray-50 transition-colors">
-            <img src="https://flagcdn.com/h40/{{ strtolower($country->iso_code_2) }}.jpg" 
+            <img src="https://flagcdn.com/h40/{{ strtolower($country->iso_code) }}.jpg" 
                  alt="{{ $country->name }} flag" 
                  class="w-10 h-6 object-cover rounded shadow-sm mb-2">
             <span class="text-sm text-center font-medium">{{ $country->name }}</span>

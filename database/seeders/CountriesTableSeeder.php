@@ -40,14 +40,25 @@ class CountriesTableSeeder extends Seeder
                 $standardRate = null;
             }
 
-            Country::create([
-                'name' => $record['Country'],
-                'iso_code' => $record['Country'],
-                'super_reduced_rate' => $superReducedRate,
-                'reduced_rate' => $reducedRate,
-                'parking_rate' => $parkingRate,
-                'standard_rate' => $standardRate,
-            ]);
+            $countryName = $record['Country'];
+            $isoCode = $countryName;
+            
+            // Extract ISO code if present in format "Country Name (XX)"
+            if (preg_match('/^(.*?)\s*\((\w{2})\)$/', $countryName, $matches)) {
+                $countryName = trim($matches[1]);
+                $isoCode = $matches[2];
+            }
+
+            Country::updateOrCreate(
+                ['iso_code' => $isoCode],
+                [
+                    'name' => $countryName,
+                    'super_reduced_rate' => $superReducedRate,
+                    'reduced_rate' => $reducedRate,
+                    'parking_rate' => $parkingRate,
+                    'standard_rate' => $standardRate,
+                ]
+            );
         }
     }
 

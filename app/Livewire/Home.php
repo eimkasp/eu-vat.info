@@ -15,8 +15,10 @@ class Home extends Component
 
     public function mount()
     {
-        // Set default country (Lithuania)
-        $this->selectedCountry = Country::where('slug', 'lithuania-lt')->first();
+        // Set default country (Lithuania or fallback to first)
+        $this->selectedCountry = Country::where('name', 'Lithuania')->first() 
+            ?? Country::where('name', 'United Kingdom')->first()
+            ?? Country::first();
     }
 
     public function selectCountry($slug)

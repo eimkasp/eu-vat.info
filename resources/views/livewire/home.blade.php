@@ -116,7 +116,7 @@
                                 </a>
                                 Rank: #{{ $country->countryRank() }}
                                 <img alt="{{ $country->name }} flag" loading="lazy" class="border mb-3 h-6 rounded"
-                                    src="https://flagcdn.com/h80/{{ strtolower($country->iso_code_2) }}.jpg" />
+                                    src="https://flagcdn.com/h80/{{ strtolower($country->iso_code) }}.jpg" />
                             </td>
                             </tr>
                             @endforeach
@@ -131,9 +131,8 @@
 
         <div class="md:col-span-4 lg:col-span-5">
             <!-- Calculator Widget -->
-            @if($selectedCountry)
-                <div class="mb-6">
-                   
+            <div class="mb-6">
+                @if($selectedCountry)
                     <livewire:vat-calculator-form :slug="$selectedCountry->slug" :key="'calc-'.$selectedCountry->id" />
                     
                     <div class="mt-2 pt-2 border-t">
@@ -142,8 +141,8 @@
                             View full calculator & history →
                         </a>
                     </div>
-                </div>
-            @endif
+                @endif
+            </div>
             
             <!-- VAT Rate Changes Widget -->
             <livewire:vat-rate-changes />

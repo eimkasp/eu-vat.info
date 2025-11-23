@@ -147,6 +147,8 @@
                     }
                 },
                 yaxis: {
+                    min: 0,
+                    max: 30,
                     opposite: false,
                     title: {
                         text: 'Rate (%)',

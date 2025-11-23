@@ -11,7 +11,7 @@
                     href="{{ route('vat-calculator.country', $country->slug) }}"
                     class="flex  items-center gap-2 text-blue-500">
                     <img alt="{{ $country->name }} flag" loading="lazy" class="border h-8 rounded"
-                        src="https://flagcdn.com/h80/{{ strtolower($country->iso_code_2) }}.jpg" />
+                        src="https://flagcdn.com/h80/{{ strtolower($country->iso_code) }}.jpg" />
                     
                    <div> {{ $country->name }} <br> VAT Calculator </div>
                 </a>

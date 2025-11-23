@@ -7,12 +7,17 @@
     />
 @endsection
 
-<div class="container py-12 mt-12">
-    <div class="max-w-7xl mx-auto">
+<div class="mx-auto max-w-7xl px-4 py-6 sm:py-12">
+    <div>
         <!-- Header -->
         <div class="mb-8">
             <h1 class="text-3xl font-bold mb-2">VAT Rate Changes History</h1>
             <p class="text-gray-600">Track all VAT rate modifications across EU countries over the past decade</p>
+        </div>
+
+        <!-- Historical Heatmap -->
+        <div class="mb-8">
+            <livewire:all-countries-vat-history />
         </div>
 
         <!-- Country Stability Overview -->
@@ -23,7 +28,7 @@
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
                 @foreach($countryStats as $stat)
                     <div class="flex items-center gap-2 p-3 border rounded-lg hover:bg-gray-50 transition-colors">
-                        <img src="https://flagcdn.com/h40/{{ strtolower($stat['iso_code_2']) }}.jpg" 
+                        <img src="https://flagcdn.com/h40/{{ strtolower($stat['iso_code']) }}.jpg" 
                              alt="{{ $stat['name'] }}" 
                              class="w-8 h-5 object-cover rounded shadow-sm">
                         <div class="flex-1 min-w-0">
@@ -92,7 +97,7 @@
                         <div class="p-6 hover:bg-gray-50 transition-colors">
                             <div class="flex items-start justify-between">
                                 <div class="flex items-center gap-4 flex-1">
-                                    <img src="https://flagcdn.com/h40/{{ strtolower($change->country->iso_code_2) }}.jpg" 
+                                    <img src="https://flagcdn.com/h40/{{ strtolower($change->country->iso_code) }}.jpg" 
                                          alt="{{ $change->country->name }}" 
                                          class="w-12 h-8 object-cover rounded shadow-sm">
                                     <div class="flex-1">

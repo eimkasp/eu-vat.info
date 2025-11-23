@@ -24,9 +24,9 @@ class VatChangesHistory extends Component
 
     public function loadCountryStats()
     {
-        // Calculate stability indicator (number of changes per country)
+        // Calculate stability indicator (number of changes per country since 2000)
         $this->countryStats = Country::withCount(['vatRates' => function ($query) {
-            $query->where('effective_from', '>=', now()->subYears(10));
+            $query->where('effective_from', '>=', '2000-01-01');
         }])
         ->get()
         ->map(function ($country) {
@@ -34,7 +34,7 @@ class VatChangesHistory extends Component
                 'id' => $country->id,
                 'name' => $country->name,
                 'slug' => $country->slug,
-                'iso_code_2' => $country->iso_code_2,
+                'iso_code' => $country->iso_code,
                 'changes_count' => $country->vat_rates_count,
                 'stability' => $this->getStabilityRating($country->vat_rates_count)
             ];
