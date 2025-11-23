@@ -1,6 +1,7 @@
 <div>
     <div class="bg-white p-6 shadow-xl rounded-xl">
         <div class="container">
+            <x-breadcrumbs :items="['VAT Map' => '']" />
             <livewire:europe-map layout="single" />
             <div class="max-w-3xl mx-auto mb-8">
                 <h1 class="text-3xl font-bold mb-4">European VAT Rates Map</h1>

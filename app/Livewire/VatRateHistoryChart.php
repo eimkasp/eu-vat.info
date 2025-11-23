@@ -18,21 +18,28 @@ class VatRateHistoryChart extends Component
 
     public function mount($country)
     {
-        $this->country = $country;
+        $this->country = $country ?? Country::first();
         $this->loadChartData();
         $this->calculateStats();
     }
 
     public function loadChartData()
     {
-        $rates = VatRate::where('country_id', $this->country->id)
+        $country_id_to_use = 1;
+        if (isset($this->country->id)) {
+            $country_id_to_use = $this->country->id;
+        } else {
+            $country_id_to_use = Country::first()->id;
+        }
+
+        $rates = VatRate::where('country_id', $country_id_to_use)
             ->where('type', 'standard')
             ->where('effective_from', '>=', '2000-01-01')
             ->orderBy('effective_from', 'asc')
             ->get();
 
         $this->totalChanges = $rates->count();
-        
+
         $data = [];
         foreach ($rates as $rate) {
             $data[] = [
@@ -46,17 +53,26 @@ class VatRateHistoryChart extends Component
 
     private function calculateStats()
     {
-        $earliest = VatRate::where('country_id', $this->country->id)
+
+        $country_id_to_use = 1;
+        if (isset($this->country->id)) {
+            $country_id_to_use = $this->country->id;
+        } else {
+            $country_id_to_use = Country::first()->id;
+        }
+
+        
+        $earliest = VatRate::where('country_id', $country_id_to_use)
             ->where('type', 'standard')
             ->where('effective_from', '>=', '2000-01-01')
             ->orderBy('effective_from', 'asc')
             ->first();
 
-        $current = VatRate::where('country_id', $this->country->id)
+        $current = VatRate::where('country_id', $country_id_to_use)
             ->where('type', 'standard')
-            ->where(function($query) {
+            ->where(function ($query) {
                 $query->whereNull('effective_to')
-                      ->orWhere('effective_to', '>=', now());
+                    ->orWhere('effective_to', '>=', now());
             })
             ->orderBy('effective_from', 'desc')
             ->first();
@@ -65,7 +81,7 @@ class VatRateHistoryChart extends Component
             $this->earliestRate = $earliest->rate;
             $this->currentRate = $current->rate;
             $this->rateChange = $current->rate - $earliest->rate;
-            
+
             if ($earliest->rate > 0) {
                 $this->changePercentage = ($this->rateChange / $earliest->rate) * 100;
             }

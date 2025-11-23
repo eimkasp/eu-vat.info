@@ -9,6 +9,7 @@
 
 <div class="mx-auto max-w-7xl px-4 py-6 sm:py-12">
     <div>
+        <x-breadcrumbs :items="['VAT Changelog' => '']" />
         <!-- Header -->
         <div class="mb-8">
             <h1 class="text-3xl font-bold mb-2">VAT Rate Changes History</h1>

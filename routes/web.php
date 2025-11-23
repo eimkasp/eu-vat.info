@@ -22,6 +22,8 @@ Route::get('/tools', Tools::class);
 Route::get('/vat-calculator', VatCalculator::class)->name('vat-calculator');
 Route::get('/vat-map', VatMap::class)->name('vat-map');
 Route::get('/vat-calculator/{slug}', VatCalculator::class)->name('vat-calculator.country');
+Route::get('/vat-check/{slug?}', \App\Livewire\VatValidator::class)->name('vat-check');
+Route::get('/vat-navigator', \App\Livewire\VatNavigator::class)->name('vat-navigator');
 Route::get('/vat-changes', \App\Livewire\VatChangesHistory::class)->name('vat-changes');
 Route::get('/sitemap/generate', [SitemapController::class, 'index'])->name('sitemap.generate');
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
@@ -29,3 +31,15 @@ Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap')
 Route::get('/embed/{country?}', [EmbedController::class, 'index'])->name('widget.embed');
 Route::get('/public/embed/{country?}', [EmbedController::class, 'iframe'])->name('widget.iframe');
 Route::get('/embed/preview/{country?}', [EmbedController::class, 'preview'])->name('widget.preview');
+
+// LLM Documentation Full List
+Route::get('/llms-full.txt', function () {
+    $countries = \App\Models\Country::orderBy('name')->get();
+    $content = "# Full EU VAT Rates List\n\n";
+    $content .= "| Country | ISO | Standard | Reduced | Super Reduced | Parking |\n";
+    $content .= "|---|---|---|---|---|---|\n";
+    foreach ($countries as $c) {
+        $content .= "| {$c->name} | {$c->iso_code} | {$c->standard_rate}% | " . ($c->reduced_rate ? "{$c->reduced_rate}%" : "-") . " | " . ($c->super_reduced_rate ? "{$c->super_reduced_rate}%" : "-") . " | " . ($c->parking_rate ? "{$c->parking_rate}%" : "-") . " |\n";
+    }
+    return response($content)->header('Content-Type', 'text/plain');
+});

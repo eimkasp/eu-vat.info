@@ -81,12 +81,16 @@ class VatCalculator extends Component
         if ($slug) {
             $this->selectedCountry1 = $slug;
             $this->slug = $slug;
+            $this->selectedCountryObject = Country::where('slug', $this->slug)->first();
         } else {
-            $this->selectedCountry1 = 'lithuania-lt';
-            $this->slug = 'lithuania-lt';
+            // Fallback to Lithuania or first available
+            $default = Country::where('name', 'Lithuania')->first() ?? Country::first();
+            if ($default) {
+                $this->selectedCountry1 = $default->slug;
+                $this->slug = $default->slug;
+                $this->selectedCountryObject = $default;
+            }
         }
-
-        $this->selectedCountryObject = Country::where('slug', $this->slug)->first();
         $this->getRates();
         
         // Set initial rate

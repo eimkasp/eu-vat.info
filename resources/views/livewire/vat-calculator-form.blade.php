@@ -79,8 +79,9 @@
 
             {{-- Results Section --}}
             @if ($total && !$error_message)
-                <div class="bg-gray-900 text-white rounded-xl p-6 shadow-lg mt-6 transform transition-all duration-300">
-                    <div class="grid grid-cols-2 gap-4 mb-4 pb-4 border-b border-gray-700">
+                <div class="bg-gray-900 text-white rounded-xl p-6 shadow-lg mt-6 transform transition-all duration-300"
+                     wire:transition.scale.origin.top>
+                    <div class="grid grid-cols-2 gap-4 mb-4 pb-4 border-b border-gray-700" wire:loading.class="opacity-50" wire:target="calculate">
                         <div>
                             <div class="text-gray-400 text-xs uppercase tracking-wider mb-1">Net Amount</div>
                             <div class="font-medium">
@@ -106,8 +107,8 @@
 
             <x-slot:actions>
                 <div class="flex gap-3 w-full">
-                    <x-button label="Save" class="flex-1 btn-outline" wire:click="saveSearch" icon="o-bookmark" />
-                    <x-button label="Calculate" class="flex-1 btn-primary bg-blue-600 hover:bg-blue-700 text-white" type="submit" icon="o-calculator" />
+                    <x-button label="Save" class="flex-1 btn-outline" wire:click="saveSearch" icon="o-bookmark" spinner="saveSearch" />
+                    <x-button label="Calculate" class="flex-1 btn-primary bg-blue-600 hover:bg-blue-700 text-white" type="submit" icon="o-calculator" spinner="calculate" />
                 </div>
             </x-slot:actions>
         </x-form>

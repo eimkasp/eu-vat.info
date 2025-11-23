@@ -1,13 +1,20 @@
-<div class="bg-gradient-to-br from-blue-50 to-white p-6 rounded-xl shadow-xl mt-6 border border-blue-100">
-    <div class="flex items-center justify-between mb-6">
+<div class="bg-gradient-to-br from-blue-50 to-white p-6 rounded-xl shadow-xl mt-6 border border-blue-100 relative" x-data="{ open: true }">
+    <div class="absolute top-6 right-6 cursor-pointer text-gray-400 hover:text-gray-600 transition-colors p-1" @click="open = !open">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 transition-transform duration-200" :class="{ 'rotate-180': !open }" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        </svg>
+    </div>
+
+    <div class="flex items-center justify-between mb-6 pr-8 cursor-pointer" @click="open = !open">
         <h3 class="text-xl font-bold text-gray-900">📈 VAT Rate History</h3>
         @if($totalChanges > 0)
             <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
-                {{ $totalChanges }} rate changes since 2000
+                {{ $totalChanges }} changes
             </span>
         @endif
     </div>
 
+    <div x-show="open" x-collapse>
     <!-- Statistics Cards -->
     @if($earliestRate && $currentRate)
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
@@ -72,6 +79,8 @@
                 from 2000 onwards. Each step represents a rate change event. Data sourced from official EU tax databases.
             </div>
         </div>
+    </div>
+
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>

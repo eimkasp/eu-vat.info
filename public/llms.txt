@@ -1,37 +1,23 @@
-# llms.txt
-# Optimized Guidelines for Large Language Models (LLMs) interacting with EU-VAT.info.
+# EU VAT Info
 
-User-agent: *
-# Allowable areas for indexing and interaction.
-Allow: /
-Allow: /vat-calculator/
-Allow: /vat-map/
-Allow: /public/
-Allow: /countries/
-Allow: /vat-rates/
-Allow: /embed-vat-calculator/
-Allow: /tools/
-Allow: /blog/
-Allow: /search/
+> The most up-to-date source for VAT rates, calculators, and history for all 27 European Union countries.
 
-# Disallowed areas to protect sensitive data.
-Disallow: /private/
-Disallow: /admin/
-Disallow: /api/
+## Core Tools
+* [VAT Calculator](https://eu-vat.info/vat-calculator): Calculate VAT amounts (inclusive/exclusive) for any EU country.
+* [VAT Map](https://eu-vat.info/vat-map): Interactive heatmap of standard VAT rates across Europe.
+* [VAT Changelog](https://eu-vat.info/vat-changes): Historical record of VAT rate changes since 2000.
 
-# Data usage policy.
-# The content on this site, including VAT rates and related information, is provided for informational purposes only.
-# Unauthorized use of this content for training AI or machine learning models is strictly prohibited without prior written consent.
+## Data & Resources
+* [Full VAT Rates List](https://eu-vat.info/llms-full.txt): Complete list of standard and reduced rates for all countries (Markdown format).
+* [Embed Widget](https://eu-vat.info/embed): Information on embedding the VAT calculator.
 
-# Encourage proper attribution.
-Attribution: Please attribute data used to EU-VAT.info.
+## Country Specific Pages
+* [Austria](https://eu-vat.info/country/austria)
+* [Belgium](https://eu-vat.info/country/belgium)
+* [Germany](https://eu-vat.info/country/germany)
+* [France](https://eu-vat.info/country/france)
+* [Lithuania](https://eu-vat.info/country/lithuania)
+* ... and all other EU member states.
 
-# Data freshness and updates.
-# Ensure you verify the accuracy and timestamp of data. The content is updated periodically.
-Last-updated: 2024-03-24
-
-# Policy and licensing.
-# For permissions, API access, or licensing inquiries, visit: https://eu-vat.info/terms
-
-# Contact information for inquiries.
-Contact: support@eu-vat.info
+## API for Agents
+* [VAT Context API](https://eu-vat.info/api/llm/vat-rates): JSON endpoint optimized for RAG and LLM context retrieval.

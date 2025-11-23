@@ -46,13 +46,21 @@
                     {{-- How to implement recently viewed countries --}}
                     <div class="border rounded-lg overflow-hidden">
                         <div class="flex items-center space-x-3 p-3">
-                            <input wire:model.live="search"
-                                class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 flex-1"
-                                placeholder="Search countries or VAT rates" type="search">
+                            <div class="relative flex-1">
+                                <input wire:model.live="search"
+                                    class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                    placeholder="Search countries or VAT rates" type="search">
+                                <div wire:loading wire:target="search" class="absolute right-3 top-2.5 text-gray-400">
+                                    <svg class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                </div>
+                            </div>
                         </div>
                         <div class="border-t">
-                            <div class="relative w-full overflow-auto">
-                                <table class="w-full caption-bottom text-sm relative">
+                            <div class="relative w-full overflow-auto" wire:loading.class="opacity-50" wire:target="search">
+                                <table class="w-full caption-bottom text-sm relative transition-opacity duration-200">
                                     <tr
                                         class=" h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
 
@@ -146,6 +154,9 @@
             
             <!-- VAT Rate Changes Widget -->
             <livewire:vat-rate-changes />
+            
+            <!-- Sidebar Banners -->
+            <x-banner-display position="sidebar" />
             
             <!-- Useful Links Widget -->
             <x-useful-vat-links />

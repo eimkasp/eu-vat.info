@@ -45,9 +45,14 @@
                                 </a>
                             </div>
                         </div>
+                        
+                        <!-- Sidebar Banners -->
+                        <x-banner-display position="country_sidebar" />
                     </div>
 
                     <div class="sm:col-span-8 pb-12">
+                        <x-breadcrumbs :items="[$country->name => '']" />
+                        
                         <div class="space-y-3">
                             <h1 class="text-2xl lg:text-3xl font-bold">
                                 VAT rates for goods and services in {{ $country->name }}
@@ -60,7 +65,10 @@
                             <x-country-rates :country="$country" />
                         </div>
 
-
+                        <!-- VAT Validator Widget -->
+                        <div class="mb-12">
+                            <livewire:vat-validator :country="$country" />
+                        </div>
 
                         <div class="country-content">
 
@@ -137,8 +145,37 @@
                                 </section>
 
                             </article>
+                        </div>
 
+                        <!-- FAQ Section -->
+                        <div class="mt-12 mb-8">
+                            <h2 class="text-2xl font-bold mb-6">How to Calculate VAT in {{ $country->name }}</h2>
+                            
+                            <div class="space-y-6">
+                                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                                    <h3 class="text-lg font-bold mb-3 text-gray-900">Adding VAT to a Net Price</h3>
+                                    <p class="text-gray-600 mb-4">To calculate the gross amount from a net price (excluding VAT), use the following formula:</p>
+                                    <div class="bg-gray-50 p-4 rounded-lg font-mono text-sm text-gray-800 mb-4 border border-gray-200">
+                                        Gross Amount = Net Price × (1 + VAT Rate / 100)
+                                    </div>
+                                    <div class="text-sm text-gray-600">
+                                        <strong>Example:</strong> Calculating {{ $country->standard_rate }}% VAT on €100 net:<br>
+                                        €100 × (1 + {{ $country->standard_rate / 100 }}) = €100 × {{ 1 + $country->standard_rate / 100 }} = <strong>€{{ 100 * (1 + $country->standard_rate / 100) }}</strong>
+                                    </div>
+                                </div>
 
+                                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                                    <h3 class="text-lg font-bold mb-3 text-gray-900">Removing VAT from a Gross Price</h3>
+                                    <p class="text-gray-600 mb-4">To calculate the net price from a gross amount (including VAT), use this formula:</p>
+                                    <div class="bg-gray-50 p-4 rounded-lg font-mono text-sm text-gray-800 mb-4 border border-gray-200">
+                                        Net Price = Gross Amount ÷ (1 + VAT Rate / 100)
+                                    </div>
+                                    <div class="text-sm text-gray-600">
+                                        <strong>Example:</strong> Extracting {{ $country->standard_rate }}% VAT from €100 gross:<br>
+                                        €100 ÷ (1 + {{ $country->standard_rate / 100 }}) = €100 ÷ {{ 1 + $country->standard_rate / 100 }} = <strong>€{{ number_format(100 / (1 + $country->standard_rate / 100), 2) }}</strong>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="mb-3">
@@ -150,6 +187,34 @@
                                     Coming Soon
                                 </li>
                             </ul>
+                        </div>
+
+                        <!-- Country Details -->
+                        <div class="mt-8 p-6 bg-gray-50 rounded-xl border border-gray-200">
+                            <h3 class="text-lg font-bold mb-4 text-gray-900">Quick Facts about {{ $country->name }}</h3>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                                <div>
+                                    <div class="text-xs text-gray-500 uppercase tracking-wider mb-1">ISO Code</div>
+                                    <div class="font-mono font-medium text-gray-900">{{ $country->iso_code }}</div>
+                                </div>
+                                <div>
+                                    <div class="text-xs text-gray-500 uppercase tracking-wider mb-1">Currency</div>
+                                    <div class="font-medium text-gray-900">{{ $country->currency_code ?? 'EUR' }}</div>
+                                </div>
+                                <div>
+                                    <div class="text-xs text-gray-500 uppercase tracking-wider mb-1">Standard Rate</div>
+                                    <div class="font-bold text-blue-600">{{ $country->standard_rate }}%</div>
+                                </div>
+                                <div>
+                                    <div class="text-xs text-gray-500 uppercase tracking-wider mb-1">EU Member</div>
+                                    <div class="font-medium text-green-600 flex items-center gap-1">
+                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                        </svg>
+                                        Yes
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                     </div>
