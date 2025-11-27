@@ -23,7 +23,9 @@ class CountryFactory extends Factory
 
     public function definition(): array
     {
-        $country = $this->faker->unique()->randomElement($this->countries);
+        static $index = 0;
+        $country = $this->countries[$index % count($this->countries)];
+        $index++;
         
         return [
             'name' => $country['name'],
