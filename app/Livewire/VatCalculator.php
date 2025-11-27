@@ -74,8 +74,17 @@ class VatCalculator extends Component
             $this->trackCountryView($this->country, 'calculator-view');
         }
         $this->country = $country;
-        $this->countries = Cache::remember('all_countries', 600, function () {
-            return Country::orderBy('name', 'ASC')->get();
+        $this->countries = Cache::remember('all_countries_with_flags', 600, function () {
+            return Country::orderBy('name', 'ASC')->get()->map(function($c) {
+                // Calculate flag emoji
+                $iso = strtoupper($c->iso_code);
+                $flag = '';
+                if (strlen($iso) === 2) {
+                    $flag = mb_chr(ord($iso[0]) + 127397) . mb_chr(ord($iso[1]) + 127397);
+                }
+                $c->name_with_flag = $flag . ' ' . $c->name;
+                return $c;
+            });
         });
         
         if ($slug) {

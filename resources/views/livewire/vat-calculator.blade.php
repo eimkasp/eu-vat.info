@@ -64,84 +64,72 @@
         <x-breadcrumbs :items="['VAT Calculator' => '']" />
     @endisset
 
-<div>
-
-    <h1 class="text-4xl font-bold pt-12 sm:mb-3">
+<div class="mb-6 mt-6  mx-auto">
+    <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-900 tracking-tight mb-6">
         @isset($selectedCountryObject)
-            {{ $selectedCountryObject->name }} -
-        @endisset
-        VAT Calculator
-    </h1>
-    <h2 class="text-xl">
-        @isset($selectedCountryObject)
-            {{ number_format($amount, 2) }} EUR with VAT @if ($vat_included == 'include')
-                included
-            @else
-                excluded
-            @endif
-
-            In {{ $selectedCountryObject->name }}
-            @if ($total)
-                = {{ number_format($total, 2) }} EUR
-            @endif
-        @endisset
-    </h2>
-</div>
-<!-- Main Grid Container with responsive order -->
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-9">
-    <!-- Left Column -->
-    <div class="order-2 lg:order-1">
-
-        @isset($selectedCountryObject)
-            <p class="">
-                This is a simple VAT calculator for {{ $selectedCountryObject->name }}.
-                Our goal is to help you calculate the VAT amount for transactions in {{ $selectedCountryObject->name }}.
-            </p>
+            {{ $selectedCountryObject->name }} <span class="text-blue-600">VAT Calculator</span>
         @else
-            <p class="">
-                This is a simple VAT calculator.
-                Our goal is to help you calculate the VAT amount for transactions in different countries.
-            </p>
+            European <span class="text-blue-600">VAT Calculator</span>
         @endisset
+    </h1>
+    
+    @isset($selectedCountryObject)
+        <p class="text-lg text-gray-600 leading-relaxed">
+            Calculate VAT for transactions in {{ $selectedCountryObject->name }} easily. 
+            Current standard rate is <span class="font-bold text-gray-900">{{ $selectedCountryObject->standard_rate }}%</span>.
+        </p>
+    @else
+        <p class="text-lg text-gray-600 leading-relaxed">
+            Quickly calculate VAT amounts for any of the 27 European Union member states. 
+            Updated daily with the latest rates.
+        </p>
+    @endisset
+</div>
+
+<!-- Main Grid Container -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+    <!-- Calculator Form (Prominent) -->
+    <div class="lg:col-span-7 order-1">
+        <livewire:vat-calculator-form :slug="$selectedCountryObject->slug ?? null" />
+    </div>
+
+    <!-- Sidebar / Info -->
+    <div class="lg:col-span-5 order-2 space-y-6">
         @isset($selectedCountryObject)
-            {{-- Desktop only --}}
-            <div class="hidden sm:block">
-                <div class="mb-3">
-                    <x-country-rates :country="$selectedCountryObject" />
-                </div>
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+                <h3 class="text-lg font-bold text-gray-900 mb-4">Current VAT Rates</h3>
+                <x-country-rates :country="$selectedCountryObject" />
             </div>
         @endisset
 
-
         <livewire:vat-rate-history-chart :country="$selectedCountryObject" />
 
-        <div class="mt-6">
-            <a href="{{ route('widget.embed', $selectedCountryObject->slug) }}" class="text-blue-500">Embed this
-                calculator on your website</a>
-            <br>
-            <a wire:navigate="{{ route('country.show', $selectedCountryObject->slug) }}"
-                href="{{ route('country.show', $selectedCountryObject->slug) }}" class="text-blue-500">
-                Learn More about VAT in
-                {{ $selectedCountryObject->name }}</a>
+        @isset($selectedCountryObject)
+        <div class="bg-blue-50 p-6 rounded-xl border border-blue-100">
+            <h4 class="font-bold text-blue-900 mb-2">Need more details?</h4>
+            <p class="text-sm text-blue-700 mb-4">
+                Learn everything about VAT compliance, registration, and exceptions in {{ $selectedCountryObject->name }}.
+            </p>
+            <a wire:navigate href="{{ route('country.show', $selectedCountryObject->slug) }}" class="text-sm font-bold text-blue-600 hover:text-blue-800 hover:underline">
+                View {{ $selectedCountryObject->name }} VAT Guide &rarr;
+            </a>
         </div>
+        @endisset
     </div>
+</div>
 
-    <!-- Calculator Form - Always show first on mobile -->
-    <div class="order-1 lg:order-2 mt-9">
-        <livewire:vat-calculator-form :slug="$selectedCountryObject->slug" />
-    </div>
-
-    <!-- Map Container - Show below calculator on mobile -->
-    <div class="order-3 lg:hidden mt-6 bg-white p-6 rounded-xl shadow-xl">
+<div class="mt-16 grid grid-cols-1 gap-8">
+    <!-- Map Section -->
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
         <livewire:europe-map :activeCountry="$selectedCountryObject" />
     </div>
 
-    <!-- Additional content -->
-    <div class="sm:col-span-2 order-4 lg:order-3">
+    <!-- Saved Searches & Links -->
+    <div>
         <x-saved-searches></x-saved-searches>
     </div>
 
-    <div class="sm:col-span-2 pb-9 order-5 lg:order-4">
+    <div class="pb-12">
         <x-country-calculator-list></x-country-calculator-list>
     </div>
 </div>

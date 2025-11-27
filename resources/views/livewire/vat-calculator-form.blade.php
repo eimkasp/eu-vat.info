@@ -1,30 +1,35 @@
 <div class="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
-    <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-3 text-white">
-        <h2 class="text-xl font-semibold flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-            </svg>
-            VAT Calculator
-        </h2>
-        <p class="text-blue-100 text-sm !mb-0 opacity-90">Calculate VAT rates instantly for any EU country</p>
+    <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4 text-white flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+            <h2 class="text-xl font-semibold flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                </svg>
+                VAT Calculator
+            </h2>
+            <p class="text-blue-100 text-sm !mb-0 opacity-90">Calculate VAT rates instantly</p>
+        </div>
+
+        <div class="w-full sm:w-auto">
+            <div class="relative">
+                <select wire:model.live="selectedCountry1" wire:change="calculate" class="appearance-none bg-blue-800/30 border border-blue-400/50 text-white rounded-lg pl-4 pr-10 py-2 text-sm focus:ring-2 focus:ring-white/50 focus:border-white transition-all cursor-pointer hover:bg-blue-800/50 w-full sm:w-64">
+                    @foreach($countries as $country)
+                        <option value="{{ $country->slug }}" class="text-gray-900">
+                            {{ $country->name_with_flag }}
+                        </option>
+                    @endforeach
+                </select>
+                <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-blue-200">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="p-6">
         <x-form wire:submit="calculate" class="space-y-6">
-            {{-- Country Selection --}}
-            <div class="space-y-2">
-                <x-select 
-                    wire:change="calculate" 
-                    label="Select Country" 
-                    :options="$countries" 
-                    option-value="slug"
-                    option-label="name" 
-                    placeholder="Choose a country..." 
-                    wire:model.live="selectedCountry1"
-                    class="w-full"
-                />
-            </div>
-
             {{-- Amount Input --}}
             <div class="space-y-2">
                 <x-input 
@@ -54,17 +59,36 @@
                     </div>
                 </div>
 
-                {{-- VAT Included/Excluded Toggle --}}
-                <div class="flex p-1 bg-gray-100 rounded-lg">
-                    @foreach($vat_options as $option)
-                        <button 
-                            type="button" 
-                            wire:click="$set('vat_included', '{{ $option['value'] }}'); $call('calculate')"
-                            class="flex-1 py-2 text-sm font-medium rounded-md transition-all duration-200 {{ $vat_included == $option['value'] ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700' }}"
-                        >
-                            {{ $option['name'] }}
-                        </button>
-                    @endforeach
+                {{-- VAT Included/Excluded Cards --}}
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-3">Calculation Mode</label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <label class="cursor-pointer relative group">
+                            <input type="radio" name="vat_included" value="include" class="peer sr-only" wire:model="vat_included" wire:change="calculate">
+                            <div class="p-4 rounded-xl border-2 transition-all hover:border-blue-200 h-full flex flex-col justify-center {{ $vat_included === 'include' ? 'border-blue-600 bg-blue-50' : 'border-gray-100 bg-gray-50' }}">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <div class="w-4 h-4 rounded-full border flex items-center justify-center {{ $vat_included === 'include' ? 'border-blue-600 bg-blue-600' : 'border-gray-400' }}">
+                                        <div class="w-1.5 h-1.5 rounded-full bg-white {{ $vat_included === 'include' ? 'opacity-100' : 'opacity-0' }}"></div>
+                                    </div>
+                                    <span class="font-bold {{ $vat_included === 'include' ? 'text-blue-900' : 'text-gray-900' }}">Price includes VAT</span>
+                                </div>
+                                <span class="text-xs text-gray-500 ml-6">Extract VAT from total amount</span>
+                            </div>
+                        </label>
+
+                        <label class="cursor-pointer relative group">
+                            <input type="radio" name="vat_included" value="exclude" class="peer sr-only" wire:model="vat_included" wire:change="calculate">
+                            <div class="p-4 rounded-xl border-2 transition-all hover:border-blue-200 h-full flex flex-col justify-center {{ $vat_included === 'exclude' ? 'border-blue-600 bg-blue-50' : 'border-gray-100 bg-gray-50' }}">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <div class="w-4 h-4 rounded-full border flex items-center justify-center {{ $vat_included === 'exclude' ? 'border-blue-600 bg-blue-600' : 'border-gray-400' }}">
+                                        <div class="w-1.5 h-1.5 rounded-full bg-white {{ $vat_included === 'exclude' ? 'opacity-100' : 'opacity-0' }}"></div>
+                                    </div>
+                                    <span class="font-bold {{ $vat_included === 'exclude' ? 'text-blue-900' : 'text-gray-900' }}">Price excludes VAT</span>
+                                </div>
+                                <span class="text-xs text-gray-500 ml-6">Add VAT to net amount</span>
+                            </div>
+                        </label>
+                    </div>
                 </div>
             @endisset
 
@@ -79,27 +103,29 @@
 
             {{-- Results Section --}}
             @if ($total && !$error_message)
-                <div class="bg-gray-900 text-white rounded-xl p-6 shadow-lg mt-6 transform transition-all duration-300"
+                <div class="bg-white rounded-xl shadow-lg mt-8 overflow-hidden border-l-4 border-blue-600"
                      wire:transition.scale.origin.top>
-                    <div class="grid grid-cols-2 gap-4 mb-4 pb-4 border-b border-gray-700" wire:loading.class="opacity-50" wire:target="calculate">
-                        <div>
-                            <div class="text-gray-400 text-xs uppercase tracking-wider mb-1">Net Amount</div>
-                            <div class="font-medium">
-                                {{ is_numeric($amount) ? Number::currency((float)($vat_included == 'include' ? $total - $vat_amount : $amount), 'EUR') : '0.00 €' }}
+                    <div class="p-6" wire:loading.class="opacity-50" wire:target="calculate">
+                        <div class="grid grid-cols-2 gap-8 mb-6">
+                            <div>
+                                <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Net Amount</div>
+                                <div class="text-xl font-medium text-gray-900">
+                                    {{ is_numeric($amount) ? Number::currency((float)($vat_included == 'include' ? $total - $vat_amount : $amount), 'EUR') : '0.00 €' }}
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">VAT ({{ $selectedRate }}%)</div>
+                                <div class="text-xl font-medium text-blue-600">
+                                    {{ is_numeric($vat_amount) ? Number::currency((float)$vat_amount, 'EUR') : '0.00 €' }}
+                                </div>
                             </div>
                         </div>
-                        <div class="text-right">
-                            <div class="text-gray-400 text-xs uppercase tracking-wider mb-1">VAT Amount ({{ $selectedRate }}%)</div>
-                            <div class="font-medium text-blue-300">
-                                {{ is_numeric($vat_amount) ? Number::currency((float)$vat_amount, 'EUR') : '0.00 €' }}
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="flex justify-between items-end">
-                        <div class="text-gray-300 text-sm">Total Amount</div>
-                        <div class="text-3xl font-bold tracking-tight text-white">
-                            {{ is_numeric($total) ? Number::currency((float)($vat_included == 'include' ? $amount : $total), 'EUR') : '0.00 €' }}
+                        
+                        <div class="pt-6 border-t border-gray-100 flex justify-between items-center bg-gray-50 -mx-6 -mb-6 px-6 py-4">
+                            <span class="font-medium text-gray-500">Total to Pay</span>
+                            <span class="text-3xl font-bold text-gray-900 tracking-tight">
+                                {{ is_numeric($total) ? Number::currency((float)($vat_included == 'include' ? $amount : $total), 'EUR') : '0.00 €' }}
+                            </span>
                         </div>
                     </div>
                 </div>

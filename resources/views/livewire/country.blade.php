@@ -70,80 +70,62 @@
                             <livewire:vat-validator :country="$country" />
                         </div> --}}
 
-                        <div class="country-content">
+                        <div class="country-content max-w-3xl mx-auto">
+                            <article class="prose prose-blue prose-lg max-w-none">
+                                <h2 class="text-3xl font-bold text-gray-900 mb-6">{{ $country->name }} VAT Guide</h2>
 
-                            <article>
-                                <h1> {{ $country->name }} VAT Information</h1>
-
-                                <section>
-                                    <h2>Introduction to VAT in {{ $country->name }} </h2>
-                                    <p> {{ $country->name }} , as a member of the European Union, has its
-                                        unique VAT
-                                        system that businesses and consumers need to navigate. The standard VAT
-                                        rate in {{ $country->name }} is {{ $country->standard_rate }}%, one of
-                                        the lowest in Europe, affecting
-                                        goods and services across the country. For detailed VAT rates and
-                                        exceptions, use our <a wire:navigate="/vat-calculator/{{ $country->slug }}"
-                                            href="/vat-calculator/{{ $country->slug }}">VAT Calculator for
-                                            {{ $country->name }}</a> to see
-                                        how much VAT you need to pay or reclaim for transactions in
-                                        {{ $country->name }} .
+                                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8 mb-10">
+                                    <h3 class="text-xl font-bold text-gray-900 mb-4">Introduction</h3>
+                                    <p class="text-gray-600 leading-relaxed mb-0">
+                                        {{ $country->name }}, as a member of the European Union, maintains its own unique VAT system. 
+                                        The standard VAT rate is <span class="font-bold text-blue-600">{{ $country->standard_rate }}%</span>, 
+                                        which applies to most goods and services. 
+                                        Using our <a href="{{ route('vat-calculator.country', $country->slug) }}" class="text-blue-600 hover:underline font-medium">VAT Calculator</a>, 
+                                        you can easily calculate the exact VAT amount for any transaction.
                                     </p>
-                                </section>
+                                </div>
 
-                                <section>
-                                    <h2>Understanding {{ $country->name }} 's VAT Rates</h2>
-                                    <p> {{ $country->name }} offers three main VAT rates:</p>
-                                    <ul>
-                                        <li><strong>Standard Rate:</strong> {{ $country->standard_rate }}%
-                                            applies to most goods and
-                                            services.</li>
-                                        <li><strong>Reduced Rate:</strong> {{ $country->reduced_rate }}% for
-                                            essential goods like food,
-                                            drugs, and books.</li>
-                                        <li><strong>Special Rate for Accommodation Services:</strong>
-                                            {{ $country->special_rate }}%</li>
-                                    </ul>
+                                <div class="space-y-10">
+                                    <section>
+                                        <h3 class="text-2xl font-bold text-gray-900 mb-4">VAT Rate Structure</h3>
+                                        <p class="text-gray-600 mb-4">{{ $country->name }} applies different rates depending on the product or service:</p>
+                                        
+                                        <div class="grid sm:grid-cols-2 gap-4 not-prose">
+                                            <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
+                                                <div class="text-sm text-blue-600 font-semibold uppercase tracking-wide mb-1">Standard Rate</div>
+                                                <div class="text-3xl font-bold text-gray-900">{{ $country->standard_rate }}%</div>
+                                                <div class="text-sm text-gray-500 mt-1">Most goods & services</div>
+                                            </div>
+                                            @if($country->reduced_rate)
+                                            <div class="bg-green-50 p-4 rounded-lg border border-green-100">
+                                                <div class="text-sm text-green-600 font-semibold uppercase tracking-wide mb-1">Reduced Rate</div>
+                                                <div class="text-3xl font-bold text-gray-900">{{ $country->reduced_rate }}%</div>
+                                                <div class="text-sm text-gray-500 mt-1">Essentials (Food, Books, etc.)</div>
+                                            </div>
+                                            @endif
+                                        </div>
+                                    </section>
 
-                                </section>
+                                    <section>
+                                        <h3 class="text-2xl font-bold text-gray-900 mb-4">VAT Registration & Compliance</h3>
+                                        <p class="text-gray-600 leading-relaxed">
+                                            Businesses operating in {{ $country->name }} must register for VAT if their annual turnover exceeds the national threshold. 
+                                            Foreign companies trading in {{ $country->name }} may need to register immediately without a threshold.
+                                        </p>
+                                    </section>
 
-                                <section>
-                                    <h2>Do I Need to Pay VAT in {{ $country->name }} ?</h2>
-                                    <p>Whether you're a business owner importing goods into
-                                        {{ $country->name }} or
-                                        providing services within the country, understanding your VAT
-                                        obligations is crucial.</p>
-                                </section>
-
-                                <section>
-                                    <h2>Using the VAT Calculator for {{ $country->name }} </h2>
-                                    <p>Calculating the VAT for transactions can be complex. Our <a
-                                            href="/vat-calculator">VAT Calculator</a> simplifies this process,
-                                        whether you're adding VAT to prices or extracting VAT amounts from gross
-                                        sums. This tool is essential for businesses and individuals dealing with
-                                        VAT in {{ $country->name }} .</p>
-                                </section>
-
-                                <section>
-                                    <h2>Navigating VAT Registration and Compliance</h2>
-                                    <p>VAT registration in {{ $country->name }} is mandatory for businesses
-                                        exceeding a
-                                        certain turnover threshold.</p>
-                                </section>
-
-                                <section>
-                                    <h2>VAT Refunds in {{ $country->name }} </h2>
-                                    <p>If you've incurred VAT on business-related expenses in
-                                        {{ $country->name }} , you
-                                        might be eligible for a refund.</p>
-                                </section>
-
-                                <section>
-                                    <h2>Stay Updated with VAT Changes</h2>
-                                    <p>VAT rates and regulations can change. Stay informed with the latest
-                                        updates and insights on</p>
-                                </section>
-
+                                    <section>
+                                        <h3 class="text-2xl font-bold text-gray-900 mb-4">Tools & Resources</h3>
+                                        <p class="text-gray-600 leading-relaxed">
+                                            Use our specialized tools to manage your VAT obligations:
+                                            <ul class="list-disc pl-5 space-y-2 mt-2">
+                                                <li><a href="{{ route('vat-calculator.country', $country->slug) }}" class="text-blue-600 hover:underline">Calculate VAT for {{ $country->name }}</a></li>
+                                                <li>Check valid VAT numbers via VIES (Coming Soon)</li>
+                                                <li>View historical rate changes</li>
+                                            </ul>
+                                        </p>
+                                    </section>
+                                </div>
                             </article>
                         </div>
 
