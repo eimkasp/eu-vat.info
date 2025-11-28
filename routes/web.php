@@ -13,8 +13,8 @@ use League\CommonMark\Extension\Embed\Embed;
 
 Route::get('/', Home::class)->name('home');
 Route::get('/country/{slug}', CountryPage::class)->name('country.show');
-Route::get('/country/{slug}/history', CountryPage::class)->name('country.vat.history');
-Route::get('/country/{slug}/vat-guide', CountryPage::class)->name('country.vat.guide');
+Route::get('/country/{slug}/{tab}', CountryPage::class)->name('country.tab')
+    ->where('tab', 'vat-calculator|vat-validator|history|vat-guide');
 
 Route::get('/counter', Counter::class);
 Route::get('/tools', Tools::class);

@@ -48,20 +48,36 @@ class SitemapController extends Controller
         
         // Country-specific calculator pages & detail pages
         foreach ($countries as $country) {
-            // Calculator Page
-            $sitemap .= '<url>';
-            $sitemap .= '<loc>' . route('vat-calculator.country', $country->slug) . '</loc>';
-            $sitemap .= '<lastmod>' . $country->updated_at->toAtomString() . '</lastmod>';
-            $sitemap .= '<changefreq>monthly</changefreq>';
-            $sitemap .= '<priority>0.8</priority>';
-            $sitemap .= '</url>';
-
-            // Detail Page
+            // Main country page (Overview)
             $sitemap .= '<url>';
             $sitemap .= '<loc>' . route('country.show', $country->slug) . '</loc>';
             $sitemap .= '<lastmod>' . $country->updated_at->toAtomString() . '</lastmod>';
             $sitemap .= '<changefreq>monthly</changefreq>';
             $sitemap .= '<priority>0.9</priority>';
+            $sitemap .= '</url>';
+
+            // Country VAT Calculator Tab
+            $sitemap .= '<url>';
+            $sitemap .= '<loc>' . route('country.tab', ['slug' => $country->slug, 'tab' => 'vat-calculator']) . '</loc>';
+            $sitemap .= '<lastmod>' . $country->updated_at->toAtomString() . '</lastmod>';
+            $sitemap .= '<changefreq>monthly</changefreq>';
+            $sitemap .= '<priority>0.8</priority>';
+            $sitemap .= '</url>';
+
+            // Country VAT Validator Tab
+            $sitemap .= '<url>';
+            $sitemap .= '<loc>' . route('country.tab', ['slug' => $country->slug, 'tab' => 'vat-validator']) . '</loc>';
+            $sitemap .= '<lastmod>' . $country->updated_at->toAtomString() . '</lastmod>';
+            $sitemap .= '<changefreq>monthly</changefreq>';
+            $sitemap .= '<priority>0.8</priority>';
+            $sitemap .= '</url>';
+
+            // Standalone Calculator Page (legacy)
+            $sitemap .= '<url>';
+            $sitemap .= '<loc>' . route('vat-calculator.country', $country->slug) . '</loc>';
+            $sitemap .= '<lastmod>' . $country->updated_at->toAtomString() . '</lastmod>';
+            $sitemap .= '<changefreq>monthly</changefreq>';
+            $sitemap .= '<priority>0.7</priority>';
             $sitemap .= '</url>';
         }
         
