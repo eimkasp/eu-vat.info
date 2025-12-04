@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\HasAnalytics;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
@@ -9,33 +10,32 @@ use Spatie\Sitemap\Contracts\Sitemapable;
 use Spatie\Sitemap\Tags\Url;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
-use App\Traits\HasAnalytics;
 
-class Country extends Model implements Sitemapable , Auditable
+class Country extends Model implements Auditable, Sitemapable
 {
-    use \OwenIt\Auditing\Auditable;
+    use HasAnalytics;
     use HasFactory;
     use HasSlug;
-    use HasAnalytics;
+    use \OwenIt\Auditing\Auditable;
 
     protected $auditExclude = [
         'id',
     ];
 
     protected $fillable = [
-    'iso_code',
-    'iso_code_2',
-    'name',
-    'slug',
-    'standard_rate',
-    'reduced_rate',
-    'super_reduced_rate',
-    'zero_rate',
-    'parking_rate',
-    'currency',
-    'currency_code',
-    'currency_symbol',
-    'flag'
+        'iso_code',
+        'iso_code_2',
+        'name',
+        'slug',
+        'standard_rate',
+        'reduced_rate',
+        'super_reduced_rate',
+        'zero_rate',
+        'parking_rate',
+        'currency',
+        'currency_code',
+        'currency_symbol',
+        'flag',
     ];
 
     /**

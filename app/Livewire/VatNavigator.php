@@ -2,22 +2,28 @@
 
 namespace App\Livewire;
 
-use Livewire\Component;
 use App\Models\Country;
+use Livewire\Component;
 
 class VatNavigator extends Component
 {
     public $sellerCountry;
+
     public $buyerCountry;
+
     public $buyerType = 'b2c'; // b2b, b2c
+
     public $itemType = 'goods'; // goods, services
+
     public $productCategory = 'general'; // general, digital, construction, events
+
     public $result = null;
+
     public $countries = [];
 
     public function mount()
     {
-        $this->countries = Country::orderBy('name')->get()->map(function($c) {
+        $this->countries = Country::orderBy('name')->get()->map(function ($c) {
             return ['id' => $c->id, 'name' => $c->name];
         })->toArray();
     }
@@ -29,8 +35,9 @@ class VatNavigator extends Component
 
     public function calculate()
     {
-        if (!$this->sellerCountry || !$this->buyerCountry) {
+        if (! $this->sellerCountry || ! $this->buyerCountry) {
             $this->result = null;
+
             return;
         }
 
@@ -38,9 +45,9 @@ class VatNavigator extends Component
         $isBuyerEU = collect($this->countries)->where('id', $this->buyerCountry)->isNotEmpty();
         // Wait, I need "Non-EU" option.
         // I'll handle "other" as ID 0 or 'non-eu'.
-        
+
         // Let's assume the list is EU countries. If buyerCountry is 'non-eu', then export.
-        
+
         $seller = Country::find($this->sellerCountry);
         $buyer = $this->buyerCountry === 'non-eu' ? null : Country::find($this->buyerCountry);
 
@@ -51,6 +58,7 @@ class VatNavigator extends Component
                 'rate' => 0,
                 'explanation' => 'Sales to countries outside the EU are generally zero-rated for VAT (exempt with credit). You must retain proof of export.',
             ];
+
             return;
         }
 
@@ -60,19 +68,20 @@ class VatNavigator extends Component
                 'rate' => $seller->standard_rate,
                 'explanation' => "Since both buyer and seller are in {$seller->name}, you must charge the standard domestic VAT rate.",
             ];
+
             return;
         }
 
         // Intra-EU
         if ($this->buyerType === 'b2b') {
             if ($this->productCategory === 'construction') {
-                 $this->result = [
+                $this->result = [
                     'action' => 'Reverse Charge (0% VAT)',
                     'rate' => 0,
-                    'explanation' => "For construction services, the Reverse Charge mechanism usually applies in B2B transactions. The recipient accounts for the VAT.",
+                    'explanation' => 'For construction services, the Reverse Charge mechanism usually applies in B2B transactions. The recipient accounts for the VAT.',
                 ];
             } elseif ($this->productCategory === 'events') {
-                 $this->result = [
+                $this->result = [
                     'action' => 'Place of Event Rule',
                     'rate' => 'Local Rate',
                     'explanation' => "Admission to events is taxable where the event actually takes place. If the event is in the buyer's country, you may need to register for VAT there or check specific exceptions.",
@@ -82,7 +91,7 @@ class VatNavigator extends Component
                 $this->result = [
                     'action' => 'Reverse Charge (0% VAT)',
                     'rate' => 0,
-                    'explanation' => "For B2B transactions between EU countries, the Reverse Charge mechanism typically applies. The buyer accounts for the VAT. Do not charge VAT but verify their VAT number.",
+                    'explanation' => 'For B2B transactions between EU countries, the Reverse Charge mechanism typically applies. The buyer accounts for the VAT. Do not charge VAT but verify their VAT number.',
                 ];
             }
         } else {
@@ -105,7 +114,7 @@ class VatNavigator extends Component
                     $this->result = [
                         'action' => 'Place of Event',
                         'rate' => 'Local Rate',
-                        'explanation' => "Admission to cultural, artistic, or educational events is taxable where the event takes place.",
+                        'explanation' => 'Admission to cultural, artistic, or educational events is taxable where the event takes place.',
                     ];
                 } else {
                     $this->result = [

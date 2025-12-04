@@ -10,13 +10,14 @@ use Illuminate\View\Component;
 class CountryRates extends Component
 {
     public $country;
+
     /**
      * Create a new component instance.
      */
     public function __construct($country = null)
     {
         $this->country = $country;
-        if($this->country == null) {
+        if ($this->country == null) {
             $this->country = Country::first();
         }
     }

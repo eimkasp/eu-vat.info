@@ -1,20 +1,23 @@
 <?php
 
 use App\Http\Controllers\EmbedController;
+use App\Http\Controllers\OgImageController;
 use App\Http\Controllers\SitemapController;
+use App\Livewire\Counter;
+use App\Livewire\CountryPage;
 use App\Livewire\Home;
 use App\Livewire\Tools;
 use App\Livewire\VatCalculator;
 use App\Livewire\VatMap;
 use Illuminate\Support\Facades\Route;
-use App\Livewire\Counter;
-use App\Livewire\CountryPage;
-use League\CommonMark\Extension\Embed\Embed;
 
 Route::get('/', Home::class)->name('home');
 Route::get('/country/{slug}', CountryPage::class)->name('country.show');
 Route::get('/country/{slug}/history', CountryPage::class)->name('country.vat.history');
 Route::get('/country/{slug}/vat-guide', CountryPage::class)->name('country.vat.guide');
+
+// Dynamic OG Image routes
+Route::get('/og-image/country/{slug}', [OgImageController::class, 'country'])->name('og-image.country');
 
 Route::get('/counter', Counter::class);
 Route::get('/tools', Tools::class);
@@ -39,7 +42,8 @@ Route::get('/llms-full.txt', function () {
     $content .= "| Country | ISO | Standard | Reduced | Super Reduced | Parking |\n";
     $content .= "|---|---|---|---|---|---|\n";
     foreach ($countries as $c) {
-        $content .= "| {$c->name} | {$c->iso_code} | {$c->standard_rate}% | " . ($c->reduced_rate ? "{$c->reduced_rate}%" : "-") . " | " . ($c->super_reduced_rate ? "{$c->super_reduced_rate}%" : "-") . " | " . ($c->parking_rate ? "{$c->parking_rate}%" : "-") . " |\n";
+        $content .= "| {$c->name} | {$c->iso_code} | {$c->standard_rate}% | ".($c->reduced_rate ? "{$c->reduced_rate}%" : '-').' | '.($c->super_reduced_rate ? "{$c->super_reduced_rate}%" : '-').' | '.($c->parking_rate ? "{$c->parking_rate}%" : '-')." |\n";
     }
+
     return response($content)->header('Content-Type', 'text/plain');
 });

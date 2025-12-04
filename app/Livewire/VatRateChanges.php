@@ -2,13 +2,13 @@
 
 namespace App\Livewire;
 
-use Livewire\Component;
 use App\Models\VatRate;
-use Illuminate\Support\Facades\DB;
+use Livewire\Component;
 
 class VatRateChanges extends Component
 {
     public $recentChanges = [];
+
     public $futureChanges = [];
 
     public function mount()
@@ -50,6 +50,7 @@ class VatRateChanges extends Component
             ->first();
 
         $rate->diff = $previous ? $rate->rate - $previous->rate : 0;
+
         return $rate;
     }
 

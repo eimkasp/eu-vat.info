@@ -19,24 +19,24 @@ return new class extends Migration
             $table->string('url')->nullable();
             $table->string('api_endpoint')->nullable();
             $table->enum('type', ['official', 'community', 'commercial', 'scraper'])->default('community');
-            
+
             // Credibility metrics
             $table->integer('credibility_score')->default(50); // 0-100
             $table->integer('reliability_score')->default(50); // 0-100
             $table->timestamp('last_checked_at')->nullable();
             $table->timestamp('last_successful_update')->nullable();
             $table->integer('consecutive_failures')->default(0);
-            
+
             // Status
             $table->boolean('is_active')->default(true);
             $table->boolean('is_primary')->default(false);
             $table->integer('priority')->default(0); // Higher = checked first
-            
+
             // Rate limiting
             $table->integer('requests_per_day')->nullable();
             $table->integer('requests_today')->default(0);
             $table->date('requests_reset_date')->nullable();
-            
+
             $table->timestamps();
         });
     }

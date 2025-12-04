@@ -2,11 +2,10 @@
 
 namespace App\Livewire;
 
-use Livewire\Component;
-use App\Models\VatRate;
 use App\Models\Country;
+use App\Models\VatRate;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
+use Livewire\Component;
 use Livewire\WithPagination;
 
 class VatChangesHistory extends Component
@@ -14,8 +13,11 @@ class VatChangesHistory extends Component
     use WithPagination;
 
     public $selectedCountry = null;
+
     public $selectedType = null;
+
     public $sortBy = 'recent'; // recent, country, stability
+
     public $countryStats = [];
 
     public function mount()
@@ -30,27 +32,34 @@ class VatChangesHistory extends Component
             return Country::withCount(['vatRates' => function ($query) {
                 $query->where('effective_from', '>=', '2000-01-01');
             }])
-            ->get()
-            ->map(function ($country) {
-                return [
-                    'id' => $country->id,
-                    'name' => $country->name,
-                    'slug' => $country->slug,
-                    'iso_code' => $country->iso_code,
-                    'changes_count' => $country->vat_rates_count,
-                    'stability' => $this->getStabilityRating($country->vat_rates_count)
-                ];
-            })
-            ->sortBy('changes_count')
-            ->values();
+                ->get()
+                ->map(function ($country) {
+                    return [
+                        'id' => $country->id,
+                        'name' => $country->name,
+                        'slug' => $country->slug,
+                        'iso_code' => $country->iso_code,
+                        'changes_count' => $country->vat_rates_count,
+                        'stability' => $this->getStabilityRating($country->vat_rates_count),
+                    ];
+                })
+                ->sortBy('changes_count')
+                ->values();
         });
     }
 
     private function getStabilityRating($changesCount)
     {
-        if ($changesCount <= 2) return 'excellent';
-        if ($changesCount <= 5) return 'good';
-        if ($changesCount <= 10) return 'moderate';
+        if ($changesCount <= 2) {
+            return 'excellent';
+        }
+        if ($changesCount <= 5) {
+            return 'good';
+        }
+        if ($changesCount <= 10) {
+            return 'moderate';
+        }
+
         return 'frequent';
     }
 
