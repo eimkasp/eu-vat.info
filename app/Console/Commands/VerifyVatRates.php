@@ -8,6 +8,7 @@ use Illuminate\Console\Command;
 class VerifyVatRates extends Command
 {
     protected $signature = 'vat:verify {--fix : Apply fixes automatically}';
+
     protected $description = 'Verify and fix VAT rates based on known 2024/2025 data';
 
     public function handle()
@@ -24,15 +25,16 @@ class VerifyVatRates extends Command
 
         foreach ($knownRates as $code => $rate) {
             $country = Country::where('iso_code', $code)->first();
-            
-            if (!$country) {
+
+            if (! $country) {
                 $this->warn("Country {$code} not found in database.");
+
                 continue;
             }
 
             if (abs($country->standard_rate - $rate) > 0.01) {
                 $this->error("Mismatch for {$country->name} ({$code}): DB={$country->standard_rate}%, Expected={$rate}%");
-                
+
                 if ($this->option('fix')) {
                     $country->standard_rate = $rate;
                     $country->save();
@@ -42,12 +44,12 @@ class VerifyVatRates extends Command
                 $this->line("{$country->name}: OK ({$rate}%)");
             }
         }
-        
+
         // Check Finland change (rose to 25.5% in Sept 2024? No, proposed. Current 24%).
         // Check Estonia (22% from Jan 2024).
         // Check Luxembourg (17% from Jan 2024).
         // Check Switzerland (8.1% from Jan 2024).
-        
-        $this->info("Verification complete.");
+
+        $this->info('Verification complete.');
     }
 }

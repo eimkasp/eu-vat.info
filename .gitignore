@@ -21,5 +21,14 @@ yarn-error.log
 
 !/bootstrap/cache/index.php
 !/storage/framework/cache/index.php
+bootstrap/cache/packages.php
+bootstrap/cache/services.php
+storage/logs/
+storage/framework/views/
+storage/app/public/og-images/
+database/database.sqlite
+public/js/filament/
+public/css/filament/
+package-lock.json
 ads.txt
 public/ads.txt

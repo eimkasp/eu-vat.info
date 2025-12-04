@@ -8,7 +8,9 @@ trait TracksCountryViews
 {
     protected function trackCountryView($country, $type = 'view', $metadata = [])
     {
-        if (!$country) return;
+        if (! $country) {
+            return;
+        }
 
         $analyticsService = app(CountryAnalyticsService::class);
         $analyticsService->trackView($country, request(), $type, $metadata);

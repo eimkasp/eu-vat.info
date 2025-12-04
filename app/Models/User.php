@@ -18,6 +18,7 @@ class User extends Authenticatable implements Auditable, FilamentUser
     protected $auditExclude = [
         'id',
     ];
+
     use \OwenIt\Auditing\Auditable;
 
     public function canAccessPanel(Panel $panel): bool

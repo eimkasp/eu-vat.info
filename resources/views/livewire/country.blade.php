@@ -1,16 +1,11 @@
 <div class="container">
-    @section('title', 'VAT Rates in ' . $country->name . '- EU VAT Info')
-    @section('meta_description',
-        'The standard VAT rate in ' .
-        $country->name .
-        ' is ' .
-        $country->standard_rate .
-        '%. Learn about VAT rates, exceptions, and compliance in ' .
-        $country->name .
-        '. Use our VAT
-        calculator to calculate VAT for transactions in ' .
-        $country->name .
-        '.')
+    @section('seo')
+        <x-seo-meta 
+            :title="'VAT Rates in ' . $country->name . ' - EU VAT Info'"
+            :description="'The standard VAT rate in ' . $country->name . ' is ' . $country->standard_rate . '%. Learn about VAT rates, exceptions, and compliance in ' . $country->name . '.'"
+            :image="route('og-image.country', $country->slug)"
+        />
+    @endsection
         <div class="">
             <div class="relative w-full">
                 <div class="grid sm:grid-cols-12 gap-9">

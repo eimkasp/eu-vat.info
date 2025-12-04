@@ -9,6 +9,7 @@ use Illuminate\View\Component;
 class CountryStats extends Component
 {
     public $country;
+
     /**
      * Create a new component instance.
      */

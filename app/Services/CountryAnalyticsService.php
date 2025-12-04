@@ -11,7 +11,7 @@ class CountryAnalyticsService
     public function trackView(Country $country, Request $request, string $type = 'view', array $metadata = []): void
     {
         $location = Location::get($request->ip());
-        
+
         $country->analytics()->create([
             'type' => $type,
             'ip_address' => $request->ip(),
@@ -21,7 +21,7 @@ class CountryAnalyticsService
             'location_city' => $location ? $location->cityName : null,
             'amount' => $metadata['amount'] ?? null,
             'rate_used' => $metadata['rate_used'] ?? null,
-            'meta_data' => !empty($metadata) ? $metadata : null,
+            'meta_data' => ! empty($metadata) ? $metadata : null,
         ]);
     }
 }

@@ -29,20 +29,20 @@ class TranslateMissing extends Command
     {
         $sourceLocale = config('translation.fallback_language', 'en');
         $supportedLocales = array_keys(config('translation.supported_languages', []));
-        
+
         // Get all source translations
         // Assuming source keys are stored with locale = $sourceLocale
-        // If your system uses 'key' as the identifier and doesn't store source text separately, 
+        // If your system uses 'key' as the identifier and doesn't store source text separately,
         // you might need to distinct() on 'key'.
-        
+
         $keys = Translation::select('key', 'group')
             ->distinct()
             ->pluck('key'); // Simplified: assuming simple keys
 
         // If you store the English value in the DB, you can fetch it.
         // If not, and the key IS the text, we use the key.
-        
-        $this->info("Found " . $keys->count() . " unique translation keys.");
+
+        $this->info('Found '.$keys->count().' unique translation keys.');
 
         foreach ($keys as $key) {
             foreach ($supportedLocales as $locale) {
@@ -55,13 +55,13 @@ class TranslateMissing extends Command
                     ->where('locale', $locale)
                     ->exists();
 
-                if (!$exists) {
+                if (! $exists) {
                     $this->info("Dispatching translation for [$locale]: $key");
                     TranslateText::dispatch($key, $locale, $sourceLocale);
                 }
             }
         }
 
-        $this->info("Translation jobs dispatched.");
+        $this->info('Translation jobs dispatched.');
     }
 }

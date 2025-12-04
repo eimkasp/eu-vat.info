@@ -11,7 +11,7 @@ class EmbedController extends Controller
     public function index(Request $request)
     {
         $country = $request->country;
-        if($country == null) {
+        if ($country == null) {
             $country = 'united-kingdom';
         }
 
@@ -23,9 +23,10 @@ class EmbedController extends Controller
     public function iframe(Request $request)
     {
         $country = $request->country;
-        if($country == null) {
+        if ($country == null) {
             $country = 'united-kingdom';
         }
+
         return view('widget.iframe', compact('country'));
     }
 }
