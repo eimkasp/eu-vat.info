@@ -14,16 +14,58 @@ class OgImageController extends Controller
     /**
      * Path to the regular font file
      */
-    protected string $fontRegular = '/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf';
+    protected string $fontRegular;
 
     /**
      * Path to the bold font file
      */
-    protected string $fontBold = '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf';
+    protected string $fontBold;
+
+    /**
+     * List of possible font paths to check (in order of preference)
+     */
+    protected array $fontPaths = [
+        'regular' => [
+            '/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf',
+            '/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf',
+            '/usr/share/fonts/truetype/freefont/FreeSans.ttf',
+            '/usr/share/fonts/truetype/lato/Lato-Regular.ttf',
+        ],
+        'bold' => [
+            '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf',
+            '/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf',
+            '/usr/share/fonts/truetype/freefont/FreeSansBold.ttf',
+            '/usr/share/fonts/truetype/lato/Lato-Bold.ttf',
+        ],
+    ];
 
     public function __construct()
     {
         $this->imageManager = new ImageManager(new Driver);
+        $this->initializeFonts();
+    }
+
+    /**
+     * Initialize fonts by finding available font files
+     */
+    protected function initializeFonts(): void
+    {
+        $this->fontRegular = $this->findAvailableFont($this->fontPaths['regular']);
+        $this->fontBold = $this->findAvailableFont($this->fontPaths['bold']) ?? $this->fontRegular;
+    }
+
+    /**
+     * Find the first available font from a list of paths
+     */
+    protected function findAvailableFont(array $fontPaths): ?string
+    {
+        foreach ($fontPaths as $fontPath) {
+            if (file_exists($fontPath)) {
+                return $fontPath;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -32,6 +74,11 @@ class OgImageController extends Controller
     public function country(string $slug)
     {
         $country = Country::where('slug', $slug)->firstOrFail();
+
+        // Check if fonts are available
+        if (! $this->fontRegular) {
+            return $this->generateFallbackImage($country);
+        }
 
         // Check if image already exists
         $imagePath = "og-images/country-{$slug}.png";
@@ -56,6 +103,23 @@ class OgImageController extends Controller
         Storage::disk('public')->put($imagePath, $imageContent);
 
         return response($imageContent, 200, [
+            'Content-Type' => 'image/png',
+            'Cache-Control' => 'public, max-age=86400',
+        ]);
+    }
+
+    /**
+     * Generate a simple fallback image when fonts are not available
+     */
+    protected function generateFallbackImage(Country $country): \Illuminate\Http\Response
+    {
+        $width = 1200;
+        $height = 630;
+
+        $image = $this->imageManager->create($width, $height);
+        $this->drawGradientBackground($image, $width, $height);
+
+        return response($image->toPng()->toString(), 200, [
             'Content-Type' => 'image/png',
             'Cache-Control' => 'public, max-age=86400',
         ]);

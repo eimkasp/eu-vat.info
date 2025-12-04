@@ -2,6 +2,7 @@
 
 use App\Models\Country;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 
 uses(RefreshDatabase::class);
