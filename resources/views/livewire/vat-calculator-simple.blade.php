@@ -40,24 +40,77 @@
         </div>
     </div>
 
-    <!-- VAT Rate Input -->
+    <!-- VAT Rate Selection -->
     <div>
         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             VAT Rate
         </label>
-        <div class="relative">
-            <input 
-                type="number" 
-                wire:model.live.debounce.300ms="vatRate"
-                step="0.1"
-                min="0"
-                max="100"
-                class="w-full pr-10 pl-4 py-3 text-lg border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                placeholder="{{ $country->standard_rate }}">
-            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 text-lg">%</span>
+        
+        <!-- Quick Rate Buttons -->
+        <div class="flex flex-wrap gap-2 mb-3">
+            <button 
+                type="button"
+                wire:click="setStandardRate"
+                class="px-3 py-2 text-sm rounded-lg transition-all {{ !$useCustomRate && $vatRate == $country->standard_rate ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600' }}">
+                Standard ({{ $country->standard_rate }}%)
+            </button>
+            
+            @if($country->reduced_rate)
+                <button 
+                    type="button"
+                    wire:click="setReducedRate"
+                    class="px-3 py-2 text-sm rounded-lg transition-all {{ !$useCustomRate && $vatRate == $country->reduced_rate ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600' }}">
+                    Reduced ({{ $country->reduced_rate }}%)
+                </button>
+            @endif
+            
+            @if($country->super_reduced_rate)
+                <button 
+                    type="button"
+                    wire:click="setSuperReducedRate"
+                    class="px-3 py-2 text-sm rounded-lg transition-all {{ !$useCustomRate && $vatRate == $country->super_reduced_rate ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600' }}">
+                    Super Reduced ({{ $country->super_reduced_rate }}%)
+                </button>
+            @endif
+            
+            <button 
+                type="button"
+                wire:click="enableCustomRate"
+                class="px-3 py-2 text-sm rounded-lg transition-all {{ $useCustomRate ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600' }}">
+                Custom
+            </button>
         </div>
+        
+        <!-- Custom Rate Input -->
+        @if($useCustomRate)
+            <div class="relative">
+                <input 
+                    type="number" 
+                    wire:model.live.debounce.300ms="vatRate"
+                    step="0.1"
+                    min="0"
+                    max="100"
+                    class="w-full pr-10 pl-4 py-3 text-lg border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    placeholder="Enter custom rate">
+                <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 text-lg">%</span>
+            </div>
+        @else
+            <div class="relative">
+                <input 
+                    type="number" 
+                    value="{{ $vatRate }}"
+                    disabled
+                    class="w-full pr-10 pl-4 py-3 text-lg border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white cursor-not-allowed">
+                <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 text-lg">%</span>
+            </div>
+        @endif
+        
         <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
-            Standard rate for {{ $country->name }}: {{ $country->standard_rate }}%
+            @if($useCustomRate)
+                Enter your custom VAT rate or select a preset above
+            @else
+                Currently using: {{ $vatRate }}% • Click "Custom" to enter a different rate
+            @endif
         </p>
     </div>
 

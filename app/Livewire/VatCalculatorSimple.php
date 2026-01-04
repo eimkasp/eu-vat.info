@@ -11,11 +11,39 @@ class VatCalculatorSimple extends Component
     public float $amount = 100;
     public string $mode = 'exclude'; // 'exclude' or 'include'
     public float $vatRate;
+    public bool $useCustomRate = false;
     
     public function mount(Country $country)
     {
         $this->country = $country;
         $this->vatRate = $country->standard_rate;
+    }
+
+    public function setStandardRate()
+    {
+        $this->useCustomRate = false;
+        $this->vatRate = $this->country->standard_rate;
+    }
+
+    public function setReducedRate()
+    {
+        if ($this->country->reduced_rate) {
+            $this->useCustomRate = false;
+            $this->vatRate = $this->country->reduced_rate;
+        }
+    }
+
+    public function setSuperReducedRate()
+    {
+        if ($this->country->super_reduced_rate) {
+            $this->useCustomRate = false;
+            $this->vatRate = $this->country->super_reduced_rate;
+        }
+    }
+
+    public function enableCustomRate()
+    {
+        $this->useCustomRate = true;
     }
 
     public function calculate()

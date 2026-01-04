@@ -34,6 +34,8 @@ class VatCalculator extends Component
     public $vat_included = 'include';
 
     public $rates = [];
+    public $customRate = null;
+    public $useCustomRate = false;
 
     public $vat_options = [
         [
@@ -180,8 +182,33 @@ class VatCalculator extends Component
                     $this->selectedRate = $this->rates[array_key_first($this->rates)]['value'];
                 }
             }
+            $this->useCustomRate = false;
             $this->calculateVat();
         }
+        
+        if ($property === 'customRate') {
+            if ($this->useCustomRate && is_numeric($this->customRate)) {
+                $this->selectedRate = floatval($this->customRate);
+                $this->calculateVat();
+            }
+        }
+    }
+
+    public function setCustomRate()
+    {
+        $this->useCustomRate = true;
+        if (is_numeric($this->customRate) && $this->customRate >= 0) {
+            $this->selectedRate = floatval($this->customRate);
+            $this->calculateVat();
+        }
+    }
+
+    public function selectPresetRate($rate)
+    {
+        $this->useCustomRate = false;
+        $this->selectedRate = $rate;
+        $this->customRate = null;
+        $this->calculateVat();
     }
 
     public function calculate()

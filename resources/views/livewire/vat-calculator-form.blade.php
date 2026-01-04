@@ -49,13 +49,37 @@
                     <label class="text-sm font-medium text-gray-700 block">VAT Rate</label>
                     <div class="grid grid-cols-1 gap-2">
                         @foreach($rates as $rate)
-                            <label class="relative flex items-center p-3 rounded-lg border cursor-pointer hover:bg-white transition-colors {{ $selectedRate == $rate['value'] ? 'bg-white border-blue-500 ring-1 ring-blue-500' : 'border-gray-200' }}">
-                                <input type="radio" name="rate" wire:model.live="selectedRate" value="{{ $rate['value'] }}" wire:change="calculate" class="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                            <label class="relative flex items-center p-3 rounded-lg border cursor-pointer hover:bg-white transition-colors {{ !$useCustomRate && $selectedRate == $rate['value'] ? 'bg-white border-blue-500 ring-1 ring-blue-500' : 'border-gray-200' }}">
+                                <input type="radio" name="rate" wire:click="selectPresetRate({{ $rate['value'] }})" value="{{ $rate['value'] }}" {{ !$useCustomRate && $selectedRate == $rate['value'] ? 'checked' : '' }} class="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500">
                                 <span class="ml-3 flex flex-col">
                                     <span class="block text-sm font-medium text-gray-900">{{ $rate['name'] }}</span>
                                 </span>
                             </label>
                         @endforeach
+                        
+                        {{-- Custom Rate Option --}}
+                        <label class="relative flex items-center p-3 rounded-lg border cursor-pointer hover:bg-white transition-colors {{ $useCustomRate ? 'bg-white border-blue-500 ring-1 ring-blue-500' : 'border-gray-200' }}">
+                            <input type="radio" name="rate" wire:click="$set('useCustomRate', true)" {{ $useCustomRate ? 'checked' : '' }} class="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                            <span class="ml-3 flex-1">
+                                <span class="block text-sm font-medium text-gray-900 mb-2">Custom Rate</span>
+                                @if($useCustomRate)
+                                    <div class="flex items-center gap-2" @click.stop>
+                                        <input 
+                                            type="number" 
+                                            wire:model.live.debounce.300ms="customRate"
+                                            wire:change="setCustomRate"
+                                            step="0.1" 
+                                            min="0" 
+                                            max="100"
+                                            placeholder="Enter rate"
+                                            class="w-24 px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                        <span class="text-sm text-gray-600">%</span>
+                                    </div>
+                                @else
+                                    <span class="text-xs text-gray-500">Enter your own VAT rate</span>
+                                @endif
+                            </span>
+                        </label>
                     </div>
                 </div>
 
