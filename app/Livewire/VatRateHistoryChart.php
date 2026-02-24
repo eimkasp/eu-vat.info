@@ -16,21 +16,23 @@ class VatRateHistoryChart extends Component
     public $currentRate = null;
     public $changePercentage = null;
 
-    public function mount($country)
+    public function mount($country = null)
     {
         $this->country = $country ?? Country::first();
+        if (!$this->country) {
+            return;
+        }
         $this->loadChartData();
         $this->calculateStats();
     }
 
     public function loadChartData()
     {
-        $country_id_to_use = 1;
-        if (isset($this->country->id)) {
-            $country_id_to_use = $this->country->id;
-        } else {
-            $country_id_to_use = Country::first()->id;
+        if (!$this->country) {
+            $this->chartData = [['name' => 'Standard Rate', 'data' => []]];
+            return;
         }
+        $country_id_to_use = $this->country->id;
 
         $rates = VatRate::where('country_id', $country_id_to_use)
             ->where('type', 'standard')
@@ -53,13 +55,10 @@ class VatRateHistoryChart extends Component
 
     private function calculateStats()
     {
-
-        $country_id_to_use = 1;
-        if (isset($this->country->id)) {
-            $country_id_to_use = $this->country->id;
-        } else {
-            $country_id_to_use = Country::first()->id;
+        if (!$this->country) {
+            return;
         }
+        $country_id_to_use = $this->country->id;
 
         
         $earliest = VatRate::where('country_id', $country_id_to_use)
