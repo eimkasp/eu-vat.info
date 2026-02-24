@@ -3,87 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\Country;
-use Illuminate\Http\Response;
+use App\Services\SitemapGenerator;
 
 class SitemapController extends Controller
 {
-    public function index()
+    public function index(SitemapGenerator $generator)
     {
-        $countries = Country::all();
-        
-        $sitemap = '<?xml version="1.0" encoding="UTF-8"?>';
-        $sitemap .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
-        
-        // Homepage
-        $sitemap .= '<url>';
-        $sitemap .= '<loc>' . url('/') . '</loc>';
-        $sitemap .= '<lastmod>' . now()->toAtomString() . '</lastmod>';
-        $sitemap .= '<changefreq>daily</changefreq>';
-        $sitemap .= '<priority>1.0</priority>';
-        $sitemap .= '</url>';
-        
-        // Main calculator page
-        $sitemap .= '<url>';
-        $sitemap .= '<loc>' . route('vat-calculator') . '</loc>';
-        $sitemap .= '<lastmod>' . now()->toAtomString() . '</lastmod>';
-        $sitemap .= '<changefreq>weekly</changefreq>';
-        $sitemap .= '<priority>0.9</priority>';
-        $sitemap .= '</url>';
-        
-        // VAT map
-        $sitemap .= '<url>';
-        $sitemap .= '<loc>' . route('vat-map') . '</loc>';
-        $sitemap .= '<lastmod>' . now()->toAtomString() . '</lastmod>';
-        $sitemap .= '<changefreq>monthly</changefreq>';
-        $sitemap .= '<priority>0.7</priority>';
-        $sitemap .= '</url>';
-        
-        // HTML Sitemap
-        $sitemap .= '<url>';
-        $sitemap .= '<loc>' . route('html-sitemap') . '</loc>';
-        $sitemap .= '<lastmod>' . now()->toAtomString() . '</lastmod>';
-        $sitemap .= '<changefreq>weekly</changefreq>';
-        $sitemap .= '<priority>0.6</priority>';
-        $sitemap .= '</url>';
-        
-        // Country-specific calculator pages & detail pages
-        foreach ($countries as $country) {
-            // Main country page (Overview)
-            $sitemap .= '<url>';
-            $sitemap .= '<loc>' . route('country.show', $country->slug) . '</loc>';
-            $sitemap .= '<lastmod>' . $country->updated_at->toAtomString() . '</lastmod>';
-            $sitemap .= '<changefreq>monthly</changefreq>';
-            $sitemap .= '<priority>0.9</priority>';
-            $sitemap .= '</url>';
+        $xml = $generator->generate();
 
-            // Country VAT Calculator Tab
-            $sitemap .= '<url>';
-            $sitemap .= '<loc>' . route('country.tab', ['slug' => $country->slug, 'tab' => 'vat-calculator']) . '</loc>';
-            $sitemap .= '<lastmod>' . $country->updated_at->toAtomString() . '</lastmod>';
-            $sitemap .= '<changefreq>monthly</changefreq>';
-            $sitemap .= '<priority>0.8</priority>';
-            $sitemap .= '</url>';
-
-            // Country VAT Validator Tab
-            $sitemap .= '<url>';
-            $sitemap .= '<loc>' . route('country.tab', ['slug' => $country->slug, 'tab' => 'vat-validator']) . '</loc>';
-            $sitemap .= '<lastmod>' . $country->updated_at->toAtomString() . '</lastmod>';
-            $sitemap .= '<changefreq>monthly</changefreq>';
-            $sitemap .= '<priority>0.8</priority>';
-            $sitemap .= '</url>';
-
-            // Standalone Calculator Page (legacy)
-            $sitemap .= '<url>';
-            $sitemap .= '<loc>' . route('vat-calculator.country', $country->slug) . '</loc>';
-            $sitemap .= '<lastmod>' . $country->updated_at->toAtomString() . '</lastmod>';
-            $sitemap .= '<changefreq>monthly</changefreq>';
-            $sitemap .= '<priority>0.7</priority>';
-            $sitemap .= '</url>';
-        }
-        
-        $sitemap .= '</urlset>';
-        
-        return response($sitemap, 200)
-            ->header('Content-Type', 'application/xml');
+        return response($xml, 200)
+            ->header('Content-Type', 'application/xml')
+            ->header('Cache-Control', 'public, max-age=3600');
     }
 }
