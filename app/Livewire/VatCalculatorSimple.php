@@ -41,6 +41,14 @@ class VatCalculatorSimple extends Component
         }
     }
 
+    public function setParkingRate()
+    {
+        if ($this->country->parking_rate) {
+            $this->useCustomRate = false;
+            $this->vatRate = $this->country->parking_rate;
+        }
+    }
+
     public function enableCustomRate()
     {
         $this->useCustomRate = true;

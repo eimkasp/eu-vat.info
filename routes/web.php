@@ -25,7 +25,7 @@ $registerRoutes = function () {
     Route::get('/', Home::class)->name('home');
     Route::get('/country/{slug}', CountryPage::class)->name('country.show');
     Route::get('/country/{slug}/{tab}', CountryPage::class)->name('country.tab')
-        ->where('tab', 'vat-calculator|vat-validator|history|vat-guide');
+        ->where('tab', 'vat-calculator|vat-validator|history|vat-guide|overview');
 
     Route::get('/counter', Counter::class);
     Route::get('/tools', Tools::class);

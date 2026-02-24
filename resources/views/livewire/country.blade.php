@@ -1,452 +1,258 @@
-<div class="container" 
-     x-data="{ activeTab: @entangle('activeTab') }"
-     @update-url.window="history.pushState({}, '', $event.detail.url)">
-    @section('title', $tabMeta['title'])
-    @section('meta_description', $tabMeta['description'])
-    
+<div class="container">
+    @section('title', __('ui.calculator.title') . ' ' . $country->name . ' — ' . $country->standard_rate . '% VAT')
+    @section('meta_description', 'Complete VAT guide for ' . $country->name . '. Standard rate: ' . $country->standard_rate . '%. Free VAT calculator, all rates, compliance info.')
+
     @push('head')
-        <!-- Canonical URL -->
-        <link rel="canonical" href="{{ $tabMeta['url'] }}">
-        
-        <!-- Open Graph -->
-        <meta property="og:title" content="{{ $tabMeta['title'] }}">
-        <meta property="og:description" content="{{ $tabMeta['description'] }}">
-        <meta property="og:url" content="{{ $tabMeta['url'] }}">
+        <link rel="canonical" href="{{ route('country.show', $country->slug) }}">
+        <meta property="og:title" content="{{ $country->name }} VAT Rates & Calculator — {{ $country->standard_rate }}%">
+        <meta property="og:description" content="Complete VAT guide for {{ $country->name }}. Standard rate: {{ $country->standard_rate }}%. Free VAT calculator, all rates, compliance info.">
+        <meta property="og:url" content="{{ route('country.show', $country->slug) }}">
         <meta property="og:type" content="website">
-        
-        <!-- Twitter Card -->
         <meta name="twitter:card" content="summary">
-        <meta name="twitter:title" content="{{ $tabMeta['title'] }}">
-        <meta name="twitter:description" content="{{ $tabMeta['description'] }}">
-        
-        <!-- Structured Data -->
-        <script type="application/ld+json">
-        {
-            "@context": "https://schema.org",
-            "@type": "WebPage",
-            "name": "{{ $tabMeta['title'] }}",
-            "description": "{{ $tabMeta['description'] }}",
-            "url": "{{ $tabMeta['url'] }}",
-            "breadcrumb": {
-                "@type": "BreadcrumbList",
-                "itemListElement": [
-                    {
-                        "@type": "ListItem",
-                        "position": 1,
-                        "name": "Home",
-                        "item": "{{ url('/') }}"
-                    },
-                    {
-                        "@type": "ListItem",
-                        "position": 2,
-                        "name": "{{ $country->name }}",
-                        "item": "{{ route('country.show', $country->slug) }}"
-                    }
-                    @if($activeTab !== 'overview')
-                    ,{
-                        "@type": "ListItem",
-                        "position": 3,
-                        "name": "{{ $tabMeta['name'] }}",
-                        "item": "{{ $tabMeta['url'] }}"
-                    }
-                    @endif
-                ]
-            },
-            "mainEntity": {
-                "@type": "GovernmentService",
-                "name": "{{ $country->name }} VAT Information",
-                "description": "VAT rates and tools for {{ $country->name }}",
-                "provider": {
-                    "@type": "GovernmentOrganization",
-                    "name": "{{ $country->name }} Tax Authority"
-                },
-                "areaServed": {
-                    "@type": "Country",
-                    "name": "{{ $country->name }}"
-                },
-                "serviceOutput": {
-                    "@type": "TaxRate",
-                    "name": "Standard VAT Rate",
-                    "value": "{{ $country->standard_rate }}",
-                    "unitText": "PERCENT"
-                }
-            }
-        }
-        </script>
-        
-        @if($activeTab === 'vat-calculator')
-        <script type="application/ld+json">
-        {
-            "@context": "https://schema.org",
-            "@type": "SoftwareApplication",
-            "name": "{{ $country->name }} VAT Calculator",
-            "applicationCategory": "FinanceApplication",
-            "offers": {
-                "@type": "Offer",
-                "price": "0",
-                "priceCurrency": "EUR"
-            },
-            "description": "Free online VAT calculator for {{ $country->name }}. Calculate {{ $country->standard_rate }}% VAT instantly.",
-            "operatingSystem": "Web Browser",
-            "url": "{{ route('country.tab', ['slug' => $country->slug, 'tab' => 'vat-calculator']) }}"
-        }
-        </script>
-        @endif
+        <meta name="twitter:title" content="{{ $country->name }} VAT Rates & Calculator — {{ $country->standard_rate }}%">
+        <meta name="twitter:description" content="Complete VAT guide for {{ $country->name }}. Standard rate: {{ $country->standard_rate }}%. Free VAT calculator, all rates, compliance info.">
+
+        <x-country.json-ld :country="$country" />
     @endpush
-        <div class="">
-            <div class="relative w-full">
-                <div class="grid sm:grid-cols-12 gap-9">
-                    <div class="sm:col-span-12">
-                        {{-- <x-country-rates :country="$country" /> --}}
-                    </div>
-                    <div class="sm:col-span-4 sm:sticky top-[-1px] sticky-element" style="align-self: flex-start">
-                        <a href="{{ locale_path('/') }}" class="mb-3 block flex items-center gap-3 hover:text-blue-700">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block" fill="none"
-                                viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M11 19l-7-7 7-7m8 14l-7-7 7-7"></path>
-                            </svg>
-                            {{ __('ui.all_countries') }}
-                        </a>
-                        <x-country-stats :country="$country" />
-                        <div class="mt-9 space-y-3 sm:mb-12 border-t pt-3">
-                            <h4 class="font-bold text-gray-900 dark:text-white mb-3">{{ __('ui.footer.vat_tools') }}</h4>
 
-                            <div>
-                                <a class="flex items-center gap-2 text-blue-600 hover:underline hover:text-blue-700 transition-colors" 
-                                   wire:navigate
-                                   href="{{ route('country.tab', ['slug' => $country->slug, 'tab' => 'vat-calculator']) }}">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                                    </svg>
-                                    {{ __('ui.country_page.vat_calculator') }}
-                                </a>
+    <div class="relative w-full">
+        <div class="grid sm:grid-cols-12 gap-6 lg:gap-8">
+            <!-- Sidebar -->
+            <div class="sm:col-span-4 sm:sticky top-[-1px] sticky-element" style="align-self: flex-start">
+                <x-country.sidebar :country="$country" />
+            </div>
+
+            <!-- Main Content -->
+            <div class="sm:col-span-8 pb-12">
+                <x-breadcrumbs :items="[$country->name => '']" />
+
+                <!-- Hero Header -->
+                <div class="mb-6">
+                    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
+                        {{ $country->name }} VAT Rates & Calculator
+                    </h1>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                        Complete guide to Value Added Tax in {{ $country->name }}. Current rates, free calculator, and compliance information.
+                    </p>
+                </div>
+
+                {{-- ─── Section 1: VAT Calculator ─── --}}
+                <section class="mb-8" id="calculator">
+                    <livewire:vat-calculator-simple :country="$country" :key="'calc-'.$country->id" />
+
+                    {{-- Quick formula reference --}}
+                    <div class="grid md:grid-cols-2 gap-3 mt-4">
+                        <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
+                            <h3 class="text-sm font-bold mb-2 text-gray-900 dark:text-white">Adding {{ $country->standard_rate }}% VAT</h3>
+                            <div class="bg-gray-50 dark:bg-gray-900 p-3 rounded-lg font-mono text-sm text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-gray-700 mb-2">
+                                Gross = Net &times; {{ 1 + $country->standard_rate / 100 }}
                             </div>
-
-                            <div>
-                                <a class="flex items-center gap-2 text-blue-600 hover:underline hover:text-blue-700 transition-colors" 
-                                   wire:navigate
-                                   href="{{ route('country.tab', ['slug' => $country->slug, 'tab' => 'vat-validator']) }}">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                    </svg>
-                                    {{ __('ui.validator.title') }}
-                                    <span class="text-xs px-2 py-0.5 bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 rounded-full">New</span>
-                                </a>
-                            </div>
-
-                            <div>
-                                <a class="flex items-center gap-2 text-blue-600 hover:underline hover:text-blue-700 transition-colors" 
-                                   wire:navigate
-                                   href="/embed/{{ $country->slug }}">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
-                                    </svg>
-                                    {{ __('ui.footer.embed_widget') }}
-                                </a>
+                            <div class="text-sm text-gray-500 dark:text-gray-400">
+                                <strong>Example:</strong> {{ $country->currency_display }}100 net &rarr; <strong>{{ $country->currency_display }}{{ number_format(100 * (1 + $country->standard_rate / 100), 2) }}</strong> gross
                             </div>
                         </div>
-                        
-                        <!-- Sidebar Banners -->
-                        <x-banner-display position="country_sidebar" />
+                        <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
+                            <h3 class="text-sm font-bold mb-2 text-gray-900 dark:text-white">Removing {{ $country->standard_rate }}% VAT</h3>
+                            <div class="bg-gray-50 dark:bg-gray-900 p-3 rounded-lg font-mono text-sm text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-gray-700 mb-2">
+                                Net = Gross &divide; {{ 1 + $country->standard_rate / 100 }}
+                            </div>
+                            <div class="text-sm text-gray-500 dark:text-gray-400">
+                                <strong>Example:</strong> {{ $country->currency_display }}100 gross &rarr; <strong>{{ $country->currency_display }}{{ number_format(100 / (1 + $country->standard_rate / 100), 2) }}</strong> net
+                            </div>
+                        </div>
                     </div>
+                </section>
 
-                    <div class="sm:col-span-8 pb-12">
-                        <x-breadcrumbs :items="[$country->name => '']" />
-                        
-                        <div class="space-y-3">
-                            <h1 class="text-2xl lg:text-3xl font-bold">
-                                {{ $tabMeta['name'] }} - {{ $country->name }}
-                            </h1>
-                            <p class="text-gray-500 dark:text-gray-400">
-                                {{ $tabMeta['description'] }}
+                {{-- ─── Section 3: Key Information ─── --}}
+                <section class="mb-8" id="info">
+                    <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Key Information
+                    </h2>
+
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 divide-y divide-gray-100 dark:divide-gray-700">
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-px">
+                            <div class="p-4">
+                                <dt class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Country Code</dt>
+                                <dd class="mt-1 text-lg font-semibold text-gray-900 dark:text-white">{{ $country->iso_code }}</dd>
+                            </div>
+                            <div class="p-4">
+                                <dt class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Currency</dt>
+                                <dd class="mt-1 text-lg font-semibold text-gray-900 dark:text-white">{{ $country->currency_display }}</dd>
+                            </div>
+                            <div class="p-4">
+                                <dt class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Standard Rate</dt>
+                                <dd class="mt-1 text-lg font-semibold text-gray-900 dark:text-white">{{ $country->standard_rate }}%</dd>
+                            </div>
+                            <div class="p-4">
+                                <dt class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">VAT Number Format</dt>
+                                <dd class="mt-1 text-lg font-semibold text-gray-900 dark:text-white">{{ $country->iso_code }}XXXXXXXXX</dd>
+                            </div>
+                            <div class="p-4">
+                                <dt class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">EU Member</dt>
+                                <dd class="mt-1 text-lg font-semibold text-green-600 dark:text-green-400">Yes</dd>
+                            </div>
+                            <div class="p-4">
+                                <dt class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">VIES Validation</dt>
+                                <dd class="mt-1 text-lg font-semibold text-green-600 dark:text-green-400">Available</dd>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {{-- ─── Section 4: VAT Guide ─── --}}
+                <section class="mb-8" id="guide">
+                    <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                        {{ $country->name }} VAT Guide
+                    </h2>
+
+                    <div class="prose prose-blue prose-lg max-w-none dark:prose-invert">
+                        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6">
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mt-0 mb-3">VAT Registration & Compliance</h3>
+                            <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-0">
+                                Businesses operating in {{ $country->name }} must register for VAT if their annual turnover exceeds the national threshold. 
+                                Foreign companies trading in {{ $country->name }} may need to register immediately without a threshold.
+                                The standard VAT rate of <strong class="text-blue-600 dark:text-blue-400">{{ $country->standard_rate }}%</strong> applies to most goods and services.
                             </p>
                         </div>
 
-                        <!-- Tab Navigation -->
-                        <div class="my-6 border-b border-gray-200 dark:border-gray-700">
-                            <nav class="-mb-px flex space-x-8 overflow-x-auto" aria-label="Tabs">
-                                @foreach($tabs as $tabKey => $tab)
-                                    <a href="{{ $tab['url'] }}" 
-                                       wire:navigate
-                                       @click.prevent="$wire.switchTab('{{ $tabKey }}')"
-                                       class="
-                                           flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap
-                                           transition-colors duration-200
-                                           {{ $activeTab === $tabKey 
-                                               ? 'border-blue-500 text-blue-600 dark:text-blue-400' 
-                                               : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300' 
-                                           }}
-                                       "
-                                       :class="{ 'border-blue-500 text-blue-600 dark:text-blue-400': activeTab === '{{ $tabKey }}' }">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $tab['icon'] }}"></path>
-                                        </svg>
-                                        {{ $tab['name'] }}
-                                    </a>
-                                @endforeach
-                            </nav>
-                        </div>
-
-                        <!-- Tab Content -->
-                        <div class="tab-content">
-                            <!-- Overview Tab -->
-                            <div x-show="activeTab === 'overview'" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 transform translate-y-4" x-transition:enter-end="opacity-100 transform translate-y-0">
-                                @if($activeTab === 'overview')
-                                    <div class="mb-6">
-                                        <x-country-rates :country="$country" />
-                                    </div>
-
-                        {{-- <!-- VAT Validator Widget -->
-                        <div class="mb-12">
-                            <livewire:vat-validator :country="$country" />
-                        </div> --}}
-
-                        <div class="country-content max-w-3xl mx-auto">
-                            <article class="prose prose-blue prose-lg max-w-none">
-                                <h2 class="text-3xl font-bold text-gray-900 mb-6">{{ $country->name }} VAT Guide</h2>
-
-                                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8 mb-10">
-                                    <h3 class="text-xl font-bold text-gray-900 mb-4">Introduction</h3>
-                                    <p class="text-gray-600 leading-relaxed mb-0">
-                                        {{ $country->name }}, as a member of the European Union, maintains its own unique VAT system. 
-                                        The standard VAT rate is <span class="font-bold text-blue-600">{{ $country->standard_rate }}%</span>, 
-                                        which applies to most goods and services. 
-                                        Using our <a href="{{ route('vat-calculator.country', $country->slug) }}" class="text-blue-600 hover:underline font-medium">VAT Calculator</a>, 
-                                        you can easily calculate the exact VAT amount for any transaction.
-                                    </p>
-                                </div>
-
-                                <div class="space-y-10">
-                                    <section>
-                                        <h3 class="text-2xl font-bold text-gray-900 mb-4">VAT Rate Structure</h3>
-                                        <p class="text-gray-600 mb-4">{{ $country->name }} applies different rates depending on the product or service:</p>
-                                        
-                                        <div class="grid sm:grid-cols-2 gap-4 not-prose">
-                                            <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
-                                                <div class="text-sm text-blue-600 font-semibold uppercase tracking-wide mb-1">Standard Rate</div>
-                                                <div class="text-3xl font-bold text-gray-900">{{ $country->standard_rate }}%</div>
-                                                <div class="text-sm text-gray-500 mt-1">Most goods & services</div>
-                                            </div>
-                                            @if($country->reduced_rate)
-                                            <div class="bg-green-50 p-4 rounded-lg border border-green-100">
-                                                <div class="text-sm text-green-600 font-semibold uppercase tracking-wide mb-1">Reduced Rate</div>
-                                                <div class="text-3xl font-bold text-gray-900">{{ $country->reduced_rate }}%</div>
-                                                <div class="text-sm text-gray-500 mt-1">Essentials (Food, Books, etc.)</div>
-                                            </div>
-                                            @endif
-                                        </div>
-                                    </section>
-
-                                    <section>
-                                        <h3 class="text-2xl font-bold text-gray-900 mb-4">VAT Registration & Compliance</h3>
-                                        <p class="text-gray-600 leading-relaxed">
-                                            Businesses operating in {{ $country->name }} must register for VAT if their annual turnover exceeds the national threshold. 
-                                            Foreign companies trading in {{ $country->name }} may need to register immediately without a threshold.
-                                        </p>
-                                    </section>
-
-                                    <section>
-                                        <h3 class="text-2xl font-bold text-gray-900 mb-4">Tools & Resources</h3>
-                                        <p class="text-gray-600 leading-relaxed">
-                                            Use our specialized tools to manage your VAT obligations:
-                                            <ul class="list-disc pl-5 space-y-2 mt-2">
-                                                <li><a href="{{ route('vat-calculator.country', $country->slug) }}" class="text-blue-600 hover:underline">Calculate VAT for {{ $country->name }}</a></li>
-                                                <li>Check valid VAT numbers via VIES (Coming Soon)</li>
-                                                <li>View historical rate changes</li>
-                                            </ul>
-                                        </p>
-                                    </section>
-                                </div>
-                            </article>
-                        </div>
-
-                        <!-- FAQ Section -->
-                        <div class="mt-12 mb-8">
-                            <h2 class="text-2xl font-bold mb-6">How to Calculate VAT in {{ $country->name }}</h2>
-                            
-                            <div class="space-y-6">
-                                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                                    <h3 class="text-lg font-bold mb-3 text-gray-900">Adding VAT to a Net Price</h3>
-                                    <p class="text-gray-600 mb-4">To calculate the gross amount from a net price (excluding VAT), use the following formula:</p>
-                                    <div class="bg-gray-50 p-4 rounded-lg font-mono text-sm text-gray-800 mb-4 border border-gray-200">
-                                        Gross Amount = Net Price × (1 + VAT Rate / 100)
-                                    </div>
-                                    <div class="text-sm text-gray-600">
-                                        <strong>Example:</strong> Calculating {{ $country->standard_rate }}% VAT on €100 net:<br>
-                                        €100 × (1 + {{ $country->standard_rate / 100 }}) = €100 × {{ 1 + $country->standard_rate / 100 }} = <strong>€{{ 100 * (1 + $country->standard_rate / 100) }}</strong>
-                                    </div>
-                                </div>
-
-                                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                                    <h3 class="text-lg font-bold mb-3 text-gray-900">Removing VAT from a Gross Price</h3>
-                                    <p class="text-gray-600 mb-4">To calculate the net price from a gross amount (including VAT), use this formula:</p>
-                                    <div class="bg-gray-50 p-4 rounded-lg font-mono text-sm text-gray-800 mb-4 border border-gray-200">
-                                        Net Price = Gross Amount ÷ (1 + VAT Rate / 100)
-                                    </div>
-                                    <div class="text-sm text-gray-600">
-                                        <strong>Example:</strong> Extracting {{ $country->standard_rate }}% VAT from €100 gross:<br>
-                                        €100 ÷ (1 + {{ $country->standard_rate / 100 }}) = €100 ÷ {{ 1 + $country->standard_rate / 100 }} = <strong>€{{ number_format(100 / (1 + $country->standard_rate / 100), 2) }}</strong>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <h3 class="text-xl font-medium">
-                                {{ $country->name }} VAT Exceptions
-                            </h3>
-                                </div>
-                            </div>
-                        </div>
+                        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mt-0 mb-3">Rate Structure</h3>
+                            <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+                                {{ $country->name }} applies different VAT rates depending on the product or service:
+                            </p>
+                            <ul class="text-gray-600 dark:text-gray-400 space-y-1">
+                                <li><strong>Standard Rate ({{ $country->standard_rate }}%)</strong> — applies to most goods and services</li>
+                                @if($country->reduced_rate)
+                                    <li><strong>Reduced Rate ({{ $country->reduced_rate }}%)</strong> — applies to essential goods like food, books, and pharmaceuticals</li>
                                 @endif
-                            </div>
-
-                            <!-- VAT Calculator Tab -->
-                            <div x-show="activeTab === 'vat-calculator'" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 transform translate-y-4" x-transition:enter-end="opacity-100 transform translate-y-0">
-                                @if($activeTab === 'vat-calculator')
-                                    <div class="space-y-6">
-                                        <div class="bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 p-6 rounded-xl border border-blue-200 dark:border-blue-800">
-                                            <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-2">
-                                                Calculate VAT for {{ $country->name }}
-                                            </h2>
-                                            <p class="text-gray-600 dark:text-gray-400 text-sm">
-                                                Add or remove {{ $country->standard_rate }}% VAT from any amount instantly.
-                                            </p>
-                                        </div>
-
-                                        <!-- Embed VAT Calculator Component -->
-                                        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-                                            <livewire:vat-calculator-simple :country="$country" :key="'calc-'.$country->id" />
-                                        </div>
-
-                                        <!-- Calculator Instructions -->
-                                        <div class="grid md:grid-cols-2 gap-6">
-                                            <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
-                                                <h3 class="text-lg font-bold mb-3 text-gray-900 dark:text-white">Adding VAT</h3>
-                                                <p class="text-gray-600 dark:text-gray-400 mb-4 text-sm">Calculate the gross amount including VAT:</p>
-                                                <div class="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg font-mono text-sm text-gray-800 dark:text-gray-200 mb-4 border border-gray-200 dark:border-gray-700">
-                                                    Gross = Net × (1 + {{ $country->standard_rate / 100 }})
-                                                </div>
-                                                <div class="text-sm text-gray-600 dark:text-gray-400">
-                                                    <strong>Example:</strong> €100 net → €{{ 100 * (1 + $country->standard_rate / 100) }} gross
-                                                </div>
-                                            </div>
-
-                                            <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
-                                                <h3 class="text-lg font-bold mb-3 text-gray-900 dark:text-white">Removing VAT</h3>
-                                                <p class="text-gray-600 dark:text-gray-400 mb-4 text-sm">Calculate the net amount excluding VAT:</p>
-                                                <div class="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg font-mono text-sm text-gray-800 dark:text-gray-200 mb-4 border border-gray-200 dark:border-gray-700">
-                                                    Net = Gross ÷ (1 + {{ $country->standard_rate / 100 }})
-                                                </div>
-                                                <div class="text-sm text-gray-600 dark:text-gray-400">
-                                                    <strong>Example:</strong> €100 gross → €{{ number_format(100 / (1 + $country->standard_rate / 100), 2) }} net
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                @if($country->super_reduced_rate)
+                                    <li><strong>Super Reduced Rate ({{ $country->super_reduced_rate }}%)</strong> — applies to basic necessities</li>
                                 @endif
-                            </div>
-
-                            <!-- VAT Validator Tab -->
-                            <div x-show="activeTab === 'vat-validator'" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 transform translate-y-4" x-transition:enter-end="opacity-100 transform translate-y-0">
-                                @if($activeTab === 'vat-validator')
-                                    <div class="space-y-6">
-                                        <div class="bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 p-6 rounded-xl border border-green-200 dark:border-green-800">
-                                            <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-2">
-                                                Validate {{ $country->name }} VAT Numbers
-                                            </h2>
-                                            <p class="text-gray-600 dark:text-gray-400 text-sm">
-                                                Verify VAT numbers using the official EU VIES system with intelligent company matching.
-                                            </p>
-                                        </div>
-
-                                        <!-- Embed VAT Validator Component -->
-                                        <livewire:vat-validation-widget :countryCode="$country->iso_code" :key="'validator-'.$country->id" />
-
-                                        <!-- Validator Info -->
-                                        <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
-                                            <h3 class="text-lg font-bold mb-3 text-gray-900 dark:text-white">About VAT Number Validation</h3>
-                                            <div class="space-y-3 text-sm text-gray-600 dark:text-gray-400">
-                                                <p>
-                                                    {{ $country->name }} VAT numbers follow the format: <strong class="text-gray-900 dark:text-white">{{ $country->iso_code }}XXXXXXXXX</strong>
-                                                </p>
-                                                <p>
-                                                    Our validator uses the European Commission's VIES (VAT Information Exchange System) to verify that VAT numbers are registered and valid. Results include company name and registered address when available.
-                                                </p>
-                                                <ul class="list-disc pl-5 space-y-1">
-                                                    <li>Real-time validation against EU databases</li>
-                                                    <li>Fuzzy matching for company names and addresses</li>
-                                                    <li>Results cached for 7 days for faster lookup</li>
-                                                    <li>Handles variations in formatting and capitalization</li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
+                                @if($country->parking_rate)
+                                    <li><strong>Parking Rate ({{ $country->parking_rate }}%)</strong> — transitional rate for specific goods</li>
                                 @endif
-                            </div>
+                            </ul>
                         </div>
-
                     </div>
-                </div>
-            </div>
-        </div>
-        <div class="hidden mt-9">s="mt-8 p-6 bg-gray-50 rounded-xl border border-gray-200">
-                            <h3 class="text-lg font-bold mb-4 text-gray-900">Quick Facts about {{ $country->name }}</h3>
-                            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                                <div>
-                                    <div class="text-xs text-gray-500 uppercase tracking-wider mb-1">ISO Code</div>
-                                    <div class="font-mono font-medium text-gray-900">{{ $country->iso_code }}</div>
-                                </div>
-                                <div>
-                                    <div class="text-xs text-gray-500 uppercase tracking-wider mb-1">Currency</div>
-                                    <div class="font-medium text-gray-900">{{ $country->currency_code ?? 'EUR' }}</div>
-                                </div>
-                                <div>
-                                    <div class="text-xs text-gray-500 uppercase tracking-wider mb-1">Standard Rate</div>
-                                    <div class="font-bold text-blue-600">{{ $country->standard_rate }}%</div>
-                                </div>
-                                <div>
-                                    <div class="text-xs text-gray-500 uppercase tracking-wider mb-1">EU Member</div>
-                                    <div class="font-medium text-green-600 flex items-center gap-1">
-                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-                                        </svg>
-                                        Yes
+                </section>
+
+                {{-- ─── Section 5: FAQ ─── --}}
+                <section class="mb-8" id="faq">
+                    <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Frequently Asked Questions
+                    </h2>
+
+                    <div class="space-y-4" x-data="{ open: null }">
+                        @php
+                            $cs = $country->currency_display;
+                            $faqs = [
+                                [
+                                    'q' => "What is the current VAT rate in {$country->name}?",
+                                    'a' => "The standard VAT rate in {$country->name} is {$country->standard_rate}%." . ($country->reduced_rate ? " A reduced rate of {$country->reduced_rate}% applies to certain essential goods and services." : ""),
+                                ],
+                                [
+                                    'q' => "How do I add {$country->standard_rate}% VAT to a price?",
+                                    'a' => "Multiply the net price by " . (1 + $country->standard_rate / 100) . ". For example, {$cs}100 × " . (1 + $country->standard_rate / 100) . " = {$cs}" . number_format(100 * (1 + $country->standard_rate / 100), 2) . " including VAT.",
+                                ],
+                                [
+                                    'q' => "How do I remove VAT from a gross price in {$country->name}?",
+                                    'a' => "Divide the gross price by " . (1 + $country->standard_rate / 100) . ". For example, {$cs}" . number_format(100 * (1 + $country->standard_rate / 100), 2) . " ÷ " . (1 + $country->standard_rate / 100) . " = {$cs}100.00 net.",
+                                ],
+                                [
+                                    'q' => "What format do {$country->name} VAT numbers use?",
+                                    'a' => "VAT numbers in {$country->name} start with the country code '{$country->iso_code}' followed by a series of digits. The format is {$country->iso_code}XXXXXXXXX.",
+                                ],
+                                [
+                                    'q' => "Do I need to register for VAT in {$country->name}?",
+                                    'a' => "If your business exceeds the national VAT registration threshold in {$country->name}, you must register. Foreign businesses selling goods or services in {$country->name} may need to register immediately.",
+                                ],
+                            ];
+                        @endphp
+
+                        @foreach($faqs as $i => $faq)
+                            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+                                <button 
+                                    @click="open = open === {{ $i }} ? null : {{ $i }}"
+                                    class="w-full flex items-center justify-between px-5 py-4 text-left text-gray-900 dark:text-white font-medium hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors">
+                                    <span>{{ $faq['q'] }}</span>
+                                    <svg class="w-5 h-5 flex-shrink-0 text-gray-500 transition-transform duration-200" :class="{ 'rotate-180': open === {{ $i }} }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                    </svg>
+                                </button>
+                                <div x-show="open === {{ $i }}" x-collapse>
+                                    <div class="px-5 pb-4 text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+                                        {{ $faq['a'] }}
                                     </div>
                                 </div>
                             </div>
-                        </div>
-
+                        @endforeach
                     </div>
-                </div>
+
+                    {{-- FAQ Schema --}}
+                    @push('head')
+                    <script type="application/ld+json">
+                    {!! json_encode([
+                        '@context' => 'https://schema.org',
+                        '@type' => 'FAQPage',
+                        'mainEntity' => collect($faqs)->map(fn($f) => [
+                            '@type' => 'Question',
+                            'name' => $f['q'],
+                            'acceptedAnswer' => ['@type' => 'Answer', 'text' => $f['a']],
+                        ])->values()->all(),
+                    ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
+                    </script>
+                    @endpush
+                </section>
+
+                {{-- ─── Section 6: Quick Links ─── --}}
+                <section class="mb-6">
+                    <div class="flex flex-wrap gap-3">
+                        <a href="{{ route('vat-calculator.country', $country->slug) }}" wire:navigate
+                           class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                            Full VAT Calculator
+                        </a>
+                        <a href="{{ locale_path('/vat-changes') }}" wire:navigate
+                           class="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors text-sm font-medium">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            VAT Rate History
+                        </a>
+                        <a href="{{ locale_path('/vat-map') }}" wire:navigate
+                           class="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors text-sm font-medium">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
+                            EU VAT Map
+                        </a>
+                    </div>
+                </section>
             </div>
         </div>
-        <div class="mt-9">
-            <h3 class="text-xl font-bold mb-4">{{ __('ui.country_page.related') }}</h3>
-            <x-related-countries :country="$country" />
-
-            <div class="mt-6 text-center">
-                <a href="{{ locale_path('/sitemap') }}" wire:navigate class="text-blue-600 hover:text-blue-800 hover:underline text-sm font-medium">
-                    {{ __('ui.sitemap.country_pages') }} &rarr;
-                </a>
-            </div>
-        </div>
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                const el = document.querySelector(".sticky-element")
-                const observer = new IntersectionObserver(
-                    ([e]) => e.target.classList.toggle("is-pinned", e.intersectionRatio < 1), {
-                        threshold: [1]
-                    }
-                );
-
-                observer.observe(el);
-
-
-                el.addEventListener('click', function() {
-                    el.classList.toggle('is-pinned')
-                });
-            });
-        </script>
     </div>
+
+    <!-- Related Countries -->
+    <div class="mt-9">
+        <h3 class="text-xl font-bold mb-4">{{ __('ui.country_page.related') }}</h3>
+        <x-related-countries :country="$country" />
+        <div class="mt-6 text-center">
+            <a href="{{ locale_path('/sitemap') }}" wire:navigate class="text-blue-600 hover:text-blue-800 hover:underline text-sm font-medium">
+                {{ __('ui.sitemap.country_pages') }} &rarr;
+            </a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const el = document.querySelector(".sticky-element");
+            if (el) {
+                const observer = new IntersectionObserver(
+                    ([e]) => e.target.classList.toggle("is-pinned", e.intersectionRatio < 1),
+                    { threshold: [1] }
+                );
+                observer.observe(el);
+                el.addEventListener('click', () => el.classList.toggle('is-pinned'));
+            }
+        });
+    </script>
+</div>

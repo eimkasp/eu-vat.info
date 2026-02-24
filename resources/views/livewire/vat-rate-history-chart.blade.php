@@ -1,3 +1,4 @@
+@if($country && $totalChanges > 0)
 <div class="bg-gradient-to-br from-blue-50 to-white p-5 rounded-xl shadow-xl mt-6 border border-blue-100 relative" x-data="{ open: true }">
     <div class="absolute top-5 right-5 cursor-pointer text-gray-400 hover:text-gray-600 transition-colors p-1" @click="open = !open">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 transition-transform duration-200" :class="{ 'rotate-180': !open }" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -208,3 +209,6 @@
         }
     </script>
 </div>
+@else
+<div></div>
+@endif

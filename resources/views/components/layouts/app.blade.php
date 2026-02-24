@@ -33,7 +33,7 @@
             crossorigin="anonymous"></script>
     @endif
     @if (config('app.data_domain') && app()->isProduction())
-        <script defer data-domain="{{ config('app.data_domain') }}" src="{{ config('app.plausible_script') }}"></script>
+        <script defer data-domain="eu-vat.info" src="https://stats.businesspress.io/js/script.js"></script>
     @endif
     <style>
         :root {

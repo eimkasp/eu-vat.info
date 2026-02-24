@@ -69,4 +69,30 @@ class Country extends Model implements Sitemapable , Auditable
     {
         return $this->hasMany(VatRate::class);
     }
+
+    /**
+     * Get the currency symbol for this country.
+     * Falls back to a lookup by ISO code when the DB field is empty.
+     */
+    public function getCurrencyDisplayAttribute(): string
+    {
+        if ($this->currency_symbol) {
+            return $this->currency_symbol;
+        }
+
+        $map = [
+            'BG' => 'лв',  // Bulgarian Lev
+            'CZ' => 'Kč',  // Czech Koruna
+            'DK' => 'kr',  // Danish Krone
+            'HU' => 'Ft',  // Hungarian Forint
+            'PL' => 'zł',  // Polish Zloty
+            'RO' => 'lei', // Romanian Leu
+            'SE' => 'kr',  // Swedish Krona
+            'CH' => 'CHF', // Swiss Franc
+            'IS' => 'kr',  // Icelandic Króna
+            'NO' => 'kr',  // Norwegian Krone
+        ];
+
+        return $map[$this->iso_code] ?? '€';
+    }
 }

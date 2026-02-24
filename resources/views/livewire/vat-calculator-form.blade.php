@@ -37,7 +37,7 @@
                     wire:change="calculate" 
                     wire:model.lazy="amount" 
                     type="text" 
-                    suffix="EUR (€)" 
+                    suffix="{{ $selectedCountryObject->currency_display ?? 'EUR (€)' }}" 
                     money 
                     class="text-lg font-medium"
                 />
@@ -120,13 +120,13 @@
                             <div>
                                 <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">{{ __('ui.calculator.net_amount') }}</div>
                                 <div class="text-xl font-medium text-gray-900">
-                                    {{ is_numeric($amount) ? Number::currency((float)($vat_included == 'include' ? $total - $vat_amount : $amount), 'EUR') : '0.00 €' }}
+                                    {{ is_numeric($amount) ? ($selectedCountryObject ? $selectedCountryObject->currency_display : '€') . number_format((float)($vat_included == 'include' ? $total - $vat_amount : $amount), 2) : '0.00' }}
                                 </div>
                             </div>
                             <div class="text-right">
                                 <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">VAT ({{ $selectedRate }}%)</div>
                                 <div class="text-xl font-medium text-blue-600">
-                                    {{ is_numeric($vat_amount) ? Number::currency((float)$vat_amount, 'EUR') : '0.00 €' }}
+                                    {{ is_numeric($vat_amount) ? ($selectedCountryObject ? $selectedCountryObject->currency_display : '€') . number_format((float)$vat_amount, 2) : '0.00' }}
                                 </div>
                             </div>
                         </div>
@@ -134,7 +134,7 @@
                         <div class="pt-4 border-t border-gray-100 flex justify-between items-center bg-gray-50 -mx-4 -mb-4 px-4 py-3">
                             <span class="font-medium text-gray-500">{{ __('ui.calculator.total_to_pay') }}</span>
                             <span class="text-3xl font-bold text-gray-900 tracking-tight">
-                                {{ is_numeric($total) ? Number::currency((float)($vat_included == 'include' ? $amount : $total), 'EUR') : '0.00 €' }}
+                                {{ is_numeric($total) ? ($selectedCountryObject ? $selectedCountryObject->currency_display : '€') . number_format((float)($vat_included == 'include' ? $amount : $total), 2) : '0.00' }}
                             </span>
                         </div>
                     </div>

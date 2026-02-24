@@ -28,9 +28,9 @@
                
            </dl>
            <div class="border-t border-gray-900/5 px-6 py-6">
-               <a wire:navigate href="{{ route('country.vat.history', $country->slug) }}"
+               <a wire:navigate href="{{ locale_path('/vat-changes') }}"
                    class="text-sm font-semibold leading-6 text-gray-100">
-                   See history <small>* Coming soon</small>
+                   {{ __('ui.stats.see_history') }} &rarr;
                 </a>
            </div>
        </div>

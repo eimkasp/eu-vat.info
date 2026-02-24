@@ -80,8 +80,7 @@
         </p>
     @else
         <p class="text-lg text-gray-600 leading-relaxed">
-            Quickly calculate VAT amounts for any of the 27 European Union member states. 
-            Updated daily with the latest rates.
+            Quickly calculate VAT amounts for any of the 27 European Union member states.
         </p>
     @endisset
 </div>

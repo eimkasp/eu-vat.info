@@ -22,7 +22,7 @@ return [
     'calculate'           => 'Calculate',
     'loading'             => 'Loading...',
     'all_rights_reserved' => 'All rights reserved.',
-    'data_updated_daily'  => 'Data updated daily',
+    'data_updated_daily'  => 'Always up to date',
     'country'             => 'Country',
     'countries'           => 'Countries',
     'rate'                => 'Rate',
@@ -41,7 +41,7 @@ return [
 
     // ── Footer ──────────────────────────────────────────────────────────
     'footer' => [
-        'description'      => 'Your trusted source for current VAT rates, calculations, and compliance information across all 27 European Union member states. Updated daily with the latest rates.',
+        'description'      => 'Your trusted source for current VAT rates, calculations, and compliance information across all 27 European Union member states.',
         'vat_tools'        => 'VAT Tools',
         'resources'        => 'Resources',
         'partner_tools'    => 'Partner Tools',
@@ -61,10 +61,10 @@ return [
     // ── Home Page ───────────────────────────────────────────────────────
     'home_page' => [
         'title'          => 'EU VAT Info - VAT Rates Calculator & Information for All EU Countries',
-        'meta_desc'      => 'Current VAT rates for all 27 EU countries. Free online calculator, historical data from 2000, rate change alerts, and compliance guides. Updated daily.',
+        'meta_desc'      => 'Compare VAT rates across all 27 EU countries. Free online calculator, historical rate data, and compliance guides for every member state.',
         'heading'        => 'VAT Rates in the',
         'heading_accent' => 'European Union',
-        'subtitle'       => 'Current standard VAT rates, reduced rates, and calculator for all 27 EU member states. Updated daily.',
+        'subtitle'       => 'Compare standard and reduced VAT rates, calculate taxes, and stay compliant across all 27 EU member states.',
         'search_placeholder' => 'Search for a country...',
         'th_country'     => 'Country',
         'th_standard'    => 'Standard Rate',
@@ -279,6 +279,7 @@ return [
         'eu_rank'          => 'EU Rank',
         'currency'         => 'Currency',
         'last_updated'     => 'Last Updated',
+        'see_history'      => 'See VAT history',
     ],
 
     // ── Useful Links ────────────────────────────────────────────────────
