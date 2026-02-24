@@ -4,8 +4,8 @@
         <div class="flex justify-between items-center">
             {{-- Logo --}}
             <div class="flex items-center">
-                <a wire:navigate class="font-extrabold text-xl" href="/">
-                    EU VAT Info
+                <a wire:navigate class="font-extrabold text-xl" href="{{ locale_path('/') }}">
+                    {{ __('ui.site_name') }}
                 </a>
             </div>
 
@@ -19,15 +19,15 @@
 
             {{-- Desktop navigation --}}
             <nav class="hidden md:flex items-center gap-6">
-                <a wire:navigate="/" href="/" title="EU VAT countries list">All Countries</a>
-                <a wire:navigate="/vat-calculator" href="/vat-calculator">VAT Calculator</a>
-                <a wire:navigate="{{ route('widget.embed')}}" href="{{ route('widget.embed')}}">VAT Widget</a>
-                <a wire:navigate={{ route('vat-map') }} href="{{ route('vat-map')}}">VAT Map</a>
-                <a wire:navigate={{ route('vat-changes') }} href="{{ route('vat-changes')}}">VAT History</a>
-                {{-- <a wire:navigate={{ route('vat-navigator') }} href="{{ route('vat-navigator')}}">VAT Navigator</a> --}}
+                <a wire:navigate href="{{ locale_path('/') }}" title="{{ __('ui.nav.all_countries') }}">{{ __('ui.nav.all_countries') }}</a>
+                <a wire:navigate href="{{ locale_path('/vat-calculator') }}">{{ __('ui.nav.vat_calculator') }}</a>
+                <a wire:navigate href="{{ route('widget.embed') }}">{{ __('ui.nav.vat_widget') }}</a>
+                <a wire:navigate href="{{ locale_path('/vat-map') }}">{{ __('ui.nav.vat_map') }}</a>
+                <a wire:navigate href="{{ locale_path('/vat-changes') }}">{{ __('ui.nav.vat_history') }}</a>
                 <a href="https://github.com/eimkasp/eu-vat.info" target="_blank" class="w-6">
                     @svg('feathericon-github')
                 </a>
+                <x-language-switcher />
             </nav>
         </div>
 
@@ -40,15 +40,17 @@
              x-transition:leave-start="opacity-100 translate-y-0"
              x-transition:leave-end="opacity-0 -translate-y-2"
              class="md:hidden mt-4 space-y-3">
-            <a wire:navigate="/" href="/" class="block py-2" title="EU VAT countries list">All Countries</a>
-            <a wire:navigate="/vat-calculator" href="/vat-calculator" class="block py-2">VAT Calculator 💶</a>
-            <a wire:navigate="{{ route('widget.embed')}}" href="{{ route('widget.embed')}}" class="block py-2">VAT Widget</a>
-            <a wire:navigate={{ route('vat-map') }} href="{{ route('vat-map')}}" class="block py-2">VAT Map 🌍</a>
-            <a wire:navigate={{ route('vat-changes') }} href="{{ route('vat-changes')}}" class="block py-2">VAT History 📊</a>
-            {{-- <a wire:navigate={{ route('vat-navigator') }} href="{{ route('vat-navigator')}}" class="block py-2">VAT Navigator 🧭</a> --}}
+            <a wire:navigate href="{{ locale_path('/') }}" class="block py-2" title="{{ __('ui.nav.all_countries') }}">{{ __('ui.nav.all_countries') }}</a>
+            <a wire:navigate href="{{ locale_path('/vat-calculator') }}" class="block py-2">{{ __('ui.nav.vat_calculator') }} 💶</a>
+            <a wire:navigate href="{{ route('widget.embed') }}" class="block py-2">{{ __('ui.nav.vat_widget') }}</a>
+            <a wire:navigate href="{{ locale_path('/vat-map') }}" class="block py-2">{{ __('ui.nav.vat_map') }} 🌍</a>
+            <a wire:navigate href="{{ locale_path('/vat-changes') }}" class="block py-2">{{ __('ui.nav.vat_history') }} 📊</a>
             <a href="https://github.com/eimkasp/eu-vat.info" target="_blank" class="block py-2">
                 GitHub @svg('feathericon-github', 'inline-block w-5 h-5 ml-1')
             </a>
+            <div class="py-2">
+                <x-language-switcher :mobile="true" />
+            </div>
         </nav>
     </div>
 </header>

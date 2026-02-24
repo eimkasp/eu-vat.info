@@ -100,17 +100,17 @@
                         {{-- <x-country-rates :country="$country" /> --}}
                     </div>
                     <div class="sm:col-span-4 sm:sticky top-[-1px] sticky-element" style="align-self: flex-start">
-                        <a href="/" class="mb-3 block flex items-center gap-3 hover:text-blue-700">
+                        <a href="{{ locale_path('/') }}" class="mb-3 block flex items-center gap-3 hover:text-blue-700">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block" fill="none"
                                 viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M11 19l-7-7 7-7m8 14l-7-7 7-7"></path>
                             </svg>
-                            Back to all countries
+                            {{ __('ui.all_countries') }}
                         </a>
                         <x-country-stats :country="$country" />
                         <div class="mt-9 space-y-3 sm:mb-12 border-t pt-3">
-                            <h4 class="font-bold text-gray-900 dark:text-white mb-3">VAT Tools</h4>
+                            <h4 class="font-bold text-gray-900 dark:text-white mb-3">{{ __('ui.footer.vat_tools') }}</h4>
 
                             <div>
                                 <a class="flex items-center gap-2 text-blue-600 hover:underline hover:text-blue-700 transition-colors" 
@@ -119,7 +119,7 @@
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
                                     </svg>
-                                    VAT Calculator
+                                    {{ __('ui.country_page.vat_calculator') }}
                                 </a>
                             </div>
 
@@ -130,7 +130,7 @@
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                     </svg>
-                                    VAT Number Validator
+                                    {{ __('ui.validator.title') }}
                                     <span class="text-xs px-2 py-0.5 bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 rounded-full">New</span>
                                 </a>
                             </div>
@@ -142,7 +142,7 @@
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
                                     </svg>
-                                    Embed VAT Widget
+                                    {{ __('ui.footer.embed_widget') }}
                                 </a>
                             </div>
                         </div>
@@ -423,12 +423,12 @@
             </div>
         </div>
         <div class="mt-9">
-            <h3 class="text-xl font-bold mb-4">Explore Other EU Countries</h3>
+            <h3 class="text-xl font-bold mb-4">{{ __('ui.country_page.related') }}</h3>
             <x-related-countries :country="$country" />
 
             <div class="mt-6 text-center">
-                <a href="{{ route('html-sitemap') }}" wire:navigate class="text-blue-600 hover:text-blue-800 hover:underline text-sm font-medium">
-                    View all EU country VAT pages &rarr;
+                <a href="{{ locale_path('/sitemap') }}" wire:navigate class="text-blue-600 hover:text-blue-800 hover:underline text-sm font-medium">
+                    {{ __('ui.sitemap.country_pages') }} &rarr;
                 </a>
             </div>
         </div>

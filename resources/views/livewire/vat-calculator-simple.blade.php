@@ -8,7 +8,7 @@
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                 </svg>
-                <span>Add VAT</span>
+                <span>{{ __('ui.calculator.add_vat') }}</span>
             </div>
         </button>
         <button 
@@ -18,7 +18,7 @@
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
                 </svg>
-                <span>Remove VAT</span>
+                <span>{{ __('ui.calculator.extract_vat') }}</span>
             </div>
         </button>
     </div>
@@ -43,7 +43,7 @@
     <!-- VAT Rate Selection -->
     <div>
         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            VAT Rate
+            {{ __('ui.calculator.vat_rate') }}
         </label>
         
         <!-- Quick Rate Buttons -->
@@ -77,7 +77,7 @@
                 type="button"
                 wire:click="enableCustomRate"
                 class="px-3 py-2 text-sm rounded-lg transition-all {{ $useCustomRate ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600' }}">
-                Custom
+                {{ __('ui.calculator.custom_rate') }}
             </button>
         </div>
         
@@ -121,7 +121,7 @@
         <div class="space-y-3">
             <!-- Net Amount -->
             <div class="flex justify-between items-center pb-3 border-b border-blue-200 dark:border-blue-700">
-                <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Net Amount</span>
+                <span class="text-sm font-medium text-gray-600 dark:text-gray-400">{{ __('ui.calculator.net_amount') }}</span>
                 <span class="text-lg font-bold text-gray-900 dark:text-white">
                     €{{ number_format($this->netAmount, 2) }}
                 </span>
@@ -137,7 +137,7 @@
 
             <!-- Gross Amount -->
             <div class="flex justify-between items-center pt-2">
-                <span class="text-base font-bold text-gray-900 dark:text-white">Gross Amount</span>
+                <span class="text-base font-bold text-gray-900 dark:text-white">{{ __('ui.calculator.total_to_pay') }}</span>
                 <span class="text-2xl font-bold text-gray-900 dark:text-white">
                     €{{ number_format($this->grossAmount, 2) }}
                 </span>

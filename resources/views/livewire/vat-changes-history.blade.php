@@ -1,19 +1,19 @@
-@section('title', 'VAT Rate Changes History - EU VAT Info')
-@section('meta_description', 'Complete history of VAT rate changes across European Union countries. Track standard and reduced rate modifications with stability indicators.')
+@section('title', __('ui.history.meta_title'))
+@section('meta_description', __('ui.history.meta_desc'))
 @section('seo')
     <x-seo-meta 
-        title="VAT Rate Changes History - EU Countries | EU VAT Info"
-        description="Complete history of VAT rate changes across all EU countries from 2000 onwards. Track standard and reduced rate modifications with country stability indicators."
+        :title="__('ui.history.meta_title')"
+        :description="__('ui.history.meta_desc')"
     />
 @endsection
 
 <div class="mx-auto max-w-7xl px-4 py-6 sm:py-12">
     <div>
-        <x-breadcrumbs :items="['VAT Changelog' => '']" />
+        <x-breadcrumbs :items="[__('ui.breadcrumbs.vat_changelog') => '']" />
         <!-- Header -->
         <div class="mb-8">
-            <h1 class="text-3xl font-bold mb-2">VAT Rate Changes History</h1>
-            <p class="text-gray-600">Track all VAT rate modifications across EU countries over the past decade</p>
+            <h1 class="text-3xl font-bold mb-2">{{ __('ui.history.title') }}</h1>
+            <p class="text-gray-600">{{ __('ui.history.subtitle') }}</p>
         </div>
 
         <!-- Historical Heatmap -->
@@ -23,8 +23,8 @@
 
         <!-- Country Stability Overview -->
         <div class="bg-white p-6 rounded-xl shadow-xl mb-6">
-            <h2 class="text-xl font-bold mb-4">📊 Country Stability Indicators</h2>
-            <p class="text-sm text-gray-600 mb-4">Countries with fewer VAT rate changes indicate more stable tax environments</p>
+            <h2 class="text-xl font-bold mb-4">📊 {{ __('ui.history.stability_title') }}</h2>
+            <p class="text-sm text-gray-600 mb-4">{{ __('ui.history.stability_desc') }}</p>
             
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
                 @foreach($countryStats as $stat)
@@ -35,22 +35,22 @@
                         <div class="flex-1 min-w-0">
                             <div class="text-sm font-medium truncate">{{ $stat['name'] }}</div>
                             <div class="flex items-center gap-2">
-                                <span class="text-xs text-gray-500">{{ $stat['changes_count'] }} changes</span>
+                                <span class="text-xs text-gray-500">{{ $stat['changes_count'] }} {{ __('ui.history.changes') }}</span>
                                 @if($stat['stability'] === 'excellent')
                                     <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
-                                        Excellent
+                                        {{ __('ui.history.excellent') }}
                                     </span>
                                 @elseif($stat['stability'] === 'good')
                                     <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
-                                        Good
+                                        {{ __('ui.history.good') }}
                                     </span>
                                 @elseif($stat['stability'] === 'moderate')
                                     <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800">
-                                        Moderate
+                                        {{ __('ui.history.moderate') }}
                                     </span>
                                 @else
                                     <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">
-                                        Frequent
+                                        {{ __('ui.history.frequent') }}
                                     </span>
                                 @endif
                             </div>
@@ -62,25 +62,25 @@
 
         <!-- Filters -->
         <div class="bg-white p-6 rounded-xl shadow-xl mb-6">
-            <h3 class="font-bold mb-4">Filters</h3>
+            <h3 class="font-bold mb-4">{{ __('ui.filters') }}</h3>
             <div class="grid md:grid-cols-2 gap-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Country</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('ui.country') }}</label>
                     <select wire:model.live="selectedCountry" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                        <option value="">All Countries</option>
+                        <option value="">{{ __('ui.history.all_countries') }}</option>
                         @foreach($countries as $country)
                             <option value="{{ $country->id }}">{{ $country->name }}</option>
                         @endforeach
                     </select>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Rate Type</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('ui.history.rate_type') }}</label>
                     <select wire:model.live="selectedType" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                        <option value="">All Types</option>
-                        <option value="standard">Standard Rate</option>
-                        <option value="reduced">Reduced Rate</option>
-                        <option value="super_reduced">Super Reduced Rate</option>
-                        <option value="parking">Parking Rate</option>
+                        <option value="">{{ __('ui.history.all_types') }}</option>
+                        <option value="standard">{{ __('ui.history.standard_rate') }}</option>
+                        <option value="reduced">{{ __('ui.history.reduced_rate') }}</option>
+                        <option value="super_reduced">{{ __('ui.history.super_reduced_rate') }}</option>
+                        <option value="parking">{{ __('ui.history.parking_rate') }}</option>
                     </select>
                 </div>
             </div>
@@ -89,7 +89,7 @@
         <!-- Changes List -->
         <div class="bg-white rounded-xl shadow-xl overflow-hidden">
             <div class="p-6 border-b bg-gray-50">
-                <h3 class="font-bold">All Changes (Past 10 Years)</h3>
+                <h3 class="font-bold">{{ __('ui.history.all_changes') }}</h3>
             </div>
             
             @if($changes->count() > 0)
@@ -110,21 +110,21 @@
                                         </div>
                                         <div class="text-gray-600">
                                             <span class="font-medium text-2xl text-blue-600">{{ $change->rate }}%</span>
-                                            <span class="text-sm ml-2">effective from {{ $change->effective_from->format('F d, Y') }}</span>
+                                            <span class="text-sm ml-2">{{ __('ui.history.effective_from', ['date' => $change->effective_from->format('F d, Y')]) }}</span>
                                         </div>
                                         @if($change->effective_to)
                                             <div class="text-sm text-gray-500 mt-1">
-                                                Valid until: {{ $change->effective_to->format('F d, Y') }}
+                                                {{ __('ui.history.valid_until', ['date' => $change->effective_to->format('F d, Y')]) }}
                                             </div>
                                         @else
                                             <div class="text-sm text-green-600 mt-1">
-                                                ✓ Currently active
+                                                ✓ {{ __('ui.history.currently_active') }}
                                             </div>
                                         @endif
                                     </div>
                                 </div>
                                 <div class="text-right">
-                                    <a href="{{ route('vat-calculator.country', $change->country->slug) }}" 
+                                    <a href="{{ locale_path('/vat-calculator/' . $change->country->slug) }}" 
                                        class="text-sm text-blue-600 hover:underline">
                                         View Calculator →
                                     </a>
@@ -143,7 +143,7 @@
                     <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                     </svg>
-                    <p>No VAT rate changes found matching your criteria</p>
+                    <p>{{ __('ui.history.no_changes') }}</p>
                 </div>
             @endif
         </div>

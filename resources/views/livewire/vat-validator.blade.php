@@ -6,7 +6,7 @@
             </svg>
             VAT Number Validator
         </h2>
-        <p class="text-indigo-100 text-sm !mb-0 opacity-90">Verify EU VAT numbers instantly via VIES</p>
+        <p class="text-indigo-100 text-sm !mb-0 opacity-90">{{ __('ui.validator.subtitle') }}</p>
     </div>
 
     <div class="p-6">
@@ -19,7 +19,7 @@
             <div class="grid sm:grid-cols-3 gap-4">
                 <div class="sm:col-span-1">
                     <x-select 
-                        label="Country" 
+                        label="{{ __('ui.country') }}" 
                         :options="$countries" 
                         option-value="iso_code"
                         option-label="name" 
@@ -30,7 +30,7 @@
                 </div>
                 <div class="sm:col-span-2">
                     <x-input 
-                        label="VAT Number" 
+                        label="{{ __('ui.validator.enter_number') }}" 
                         wire:model="vatNumber" 
                         type="text" 
                         placeholder="e.g. 123456789"
@@ -40,7 +40,7 @@
             </div>
 
             <div class="flex justify-end">
-                <x-button label="Validate" class="btn-primary bg-indigo-600 hover:bg-indigo-700 text-white" type="submit" icon="o-check-circle" spinner="validateVat" />
+                <x-button label="{{ __('ui.validator.validate') }}" class="btn-primary bg-indigo-600 hover:bg-indigo-700 text-white" type="submit" icon="o-check-circle" spinner="validateVat" />
             </div>
         </form>
 
@@ -61,23 +61,23 @@
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
-                            <h3 class="text-lg font-bold text-green-800">Valid VAT Number</h3>
+                            <h3 class="text-lg font-bold text-green-800">{{ __('ui.validator.valid') }} VAT</h3>
                         @else
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
-                            <h3 class="text-lg font-bold text-red-800">Invalid VAT Number</h3>
+                            <h3 class="text-lg font-bold text-red-800">{{ __('ui.validator.invalid') }} VAT</h3>
                         @endif
                     </div>
 
                     @if($result['valid'])
                         <div class="space-y-2 text-sm">
                             <div class="flex justify-between py-1 border-b border-green-200">
-                                <span class="text-green-700 font-medium">Company Name</span>
+                                <span class="text-green-700 font-medium">{{ __('ui.validator.company_name') }}</span>
                                 <span class="text-gray-900">{{ $result['name'] }}</span>
                             </div>
                             <div class="flex justify-between py-1 border-b border-green-200">
-                                <span class="text-green-700 font-medium">Address</span>
+                                <span class="text-green-700 font-medium">{{ __('ui.validator.company_address') }}</span>
                                 <span class="text-gray-900">{{ $result['address'] }}</span>
                             </div>
                             <div class="flex justify-between py-1">

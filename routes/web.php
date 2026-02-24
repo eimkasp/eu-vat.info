@@ -12,21 +12,71 @@ use App\Livewire\CountryPage;
 use App\Livewire\HtmlSitemap;
 use League\CommonMark\Extension\Embed\Embed;
 
-Route::get('/', Home::class)->name('home');
-Route::get('/country/{slug}', CountryPage::class)->name('country.show');
-Route::get('/country/{slug}/{tab}', CountryPage::class)->name('country.tab')
-    ->where('tab', 'vat-calculator|vat-validator|history|vat-guide');
+/*
+|--------------------------------------------------------------------------
+| Localised Routes
+|--------------------------------------------------------------------------
+| English (default): /vat-calculator, /country/germany, etc.
+| Other languages:   /de/vat-calculator, /de/country/germany, etc.
+*/
 
-Route::get('/counter', Counter::class);
-Route::get('/tools', Tools::class);
+// Helper: register all app routes (used for both root and locale-prefix groups)
+$registerRoutes = function () {
+    Route::get('/', Home::class)->name('home');
+    Route::get('/country/{slug}', CountryPage::class)->name('country.show');
+    Route::get('/country/{slug}/{tab}', CountryPage::class)->name('country.tab')
+        ->where('tab', 'vat-calculator|vat-validator|history|vat-guide');
 
-Route::get('/vat-calculator', VatCalculator::class)->name('vat-calculator');
-Route::get('/vat-map', VatMap::class)->name('vat-map');
-Route::get('/vat-calculator/{slug}', VatCalculator::class)->name('vat-calculator.country');
-// Route::get('/vat-check/{slug?}', \App\Livewire\VatValidator::class)->name('vat-check');
-// Route::get('/vat-navigator', \App\Livewire\VatNavigator::class)->name('vat-navigator');
-Route::get('/vat-changes', \App\Livewire\VatChangesHistory::class)->name('vat-changes');
-Route::get('/sitemap', HtmlSitemap::class)->name('html-sitemap');
+    Route::get('/counter', Counter::class);
+    Route::get('/tools', Tools::class);
+
+    Route::get('/vat-calculator', VatCalculator::class)->name('vat-calculator');
+    Route::get('/vat-map', VatMap::class)->name('vat-map');
+    Route::get('/vat-calculator/{slug}', VatCalculator::class)->name('vat-calculator.country');
+    // Route::get('/vat-check/{slug?}', \App\Livewire\VatValidator::class)->name('vat-check');
+    // Route::get('/vat-navigator', \App\Livewire\VatNavigator::class)->name('vat-navigator');
+    Route::get('/vat-changes', \App\Livewire\VatChangesHistory::class)->name('vat-changes');
+    Route::get('/sitemap', HtmlSitemap::class)->name('html-sitemap');
+};
+
+// Locale-prefixed routes for non-default languages (registered FIRST)
+$supported = array_keys(config('translation.supported_languages', []));
+$nonDefault = array_filter($supported, fn ($l) => $l !== config('translation.default_language', 'en'));
+$localePattern = implode('|', $nonDefault);
+
+Route::prefix('{locale}')
+    ->where(['locale' => $localePattern])
+    ->group($registerRoutes);
+
+// Default locale (en) — no prefix (registered LAST so names point to root URIs)
+$registerRoutes();
+
+// Language switch route
+Route::get('/lang/{locale}', function (string $locale) {
+    $supported = array_keys(config('translation.supported_languages', []));
+    if (!in_array($locale, $supported)) {
+        abort(404);
+    }
+    session()->put('locale', $locale);
+
+    // Redirect to the same page in the new locale
+    $previous = url()->previous();
+    $default = config('translation.default_language', 'en');
+    $parsed = parse_url($previous);
+    $path = $parsed['path'] ?? '/';
+
+    // Strip existing locale prefix from path
+    $path = preg_replace('#^/(' . implode('|', $supported) . ')(/|$)#', '/', $path);
+    $path = $path === '' ? '/' : $path;
+
+    if ($locale === $default) {
+        return redirect($path);
+    }
+
+    return redirect('/' . $locale . ($path === '/' ? '' : $path));
+})->name('lang.switch');
+
+// Non-localised routes (sitemap, embed, API, etc.)
 Route::get('/sitemap/generate', [SitemapController::class, 'index'])->name('sitemap.generate');
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 

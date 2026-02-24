@@ -19,7 +19,7 @@
             EU VAT Number Validator
         </h2>
         <p class="text-sm text-gray-600 dark:text-gray-400">
-            Validate EU VAT numbers using the official VIES service with intelligent company name and address matching.
+            {{ __('ui.validator.subtitle') }}
         </p>
     </div>
 
@@ -29,7 +29,7 @@
         <!-- Country Selection -->
         <div>
             <label for="country" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Country <span class="text-red-500">*</span>
+                {{ __('ui.country') }} <span class="text-red-500">*</span>
             </label>
             <select 
                 wire:model.live="countryCode"
@@ -49,7 +49,7 @@
         <!-- VAT Number Input -->
         <div>
             <label for="vatNumber" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                VAT Number <span class="text-red-500">*</span>
+                {{ __('ui.validator.enter_number') }} <span class="text-red-500">*</span>
             </label>
             <div class="flex gap-2">
                 <div class="flex-1">
@@ -87,7 +87,7 @@
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
-                    <span>Validate VAT Number</span>
+                    <span>{{ __('ui.validator.validate') }}</span>
                 @endif
             </button>
 
@@ -134,14 +134,14 @@
                             <svg class="w-6 h-6 text-green-600 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                             </svg>
-                            <span class="font-semibold text-green-800 dark:text-green-200">Valid VAT Number</span>
+                            <span class="font-semibold text-green-800 dark:text-green-200">{{ __('ui.validator.valid') }} VAT</span>
                         </div>
                     @else
                         <div class="flex items-center gap-2 px-4 py-2 bg-red-100 dark:bg-red-900/30 rounded-lg">
                             <svg class="w-6 h-6 text-red-600 dark:text-red-400" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
                             </svg>
-                            <span class="font-semibold text-red-800 dark:text-red-200">Invalid VAT Number</span>
+                            <span class="font-semibold text-red-800 dark:text-red-200">{{ __('ui.validator.invalid') }} VAT</span>
                         </div>
                     @endif
 
@@ -154,11 +154,11 @@
                 <!-- Company Details -->
                 @if($validationResult['name'] || $validationResult['address'])
                     <div class="space-y-3 bg-gray-50 dark:bg-gray-900/50 rounded-lg p-4">
-                        <h3 class="font-semibold text-gray-900 dark:text-white">Company Details</h3>
+                        <h3 class="font-semibold text-gray-900 dark:text-white">{{ __('ui.validator.company_name') }}</h3>
                         
                         @if($validationResult['name'])
                             <div>
-                                <label class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Company Name</label>
+                                <label class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">{{ __('ui.validator.company_name') }}</label>
                                 <p class="text-sm text-gray-900 dark:text-white mt-1">{{ $validationResult['name'] }}</p>
                                 
                                 @if(isset($validationResult['name_match']) && $validationResult['name_match']['confidence'] > 0)
@@ -177,7 +177,7 @@
 
                         @if($validationResult['address'])
                             <div>
-                                <label class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Address</label>
+                                <label class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">{{ __('ui.validator.company_address') }}</label>
                                 <p class="text-sm text-gray-900 dark:text-white mt-1 whitespace-pre-line">{{ $validationResult['address'] }}</p>
                                 
                                 @if(isset($validationResult['address_match']) && $validationResult['address_match']['confidence'] > 0)

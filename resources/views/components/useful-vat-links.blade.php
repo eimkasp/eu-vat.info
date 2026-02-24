@@ -1,5 +1,5 @@
 <div class="bg-white p-6 rounded-xl shadow-xl mb-6">
-    <h3 class="text-lg font-bold mb-4">🔗 Useful Resources</h3>
+    <h3 class="text-lg font-bold mb-4">🔗 {{ __('ui.useful_links.title') }}</h3>
     
     <div class="space-y-3">
         <a href="https://ec.europa.eu/taxation_customs/vies/" 
@@ -12,8 +12,8 @@
                 </svg>
             </div>
             <div class="flex-1">
-                <div class="font-medium text-gray-900">EU VIES VAT Number Validation</div>
-                <div class="text-sm text-gray-500">Verify EU VAT registration numbers</div>
+                <div class="font-medium text-gray-900">{{ __('ui.useful_links.vies_service') }}</div>
+                <div class="text-sm text-gray-500">{{ __('ui.footer.eu_vies') }}</div>
             </div>
             <svg class="w-5 h-5 text-gray-400 group-hover:text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
@@ -30,8 +30,8 @@
                 </svg>
             </div>
             <div class="flex-1">
-                <div class="font-medium text-gray-900">Your Europe - VAT Guide</div>
-                <div class="text-sm text-gray-500">Official guide for businesses on VAT</div>
+                <div class="font-medium text-gray-900">{{ __('ui.useful_links.your_europe') }}</div>
+                <div class="text-sm text-gray-500">{{ __('ui.footer.eu_vat_guide') }}</div>
             </div>
             <svg class="w-5 h-5 text-gray-400 group-hover:text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>

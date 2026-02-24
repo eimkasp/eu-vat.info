@@ -7,7 +7,7 @@
                 </svg>
                 VAT Calculator
             </h2>
-            <p class="text-blue-100 text-sm !mb-0 opacity-90">Calculate VAT rates instantly</p>
+            <p class="text-blue-100 text-sm !mb-0 opacity-90">{{ __('ui.calculator.calculate_instantly') }}</p>
         </div>
 
         <div class="w-full sm:w-auto">
@@ -33,7 +33,7 @@
             {{-- Amount Input --}}
             <div class="space-y-2">
                 <x-input 
-                    label="Amount" 
+                    label="{{ __('ui.calculator.amount') }}" 
                     wire:change="calculate" 
                     wire:model.lazy="amount" 
                     type="text" 
@@ -46,7 +46,7 @@
             @isset($selectedCountryObject)
                 {{-- VAT Rate Selection --}}
                 <div class="bg-gray-50 p-3 rounded-xl border border-gray-200 space-y-2">
-                    <label class="text-sm font-medium text-gray-700 block">VAT Rate</label>
+                    <label class="text-sm font-medium text-gray-700 block">{{ __('ui.calculator.vat_rate') }}</label>
                     <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
                         @foreach($rates as $rate)
                             <label class="relative flex items-center p-2 rounded-lg border cursor-pointer hover:bg-white transition-colors {{ !$useCustomRate && $selectedRate == $rate['value'] ? 'bg-white border-blue-500 ring-1 ring-blue-500' : 'border-gray-200' }}">
@@ -60,8 +60,8 @@
                             <input type="radio" name="rate" wire:click="$set('useCustomRate', true)" {{ $useCustomRate ? 'checked' : '' }} class="h-4 w-4 text-amber-600 border-gray-300 focus:ring-amber-500">
                             <span class="ml-3 flex-1">
                                 <div class="flex items-center gap-2 {{ $useCustomRate ? 'mb-2' : '' }}">
-                                    <span class="block text-sm font-medium text-gray-900">Custom Rate</span>
-                                    <span class="text-xs px-1.5 py-0.5 bg-amber-100 text-amber-700 rounded font-medium">Any %</span>
+                                    <span class="block text-sm font-medium text-gray-900">{{ __('ui.calculator.custom_rate') }}</span>
+                                    <span class="text-xs px-1.5 py-0.5 bg-amber-100 text-amber-700 rounded font-medium">{{ __('ui.calculator.any_percent') }}</span>
                                 </div>
                                 @if($useCustomRate)
                                     <div class="flex items-center gap-2" @click.stop>
@@ -77,9 +77,9 @@
                                             class="flex-1 px-3 py-2 text-sm border border-amber-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent bg-amber-50">
                                         <span class="text-sm font-medium text-gray-700">%</span>
                                     </div>
-                                    <p class="text-xs text-gray-500 mt-1">Enter any VAT percentage from 0% to 100%</p>
+                                    <p class="text-xs text-gray-500 mt-1">{{ __('ui.calculator.enter_custom') }}</p>
                                 @else
-                                    <span class="text-xs text-gray-500">Enter any VAT percentage for your calculation</span>
+                                    <span class="text-xs text-gray-500">{{ __('ui.calculator.custom_desc') }}</span>
                                 @endif
                             </span>
                         </label>
@@ -88,7 +88,7 @@
 
                 {{-- VAT Included/Excluded Cards --}}
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Calculation Mode</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('ui.calculator.calculation_mode') }}</label>
                     <div class="grid grid-cols-2 gap-3">
                         <label class="cursor-pointer relative group">
                             <input type="radio" name="vat_included" value="include" class="peer sr-only" wire:model.live="vat_included">
@@ -97,9 +97,9 @@
                                     <div class="w-4 h-4 rounded-full border flex items-center justify-center {{ $vat_included === 'include' ? 'border-blue-600 bg-blue-600' : 'border-gray-400' }}">
                                         <div class="w-1.5 h-1.5 rounded-full bg-white {{ $vat_included === 'include' ? 'opacity-100' : 'opacity-0' }}"></div>
                                     </div>
-                                    <span class="font-semibold text-sm {{ $vat_included === 'include' ? 'text-blue-900' : 'text-gray-900' }}">Includes VAT</span>
+                                    <span class="font-semibold text-sm {{ $vat_included === 'include' ? 'text-blue-900' : 'text-gray-900' }}">{{ __('ui.calculator.includes_vat') }}</span>
                                 </div>
-                                <span class="text-xs text-gray-500 ml-6">Extract VAT from total</span>
+                                <span class="text-xs text-gray-500 ml-6">{{ __('ui.calculator.extract_vat') }}</span>
                             </div>
                         </label>
 
@@ -110,9 +110,9 @@
                                     <div class="w-4 h-4 rounded-full border flex items-center justify-center {{ $vat_included === 'exclude' ? 'border-blue-600 bg-blue-600' : 'border-gray-400' }}">
                                         <div class="w-1.5 h-1.5 rounded-full bg-white {{ $vat_included === 'exclude' ? 'opacity-100' : 'opacity-0' }}"></div>
                                     </div>
-                                    <span class="font-semibold text-sm {{ $vat_included === 'exclude' ? 'text-blue-900' : 'text-gray-900' }}">Excludes VAT</span>
+                                    <span class="font-semibold text-sm {{ $vat_included === 'exclude' ? 'text-blue-900' : 'text-gray-900' }}">{{ __('ui.calculator.excludes_vat') }}</span>
                                 </div>
-                                <span class="text-xs text-gray-500 ml-6">Add VAT to net amount</span>
+                                <span class="text-xs text-gray-500 ml-6">{{ __('ui.calculator.add_vat') }}</span>
                             </div>
                         </label>
                     </div>
@@ -135,7 +135,7 @@
                     <div class="p-4" wire:loading.class="opacity-50" wire:target="calculate">
                         <div class="grid grid-cols-2 gap-6 mb-4">
                             <div>
-                                <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Net Amount</div>
+                                <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">{{ __('ui.calculator.net_amount') }}</div>
                                 <div class="text-xl font-medium text-gray-900">
                                     {{ is_numeric($amount) ? Number::currency((float)($vat_included == 'include' ? $total - $vat_amount : $amount), 'EUR') : '0.00 €' }}
                                 </div>
@@ -149,7 +149,7 @@
                         </div>
                         
                         <div class="pt-4 border-t border-gray-100 flex justify-between items-center bg-gray-50 -mx-4 -mb-4 px-4 py-3">
-                            <span class="font-medium text-gray-500">Total to Pay</span>
+                            <span class="font-medium text-gray-500">{{ __('ui.calculator.total_to_pay') }}</span>
                             <span class="text-3xl font-bold text-gray-900 tracking-tight">
                                 {{ is_numeric($total) ? Number::currency((float)($vat_included == 'include' ? $amount : $total), 'EUR') : '0.00 €' }}
                             </span>
@@ -160,8 +160,8 @@
 
             <x-slot:actions>
                 <div class="flex gap-3 w-full">
-                    <x-button label="Save" class="flex-1 btn-outline" wire:click="saveSearch" icon="o-bookmark" spinner="saveSearch" />
-                    <x-button label="Calculate" class="flex-1 btn-primary bg-blue-600 hover:bg-blue-700 text-white" type="submit" icon="o-calculator" spinner="calculate" />
+                    <x-button label="{{ __('ui.save') }}" class="flex-1 btn-outline" wire:click="saveSearch" icon="o-bookmark" spinner="saveSearch" />
+                    <x-button label="{{ __('ui.calculate') }}" class="flex-1 btn-primary bg-blue-600 hover:bg-blue-700 text-white" type="submit" icon="o-calculator" spinner="calculate" />
                 </div>
             </x-slot:actions>
         </x-form>

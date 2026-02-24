@@ -1,6 +1,6 @@
 @section('seo')
-    <x-seo-meta title="EU VAT Info - VAT Rates Calculator & Information for All EU Countries"
-        description="Current VAT rates for all 27 EU countries. Free online calculator, historical data from 2000, rate change alerts, and compliance guides. Updated daily."
+    <x-seo-meta :title="__('ui.home_page.title')"
+        :description="__('ui.home_page.meta_desc')"
         type="website">
         <script type="application/ld+json">
         {
@@ -25,10 +25,10 @@
 <div class="mx-auto max-w-7xl px-4 py-6 sm:py-12" x-data="{ showMap: true }">
     <div class="text-center mb-16 max-w-3xl mx-auto">
         <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-900 tracking-tight mb-4">
-            VAT Rates in the <span class="text-blue-600">European Union</span>
+            {{ __('ui.home_page.heading') }} <span class="text-blue-600">{{ __('ui.home_page.heading_accent') }}</span>
         </h1>
         <p class="text-xl text-gray-500 leading-relaxed">
-            Current standard VAT rates, reduced rates, and calculator for all 27 EU member states. Updated daily.
+            {{ __('ui.home_page.subtitle') }}
         </p>
     </div>
 
@@ -47,7 +47,7 @@
                             <div class="relative">
                                 <input wire:model.live="search"
                                     class="w-full pl-10 pr-4 py-3 rounded-xl border-0 ring-1 ring-gray-200 focus:ring-2 focus:ring-blue-500 bg-white shadow-sm transition-all"
-                                    placeholder="Search for a country..." type="search">
+                                    placeholder="{{ __('ui.home_page.search_placeholder') }}" type="search">
                                 <div class="absolute left-3 top-3.5 text-gray-400">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                         stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
@@ -72,10 +72,10 @@
                             <table class="w-full text-left text-sm text-gray-600">
                                 <thead class="bg-gray-50 text-xs uppercase font-semibold text-gray-500 tracking-wider">
                                     <tr>
-                                        <th class="px-6 py-4">Country</th>
-                                        <th class="px-6 py-4">Standard Rate</th>
-                                        <th class="px-6 py-4 hidden sm:table-cell">Reduced</th>
-                                        <th class="px-6 py-4 text-right">Actions</th>
+                                        <th class="px-6 py-4">{{ __('ui.home_page.th_country') }}</th>
+                                        <th class="px-6 py-4">{{ __('ui.home_page.th_standard') }}</th>
+                                        <th class="px-6 py-4 hidden sm:table-cell">{{ __('ui.home_page.th_reduced') }}</th>
+                                        <th class="px-6 py-4 text-right">{{ __('ui.home_page.th_actions') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-100">
@@ -111,9 +111,9 @@
                                                 @endif
                                             </td>
                                             <td class="px-6 py-4 text-right">
-                                                <a href="{{ route('vat-calculator.country', $country->slug) }}"
+                                                <a href="{{ locale_path('/vat-calculator/' . $country->slug) }}"
                                                     class="text-blue-600 font-medium hover:text-blue-800 text-xs uppercase tracking-wide transition-colors">
-                                                    Details &rarr;
+                                                    {{ __('ui.details') }} &rarr;
                                                 </a>
                                             </td>
                                         </tr>
@@ -134,7 +134,7 @@
                     <div class="mt-2 pt-2 border-t">
                         <a href="{{ route('vat-calculator.country', $selectedCountry->slug) }}" 
                            class="text-blue-600 hover:underline text-sm">
-                            View full calculator & history →
+                            {{ __('ui.home_page.view_full') }} →
                         </a>
                     </div>
                 @endif

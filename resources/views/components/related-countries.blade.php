@@ -16,7 +16,7 @@
                 $flag = mb_chr(ord($iso[0]) + 127397) . mb_chr(ord($iso[1]) + 127397);
             }
         @endphp
-        <a href="{{ route('country.show', $related->slug) }}" 
+        <a href="{{ locale_path('/country/' . $related->slug) }}" 
            wire:navigate
            class="flex items-center gap-3 p-4 bg-white rounded-xl border border-gray-100 hover:shadow-md hover:border-blue-200 transition-all group">
             <img src="https://flagcdn.com/h40/{{ strtolower($related->iso_code) }}.jpg" 
