@@ -18,6 +18,7 @@
                 <ul class="space-y-2 text-sm">
                     <li><a href="{{ route('vat-calculator') }}" wire:navigate class="hover:text-white transition-colors">VAT Calculator</a></li>
                     <li><a href="{{ route('vat-map') }}" wire:navigate class="hover:text-white transition-colors">Interactive VAT Map</a></li>
+                    <li><a href="{{ route('vat-changes') }}" wire:navigate class="hover:text-white transition-colors">VAT Rate History</a></li>
                     <li><a href="{{ route('widget.embed') }}" wire:navigate class="hover:text-white transition-colors">Embed VAT Widget</a></li>
                 </ul>
             </div>

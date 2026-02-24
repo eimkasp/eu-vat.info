@@ -8,6 +8,7 @@ EU VAT Info (https://vat.businesspress.io) is a free, open-source platform provi
 ## Core Tools
 - [VAT Calculator](https://vat.businesspress.io/vat-calculator): Calculate VAT amounts (inclusive/exclusive) for any EU country. Supports all rate types (standard, reduced, super-reduced, parking) and custom percentage entry.
 - [VAT Map](https://vat.businesspress.io/vat-map): Interactive heatmap visualizing standard VAT rates across all 27 EU member states.
+- [VAT Rate History](https://vat.businesspress.io/vat-changes): Complete history of VAT rate changes across all EU countries with stability indicators.
 - [VAT Number Validator](https://vat.businesspress.io/country/germany/vat-validator): VIES-powered VAT number validation with fuzzy company name matching (available per-country).
 - [Embed Widget](https://vat.businesspress.io/embed): Embeddable VAT calculator widget for third-party websites.
 

@@ -83,12 +83,12 @@ it('resets custom rate when switching countries', function () {
         ->assertSet('selectedRate', 20);
 });
 
-// ── /vat-changes route is disabled ─────────────────────────────────────────
+// ── /vat-changes route is enabled (VAT History page) ──────────────────────
 
-it('returns 404 for disabled vat-changes route', function () {
+it('loads vat-changes history page', function () {
     $response = $this->get('/vat-changes');
-    // Route is commented out, should be 404 (or 500 if route name still referenced somewhere)
-    expect($response->getStatusCode())->toBeIn([404, 500]);
+    $response->assertStatus(200);
+    $response->assertSee('VAT Rate Changes History');
 });
 
 it('does not show vat changelog link in header', function () {
@@ -97,11 +97,10 @@ it('does not show vat changelog link in header', function () {
     $response->assertDontSee('VAT Changelog');
 });
 
-it('does not show vat rate changes link in footer', function () {
+it('shows vat rate history link in footer', function () {
     $response = $this->get('/');
     $response->assertStatus(200);
-    // The footer link to vat-changes was removed; widget heading may still exist
-    expect($response->getContent())->not->toContain('href="http://localhost/vat-changes"');
+    expect($response->getContent())->toContain('VAT Rate History');
 });
 
 // ── VAT Map improvements ───────────────────────────────────────────────────
@@ -148,11 +147,11 @@ it('calculator page renders with compact layout', function () {
         ->assertSee('Excludes VAT');
 });
 
-it('html sitemap page loads without vat-changes', function () {
+it('html sitemap page includes vat history link', function () {
     $this->get('/sitemap')
         ->assertStatus(200)
         ->assertSee('Sitemap')
-        ->assertDontSee('VAT Rate Changes History');
+        ->assertSee('VAT Rate History');
 });
 
 // ── XML sitemap excludes vat-changes ────────────────────────────────────────
@@ -170,7 +169,8 @@ it('robots txt does not reference vat-changes', function () {
     expect($content)->not->toContain('vat-changes');
 });
 
-it('llms txt does not reference vat-changes', function () {
+it('llms txt references vat-changes history page', function () {
     $content = file_get_contents(public_path('llms.txt'));
-    expect($content)->not->toContain('vat-changes');
+    expect($content)->toContain('vat-changes');
+    expect($content)->toContain('VAT Rate History');
 });

@@ -70,6 +70,13 @@
                     </a>
                     <p class="text-sm text-gray-500 ml-6">Embed the VAT calculator on your own website</p>
                 </li>
+                <li>
+                    <a href="{{ route('vat-changes') }}" wire:navigate class="flex items-center gap-2 text-blue-600 hover:text-blue-800 hover:underline font-medium">
+                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        VAT Rate History
+                    </a>
+                    <p class="text-sm text-gray-500 ml-6">Complete history of VAT rate changes across all EU countries</p>
+                </li>
             </ul>
         </div>
 

@@ -82,7 +82,8 @@
         </div>
     @endif
     
-    <div class="mt-4 pt-4 border-t">
+    <div class="mt-4 pt-4 border-t flex justify-between">
+        <a href="{{ route('vat-changes') }}" class="text-sm text-blue-600 hover:underline">Full VAT History →</a>
         <a href="{{ route('vat-map') }}" class="text-sm text-blue-600 hover:underline">Explore VAT Map →</a>
     </div>
 </div>

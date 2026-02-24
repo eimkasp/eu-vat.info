@@ -7,19 +7,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-
-class UpdateVatRates implements ShouldQueue
-{
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
-    /**
-     * Create a new job instance.
-     */
-    public function __construct()
-    {
-        //
-    }
-
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
@@ -29,9 +16,9 @@ class UpdateVatRates implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    /**
-     * Create a new job instance.
-     */
+    public int $tries = 3;
+    public int $backoff = 60;
+
     public function __construct()
     {
         //
@@ -40,40 +27,63 @@ class UpdateVatRates implements ShouldQueue
     /**
      * Execute the job.
      */
-    public function handle()
+    public function handle(): void
     {
         Log::info('UpdateVatRates job started.');
-        
-        $this->updateFromGithub();
-        
+
+        $this->downloadLatestCsv();
+        $this->runSeeder();
+        $this->syncCountryRates();
+
         Log::info('UpdateVatRates job finished.');
     }
 
-    private function updateFromGithub()
+    /**
+     * Download the latest VAT rates CSV from kdeldycke/vat-rates GitHub repo.
+     */
+    private function downloadLatestCsv(): void
     {
         $url = 'https://raw.githubusercontent.com/kdeldycke/vat-rates/main/vat_rates.csv';
         $path = base_path('data/vat_rates.csv');
 
-        try {
-            $response = Http::get($url);
+        $response = Http::timeout(30)->get($url);
 
-            if ($response->successful()) {
-                // Ensure directory exists
-                if (!File::exists(dirname($path))) {
-                    File::makeDirectory(dirname($path), 0755, true);
-                }
-
-                File::put($path, $response->body());
-                Log::info("Downloaded latest VAT rates CSV to {$path}");
-
-                // Run the seeder
-                Artisan::call('db:seed', ['--class' => 'VatRateSeeder']);
-                Log::info("VatRateSeeder executed successfully.");
-            } else {
-                Log::error("Failed to download VAT rates CSV. Status: " . $response->status());
-            }
-        } catch (\Exception $e) {
-            Log::error("Error updating VAT rates: " . $e->getMessage());
+        if (!$response->successful()) {
+            Log::error("Failed to download VAT rates CSV. Status: {$response->status()}");
+            throw new \RuntimeException("Failed to download VAT rates CSV: HTTP {$response->status()}");
         }
+
+        if (!File::exists(dirname($path))) {
+            File::makeDirectory(dirname($path), 0755, true);
+        }
+
+        File::put($path, $response->body());
+        Log::info("Downloaded latest VAT rates CSV ({$this->countCsvLines($response->body())} records).");
+    }
+
+    /**
+     * Run the VatRateSeeder to import CSV data into vat_rates table.
+     */
+    private function runSeeder(): void
+    {
+        Artisan::call('db:seed', [
+            '--class' => 'VatRateSeeder',
+            '--force' => true,
+        ]);
+        Log::info('VatRateSeeder executed successfully.');
+    }
+
+    /**
+     * Sync latest active VatRate records back to the countries table.
+     */
+    private function syncCountryRates(): void
+    {
+        $job = new VerifyVatRatesIntegrity();
+        $job->handle();
+    }
+
+    private function countCsvLines(string $content): int
+    {
+        return max(0, substr_count($content, "\n") - 1); // minus header
     }
 }

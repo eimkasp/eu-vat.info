@@ -33,13 +33,8 @@ class VatRateSeeder extends Seeder
                 continue;
             }
 
-            // Match "Austria (AT)" with "AT"
-            $country = Country::where('iso_code', 'LIKE', "%($countryCode)%")->first();
-
-            if (!$country) {
-                // Fallback: try exact match or just name match if needed
-                $country = Country::where('iso_code', $countryCode)->first();
-            }
+            // Match country by ISO code (e.g. "AT", "DE")
+            $country = Country::where('iso_code', $countryCode)->first();
 
             if (!$country) {
                 continue;

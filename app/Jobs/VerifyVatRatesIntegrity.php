@@ -28,36 +28,37 @@ class VerifyVatRatesIntegrity implements ShouldQueue
         $issues = 0;
         $fixed = 0;
 
-        foreach ($countries as $country) {
-            // Check Standard Rate
-            $latestStandard = VatRate::where('country_id', $country->id)
-                ->where('type', 'standard')
-                ->where('effective_from', '<=', now())
-                ->where(function ($query) {
-                    $query->whereNull('effective_to')
-                          ->orWhere('effective_to', '>=', now());
-                })
-                ->orderBy('effective_from', 'desc')
-                ->first();
+        $rateTypeMapping = [
+            'standard' => 'standard_rate',
+            'reduced' => 'reduced_rate',
+            'super_reduced' => 'super_reduced_rate',
+            'parking' => 'parking_rate',
+        ];
 
-            if ($latestStandard) {
-                if (abs($country->standard_rate - $latestStandard->rate) > 0.01) {
-                    Log::warning("Mismatch for {$country->name}: Country rate {$country->standard_rate} vs VatRate {$latestStandard->rate}");
-                    
-                    // Auto-fix
-                    $country->standard_rate = $latestStandard->rate;
-                    $country->save();
-                    $fixed++;
-                    $issues++;
+        foreach ($countries as $country) {
+            foreach ($rateTypeMapping as $vatType => $countryField) {
+                $latestRate = VatRate::where('country_id', $country->id)
+                    ->where('type', $vatType)
+                    ->where('effective_from', '<=', now())
+                    ->where(function ($query) {
+                        $query->whereNull('effective_to')
+                              ->orWhere('effective_to', '>=', now());
+                    })
+                    ->orderBy('effective_from', 'desc')
+                    ->first();
+
+                if ($latestRate) {
+                    $countryRate = $country->{$countryField};
+                    if ($countryRate !== null && abs($countryRate - $latestRate->rate) > 0.01) {
+                        Log::warning("Mismatch for {$country->name} ({$vatType}): Country rate {$countryRate} vs VatRate {$latestRate->rate}");
+                        
+                        $country->{$countryField} = $latestRate->rate;
+                        $country->save();
+                        $fixed++;
+                        $issues++;
+                    }
                 }
-            } else {
-                // If no VatRate exists, maybe create one from Country rate?
-                // Or just log warning.
-                Log::warning("No active standard VatRate found for {$country->name}");
             }
-            
-            // We could do similar checks for reduced rates if we had a structured way to map them.
-            // Country model has 'reduced_rate' string/text, but VatRate has 'reduced' type.
         }
 
         Log::info("VerifyVatRatesIntegrity job finished. Found {$issues} issues, fixed {$fixed}.");
