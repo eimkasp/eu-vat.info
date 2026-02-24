@@ -192,6 +192,10 @@ class VatCalculator extends Component
                 $this->calculateVat();
             }
         }
+
+        if ($property === 'vat_included') {
+            $this->calculateVat();
+        }
     }
 
     public function setCustomRate()
@@ -233,9 +237,14 @@ class VatCalculator extends Component
         $this->error_message = null;
 
         try {
-            // Improved number format handling
-            $cleanAmount = $this->normalizeNumber($this->amount);
-            $amount = round(floatval($cleanAmount), 2);
+            // If amount is already numeric (float/int), use it directly
+            // Otherwise normalize European format strings like '1.234,56'
+            if (is_numeric($this->amount)) {
+                $amount = round(floatval($this->amount), 2);
+            } else {
+                $cleanAmount = $this->normalizeNumber($this->amount);
+                $amount = round(floatval($cleanAmount), 2);
+            }
             
             if (!$this->isValidAmount($amount)) {
                 throw new \InvalidArgumentException("Please enter a valid positive number");

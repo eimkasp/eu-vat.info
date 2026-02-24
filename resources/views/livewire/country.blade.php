@@ -422,10 +422,15 @@
                 </div>
             </div>
         </div>
-        <div class="hidden mt-9">
-            <h3 class="text-xl font-medium mb-3">Related countries</h3>
+        <div class="mt-9">
+            <h3 class="text-xl font-bold mb-4">Explore Other EU Countries</h3>
             <x-related-countries :country="$country" />
 
+            <div class="mt-6 text-center">
+                <a href="{{ route('html-sitemap') }}" wire:navigate class="text-blue-600 hover:text-blue-800 hover:underline text-sm font-medium">
+                    View all EU country VAT pages &rarr;
+                </a>
+            </div>
         </div>
         <script>
             document.addEventListener('DOMContentLoaded', function() {

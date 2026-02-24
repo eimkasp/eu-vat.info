@@ -72,7 +72,7 @@
                         <livewire:vat-calculator-form slug="united-kingdom-gb" />
                     @endisset
                     <div class="mt-3 text-right">
-                        Powered by <a href="https://eu-vat.info" target="_blank" class="text-blue-500">EU-VAT.info</a>
+                        Powered by <a href="https://vat.businesspress.io" target="_blank" class="text-blue-500">VAT.BusinessPress.io</a>
                     </div>
                 </div>
             </div>

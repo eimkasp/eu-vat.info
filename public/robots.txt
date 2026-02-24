@@ -1,4 +1,18 @@
+# EU VAT Info - robots.txt
+# https://vat.businesspress.io
+
+# ===== General Search Engines =====
 User-agent: *
+Allow: /
+Allow: /vat-calculator
+Allow: /vat-map
+Allow: /country/
+Allow: /embed
+Allow: /sitemap
+Allow: /api/
+Allow: /llms.txt
+Allow: /llms-full.txt
+
 Disallow: /vendor/
 Disallow: /node_modules/
 Disallow: /storage/
@@ -8,7 +22,6 @@ Disallow: /database/
 Disallow: /resources/
 Disallow: /routes/
 Disallow: /tests/
-Disallow: /env
 Disallow: /.env
 Disallow: /.git
 Disallow: /phpunit.xml
@@ -18,8 +31,91 @@ Disallow: /composer.lock
 Disallow: /package.json
 Disallow: /package-lock.json
 Disallow: /yarn.lock
+Disallow: /artisan
+Disallow: /filament/
+Disallow: /admin/
+Disallow: /livewire/
 
-# Allow indexing of your public directory
-Allow: /storage/app/public/
+# ===== Googlebot =====
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
 
-Sitemap: https://eu-vat.info/sitemap.xml
+# ===== Bingbot =====
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 2
+
+# ===== AI/LLM Crawlers - Allowed =====
+# We provide structured data for AI via llms.txt and API endpoints
+User-agent: GPTBot
+Allow: /
+Allow: /llms.txt
+Allow: /llms-full.txt
+Allow: /api/llm/vat-rates
+Allow: /api/countries
+Crawl-delay: 5
+
+User-agent: ChatGPT-User
+Allow: /
+Allow: /llms.txt
+Allow: /llms-full.txt
+Allow: /api/llm/vat-rates
+Crawl-delay: 5
+
+User-agent: Google-Extended
+Allow: /
+Allow: /llms.txt
+Allow: /llms-full.txt
+Crawl-delay: 3
+
+User-agent: Anthropic-AI
+Allow: /
+Allow: /llms.txt
+Allow: /llms-full.txt
+Allow: /api/llm/vat-rates
+Crawl-delay: 5
+
+User-agent: Claude-Web
+Allow: /
+Allow: /llms.txt
+Allow: /llms-full.txt
+Crawl-delay: 5
+
+User-agent: PerplexityBot
+Allow: /
+Allow: /llms.txt
+Allow: /llms-full.txt
+Allow: /api/llm/vat-rates
+Crawl-delay: 5
+
+User-agent: Cohere-AI
+Allow: /
+Allow: /llms.txt
+Crawl-delay: 5
+
+User-agent: Meta-ExternalAgent
+Allow: /
+Allow: /llms.txt
+Crawl-delay: 5
+
+# ===== Aggressive Scrapers - Blocked =====
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+User-agent: SemrushBot
+Crawl-delay: 10
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+# ===== Sitemaps =====
+Sitemap: https://vat.businesspress.io/sitemap.xml
+
+# ===== LLM-Readable Content =====
+# llms.txt: https://vat.businesspress.io/llms.txt
+# Full rates: https://vat.businesspress.io/llms-full.txt
+# JSON API: https://vat.businesspress.io/api/llm/vat-rates

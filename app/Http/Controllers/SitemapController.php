@@ -30,20 +30,20 @@ class SitemapController extends Controller
         $sitemap .= '<priority>0.9</priority>';
         $sitemap .= '</url>';
         
-        // VAT changes history
-        $sitemap .= '<url>';
-        $sitemap .= '<loc>' . route('vat-changes') . '</loc>';
-        $sitemap .= '<lastmod>' . now()->toAtomString() . '</lastmod>';
-        $sitemap .= '<changefreq>weekly</changefreq>';
-        $sitemap .= '<priority>0.8</priority>';
-        $sitemap .= '</url>';
-        
         // VAT map
         $sitemap .= '<url>';
         $sitemap .= '<loc>' . route('vat-map') . '</loc>';
         $sitemap .= '<lastmod>' . now()->toAtomString() . '</lastmod>';
         $sitemap .= '<changefreq>monthly</changefreq>';
         $sitemap .= '<priority>0.7</priority>';
+        $sitemap .= '</url>';
+        
+        // HTML Sitemap
+        $sitemap .= '<url>';
+        $sitemap .= '<loc>' . route('html-sitemap') . '</loc>';
+        $sitemap .= '<lastmod>' . now()->toAtomString() . '</lastmod>';
+        $sitemap .= '<changefreq>weekly</changefreq>';
+        $sitemap .= '<priority>0.6</priority>';
         $sitemap .= '</url>';
         
         // Country-specific calculator pages & detail pages

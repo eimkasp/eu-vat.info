@@ -83,6 +83,6 @@
     @endif
     
     <div class="mt-4 pt-4 border-t">
-        <a href="{{ route('vat-changes') }}" class="text-sm text-blue-600 hover:underline">View all changes →</a>
+        <a href="{{ route('vat-map') }}" class="text-sm text-blue-600 hover:underline">Explore VAT Map →</a>
     </div>
 </div>

@@ -1,23 +1,71 @@
 # EU VAT Info
 
-> The most up-to-date source for VAT rates, calculators, and history for all 27 European Union countries.
+> The most comprehensive, daily-updated source for VAT rates, calculators, validators, and historical data for all 27 European Union member states. Data sourced from official EU institutions and national tax authorities.
+
+## What is EU VAT Info?
+EU VAT Info (https://vat.businesspress.io) is a free, open-source platform providing current and historical Value Added Tax (VAT) information for every EU country. It includes real-time calculators, VIES-powered VAT number validation, interactive maps, and machine-readable APIs. All data is updated daily.
 
 ## Core Tools
-* [VAT Calculator](https://eu-vat.info/vat-calculator): Calculate VAT amounts (inclusive/exclusive) for any EU country.
-* [VAT Map](https://eu-vat.info/vat-map): Interactive heatmap of standard VAT rates across Europe.
-* [VAT Changelog](https://eu-vat.info/vat-changes): Historical record of VAT rate changes since 2000.
+- [VAT Calculator](https://vat.businesspress.io/vat-calculator): Calculate VAT amounts (inclusive/exclusive) for any EU country. Supports all rate types (standard, reduced, super-reduced, parking) and custom percentage entry.
+- [VAT Map](https://vat.businesspress.io/vat-map): Interactive heatmap visualizing standard VAT rates across all 27 EU member states.
+- [VAT Number Validator](https://vat.businesspress.io/country/germany/vat-validator): VIES-powered VAT number validation with fuzzy company name matching (available per-country).
+- [Embed Widget](https://vat.businesspress.io/embed): Embeddable VAT calculator widget for third-party websites.
 
-## Data & Resources
-* [Full VAT Rates List](https://eu-vat.info/llms-full.txt): Complete list of standard and reduced rates for all countries (Markdown format).
-* [Embed Widget](https://eu-vat.info/embed): Information on embedding the VAT calculator.
+## Data Endpoints (for AI Agents & RAG)
+- [Full VAT Rates (Markdown)](https://vat.businesspress.io/llms-full.txt): Complete table of standard, reduced, super-reduced, and parking rates for all 27 EU countries in Markdown format.
+- [VAT Rates JSON API](https://vat.businesspress.io/api/llm/vat-rates): Structured JSON endpoint optimized for RAG pipelines and LLM context retrieval. Returns all countries with current rates, ISO codes, and metadata.
+- [Countries API](https://vat.businesspress.io/api/countries): RESTful JSON API returning all EU country VAT data.
+- [Single Country API](https://vat.businesspress.io/api/countries/{slug}): Get VAT rates for a specific country by slug.
 
-## Country Specific Pages
-* [Austria](https://eu-vat.info/country/austria)
-* [Belgium](https://eu-vat.info/country/belgium)
-* [Germany](https://eu-vat.info/country/germany)
-* [France](https://eu-vat.info/country/france)
-* [Lithuania](https://eu-vat.info/country/lithuania)
-* ... and all other EU member states.
+## Country Pages (all 27 EU member states)
+Each country page includes: VAT rate overview, country-specific calculator, VIES VAT number validator, compliance guide, and historical rate data.
 
-## API for Agents
-* [VAT Context API](https://eu-vat.info/api/llm/vat-rates): JSON endpoint optimized for RAG and LLM context retrieval.
+- [Austria VAT](https://vat.businesspress.io/country/austria) | [Calculator](https://vat.businesspress.io/country/austria/vat-calculator) | [Validator](https://vat.businesspress.io/country/austria/vat-validator)
+- [Belgium VAT](https://vat.businesspress.io/country/belgium) | [Calculator](https://vat.businesspress.io/country/belgium/vat-calculator) | [Validator](https://vat.businesspress.io/country/belgium/vat-validator)
+- [Bulgaria VAT](https://vat.businesspress.io/country/bulgaria) | [Calculator](https://vat.businesspress.io/country/bulgaria/vat-calculator) | [Validator](https://vat.businesspress.io/country/bulgaria/vat-validator)
+- [Croatia VAT](https://vat.businesspress.io/country/croatia) | [Calculator](https://vat.businesspress.io/country/croatia/vat-calculator) | [Validator](https://vat.businesspress.io/country/croatia/vat-validator)
+- [Cyprus VAT](https://vat.businesspress.io/country/cyprus) | [Calculator](https://vat.businesspress.io/country/cyprus/vat-calculator) | [Validator](https://vat.businesspress.io/country/cyprus/vat-validator)
+- [Czech Republic VAT](https://vat.businesspress.io/country/czech-republic-cz) | [Calculator](https://vat.businesspress.io/country/czech-republic-cz/vat-calculator) | [Validator](https://vat.businesspress.io/country/czech-republic-cz/vat-validator)
+- [Denmark VAT](https://vat.businesspress.io/country/denmark) | [Calculator](https://vat.businesspress.io/country/denmark/vat-calculator) | [Validator](https://vat.businesspress.io/country/denmark/vat-validator)
+- [Estonia VAT](https://vat.businesspress.io/country/estonia) | [Calculator](https://vat.businesspress.io/country/estonia/vat-calculator) | [Validator](https://vat.businesspress.io/country/estonia/vat-validator)
+- [Finland VAT](https://vat.businesspress.io/country/finland) | [Calculator](https://vat.businesspress.io/country/finland/vat-calculator) | [Validator](https://vat.businesspress.io/country/finland/vat-validator)
+- [France VAT](https://vat.businesspress.io/country/france) | [Calculator](https://vat.businesspress.io/country/france/vat-calculator) | [Validator](https://vat.businesspress.io/country/france/vat-validator)
+- [Germany VAT](https://vat.businesspress.io/country/germany) | [Calculator](https://vat.businesspress.io/country/germany/vat-calculator) | [Validator](https://vat.businesspress.io/country/germany/vat-validator)
+- [Greece VAT](https://vat.businesspress.io/country/greece) | [Calculator](https://vat.businesspress.io/country/greece/vat-calculator) | [Validator](https://vat.businesspress.io/country/greece/vat-validator)
+- [Hungary VAT](https://vat.businesspress.io/country/hungary) | [Calculator](https://vat.businesspress.io/country/hungary/vat-calculator) | [Validator](https://vat.businesspress.io/country/hungary/vat-validator)
+- [Ireland VAT](https://vat.businesspress.io/country/ireland) | [Calculator](https://vat.businesspress.io/country/ireland/vat-calculator) | [Validator](https://vat.businesspress.io/country/ireland/vat-validator)
+- [Italy VAT](https://vat.businesspress.io/country/italy) | [Calculator](https://vat.businesspress.io/country/italy/vat-calculator) | [Validator](https://vat.businesspress.io/country/italy/vat-validator)
+- [Latvia VAT](https://vat.businesspress.io/country/latvia) | [Calculator](https://vat.businesspress.io/country/latvia/vat-calculator) | [Validator](https://vat.businesspress.io/country/latvia/vat-validator)
+- [Lithuania VAT](https://vat.businesspress.io/country/lithuania) | [Calculator](https://vat.businesspress.io/country/lithuania/vat-calculator) | [Validator](https://vat.businesspress.io/country/lithuania/vat-validator)
+- [Luxembourg VAT](https://vat.businesspress.io/country/luxembourg) | [Calculator](https://vat.businesspress.io/country/luxembourg/vat-calculator) | [Validator](https://vat.businesspress.io/country/luxembourg/vat-validator)
+- [Malta VAT](https://vat.businesspress.io/country/malta) | [Calculator](https://vat.businesspress.io/country/malta/vat-calculator) | [Validator](https://vat.businesspress.io/country/malta/vat-validator)
+- [Netherlands VAT](https://vat.businesspress.io/country/netherlands) | [Calculator](https://vat.businesspress.io/country/netherlands/vat-calculator) | [Validator](https://vat.businesspress.io/country/netherlands/vat-validator)
+- [Poland VAT](https://vat.businesspress.io/country/poland) | [Calculator](https://vat.businesspress.io/country/poland/vat-calculator) | [Validator](https://vat.businesspress.io/country/poland/vat-validator)
+- [Portugal VAT](https://vat.businesspress.io/country/portugal) | [Calculator](https://vat.businesspress.io/country/portugal/vat-calculator) | [Validator](https://vat.businesspress.io/country/portugal/vat-validator)
+- [Romania VAT](https://vat.businesspress.io/country/romania) | [Calculator](https://vat.businesspress.io/country/romania/vat-calculator) | [Validator](https://vat.businesspress.io/country/romania/vat-validator)
+- [Slovakia VAT](https://vat.businesspress.io/country/slovakia) | [Calculator](https://vat.businesspress.io/country/slovakia/vat-calculator) | [Validator](https://vat.businesspress.io/country/slovakia/vat-validator)
+- [Slovenia VAT](https://vat.businesspress.io/country/slovenia) | [Calculator](https://vat.businesspress.io/country/slovenia/vat-calculator) | [Validator](https://vat.businesspress.io/country/slovenia/vat-validator)
+- [Spain VAT](https://vat.businesspress.io/country/spain) | [Calculator](https://vat.businesspress.io/country/spain/vat-calculator) | [Validator](https://vat.businesspress.io/country/spain/vat-validator)
+- [Sweden VAT](https://vat.businesspress.io/country/sweden) | [Calculator](https://vat.businesspress.io/country/sweden/vat-calculator) | [Validator](https://vat.businesspress.io/country/sweden/vat-validator)
+
+## VAT Calculation Formulas
+- **Add VAT**: Gross = Net × (1 + VAT_Rate / 100)
+- **Remove VAT**: Net = Gross ÷ (1 + VAT_Rate / 100)
+- **Extract VAT**: VAT_Amount = Gross - (Gross ÷ (1 + VAT_Rate / 100))
+
+## Key Facts
+- EU has 27 member states, each with their own VAT rate structure
+- Standard VAT rates in the EU range from 16% (Luxembourg) to 27% (Hungary)
+- Most countries have reduced rates for essentials like food, books, and medicine
+- Some countries have super-reduced rates and parking rates
+- VAT numbers can be validated through the official EU VIES system
+- Cross-border B2B services use the reverse charge mechanism
+
+## Sitemap
+- [HTML Sitemap](https://vat.businesspress.io/sitemap): Human-readable sitemap of all pages
+- [XML Sitemap](https://vat.businesspress.io/sitemap.xml): Machine-readable sitemap for crawlers
+
+## Contact & Source
+- Website: https://vat.businesspress.io
+- Source Code: https://github.com/eimkasp/eu-vat.info
+- License: Open Source

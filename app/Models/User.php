@@ -22,7 +22,7 @@ class User extends Authenticatable implements Auditable, FilamentUser
 
     public function canAccessPanel(Panel $panel): bool
     {
-        return str_ends_with($this->email, '@eu-vat.info') && $this->hasVerifiedEmail();
+        return str_ends_with($this->email, '@vat.businesspress.io') && $this->hasVerifiedEmail();
     }
 
     /**

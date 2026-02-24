@@ -9,6 +9,7 @@ use App\Livewire\VatMap;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Counter;
 use App\Livewire\CountryPage;
+use App\Livewire\HtmlSitemap;
 use League\CommonMark\Extension\Embed\Embed;
 
 Route::get('/', Home::class)->name('home');
@@ -24,7 +25,8 @@ Route::get('/vat-map', VatMap::class)->name('vat-map');
 Route::get('/vat-calculator/{slug}', VatCalculator::class)->name('vat-calculator.country');
 // Route::get('/vat-check/{slug?}', \App\Livewire\VatValidator::class)->name('vat-check');
 // Route::get('/vat-navigator', \App\Livewire\VatNavigator::class)->name('vat-navigator');
-Route::get('/vat-changes', \App\Livewire\VatChangesHistory::class)->name('vat-changes');
+// Route::get('/vat-changes', \App\Livewire\VatChangesHistory::class)->name('vat-changes');
+Route::get('/sitemap', HtmlSitemap::class)->name('html-sitemap');
 Route::get('/sitemap/generate', [SitemapController::class, 'index'])->name('sitemap.generate');
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 

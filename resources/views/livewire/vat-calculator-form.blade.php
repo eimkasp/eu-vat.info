@@ -12,7 +12,7 @@
 
         <div class="w-full sm:w-auto">
             <div class="relative">
-                <select wire:model.live="selectedCountry1" wire:change="calculate" class="appearance-none bg-blue-800/30 border border-blue-400/50 text-white rounded-lg pl-4 pr-10 py-2 text-sm focus:ring-2 focus:ring-white/50 focus:border-white transition-all cursor-pointer hover:bg-blue-800/50 w-full sm:w-64">
+                <select wire:model.live="selectedCountry1" class="appearance-none bg-blue-800/30 border border-blue-400/50 text-white rounded-lg pl-4 pr-10 py-2 text-sm focus:ring-2 focus:ring-white/50 focus:border-white transition-all cursor-pointer hover:bg-blue-800/50 w-full sm:w-64">
                     @foreach($countries as $country)
                         <option value="{{ $country->slug }}" class="text-gray-900">
                             {{ $country->name_with_flag }}
@@ -28,8 +28,8 @@
         </div>
     </div>
 
-    <div class="p-6">
-        <x-form wire:submit="calculate" class="space-y-6">
+    <div class="p-4">
+        <x-form wire:submit="calculate" class="space-y-4">
             {{-- Amount Input --}}
             <div class="space-y-2">
                 <x-input 
@@ -45,23 +45,24 @@
 
             @isset($selectedCountryObject)
                 {{-- VAT Rate Selection --}}
-                <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 space-y-3">
+                <div class="bg-gray-50 p-3 rounded-xl border border-gray-200 space-y-2">
                     <label class="text-sm font-medium text-gray-700 block">VAT Rate</label>
-                    <div class="grid grid-cols-1 gap-2">
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
                         @foreach($rates as $rate)
-                            <label class="relative flex items-center p-3 rounded-lg border cursor-pointer hover:bg-white transition-colors {{ !$useCustomRate && $selectedRate == $rate['value'] ? 'bg-white border-blue-500 ring-1 ring-blue-500' : 'border-gray-200' }}">
+                            <label class="relative flex items-center p-2 rounded-lg border cursor-pointer hover:bg-white transition-colors {{ !$useCustomRate && $selectedRate == $rate['value'] ? 'bg-white border-blue-500 ring-1 ring-blue-500' : 'border-gray-200' }}">
                                 <input type="radio" name="rate" wire:click="selectPresetRate({{ $rate['value'] }})" value="{{ $rate['value'] }}" {{ !$useCustomRate && $selectedRate == $rate['value'] ? 'checked' : '' }} class="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500">
-                                <span class="ml-3 flex flex-col">
-                                    <span class="block text-sm font-medium text-gray-900">{{ $rate['name'] }}</span>
-                                </span>
+                                <span class="ml-2 text-sm font-medium text-gray-900">{{ $rate['name'] }}</span>
                             </label>
                         @endforeach
                         
-                        {{-- Custom Rate Option --}}
-                        <label class="relative flex items-center p-3 rounded-lg border cursor-pointer hover:bg-white transition-colors {{ $useCustomRate ? 'bg-white border-blue-500 ring-1 ring-blue-500' : 'border-gray-200' }}">
-                            <input type="radio" name="rate" wire:click="$set('useCustomRate', true)" {{ $useCustomRate ? 'checked' : '' }} class="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                        {{-- Custom Rate Option - Enhanced --}}
+                        <label class="relative flex items-center p-2 rounded-lg border cursor-pointer hover:bg-white transition-colors {{ $useCustomRate ? 'bg-white border-amber-500 ring-1 ring-amber-500' : 'border-gray-200 border-dashed' }}">
+                            <input type="radio" name="rate" wire:click="$set('useCustomRate', true)" {{ $useCustomRate ? 'checked' : '' }} class="h-4 w-4 text-amber-600 border-gray-300 focus:ring-amber-500">
                             <span class="ml-3 flex-1">
-                                <span class="block text-sm font-medium text-gray-900 mb-2">Custom Rate</span>
+                                <div class="flex items-center gap-2 {{ $useCustomRate ? 'mb-2' : '' }}">
+                                    <span class="block text-sm font-medium text-gray-900">Custom Rate</span>
+                                    <span class="text-xs px-1.5 py-0.5 bg-amber-100 text-amber-700 rounded font-medium">Any %</span>
+                                </div>
                                 @if($useCustomRate)
                                     <div class="flex items-center gap-2" @click.stop>
                                         <input 
@@ -71,12 +72,14 @@
                                             step="0.1" 
                                             min="0" 
                                             max="100"
-                                            placeholder="Enter rate"
-                                            class="w-24 px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                        <span class="text-sm text-gray-600">%</span>
+                                            placeholder="e.g. 15, 7.5, 23"
+                                            autofocus
+                                            class="flex-1 px-3 py-2 text-sm border border-amber-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent bg-amber-50">
+                                        <span class="text-sm font-medium text-gray-700">%</span>
                                     </div>
+                                    <p class="text-xs text-gray-500 mt-1">Enter any VAT percentage from 0% to 100%</p>
                                 @else
-                                    <span class="text-xs text-gray-500">Enter your own VAT rate</span>
+                                    <span class="text-xs text-gray-500">Enter any VAT percentage for your calculation</span>
                                 @endif
                             </span>
                         </label>
@@ -85,29 +88,29 @@
 
                 {{-- VAT Included/Excluded Cards --}}
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-3">Calculation Mode</label>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Calculation Mode</label>
+                    <div class="grid grid-cols-2 gap-3">
                         <label class="cursor-pointer relative group">
-                            <input type="radio" name="vat_included" value="include" class="peer sr-only" wire:model="vat_included" wire:change="calculate">
-                            <div class="p-4 rounded-xl border-2 transition-all hover:border-blue-200 h-full flex flex-col justify-center {{ $vat_included === 'include' ? 'border-blue-600 bg-blue-50' : 'border-gray-100 bg-gray-50' }}">
-                                <div class="flex items-center gap-2 mb-1">
+                            <input type="radio" name="vat_included" value="include" class="peer sr-only" wire:model.live="vat_included">
+                            <div class="p-3 rounded-xl border-2 transition-all hover:border-blue-200 h-full flex flex-col justify-center {{ $vat_included === 'include' ? 'border-blue-600 bg-blue-50' : 'border-gray-100 bg-gray-50' }}">
+                                <div class="flex items-center gap-2">
                                     <div class="w-4 h-4 rounded-full border flex items-center justify-center {{ $vat_included === 'include' ? 'border-blue-600 bg-blue-600' : 'border-gray-400' }}">
                                         <div class="w-1.5 h-1.5 rounded-full bg-white {{ $vat_included === 'include' ? 'opacity-100' : 'opacity-0' }}"></div>
                                     </div>
-                                    <span class="font-bold {{ $vat_included === 'include' ? 'text-blue-900' : 'text-gray-900' }}">Price includes VAT</span>
+                                    <span class="font-semibold text-sm {{ $vat_included === 'include' ? 'text-blue-900' : 'text-gray-900' }}">Includes VAT</span>
                                 </div>
-                                <span class="text-xs text-gray-500 ml-6">Extract VAT from total amount</span>
+                                <span class="text-xs text-gray-500 ml-6">Extract VAT from total</span>
                             </div>
                         </label>
 
                         <label class="cursor-pointer relative group">
-                            <input type="radio" name="vat_included" value="exclude" class="peer sr-only" wire:model="vat_included" wire:change="calculate">
-                            <div class="p-4 rounded-xl border-2 transition-all hover:border-blue-200 h-full flex flex-col justify-center {{ $vat_included === 'exclude' ? 'border-blue-600 bg-blue-50' : 'border-gray-100 bg-gray-50' }}">
-                                <div class="flex items-center gap-2 mb-1">
+                            <input type="radio" name="vat_included" value="exclude" class="peer sr-only" wire:model.live="vat_included">
+                            <div class="p-3 rounded-xl border-2 transition-all hover:border-blue-200 h-full flex flex-col justify-center {{ $vat_included === 'exclude' ? 'border-blue-600 bg-blue-50' : 'border-gray-100 bg-gray-50' }}">
+                                <div class="flex items-center gap-2">
                                     <div class="w-4 h-4 rounded-full border flex items-center justify-center {{ $vat_included === 'exclude' ? 'border-blue-600 bg-blue-600' : 'border-gray-400' }}">
                                         <div class="w-1.5 h-1.5 rounded-full bg-white {{ $vat_included === 'exclude' ? 'opacity-100' : 'opacity-0' }}"></div>
                                     </div>
-                                    <span class="font-bold {{ $vat_included === 'exclude' ? 'text-blue-900' : 'text-gray-900' }}">Price excludes VAT</span>
+                                    <span class="font-semibold text-sm {{ $vat_included === 'exclude' ? 'text-blue-900' : 'text-gray-900' }}">Excludes VAT</span>
                                 </div>
                                 <span class="text-xs text-gray-500 ml-6">Add VAT to net amount</span>
                             </div>
@@ -127,10 +130,10 @@
 
             {{-- Results Section --}}
             @if ($total && !$error_message)
-                <div class="bg-white rounded-xl shadow-lg mt-8 overflow-hidden border-l-4 border-blue-600"
+                <div class="bg-white rounded-xl shadow-lg mt-4 overflow-hidden border-l-4 border-blue-600"
                      wire:transition.scale.origin.top>
-                    <div class="p-6" wire:loading.class="opacity-50" wire:target="calculate">
-                        <div class="grid grid-cols-2 gap-8 mb-6">
+                    <div class="p-4" wire:loading.class="opacity-50" wire:target="calculate">
+                        <div class="grid grid-cols-2 gap-6 mb-4">
                             <div>
                                 <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Net Amount</div>
                                 <div class="text-xl font-medium text-gray-900">
@@ -145,7 +148,7 @@
                             </div>
                         </div>
                         
-                        <div class="pt-6 border-t border-gray-100 flex justify-between items-center bg-gray-50 -mx-6 -mb-6 px-6 py-4">
+                        <div class="pt-4 border-t border-gray-100 flex justify-between items-center bg-gray-50 -mx-4 -mb-4 px-4 py-3">
                             <span class="font-medium text-gray-500">Total to Pay</span>
                             <span class="text-3xl font-bold text-gray-900 tracking-tight">
                                 {{ is_numeric($total) ? Number::currency((float)($vat_included == 'include' ? $amount : $total), 'EUR') : '0.00 €' }}
