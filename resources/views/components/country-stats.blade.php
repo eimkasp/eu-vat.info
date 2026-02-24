@@ -20,7 +20,7 @@
                </div>
                <div class="flex-none self-end px-6 pt-4">
                    <dt class="sr-only">Status</dt>
-                   <a href="{{ locale_path('/') }}" wire:navigate
+                   <a href="{{ locale_path('/') }}"
                        class="hover:bg-green-600 hover:text-white inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
                        VAT Rank: {{ $country->countryRank() }}
                    </a>
@@ -28,7 +28,7 @@
                
            </dl>
            <div class="border-t border-gray-900/5 px-6 py-6">
-               <a wire:navigate href="{{ locale_path('/vat-changes') }}"
+               <a href="{{ locale_path('/vat-changes') }}"
                    class="text-sm font-semibold leading-6 text-gray-100">
                    {{ __('ui.stats.see_history') }} &rarr;
                 </a>

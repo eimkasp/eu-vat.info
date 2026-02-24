@@ -43,35 +43,35 @@
             </h2>
             <ul class="space-y-3">
                 <li>
-                    <a href="{{ locale_path('/') }}" wire:navigate class="flex items-center gap-2 text-blue-600 hover:text-blue-800 hover:underline font-medium">
+                    <a href="{{ locale_path('/') }}" class="flex items-center gap-2 text-blue-600 hover:text-blue-800 hover:underline font-medium">
                         <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                         {{ __('ui.sitemap.home_all') }}
                     </a>
                     <p class="text-sm text-gray-500 ml-6">{{ __('ui.sitemap.home_desc') }}</p>
                 </li>
                 <li>
-                    <a href="{{ locale_path('/vat-calculator') }}" wire:navigate class="flex items-center gap-2 text-blue-600 hover:text-blue-800 hover:underline font-medium">
+                    <a href="{{ locale_path('/vat-calculator') }}" class="flex items-center gap-2 text-blue-600 hover:text-blue-800 hover:underline font-medium">
                         <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                         {{ __('ui.sitemap.calculator') }}
                     </a>
                     <p class="text-sm text-gray-500 ml-6">{{ __('ui.sitemap.calculator_desc') }}</p>
                 </li>
                 <li>
-                    <a href="{{ locale_path('/vat-map') }}" wire:navigate class="flex items-center gap-2 text-blue-600 hover:text-blue-800 hover:underline font-medium">
+                    <a href="{{ locale_path('/vat-map') }}" class="flex items-center gap-2 text-blue-600 hover:text-blue-800 hover:underline font-medium">
                         <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                         {{ __('ui.sitemap.map') }}
                     </a>
                     <p class="text-sm text-gray-500 ml-6">{{ __('ui.sitemap.map_desc') }}</p>
                 </li>
                 <li>
-                    <a href="{{ route('widget.embed') }}" wire:navigate class="flex items-center gap-2 text-blue-600 hover:text-blue-800 hover:underline font-medium">
+                    <a href="{{ route('widget.embed') }}" class="flex items-center gap-2 text-blue-600 hover:text-blue-800 hover:underline font-medium">
                         <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                         {{ __('ui.sitemap.embed') }}
                     </a>
                     <p class="text-sm text-gray-500 ml-6">{{ __('ui.sitemap.embed_desc') }}</p>
                 </li>
                 <li>
-                    <a href="{{ locale_path('/vat-changes') }}" wire:navigate class="flex items-center gap-2 text-blue-600 hover:text-blue-800 hover:underline font-medium">
+                    <a href="{{ locale_path('/vat-changes') }}" class="flex items-center gap-2 text-blue-600 hover:text-blue-800 hover:underline font-medium">
                         <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                         {{ __('ui.sitemap.history') }}
                     </a>
@@ -187,19 +187,19 @@
                 </div>
                 <ul class="space-y-2 text-sm">
                     <li>
-                        <a href="{{ locale_path('/country/' . $country->slug) }}" wire:navigate class="text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-1">
+                        <a href="{{ locale_path('/country/' . $country->slug) }}" class="text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-1">
                             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                             {{ __('ui.sitemap.overview_guide', ['country' => $country->name]) }}
                         </a>
                     </li>
                     <li>
-                        <a href="{{ locale_path('/country/' . $country->slug . '/vat-calculator') }}" wire:navigate class="text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-1">
+                        <a href="{{ locale_path('/country/' . $country->slug . '/vat-calculator') }}" class="text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-1">
                             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                             {{ __('ui.sitemap.country_calculator', ['country' => $country->name]) }}
                         </a>
                     </li>
                     <li>
-                        <a href="{{ locale_path('/vat-calculator/' . $country->slug) }}" wire:navigate class="text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-1">
+                        <a href="{{ locale_path('/vat-calculator/' . $country->slug) }}" class="text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-1">
                             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                             {{ __('ui.sitemap.standalone_calculator', ['country' => $country->name]) }}
                         </a>
@@ -215,8 +215,8 @@
         <div class="prose prose-blue max-w-none text-gray-700">
             <p>
                 {!! __('ui.sitemap.about_p1', [
-                    'calculator_link' => '<a href="' . locale_path('/vat-calculator') . '" wire:navigate class="text-blue-600 hover:underline font-medium">' . e(__('ui.sitemap.calculator')) . '</a>',
-                    'map_link' => '<a href="' . locale_path('/vat-map') . '" wire:navigate class="text-blue-600 hover:underline font-medium">' . e(__('ui.sitemap.map')) . '</a>',
+                    'calculator_link' => '<a href="' . locale_path('/vat-calculator') . '" class="text-blue-600 hover:underline font-medium">' . e(__('ui.sitemap.calculator')) . '</a>',
+                    'map_link' => '<a href="' . locale_path('/vat-map') . '" class="text-blue-600 hover:underline font-medium">' . e(__('ui.sitemap.map')) . '</a>',
                 ]) !!}
             </p>
             <p>

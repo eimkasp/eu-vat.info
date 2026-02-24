@@ -18,7 +18,7 @@
     <div class="relative w-full">
         <div class="grid sm:grid-cols-12 gap-6 lg:gap-8">
             <!-- Sidebar -->
-            <div class="sm:col-span-4 sm:sticky top-[-1px] sticky-element" style="align-self: flex-start">
+            <div class="sm:col-span-4">
                 <x-country.sidebar :country="$country" />
             </div>
 
@@ -210,17 +210,17 @@
                 {{-- ─── Section 6: Quick Links ─── --}}
                 <section class="mb-6">
                     <div class="flex flex-wrap gap-3">
-                        <a href="{{ route('vat-calculator.country', $country->slug) }}" wire:navigate
+                        <a href="{{ route('vat-calculator.country', $country->slug) }}"
                            class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
                             Full VAT Calculator
                         </a>
-                        <a href="{{ locale_path('/vat-changes') }}" wire:navigate
+                        <a href="{{ locale_path('/vat-changes') }}"
                            class="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors text-sm font-medium">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                             VAT Rate History
                         </a>
-                        <a href="{{ locale_path('/vat-map') }}" wire:navigate
+                        <a href="{{ locale_path('/vat-map') }}"
                            class="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors text-sm font-medium">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
                             EU VAT Map
@@ -236,23 +236,10 @@
         <h3 class="text-xl font-bold mb-4">{{ __('ui.country_page.related') }}</h3>
         <x-related-countries :country="$country" />
         <div class="mt-6 text-center">
-            <a href="{{ locale_path('/sitemap') }}" wire:navigate class="text-blue-600 hover:text-blue-800 hover:underline text-sm font-medium">
+            <a href="{{ locale_path('/sitemap') }}" class="text-blue-600 hover:text-blue-800 hover:underline text-sm font-medium">
                 {{ __('ui.sitemap.country_pages') }} &rarr;
             </a>
         </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const el = document.querySelector(".sticky-element");
-            if (el) {
-                const observer = new IntersectionObserver(
-                    ([e]) => e.target.classList.toggle("is-pinned", e.intersectionRatio < 1),
-                    { threshold: [1] }
-                );
-                observer.observe(el);
-                el.addEventListener('click', () => el.classList.toggle('is-pinned'));
-            }
-        });
-    </script>
 </div>

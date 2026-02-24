@@ -4,7 +4,7 @@
     <div class="flex overflow-x-auto pb-6 gap-4 snap-x scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0">
         @foreach ($countries as $country)
             <a href="{{ route('vat-calculator.country', $country->slug) }}" 
-               wire:navigate
+              
                class="flex-none w-64 bg-white p-4 rounded-xl shadow-md border border-gray-100 hover:shadow-lg transition-all hover:-translate-y-1 snap-start group">
                <div class="flex items-center gap-3 mb-3 pb-3 border-b border-gray-50">
                    <img src="https://flagcdn.com/h40/{{ strtolower($country->iso_code) }}.jpg" 

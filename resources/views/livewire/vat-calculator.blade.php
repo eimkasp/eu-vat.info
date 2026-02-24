@@ -109,7 +109,7 @@
             <p class="text-sm text-blue-700 mb-4">
                 Learn everything about VAT compliance, registration, and exceptions in {{ $selectedCountryObject->name }}.
             </p>
-            <a wire:navigate href="{{ route('country.show', $selectedCountryObject->slug) }}" class="text-sm font-bold text-blue-600 hover:text-blue-800 hover:underline">
+            <a href="{{ route('country.show', $selectedCountryObject->slug) }}" class="text-sm font-bold text-blue-600 hover:text-blue-800 hover:underline">
                 View {{ $selectedCountryObject->name }} VAT Guide &rarr;
             </a>
         </div>

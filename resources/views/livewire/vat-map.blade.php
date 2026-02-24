@@ -30,7 +30,7 @@
                             @foreach($countries as $country)
                                 <tr class="hover:bg-gray-50 transition-colors">
                                     <td class="px-4 py-2.5">
-                                        <a href="{{ locale_path('/country/' . $country->slug) }}" wire:navigate class="flex items-center gap-2 text-gray-900 hover:text-blue-600 font-medium">
+                                        <a href="{{ locale_path('/country/' . $country->slug) }}" class="flex items-center gap-2 text-gray-900 hover:text-blue-600 font-medium">
                                             <img src="https://flagcdn.com/h20/{{ strtolower($country->iso_code) }}.jpg" alt="{{ $country->name }}" class="h-4 rounded border">
                                             {{ $country->name }}
                                         </a>
@@ -39,7 +39,7 @@
                                     <td class="px-4 py-2.5 text-center text-gray-600">{{ $country->reduced_rate ? $country->reduced_rate . '%' : '—' }}</td>
                                     <td class="px-4 py-2.5 text-center text-gray-600 hidden sm:table-cell">{{ $country->super_reduced_rate ? $country->super_reduced_rate . '%' : '—' }}</td>
                                     <td class="px-4 py-2.5 text-right">
-                                        <a href="{{ locale_path('/vat-calculator/' . $country->slug) }}" wire:navigate class="text-xs text-blue-600 hover:text-blue-800 font-medium">
+                                        <a href="{{ locale_path('/vat-calculator/' . $country->slug) }}" class="text-xs text-blue-600 hover:text-blue-800 font-medium">
                                             {{ __('ui.map.calculator_link') }} →
                                         </a>
                                     </td>

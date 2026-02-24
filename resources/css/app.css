@@ -91,24 +91,3 @@ p {
     margin-bottom: 20px;
 }
 
-.sticky-element,
-.sticky-element>div {
-    transition: all 0.3s ease;
-}
-
-.sticky-element.is-pinned {}
-
-.sticky-element.is-pinned>div {
-    margin-top: 100px;
-}
-
-.sticky-element .country-sub-details {
-    transition: all 0.4s ease-in-out !important;
-    height: 20px;
-}
-
-.sticky-element.is-pinned .country-sub-details {
-    height: 0px;
-    opacity: 0;
-    overflow: hidden;
-}

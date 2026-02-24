@@ -16,17 +16,17 @@
             <div>
                 <h3 class="text-white font-semibold mb-4">{{ __('ui.footer.vat_tools') }}</h3>
                 <ul class="space-y-2 text-sm">
-                    <li><a href="{{ locale_path('/vat-calculator') }}" wire:navigate class="hover:text-white transition-colors">{{ __('ui.footer.vat_calculator') }}</a></li>
-                    <li><a href="{{ locale_path('/vat-map') }}" wire:navigate class="hover:text-white transition-colors">{{ __('ui.footer.interactive_map') }}</a></li>
-                    <li><a href="{{ locale_path('/vat-changes') }}" wire:navigate class="hover:text-white transition-colors">{{ __('ui.footer.vat_rate_history') }}</a></li>
-                    <li><a href="{{ route('widget.embed') }}" wire:navigate class="hover:text-white transition-colors">{{ __('ui.footer.embed_widget') }}</a></li>
+                    <li><a href="{{ locale_path('/vat-calculator') }}" class="hover:text-white transition-colors">{{ __('ui.footer.vat_calculator') }}</a></li>
+                    <li><a href="{{ locale_path('/vat-map') }}" class="hover:text-white transition-colors">{{ __('ui.footer.interactive_map') }}</a></li>
+                    <li><a href="{{ locale_path('/vat-changes') }}" class="hover:text-white transition-colors">{{ __('ui.footer.vat_rate_history') }}</a></li>
+                    <li><a href="{{ route('widget.embed') }}" class="hover:text-white transition-colors">{{ __('ui.footer.embed_widget') }}</a></li>
                 </ul>
             </div>
 
             <div>
                 <h3 class="text-white font-semibold mb-4">{{ __('ui.footer.resources') }}</h3>
                 <ul class="space-y-2 text-sm">
-                    <li><a href="{{ locale_path('/sitemap') }}" wire:navigate class="hover:text-white transition-colors">{{ __('ui.footer.sitemap') }}</a></li>
+                    <li><a href="{{ locale_path('/sitemap') }}" class="hover:text-white transition-colors">{{ __('ui.footer.sitemap') }}</a></li>
                     <li><a href="/llms.txt" class="hover:text-white transition-colors">{{ __('ui.footer.llms_data') }}</a></li>
                     <li><a href="/api/llm/vat-rates" class="hover:text-white transition-colors">{{ __('ui.footer.vat_rates_api') }}</a></li>
                     <li><a href="/sitemap.xml" class="hover:text-white transition-colors">{{ __('ui.footer.xml_sitemap') }}</a></li>
@@ -48,7 +48,7 @@
                 &copy; {{ date('Y') }} {{ __('ui.site_name') }}. {{ __('ui.all_rights_reserved') }}
             </div>
             <div class="flex space-x-6 items-center">
-                <a href="{{ locale_path('/sitemap') }}" wire:navigate class="hover:text-white transition-colors">{{ __('ui.footer.sitemap') }}</a>
+                <a href="{{ locale_path('/sitemap') }}" class="hover:text-white transition-colors">{{ __('ui.footer.sitemap') }}</a>
                 <a href="/llms.txt" class="hover:text-white transition-colors">llms.txt</a>
                 <a href="https://pdf.businesspress.io/" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors">PDF Tools</a>
                 <span class="text-gray-600">{{ __('ui.data_updated_daily') }}</span>

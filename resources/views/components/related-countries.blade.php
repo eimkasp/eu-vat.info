@@ -17,7 +17,7 @@
             }
         @endphp
         <a href="{{ locale_path('/country/' . $related->slug) }}" 
-           wire:navigate
+          
            class="flex items-center gap-3 p-4 bg-white rounded-xl border border-gray-100 hover:shadow-md hover:border-blue-200 transition-all group">
             <img src="https://flagcdn.com/h40/{{ strtolower($related->iso_code) }}.jpg" 
                  alt="{{ $related->name }} flag" 
