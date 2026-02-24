@@ -82,7 +82,7 @@
                                     @foreach ($euCountries as $country)
                                         <tr class="hover:bg-blue-50/50 transition-colors group">
                                             <td class="px-6 py-4">
-                                                <button wire:click="selectCountry('{{ $country->slug }}')"
+                                                <a href="{{ locale_path('/country/' . $country->slug) }}" wire:navigate
                                                     class="flex items-center gap-4 group-hover:text-blue-600 transition-colors">
                                                     <span
                                                         class="font-mono text-xs text-gray-300 w-6">#{{ $country->countryRank() }}</span>
@@ -91,7 +91,7 @@
                                                         class="h-6 w-auto rounded-sm shadow-sm">
                                                     <span
                                                         class="font-bold text-gray-900 group-hover:text-blue-600">{{ $country->name }}</span>
-                                                </button>
+                                                </a>
                                             </td>
                                             <td class="px-6 py-4">
                                                 <span

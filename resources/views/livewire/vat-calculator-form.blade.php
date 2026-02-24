@@ -12,9 +12,9 @@
 
         <div class="w-full sm:w-auto">
             <div class="relative">
-                <select wire:model.live="selectedCountry1" class="appearance-none bg-blue-800/30 border border-blue-400/50 text-white rounded-lg pl-4 pr-10 py-2 text-sm focus:ring-2 focus:ring-white/50 focus:border-white transition-all cursor-pointer hover:bg-blue-800/50 w-full sm:w-64">
+                <select wire:model.live="selectedCountry1" class="appearance-none bg-blue-800/30 border border-blue-400/50 text-white rounded-lg pl-4 pr-10 py-2 text-sm focus:ring-2 focus:ring-white/50 focus:border-white transition-all cursor-pointer hover:bg-blue-800/50 w-full sm:w-64" style="color: white; background-color: rgba(30, 64, 175, 0.3);">
                     @foreach($countries as $country)
-                        <option value="{{ $country->slug }}" class="text-gray-900">
+                        <option value="{{ $country->slug }}" style="color: #111827; background-color: white;">
                             {{ $country->name_with_flag }}
                         </option>
                     @endforeach
@@ -45,74 +45,57 @@
 
             @isset($selectedCountryObject)
                 {{-- VAT Rate Selection --}}
-                <div class="bg-gray-50 p-3 rounded-xl border border-gray-200 space-y-2">
-                    <label class="text-sm font-medium text-gray-700 block">{{ __('ui.calculator.vat_rate') }}</label>
-                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                <div class="bg-gray-50 px-3 py-2 rounded-xl border border-gray-200">
+                    <label class="text-xs font-medium text-gray-500 uppercase tracking-wide block mb-1.5">{{ __('ui.calculator.vat_rate') }}</label>
+                    <div class="flex flex-wrap gap-1.5">
                         @foreach($rates as $rate)
-                            <label class="relative flex items-center p-2 rounded-lg border cursor-pointer hover:bg-white transition-colors {{ !$useCustomRate && $selectedRate == $rate['value'] ? 'bg-white border-blue-500 ring-1 ring-blue-500' : 'border-gray-200' }}">
-                                <input type="radio" name="rate" wire:click="selectPresetRate({{ $rate['value'] }})" value="{{ $rate['value'] }}" {{ !$useCustomRate && $selectedRate == $rate['value'] ? 'checked' : '' }} class="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500">
-                                <span class="ml-2 text-sm font-medium text-gray-900">{{ $rate['name'] }}</span>
+                            <label class="relative inline-flex items-center px-2.5 py-1 rounded-md border text-xs cursor-pointer hover:bg-white transition-colors {{ !$useCustomRate && $selectedRate == $rate['value'] ? 'bg-white border-blue-500 ring-1 ring-blue-500 font-semibold text-blue-700' : 'border-gray-200 text-gray-700' }}">
+                                <input type="radio" name="rate" wire:click="selectPresetRate({{ $rate['value'] }})" value="{{ $rate['value'] }}" {{ !$useCustomRate && $selectedRate == $rate['value'] ? 'checked' : '' }} class="sr-only">
+                                {{ $rate['name'] }}
                             </label>
                         @endforeach
                         
-                        {{-- Custom Rate Option - Enhanced --}}
-                        <label class="relative flex items-center p-2 rounded-lg border cursor-pointer hover:bg-white transition-colors {{ $useCustomRate ? 'bg-white border-amber-500 ring-1 ring-amber-500' : 'border-gray-200 border-dashed' }}">
-                            <input type="radio" name="rate" wire:click="$set('useCustomRate', true)" {{ $useCustomRate ? 'checked' : '' }} class="h-4 w-4 text-amber-600 border-gray-300 focus:ring-amber-500">
-                            <span class="ml-3 flex-1">
-                                <div class="flex items-center gap-2 {{ $useCustomRate ? 'mb-2' : '' }}">
-                                    <span class="block text-sm font-medium text-gray-900">{{ __('ui.calculator.custom_rate') }}</span>
-                                    <span class="text-xs px-1.5 py-0.5 bg-amber-100 text-amber-700 rounded font-medium">{{ __('ui.calculator.any_percent') }}</span>
+                        {{-- Custom Rate Option --}}
+                        <label class="relative inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md border text-xs cursor-pointer hover:bg-white transition-colors {{ $useCustomRate ? 'bg-white border-amber-500 ring-1 ring-amber-500 font-semibold text-amber-700' : 'border-gray-200 border-dashed text-gray-500' }}">
+                            <input type="radio" name="rate" wire:click="$set('useCustomRate', true)" {{ $useCustomRate ? 'checked' : '' }} class="sr-only">
+                            @if($useCustomRate)
+                                <div class="flex items-center gap-1" @click.stop>
+                                    <input 
+                                        type="number" 
+                                        wire:model.live.debounce.300ms="customRate"
+                                        wire:change="setCustomRate"
+                                        step="0.1" 
+                                        min="0" 
+                                        max="100"
+                                        placeholder="15"
+                                        autofocus
+                                        class="w-14 px-1.5 py-0.5 text-xs border border-amber-300 rounded focus:ring-1 focus:ring-amber-500 focus:border-transparent bg-amber-50">
+                                    <span class="text-xs font-medium text-gray-600">%</span>
                                 </div>
-                                @if($useCustomRate)
-                                    <div class="flex items-center gap-2" @click.stop>
-                                        <input 
-                                            type="number" 
-                                            wire:model.live.debounce.300ms="customRate"
-                                            wire:change="setCustomRate"
-                                            step="0.1" 
-                                            min="0" 
-                                            max="100"
-                                            placeholder="e.g. 15, 7.5, 23"
-                                            autofocus
-                                            class="flex-1 px-3 py-2 text-sm border border-amber-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent bg-amber-50">
-                                        <span class="text-sm font-medium text-gray-700">%</span>
-                                    </div>
-                                    <p class="text-xs text-gray-500 mt-1">{{ __('ui.calculator.enter_custom') }}</p>
-                                @else
-                                    <span class="text-xs text-gray-500">{{ __('ui.calculator.custom_desc') }}</span>
-                                @endif
-                            </span>
+                            @else
+                                {{ __('ui.calculator.custom_rate') }}
+                                <span class="px-1 py-0 bg-amber-100 text-amber-700 rounded text-[10px] font-medium">%</span>
+                            @endif
                         </label>
                     </div>
                 </div>
 
-                {{-- VAT Included/Excluded Cards --}}
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('ui.calculator.calculation_mode') }}</label>
-                    <div class="grid grid-cols-2 gap-3">
-                        <label class="cursor-pointer relative group">
+                {{-- VAT Included/Excluded Toggle --}}
+                <div class="bg-gray-50 px-3 py-2 rounded-xl border border-gray-200">
+                    <label class="text-xs font-medium text-gray-500 uppercase tracking-wide block mb-1.5">{{ __('ui.calculator.calculation_mode') }}</label>
+                    <div class="grid grid-cols-2 gap-2">
+                        <label class="cursor-pointer">
                             <input type="radio" name="vat_included" value="include" class="peer sr-only" wire:model.live="vat_included">
-                            <div class="p-3 rounded-xl border-2 transition-all hover:border-blue-200 h-full flex flex-col justify-center {{ $vat_included === 'include' ? 'border-blue-600 bg-blue-50' : 'border-gray-100 bg-gray-50' }}">
-                                <div class="flex items-center gap-2">
-                                    <div class="w-4 h-4 rounded-full border flex items-center justify-center {{ $vat_included === 'include' ? 'border-blue-600 bg-blue-600' : 'border-gray-400' }}">
-                                        <div class="w-1.5 h-1.5 rounded-full bg-white {{ $vat_included === 'include' ? 'opacity-100' : 'opacity-0' }}"></div>
-                                    </div>
-                                    <span class="font-semibold text-sm {{ $vat_included === 'include' ? 'text-blue-900' : 'text-gray-900' }}">{{ __('ui.calculator.includes_vat') }}</span>
-                                </div>
-                                <span class="text-xs text-gray-500 ml-6">{{ __('ui.calculator.extract_vat') }}</span>
+                            <div class="px-3 py-2 rounded-lg border transition-all text-center {{ $vat_included === 'include' ? 'border-blue-600 bg-blue-50 ring-1 ring-blue-500' : 'border-gray-200 hover:border-blue-200' }}">
+                                <span class="font-semibold text-xs {{ $vat_included === 'include' ? 'text-blue-700' : 'text-gray-700' }}">{{ __('ui.calculator.includes_vat') }}</span>
+                                <span class="block text-[10px] text-gray-500 mt-0.5">{{ __('ui.calculator.extract_vat') }}</span>
                             </div>
                         </label>
-
-                        <label class="cursor-pointer relative group">
+                        <label class="cursor-pointer">
                             <input type="radio" name="vat_included" value="exclude" class="peer sr-only" wire:model.live="vat_included">
-                            <div class="p-3 rounded-xl border-2 transition-all hover:border-blue-200 h-full flex flex-col justify-center {{ $vat_included === 'exclude' ? 'border-blue-600 bg-blue-50' : 'border-gray-100 bg-gray-50' }}">
-                                <div class="flex items-center gap-2">
-                                    <div class="w-4 h-4 rounded-full border flex items-center justify-center {{ $vat_included === 'exclude' ? 'border-blue-600 bg-blue-600' : 'border-gray-400' }}">
-                                        <div class="w-1.5 h-1.5 rounded-full bg-white {{ $vat_included === 'exclude' ? 'opacity-100' : 'opacity-0' }}"></div>
-                                    </div>
-                                    <span class="font-semibold text-sm {{ $vat_included === 'exclude' ? 'text-blue-900' : 'text-gray-900' }}">{{ __('ui.calculator.excludes_vat') }}</span>
-                                </div>
-                                <span class="text-xs text-gray-500 ml-6">{{ __('ui.calculator.add_vat') }}</span>
+                            <div class="px-3 py-2 rounded-lg border transition-all text-center {{ $vat_included === 'exclude' ? 'border-blue-600 bg-blue-50 ring-1 ring-blue-500' : 'border-gray-200 hover:border-blue-200' }}">
+                                <span class="font-semibold text-xs {{ $vat_included === 'exclude' ? 'text-blue-700' : 'text-gray-700' }}">{{ __('ui.calculator.excludes_vat') }}</span>
+                                <span class="block text-[10px] text-gray-500 mt-0.5">{{ __('ui.calculator.add_vat') }}</span>
                             </div>
                         </label>
                     </div>
