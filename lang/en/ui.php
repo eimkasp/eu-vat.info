@@ -224,6 +224,9 @@ return [
         'vat_map' => 'VAT Map',
         'vat_changelog' => 'VAT Changelog',
         'sitemap' => 'Sitemap',
+        'tools' => 'Tools & Resources',
+        'vat_navigator' => 'VAT Navigator',
+        'countries' => 'Countries',
     ],
 
     // ── HTML Sitemap ────────────────────────────────────────────────────

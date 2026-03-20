@@ -24,11 +24,11 @@
 
             <!-- Main Content -->
             <div class="sm:col-span-8 pb-12">
-                <x-breadcrumbs :items="[$country->name => '']" />
+                <x-breadcrumbs :items="[__('ui.breadcrumbs.countries') => locale_path('/'), $country->name => '']" />
 
                 <!-- Hero Header -->
                 <div class="mb-6">
-                    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
+                    <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
                         {{ __('ui.country_page.heading', ['country' => $country->name]) }}
                     </h1>
                     <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">

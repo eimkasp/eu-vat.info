@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "skills": {
+    "i18n-localization": {
+      "source": "davila7/claude-code-templates",
+      "sourceType": "github",
+      "computedHash": "66da9c3f527c18a87003543882c76ebe5bd179e692fc9bc859752bf6e1a2f1f6"
+    },
+    "laravel-11-12-app-guidelines": {
+      "source": "thienanblog/awesome-ai-agent-skills",
+      "sourceType": "github",
+      "computedHash": "05fff490f63cd7c89192d514e78160e470dc5fc9bd78331606565eba712dacc0"
+    },
+    "livewire-development": {
+      "source": "spatie/freek.dev",
+      "sourceType": "github",
+      "computedHash": "f8cd31cb3bcbe866949268cb51f2cb4fe24932b6c0572419e0baf2b07dbf98d5"
+    },
+    "pest-testing": {
+      "source": "spatie/freek.dev",
+      "sourceType": "github",
+      "computedHash": "16b9ee01b7eb3f527cd0c1cb3ec4ea22099211f6529534ba7b8b646cfec38d5b"
+    },
+    "resource": {
+      "source": "mwguerra/claude-code-plugins",
+      "sourceType": "github",
+      "computedHash": "aa951a887e19550f60e9ff5ca6c7365166953dcdc56767818d2c4d4a9e6fa03a"
+    }
+  }
+}

@@ -12,7 +12,7 @@
 
     <!-- Header -->
     <div class="mb-6">
-        <h1 class="text-2xl font-bold mb-1">{{ __('ui.history.title') }}</h1>
+        <h1 class="text-3xl font-bold mb-1 text-gray-900 dark:text-white">{{ __('ui.history.title') }}</h1>
         <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('ui.history.subtitle') }}</p>
     </div>
 
