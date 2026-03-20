@@ -4,15 +4,15 @@
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            VAT Number Validator
+            {{ __('ui.validator.heading') }}
         </h2>
         <p class="text-indigo-100 text-sm !mb-0 opacity-90">{{ __('ui.validator.subtitle') }}</p>
     </div>
 
     <div class="p-6">
         <div class="mb-6 text-sm text-gray-600">
-            <p class="mb-2">Enter a country code and VAT number to check its validity in the official EU VIES database.</p>
-            <p>Need an example? <button type="button" wire:click="prefillExample" class="text-indigo-600 hover:underline font-medium">Try LT100019070512</button></p>
+            <p class="mb-2">{{ __('ui.validator.instructions') }}</p>
+            <p>{{ __('ui.validator.need_example') }} <button type="button" wire:click="prefillExample" class="text-indigo-600 hover:underline font-medium">{{ __('ui.validator.try_example') }}</button></p>
         </div>
 
         <form wire:submit.prevent="validateVat" class="space-y-4" wire:loading.class="opacity-50 pointer-events-none" wire:target="validateVat">
@@ -23,7 +23,7 @@
                         :options="$countries" 
                         option-value="iso_code"
                         option-label="name" 
-                        placeholder="Select" 
+                        placeholder="{{ __('ui.validator.select_placeholder') }}" 
                         wire:model="countryCode"
                         class="w-full"
                     />
@@ -61,12 +61,12 @@
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
-                            <h3 class="text-lg font-bold text-green-800">{{ __('ui.validator.valid') }} VAT</h3>
+                            <h3 class="text-lg font-bold text-green-800">{{ __('ui.validator.valid_vat') }}</h3>
                         @else
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
-                            <h3 class="text-lg font-bold text-red-800">{{ __('ui.validator.invalid') }} VAT</h3>
+                            <h3 class="text-lg font-bold text-red-800">{{ __('ui.validator.invalid_vat') }}</h3>
                         @endif
                     </div>
 
@@ -81,7 +81,7 @@
                                 <span class="text-gray-900">{{ $result['address'] }}</span>
                             </div>
                             <div class="flex justify-between py-1">
-                                <span class="text-green-700 font-medium">Request ID</span>
+                                <span class="text-green-700 font-medium">{{ __('ui.validator.request_id') }}</span>
                                 <span class="text-gray-500 font-mono text-xs">{{ $result['requestIdentifier'] }}</span>
                             </div>
                         </div>
@@ -93,7 +93,7 @@
                                 <path d="M10 12.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" />
                                 <path fill-rule="evenodd" d="M.664 10.59a1.651 1.651 0 010-1.186A10.004 10.004 0 0110 3c4.257 0 7.893 2.66 9.336 6.41.147.381.146.804 0 1.186A10.004 10.004 0 0110 17c-4.257 0-7.893-2.66-9.336-6.41zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
                             </svg>
-                            Checked {{ $validationCount }} times by users
+                            {{ __('ui.validator.checked_times', ['count' => $validationCount]) }}
                         </div>
                     @endif
                 </div>

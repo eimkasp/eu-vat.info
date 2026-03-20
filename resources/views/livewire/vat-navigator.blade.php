@@ -1,7 +1,7 @@
 @section('seo')
     <x-seo-meta
-        title="VAT Navigator - Find Where & How Much VAT to Charge in the EU"
-        description="Determine the correct VAT rate for cross-border EU transactions. Enter seller and buyer details to find the applicable VAT rules."
+        :title="__('ui.navigator.seo_title')"
+        :description="__('ui.navigator.seo_description')"
         :url="url()->current()"
     />
 @endsection
@@ -13,70 +13,70 @@
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z" />
             </svg>
-            VAT Navigator
+            {{ __('ui.navigator.heading') }}
         </h2>
-        <p class="text-purple-100 text-sm !mb-0 opacity-90">Find out where and how much VAT to charge</p>
+        <p class="text-purple-100 text-sm !mb-0 opacity-90">{{ __('ui.navigator.subtitle') }}</p>
     </div>
 
     <div class="p-6 grid md:grid-cols-2 gap-8">
         <!-- Form -->
         <div class="space-y-6">
             <x-select 
-                label="Seller's Country" 
+                :label="__('ui.navigator.seller_country')" 
                 :options="$countries" 
                 option-value="id"
                 option-label="name" 
-                placeholder="Select Country" 
+                :placeholder="__('ui.navigator.select_country')" 
                 wire:model.live="sellerCountry"
                 class="w-full"
             />
 
             <x-select 
-                label="Buyer's Country" 
-                :options="collect($countries)->push(['id' => 'non-eu', 'name' => 'Non-EU Country'])" 
+                :label="__('ui.navigator.buyer_country')" 
+                :options="collect($countries)->push(['id' => 'non-eu', 'name' => __('ui.navigator.non_eu_country')])" 
                 option-value="id"
                 option-label="name" 
-                placeholder="Select Country" 
+                :placeholder="__('ui.navigator.select_country')" 
                 wire:model.live="buyerCountry"
                 class="w-full"
             />
 
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Buyer Type</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('ui.navigator.buyer_type') }}</label>
                 <div class="flex gap-4">
                     <label class="flex items-center gap-2 cursor-pointer">
                         <input type="radio" wire:model.live="buyerType" value="b2c" class="text-purple-600 focus:ring-purple-500">
-                        <span>Individual (B2C)</span>
+                        <span>{{ __('ui.navigator.individual_b2c') }}</span>
                     </label>
                     <label class="flex items-center gap-2 cursor-pointer">
                         <input type="radio" wire:model.live="buyerType" value="b2b" class="text-purple-600 focus:ring-purple-500">
-                        <span>Business (B2B)</span>
+                        <span>{{ __('ui.navigator.business_b2b') }}</span>
                     </label>
                 </div>
             </div>
 
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Item Type</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('ui.navigator.item_type') }}</label>
                 <div class="flex gap-4">
                     <label class="flex items-center gap-2 cursor-pointer">
                         <input type="radio" wire:model.live="itemType" value="goods" class="text-purple-600 focus:ring-purple-500">
-                        <span>Physical Goods</span>
+                        <span>{{ __('ui.navigator.physical_goods') }}</span>
                     </label>
                     <label class="flex items-center gap-2 cursor-pointer">
                         <input type="radio" wire:model.live="itemType" value="services" class="text-purple-600 focus:ring-purple-500">
-                        <span>Services</span>
+                        <span>{{ __('ui.navigator.services') }}</span>
                     </label>
                 </div>
             </div>
 
             @if($itemType === 'services')
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Service Category</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('ui.navigator.service_category') }}</label>
                     <select wire:model.live="productCategory" class="w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500">
-                        <option value="general">General Services (Consulting, Marketing, etc.)</option>
-                        <option value="digital">Digital Services (Software, E-books, Streaming)</option>
-                        <option value="construction">Construction Work (Building, Renovation)</option>
-                        <option value="events">Admission to Events (Concerts, Conferences)</option>
+                        <option value="general">{{ __('ui.navigator.general_services') }}</option>
+                        <option value="digital">{{ __('ui.navigator.digital_services') }}</option>
+                        <option value="construction">{{ __('ui.navigator.construction_work') }}</option>
+                        <option value="events">{{ __('ui.navigator.admission_events') }}</option>
                     </select>
                 </div>
             @endif
@@ -107,7 +107,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12 mx-auto mb-3 opacity-50">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
                     </svg>
-                    <p>Select country options to see VAT rules</p>
+                    <p>{{ __('ui.navigator.empty_state') }}</p>
                 </div>
             @endif
         </div>

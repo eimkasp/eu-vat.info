@@ -1,16 +1,16 @@
 <div class="container">
-    @section('title', __('ui.calculator.title') . ' ' . $country->name . ' — ' . $country->standard_rate . '% VAT')
-    @section('meta_description', 'Complete VAT guide for ' . $country->name . '. Standard rate: ' . $country->standard_rate . '%. Free VAT calculator, all rates, compliance info.')
+    @section('title', __('ui.country_page.seo_title', ['country' => $country->name, 'rate' => $country->standard_rate]))
+    @section('meta_description', __('ui.country_page.seo_description', ['country' => $country->name, 'rate' => $country->standard_rate]))
 
     @push('head')
         <link rel="canonical" href="{{ route('country.show', $country->slug) }}">
-        <meta property="og:title" content="{{ $country->name }} VAT Rates & Calculator — {{ $country->standard_rate }}%">
-        <meta property="og:description" content="Complete VAT guide for {{ $country->name }}. Standard rate: {{ $country->standard_rate }}%. Free VAT calculator, all rates, compliance info.">
+        <meta property="og:title" content="{{ __('ui.country_page.seo_title', ['country' => $country->name, 'rate' => $country->standard_rate]) }}">
+        <meta property="og:description" content="{{ __('ui.country_page.seo_description', ['country' => $country->name, 'rate' => $country->standard_rate]) }}">
         <meta property="og:url" content="{{ route('country.show', $country->slug) }}">
         <meta property="og:type" content="website">
         <meta name="twitter:card" content="summary">
-        <meta name="twitter:title" content="{{ $country->name }} VAT Rates & Calculator — {{ $country->standard_rate }}%">
-        <meta name="twitter:description" content="Complete VAT guide for {{ $country->name }}. Standard rate: {{ $country->standard_rate }}%. Free VAT calculator, all rates, compliance info.">
+        <meta name="twitter:title" content="{{ __('ui.country_page.seo_title', ['country' => $country->name, 'rate' => $country->standard_rate]) }}">
+        <meta name="twitter:description" content="{{ __('ui.country_page.seo_description', ['country' => $country->name, 'rate' => $country->standard_rate]) }}">
 
         <x-country.json-ld :country="$country" />
     @endpush
@@ -29,10 +29,10 @@
                 <!-- Hero Header -->
                 <div class="mb-6">
                     <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
-                        {{ $country->name }} VAT Rates & Calculator
+                        {{ __('ui.country_page.heading', ['country' => $country->name]) }}
                     </h1>
                     <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                        Complete guide to Value Added Tax in {{ $country->name }}. Current rates, free calculator, and compliance information.
+                        {{ __('ui.country_page.hero_subtitle', ['country' => $country->name]) }}
                     </p>
                 </div>
 
@@ -43,21 +43,21 @@
                     {{-- Quick formula reference --}}
                     <div class="grid md:grid-cols-2 gap-3 mt-4">
                         <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
-                            <h3 class="text-sm font-bold mb-2 text-gray-900 dark:text-white">Adding {{ $country->standard_rate }}% VAT</h3>
+                            <h3 class="text-sm font-bold mb-2 text-gray-900 dark:text-white">{{ __('ui.country_page.adding_vat', ['rate' => $country->standard_rate]) }}</h3>
                             <div class="bg-gray-50 dark:bg-gray-900 p-3 rounded-lg font-mono text-sm text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-gray-700 mb-2">
-                                Gross = Net &times; {{ 1 + $country->standard_rate / 100 }}
+                                {{ __('ui.country_page.formula_gross') }} {{ 1 + $country->standard_rate / 100 }}
                             </div>
                             <div class="text-sm text-gray-500 dark:text-gray-400">
-                                <strong>Example:</strong> {{ $country->currency_display }}100 net &rarr; <strong>{{ $country->currency_display }}{{ number_format(100 * (1 + $country->standard_rate / 100), 2) }}</strong> gross
+                                <strong>{{ __('ui.country_page.example') }}</strong> {{ $country->currency_display }}100 {{ __('ui.country_page.net') }} &rarr; <strong>{{ $country->currency_display }}{{ number_format(100 * (1 + $country->standard_rate / 100), 2) }}</strong> {{ __('ui.country_page.gross') }}
                             </div>
                         </div>
                         <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
-                            <h3 class="text-sm font-bold mb-2 text-gray-900 dark:text-white">Removing {{ $country->standard_rate }}% VAT</h3>
+                            <h3 class="text-sm font-bold mb-2 text-gray-900 dark:text-white">{{ __('ui.country_page.removing_vat', ['rate' => $country->standard_rate]) }}</h3>
                             <div class="bg-gray-50 dark:bg-gray-900 p-3 rounded-lg font-mono text-sm text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-gray-700 mb-2">
-                                Net = Gross &divide; {{ 1 + $country->standard_rate / 100 }}
+                                {{ __('ui.country_page.formula_net') }} {{ 1 + $country->standard_rate / 100 }}
                             </div>
                             <div class="text-sm text-gray-500 dark:text-gray-400">
-                                <strong>Example:</strong> {{ $country->currency_display }}100 gross &rarr; <strong>{{ $country->currency_display }}{{ number_format(100 / (1 + $country->standard_rate / 100), 2) }}</strong> net
+                                <strong>{{ __('ui.country_page.example') }}</strong> {{ $country->currency_display }}100 {{ __('ui.country_page.gross') }} &rarr; <strong>{{ $country->currency_display }}{{ number_format(100 / (1 + $country->standard_rate / 100), 2) }}</strong> {{ __('ui.country_page.net') }}
                             </div>
                         </div>
                     </div>
@@ -67,34 +67,34 @@
                 <section class="mb-8" id="info">
                     <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                         <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        Key Information
+                        {{ __('ui.country_page.key_information') }}
                     </h2>
 
                     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 divide-y divide-gray-100 dark:divide-gray-700">
                         <div class="grid grid-cols-2 sm:grid-cols-3 gap-px">
                             <div class="p-4">
-                                <dt class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Country Code</dt>
+                                <dt class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ __('ui.country_page.country_code') }}</dt>
                                 <dd class="mt-1 text-lg font-semibold text-gray-900 dark:text-white">{{ $country->iso_code }}</dd>
                             </div>
                             <div class="p-4">
-                                <dt class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Currency</dt>
+                                <dt class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ __('ui.country_page.currency') }}</dt>
                                 <dd class="mt-1 text-lg font-semibold text-gray-900 dark:text-white">{{ $country->currency_display }}</dd>
                             </div>
                             <div class="p-4">
-                                <dt class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Standard Rate</dt>
+                                <dt class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ __('ui.country_page.standard_rate_label') }}</dt>
                                 <dd class="mt-1 text-lg font-semibold text-gray-900 dark:text-white">{{ $country->standard_rate }}%</dd>
                             </div>
                             <div class="p-4">
-                                <dt class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">VAT Number Format</dt>
+                                <dt class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ __('ui.country_page.vat_number_format') }}</dt>
                                 <dd class="mt-1 text-lg font-semibold text-gray-900 dark:text-white">{{ $country->iso_code }}XXXXXXXXX</dd>
                             </div>
                             <div class="p-4">
-                                <dt class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">EU Member</dt>
-                                <dd class="mt-1 text-lg font-semibold text-green-600 dark:text-green-400">Yes</dd>
+                                <dt class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ __('ui.country_page.eu_member') }}</dt>
+                                <dd class="mt-1 text-lg font-semibold text-green-600 dark:text-green-400">{{ __('ui.country_page.yes') }}</dd>
                             </div>
                             <div class="p-4">
-                                <dt class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">VIES Validation</dt>
-                                <dd class="mt-1 text-lg font-semibold text-green-600 dark:text-green-400">Available</dd>
+                                <dt class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ __('ui.country_page.vies_validation') }}</dt>
+                                <dd class="mt-1 text-lg font-semibold text-green-600 dark:text-green-400">{{ __('ui.country_page.available') }}</dd>
                             </div>
                         </div>
                     </div>
@@ -104,34 +104,32 @@
                 <section class="mb-8" id="guide">
                     <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                         <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
-                        {{ $country->name }} VAT Guide
+                        {{ __('ui.country_page.vat_guide_heading', ['country' => $country->name]) }}
                     </h2>
 
                     <div class="prose prose-blue prose-lg max-w-none dark:prose-invert">
                         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6">
-                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mt-0 mb-3">VAT Registration & Compliance</h3>
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mt-0 mb-3">{{ __('ui.country_page.vat_registration_heading') }}</h3>
                             <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-0">
-                                Businesses operating in {{ $country->name }} must register for VAT if their annual turnover exceeds the national threshold. 
-                                Foreign companies trading in {{ $country->name }} may need to register immediately without a threshold.
-                                The standard VAT rate of <strong class="text-blue-600 dark:text-blue-400">{{ $country->standard_rate }}%</strong> applies to most goods and services.
+                                {{ __('ui.country_page.vat_registration_text', ['country' => $country->name, 'rate' => $country->standard_rate]) }}
                             </p>
                         </div>
 
                         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mt-0 mb-3">Rate Structure</h3>
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mt-0 mb-3">{{ __('ui.country_page.rate_structure_heading') }}</h3>
                             <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
-                                {{ $country->name }} applies different VAT rates depending on the product or service:
+                                {{ __('ui.country_page.rate_structure_intro', ['country' => $country->name]) }}
                             </p>
                             <ul class="text-gray-600 dark:text-gray-400 space-y-1">
-                                <li><strong>Standard Rate ({{ $country->standard_rate }}%)</strong> — applies to most goods and services</li>
+                                <li><strong>{{ __('ui.country_page.standard_rate_desc', ['rate' => $country->standard_rate]) }}</strong></li>
                                 @if($country->reduced_rate)
-                                    <li><strong>Reduced Rate ({{ $country->reduced_rate }}%)</strong> — applies to essential goods like food, books, and pharmaceuticals</li>
+                                    <li><strong>{{ __('ui.country_page.reduced_rate_desc', ['rate' => $country->reduced_rate]) }}</strong></li>
                                 @endif
                                 @if($country->super_reduced_rate)
-                                    <li><strong>Super Reduced Rate ({{ $country->super_reduced_rate }}%)</strong> — applies to basic necessities</li>
+                                    <li><strong>{{ __('ui.country_page.super_reduced_rate_desc', ['rate' => $country->super_reduced_rate]) }}</strong></li>
                                 @endif
                                 @if($country->parking_rate)
-                                    <li><strong>Parking Rate ({{ $country->parking_rate }}%)</strong> — transitional rate for specific goods</li>
+                                    <li><strong>{{ __('ui.country_page.parking_rate_desc', ['rate' => $country->parking_rate]) }}</strong></li>
                                 @endif
                             </ul>
                         </div>
@@ -142,7 +140,7 @@
                 <section class="mb-8" id="faq">
                     <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                         <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        Frequently Asked Questions
+                        {{ __('ui.country_page.faq_heading') }}
                     </h2>
 
                     <div class="space-y-4" x-data="{ open: null }">
@@ -150,24 +148,24 @@
                             $cs = $country->currency_display;
                             $faqs = [
                                 [
-                                    'q' => "What is the current VAT rate in {$country->name}?",
-                                    'a' => "The standard VAT rate in {$country->name} is {$country->standard_rate}%." . ($country->reduced_rate ? " A reduced rate of {$country->reduced_rate}% applies to certain essential goods and services." : ""),
+                                    'q' => __('ui.country_page.faq_q_current_rate', ['country' => $country->name]),
+                                    'a' => __('ui.country_page.faq_a_current_rate', ['country' => $country->name, 'rate' => $country->standard_rate]) . ($country->reduced_rate ? ' ' . __('ui.country_page.reduced_rate_desc', ['rate' => $country->reduced_rate]) : ''),
                                 ],
                                 [
-                                    'q' => "How do I add {$country->standard_rate}% VAT to a price?",
-                                    'a' => "Multiply the net price by " . (1 + $country->standard_rate / 100) . ". For example, {$cs}100 × " . (1 + $country->standard_rate / 100) . " = {$cs}" . number_format(100 * (1 + $country->standard_rate / 100), 2) . " including VAT.",
+                                    'q' => __('ui.country_page.faq_q_add_vat', ['rate' => $country->standard_rate]),
+                                    'a' => __('ui.country_page.faq_a_add_vat', ['rate' => $country->standard_rate, 'multiplier' => (1 + $country->standard_rate / 100), 'result' => number_format(100 * (1 + $country->standard_rate / 100), 2)]),
                                 ],
                                 [
-                                    'q' => "How do I remove VAT from a gross price in {$country->name}?",
-                                    'a' => "Divide the gross price by " . (1 + $country->standard_rate / 100) . ". For example, {$cs}" . number_format(100 * (1 + $country->standard_rate / 100), 2) . " ÷ " . (1 + $country->standard_rate / 100) . " = {$cs}100.00 net.",
+                                    'q' => __('ui.country_page.faq_q_remove_vat', ['country' => $country->name]),
+                                    'a' => __('ui.country_page.faq_a_remove_vat', ['divisor' => (1 + $country->standard_rate / 100), 'gross' => number_format(100 * (1 + $country->standard_rate / 100), 2)]),
                                 ],
                                 [
-                                    'q' => "What format do {$country->name} VAT numbers use?",
-                                    'a' => "VAT numbers in {$country->name} start with the country code '{$country->iso_code}' followed by a series of digits. The format is {$country->iso_code}XXXXXXXXX.",
+                                    'q' => __('ui.country_page.faq_q_vat_format', ['country' => $country->name]),
+                                    'a' => __('ui.country_page.faq_a_vat_format', ['country' => $country->name, 'code' => $country->iso_code, 'format' => $country->iso_code . 'XXXXXXXXX']),
                                 ],
                                 [
-                                    'q' => "Do I need to register for VAT in {$country->name}?",
-                                    'a' => "If your business exceeds the national VAT registration threshold in {$country->name}, you must register. Foreign businesses selling goods or services in {$country->name} may need to register immediately.",
+                                    'q' => __('ui.country_page.faq_q_registration', ['country' => $country->name]),
+                                    'a' => __('ui.country_page.faq_a_registration', ['country' => $country->name]),
                                 ],
                             ];
                         @endphp
@@ -213,17 +211,17 @@
                         <a href="{{ route('vat-calculator.country', $country->slug) }}"
                            class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
-                            Full VAT Calculator
+                            {{ __('ui.country_page.full_calculator_link') }}
                         </a>
                         <a href="{{ locale_path('/vat-changes') }}"
                            class="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors text-sm font-medium">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            VAT Rate History
+                            {{ __('ui.country_page.rate_history_link') }}
                         </a>
                         <a href="{{ locale_path('/vat-map') }}"
                            class="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors text-sm font-medium">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
-                            EU VAT Map
+                            {{ __('ui.country_page.vat_map_link') }}
                         </a>
                     </div>
                 </section>

@@ -110,7 +110,7 @@
                         </div>
                     </div>
                     <div class="text-right">
-                        <div class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-0.5">VAT ({{ $vatRate }}%)</div>
+                        <div class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-0.5">{{ __('ui.calculator.vat_percentage_label', ['rate' => $vatRate]) }}</div>
                         <div class="text-lg font-medium text-blue-600 dark:text-blue-400">
                             {{ $country->currency_display }}{{ number_format($this->vatAmount, 2) }}
                         </div>
