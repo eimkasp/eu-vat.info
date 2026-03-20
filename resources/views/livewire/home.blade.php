@@ -19,6 +19,47 @@
             }
         }
         </script>
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "EU VAT Info",
+            "url": "{{ url('/') }}",
+            "description": "Comprehensive EU VAT rate information, calculators, and compliance tools for all 27 EU member states."
+        }
+        </script>
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Dataset",
+            "name": "EU VAT Rates {{ date('Y') }}",
+            "description": "Current Value Added Tax (VAT) rates for all 27 EU member states, including standard, reduced, super-reduced, and parking rates.",
+            "url": "{{ url('/') }}",
+            "license": "https://creativecommons.org/licenses/by/4.0/",
+            "isAccessibleForFree": true,
+            "creator": {
+                "@type": "Organization",
+                "name": "EU VAT Info"
+            },
+            "distribution": [
+                {
+                    "@type": "DataDownload",
+                    "encodingFormat": "application/json",
+                    "contentUrl": "{{ url('/api/countries') }}"
+                },
+                {
+                    "@type": "DataDownload",
+                    "encodingFormat": "text/plain",
+                    "contentUrl": "{{ url('/llms-full.txt') }}"
+                }
+            ],
+            "temporalCoverage": "2000/{{ date('Y') }}",
+            "spatialCoverage": {
+                "@type": "Place",
+                "name": "European Union"
+            }
+        }
+        </script>
     </x-seo-meta>
 @endsection
 

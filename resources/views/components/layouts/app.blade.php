@@ -32,6 +32,8 @@
             <link rel="alternate" hreflang="{{ $hrefLocale }}" href="{{ url('/' . $hrefLocale . ($cleanPath === '/' ? '' : $cleanPath)) }}">
         @endif
     @endforeach
+
+    @stack('head')
     
     <script>
         if ('serviceWorker' in navigator) {
