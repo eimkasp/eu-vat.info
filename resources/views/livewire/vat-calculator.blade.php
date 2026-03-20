@@ -118,7 +118,7 @@
 
 <div class="mt-16 grid grid-cols-1 gap-8">
     <!-- Map Section -->
-    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
         <livewire:europe-map :activeCountry="$selectedCountryObject" />
     </div>
 
