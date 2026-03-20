@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -15,8 +16,13 @@ return new class extends Migration
             $table->string('iso_code_2', 2)->nullable()->after('iso_code');
         });
 
-        // Update existing records to extract 2-letter code
-        DB::statement("UPDATE countries SET iso_code_2 = SUBSTRING_INDEX(SUBSTRING_INDEX(iso_code, '(', -1), ')', 1) WHERE iso_code LIKE '%(%)%'");
+        // Update existing records to extract 2-letter code (database-agnostic)
+        $driver = Schema::getConnection()->getDriverName();
+        if ($driver === 'sqlite') {
+            DB::statement("UPDATE countries SET iso_code_2 = SUBSTR(iso_code, INSTR(iso_code, '(') + 1, INSTR(iso_code, ')') - INSTR(iso_code, '(') - 1) WHERE iso_code LIKE '%(%)%'");
+        } else {
+            DB::statement("UPDATE countries SET iso_code_2 = SUBSTRING_INDEX(SUBSTRING_INDEX(iso_code, '(', -1), ')', 1) WHERE iso_code LIKE '%(%)%'");
+        }
     }
 
     /**
