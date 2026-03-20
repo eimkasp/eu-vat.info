@@ -96,6 +96,15 @@ return [
         'super_reduced_rate_label' => 'Super Reduced (:rate%)',
         'parking_rate_label' => 'Parking (:rate%)',
         'vat_percentage_label' => 'VAT (:rate%)',
+        'current_vat_rates' => 'Current VAT Rates',
+        'need_more_details' => 'Need more details?',
+        'need_more_details_desc' => 'Learn everything about VAT compliance, registration, and exceptions in :country.',
+        'view_vat_guide' => 'View :country VAT Guide',
+        'country_heading' => ':country VAT Calculator',
+        'european_heading' => 'European VAT Calculator',
+        'country_subtitle' => 'Calculate VAT for transactions in :country easily. Current standard rate is :rate%.',
+        'generic_subtitle' => 'Quickly calculate VAT amounts for any of the 27 European Union member states.',
+        'breadcrumb_label' => 'VAT Calculator',
     ],
 
     // ── VAT Map ─────────────────────────────────────────────────────────

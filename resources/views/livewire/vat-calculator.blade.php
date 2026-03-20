@@ -59,28 +59,27 @@
 
 <div class="container py-12 mt-12 pb-12">
     @isset($selectedCountryObject)
-        <x-breadcrumbs :items="['VAT Calculator' => '/vat-calculator', $selectedCountryObject->name => '']" />
+        <x-breadcrumbs :items="[__('ui.calculator.breadcrumb_label') => locale_path('/vat-calculator'), $selectedCountryObject->name => '']" />
     @else
-        <x-breadcrumbs :items="['VAT Calculator' => '']" />
+        <x-breadcrumbs :items="[__('ui.calculator.breadcrumb_label') => '']" />
     @endisset
 
 <div class="mb-6 mt-6  mx-auto">
-    <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-900 tracking-tight mb-6">
+    <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-900 dark:text-white tracking-tight mb-6">
         @isset($selectedCountryObject)
-            {{ $selectedCountryObject->name }} <span class="text-blue-600">VAT Calculator</span>
+            {{ $selectedCountryObject->name }} <span class="text-blue-600">{{ __('ui.calculator.title') }}</span>
         @else
-            European <span class="text-blue-600">VAT Calculator</span>
+            {{ __('ui.calculator.european_heading') }}
         @endisset
     </h1>
     
     @isset($selectedCountryObject)
-        <p class="text-lg text-gray-600 leading-relaxed">
-            Calculate VAT for transactions in {{ $selectedCountryObject->name }} easily. 
-            Current standard rate is <span class="font-bold text-gray-900">{{ $selectedCountryObject->standard_rate }}%</span>.
+        <p class="text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
+            {{ __('ui.calculator.country_subtitle', ['country' => $selectedCountryObject->name, 'rate' => $selectedCountryObject->standard_rate]) }}
         </p>
     @else
-        <p class="text-lg text-gray-600 leading-relaxed">
-            Quickly calculate VAT amounts for any of the 27 European Union member states.
+        <p class="text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
+            {{ __('ui.calculator.generic_subtitle') }}
         </p>
     @endisset
 </div>
@@ -95,8 +94,8 @@
     <!-- Sidebar / Info -->
     <div class="lg:col-span-5 order-2 space-y-6">
         @isset($selectedCountryObject)
-            <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
-                <h3 class="text-lg font-bold text-gray-900 mb-4">Current VAT Rates</h3>
+            <div class="bg-white dark:bg-gray-800 p-5 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">{{ __('ui.calculator.current_vat_rates') }}</h3>
                 <x-country-rates :country="$selectedCountryObject" />
             </div>
         @endisset
@@ -104,13 +103,13 @@
         <livewire:vat-rate-history-chart :country="$selectedCountryObject" />
 
         @isset($selectedCountryObject)
-        <div class="bg-blue-50 p-6 rounded-xl border border-blue-100">
-            <h4 class="font-bold text-blue-900 mb-2">Need more details?</h4>
-            <p class="text-sm text-blue-700 mb-4">
-                Learn everything about VAT compliance, registration, and exceptions in {{ $selectedCountryObject->name }}.
+        <div class="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-xl border border-blue-100 dark:border-blue-800">
+            <h4 class="font-bold text-blue-900 dark:text-blue-200 mb-2">{{ __('ui.calculator.need_more_details') }}</h4>
+            <p class="text-sm text-blue-700 dark:text-blue-300 mb-4">
+                {{ __('ui.calculator.need_more_details_desc', ['country' => $selectedCountryObject->name]) }}
             </p>
-            <a href="{{ route('country.show', $selectedCountryObject->slug) }}" class="text-sm font-bold text-blue-600 hover:text-blue-800 hover:underline">
-                View {{ $selectedCountryObject->name }} VAT Guide &rarr;
+            <a href="{{ route('country.show', $selectedCountryObject->slug) }}" wire:navigate class="text-sm font-bold text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline">
+                {{ __('ui.calculator.view_vat_guide', ['country' => $selectedCountryObject->name]) }} &rarr;
             </a>
         </div>
         @endisset

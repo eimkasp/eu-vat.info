@@ -32,27 +32,27 @@
             <div class="flex flex-wrap gap-1.5">
                 <label class="relative inline-flex items-center px-2.5 py-1 rounded-md border text-xs cursor-pointer hover:bg-white dark:hover:bg-gray-800 transition-colors {{ !$useCustomRate && $vatRate == $country->standard_rate ? 'bg-white dark:bg-gray-800 border-blue-500 ring-1 ring-blue-500 font-semibold text-blue-700 dark:text-blue-400' : 'border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300' }}">
                     <input type="radio" wire:click="setStandardRate" class="sr-only">
-                    Standard ({{ $country->standard_rate }}%)
+                    {{ __('ui.calculator.standard_rate_label', ['rate' => $country->standard_rate]) }}
                 </label>
                 
                 @if($country->reduced_rate)
                     <label class="relative inline-flex items-center px-2.5 py-1 rounded-md border text-xs cursor-pointer hover:bg-white dark:hover:bg-gray-800 transition-colors {{ !$useCustomRate && $vatRate == $country->reduced_rate ? 'bg-white dark:bg-gray-800 border-blue-500 ring-1 ring-blue-500 font-semibold text-blue-700 dark:text-blue-400' : 'border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300' }}">
                         <input type="radio" wire:click="setReducedRate" class="sr-only">
-                        Reduced ({{ $country->reduced_rate }}%)
+                        {{ __('ui.calculator.reduced_rate_label', ['rate' => $country->reduced_rate]) }}
                     </label>
                 @endif
                 
                 @if($country->super_reduced_rate)
                     <label class="relative inline-flex items-center px-2.5 py-1 rounded-md border text-xs cursor-pointer hover:bg-white dark:hover:bg-gray-800 transition-colors {{ !$useCustomRate && $vatRate == $country->super_reduced_rate ? 'bg-white dark:bg-gray-800 border-blue-500 ring-1 ring-blue-500 font-semibold text-blue-700 dark:text-blue-400' : 'border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300' }}">
                         <input type="radio" wire:click="setSuperReducedRate" class="sr-only">
-                        Super Reduced ({{ $country->super_reduced_rate }}%)
+                        {{ __('ui.calculator.super_reduced_rate_label', ['rate' => $country->super_reduced_rate]) }}
                     </label>
                 @endif
 
                 @if($country->parking_rate)
                     <label class="relative inline-flex items-center px-2.5 py-1 rounded-md border text-xs cursor-pointer hover:bg-white dark:hover:bg-gray-800 transition-colors {{ !$useCustomRate && $vatRate == $country->parking_rate ? 'bg-white dark:bg-gray-800 border-blue-500 ring-1 ring-blue-500 font-semibold text-blue-700 dark:text-blue-400' : 'border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300' }}">
                         <input type="radio" wire:click="setParkingRate" class="sr-only">
-                        Parking ({{ $country->parking_rate }}%)
+                        {{ __('ui.calculator.parking_rate_label', ['rate' => $country->parking_rate]) }}
                     </label>
                 @endif
                 
