@@ -11,6 +11,7 @@ use Illuminate\View\Component;
 class CountryCalculatorList extends Component
 {
     public $countries;
+
     /**
      * Create a new component instance.
      */

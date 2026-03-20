@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Country;
 use App\Services\SitemapGenerator;
 
 class SitemapController extends Controller

@@ -8,6 +8,7 @@ use Illuminate\Console\Command;
 class GenerateSitemap extends Command
 {
     protected $signature = 'sitemap:generate {--url= : Override APP_URL (e.g. https://vat.businesspress.io)}';
+
     protected $description = 'Generate the public/sitemap.xml file with all pages and hreflang alternates';
 
     public function handle(SitemapGenerator $generator): int

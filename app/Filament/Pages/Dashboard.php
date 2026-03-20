@@ -4,8 +4,8 @@ namespace App\Filament\Pages;
 
 use App\Models\CountryAnalytic;
 use Filament\Pages\Dashboard as BaseDashboard;
-use Filament\Widgets\StatsOverviewWidget\Stat;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
+use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class Dashboard extends BaseDashboard
 {
@@ -38,7 +38,7 @@ class StatsOverview extends BaseWidget
                 ->descriptionIcon('heroicon-m-bookmark')
                 ->color('success'),
 
-            Stat::make('Average VAT Rate', number_format(CountryAnalytic::avg('rate_used'), 2) . '%')
+            Stat::make('Average VAT Rate', number_format(CountryAnalytic::avg('rate_used'), 2).'%')
                 ->description('Average VAT rate used')
                 ->descriptionIcon('heroicon-m-currency-euro')
                 ->color('warning'),

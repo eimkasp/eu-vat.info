@@ -24,13 +24,13 @@ class GenerateVatRateChanges implements ShouldQueue
     public function handle()
     {
         Log::info('GenerateVatRateChanges job started.');
-        
+
         $countries = Country::all();
         $created = 0;
 
         foreach ($countries as $country) {
             $types = ['standard', 'reduced', 'super_reduced', 'parking'];
-            
+
             foreach ($types as $type) {
                 $rates = VatRate::where('country_id', $country->id)
                     ->where('type', $type)
@@ -51,7 +51,7 @@ class GenerateVatRateChanges implements ShouldQueue
                             ->where('vat_rate_id', $curr->id)
                             ->exists();
 
-                        if (!$exists) {
+                        if (! $exists) {
                             $change = new VatRateChange();
                             $change->country_id = $country->id;
                             $change->vat_rate_id = $curr->id;
@@ -64,7 +64,7 @@ class GenerateVatRateChanges implements ShouldQueue
                             $change->percentage_change = $change->calculatePercentageChange();
                             $change->change_direction = $change->determineChangeDirection();
                             $change->save();
-                            
+
                             $created++;
                         }
                     }

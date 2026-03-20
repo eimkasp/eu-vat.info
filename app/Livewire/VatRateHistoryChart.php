@@ -9,17 +9,23 @@ use Livewire\Component;
 class VatRateHistoryChart extends Component
 {
     public $country;
+
     public $chartData = [];
+
     public $rateChange = null;
+
     public $totalChanges = 0;
+
     public $earliestRate = null;
+
     public $currentRate = null;
+
     public $changePercentage = null;
 
     public function mount($country = null)
     {
         $this->country = $country ?? Country::first();
-        if (!$this->country) {
+        if (! $this->country) {
             return;
         }
         $this->loadChartData();
@@ -28,8 +34,9 @@ class VatRateHistoryChart extends Component
 
     public function loadChartData()
     {
-        if (!$this->country) {
+        if (! $this->country) {
             $this->chartData = [['name' => 'Standard Rate', 'data' => []]];
+
             return;
         }
         $country_id_to_use = $this->country->id;
@@ -55,12 +62,11 @@ class VatRateHistoryChart extends Component
 
     private function calculateStats()
     {
-        if (!$this->country) {
+        if (! $this->country) {
             return;
         }
         $country_id_to_use = $this->country->id;
 
-        
         $earliest = VatRate::where('country_id', $country_id_to_use)
             ->where('type', 'standard')
             ->where('effective_from', '>=', '2000-01-01')

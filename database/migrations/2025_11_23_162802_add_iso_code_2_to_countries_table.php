@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::table('countries', function (Blueprint $table) {
             $table->string('iso_code_2', 2)->nullable()->after('iso_code');
         });
-        
+
         // Update existing records to extract 2-letter code
         DB::statement("UPDATE countries SET iso_code_2 = SUBSTRING_INDEX(SUBSTRING_INDEX(iso_code, '(', -1), ')', 1) WHERE iso_code LIKE '%(%)%'");
     }

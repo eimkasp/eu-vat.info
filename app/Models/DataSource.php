@@ -54,11 +54,11 @@ class DataSource extends Model
      */
     public function canQuery(): bool
     {
-        if (!$this->is_active) {
+        if (! $this->is_active) {
             return false;
         }
 
-        if (!$this->requests_per_day) {
+        if (! $this->requests_per_day) {
             return true;
         }
 
@@ -75,7 +75,7 @@ class DataSource extends Model
      */
     public function incrementRequests(): void
     {
-        if (!$this->requests_reset_date || !$this->requests_reset_date->isToday()) {
+        if (! $this->requests_reset_date || ! $this->requests_reset_date->isToday()) {
             $this->update([
                 'requests_today' => 1,
                 'requests_reset_date' => now()->toDateString(),
@@ -125,6 +125,6 @@ class DataSource extends Model
     public function scopeByPriority($query)
     {
         return $query->orderBy('priority', 'desc')
-                    ->orderBy('credibility_score', 'desc');
+            ->orderBy('credibility_score', 'desc');
     }
 }

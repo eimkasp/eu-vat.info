@@ -29,6 +29,7 @@ class RefreshVatRates extends Command
             return $this->runSynchronously();
         } catch (\Exception $e) {
             $this->error("❌ Refresh failed: {$e->getMessage()}");
+
             return self::FAILURE;
         } finally {
             $elapsed = round(microtime(true) - $startTime, 2);
@@ -40,7 +41,7 @@ class RefreshVatRates extends Command
     private function runSynchronously(): int
     {
         // Step 1: Download & seed
-        if (!$this->option('skip-download')) {
+        if (! $this->option('skip-download')) {
             $this->info('Step 1/3: Downloading latest VAT rates from GitHub...');
             $job = new UpdateVatRates();
             $job->handle();
@@ -56,7 +57,7 @@ class RefreshVatRates extends Command
         $this->info('  ✓ Integrity check complete.');
 
         // Step 3: Generate change records
-        if (!$this->option('no-changes')) {
+        if (! $this->option('no-changes')) {
             $this->info('Step 3/3: Generating VAT rate change records...');
             $changesJob = new GenerateVatRateChanges();
             $changesJob->handle();

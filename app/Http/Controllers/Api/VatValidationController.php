@@ -4,20 +4,18 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Services\ViesValidationService;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class VatValidationController extends Controller
 {
     public function __construct(
         private ViesValidationService $viesService
-    ) {}
+    ) {
+    }
 
     /**
      * Validate VAT number via API
-     * 
-     * @param Request $request
-     * @return JsonResponse
      */
     public function validate(Request $request): JsonResponse
     {
@@ -43,9 +41,6 @@ class VatValidationController extends Controller
 
     /**
      * Batch validate multiple VAT numbers
-     * 
-     * @param Request $request
-     * @return JsonResponse
      */
     public function batchValidate(Request $request): JsonResponse
     {
@@ -76,8 +71,6 @@ class VatValidationController extends Controller
 
     /**
      * Health check endpoint
-     * 
-     * @return JsonResponse
      */
     public function health(): JsonResponse
     {

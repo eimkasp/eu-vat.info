@@ -23,7 +23,7 @@ class VerifyVatRatesIntegrity implements ShouldQueue
     public function handle()
     {
         Log::info('VerifyVatRatesIntegrity job started.');
-        
+
         $countries = Country::all();
         $issues = 0;
         $fixed = 0;
@@ -42,7 +42,7 @@ class VerifyVatRatesIntegrity implements ShouldQueue
                     ->where('effective_from', '<=', now())
                     ->where(function ($query) {
                         $query->whereNull('effective_to')
-                              ->orWhere('effective_to', '>=', now());
+                            ->orWhere('effective_to', '>=', now());
                     })
                     ->orderBy('effective_from', 'desc')
                     ->first();
@@ -51,7 +51,7 @@ class VerifyVatRatesIntegrity implements ShouldQueue
                     $countryRate = $country->{$countryField};
                     if ($countryRate !== null && abs($countryRate - $latestRate->rate) > 0.01) {
                         Log::warning("Mismatch for {$country->name} ({$vatType}): Country rate {$countryRate} vs VatRate {$latestRate->rate}");
-                        
+
                         $country->{$countryField} = $latestRate->rate;
                         $country->save();
                         $fixed++;

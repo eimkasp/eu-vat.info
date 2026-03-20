@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\App;
 
-if (!function_exists('locale_url')) {
+if (! function_exists('locale_url')) {
     /**
      * Generate a locale-aware URL for a named route.
      * English (default) gets no prefix; other locales get /{locale}/...
@@ -20,7 +20,7 @@ if (!function_exists('locale_url')) {
     }
 }
 
-if (!function_exists('locale_path')) {
+if (! function_exists('locale_path')) {
     /**
      * Prefix a raw path with the current locale if not default.
      */
@@ -30,14 +30,14 @@ if (!function_exists('locale_path')) {
         $default = config('translation.default_language', 'en');
 
         if ($locale !== $default) {
-            return '/' . $locale . ($path === '/' ? '' : $path);
+            return '/'.$locale.($path === '/' ? '' : $path);
         }
 
         return $path;
     }
 }
 
-if (!function_exists('supported_locales')) {
+if (! function_exists('supported_locales')) {
     /**
      * Get all supported locale configs.
      */
@@ -47,13 +47,14 @@ if (!function_exists('supported_locales')) {
     }
 }
 
-if (!function_exists('current_locale_config')) {
+if (! function_exists('current_locale_config')) {
     /**
      * Get the config for the current locale.
      */
     function current_locale_config(): array
     {
         $locale = App::getLocale();
+
         return config("translation.supported_languages.{$locale}", []);
     }
 }

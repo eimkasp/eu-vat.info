@@ -2,15 +2,15 @@
 
 namespace App\Services;
 
-use App\Models\VatValidationLog;
 use App\Models\VatValidationCache;
-use Illuminate\Support\Facades\Http;
+use App\Models\VatValidationLog;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Http;
 
 class ViesValidationService
 {
     private const VIES_API_URL = 'https://ec.europa.eu/taxation_customs/vies/rest-api/check-vat-number';
+
     private const CACHE_TTL = 86400; // 24 hours
 
     /**
@@ -31,6 +31,7 @@ class ViesValidationService
         if ($dbResult = $this->getFromDatabase($countryCode, $vatNumber)) {
             if ($this->isRecentValidation($dbResult)) {
                 Cache::put($cacheKey, $dbResult, self::CACHE_TTL);
+
                 return array_merge($dbResult, ['source' => 'database']);
             }
         }
@@ -44,7 +45,7 @@ class ViesValidationService
 
             if ($response->successful()) {
                 $data = $response->json();
-                
+
                 $result = [
                     'valid' => $data['valid'] ?? false,
                     'country_code' => $countryCode,
@@ -77,7 +78,7 @@ class ViesValidationService
             return [
                 'valid' => false,
                 'error' => $response->json()['errorWrapperError'] ?? 'Validation failed',
-                'source' => 'error'
+                'source' => 'error',
             ];
 
         } catch (\Exception $e) {
@@ -88,8 +89,8 @@ class ViesValidationService
 
             return [
                 'valid' => false,
-                'error' => 'Service unavailable: ' . $e->getMessage(),
-                'source' => 'error'
+                'error' => 'Service unavailable: '.$e->getMessage(),
+                'source' => 'error',
             ];
         }
     }
@@ -101,10 +102,10 @@ class ViesValidationService
     {
         // Remove spaces, dashes, dots
         $cleaned = str_replace([' ', '-', '.'], '', $vatNumber);
-        
+
         // Remove country code prefix if present (e.g., LT123456789 -> 123456789)
         $cleaned = preg_replace('/^[A-Z]{2}/', '', $cleaned);
-        
+
         return strtoupper(trim($cleaned));
     }
 
@@ -113,7 +114,7 @@ class ViesValidationService
      */
     private function fuzzyMatch(?string $input, ?string $reference): ?array
     {
-        if (!$input || !$reference) {
+        if (! $input || ! $reference) {
             return null;
         }
 
@@ -123,7 +124,7 @@ class ViesValidationService
 
         // Calculate similarity
         similar_text($normalizedInput, $normalizedReference, $percent);
-        
+
         // Calculate Levenshtein distance for additional accuracy
         $distance = levenshtein(
             substr($normalizedInput, 0, 255),
@@ -147,16 +148,16 @@ class ViesValidationService
     {
         // Convert to lowercase
         $str = mb_strtolower($str);
-        
+
         // Replace Latin characters with ASCII equivalents
         $str = $this->removeDiacritics($str);
-        
+
         // Remove punctuation except spaces
         $str = preg_replace('/[^\w\s]/', '', $str);
-        
+
         // Normalize whitespace
         $str = preg_replace('/\s+/', ' ', $str);
-        
+
         return trim($str);
     }
 
@@ -265,7 +266,7 @@ class ViesValidationService
      */
     private function isRecentValidation(?array $result): bool
     {
-        if (!$result || !isset($result['last_checked_at'])) {
+        if (! $result || ! isset($result['last_checked_at'])) {
             return false;
         }
 

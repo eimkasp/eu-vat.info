@@ -27,7 +27,7 @@ class VatValidationCache extends Model
      */
     public function getFullVatNumberAttribute(): string
     {
-        return $this->country_code . $this->vat_number;
+        return $this->country_code.$this->vat_number;
     }
 
     /**

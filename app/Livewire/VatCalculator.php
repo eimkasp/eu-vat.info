@@ -3,13 +3,12 @@
 namespace App\Livewire;
 
 use App\Models\Country;
-use App\Models\CountryAnalytic;
 use App\Services\CountryAnalyticsService;
-use Illuminate\Support\Facades\Cache;
-use Livewire\Component;
-use Livewire\Attributes\Url;
-use Mary\Traits\Toast;
 use App\Traits\TracksCountryViews;
+use Illuminate\Support\Facades\Cache;
+use Livewire\Attributes\Url;
+use Livewire\Component;
+use Mary\Traits\Toast;
 
 // Remove the Number import if it exists
 // use Illuminate\Support\Number;
@@ -20,21 +19,29 @@ class VatCalculator extends Component
 
     #[Url]
     public $amount = 100;
+
     public $country = null;
+
     public $vat = 0;
+
     public $slug = 'lithuania-lt';
 
     public $vat_amount = 0;
 
     public $total = 0;
+
     public $result = 0; // Add this property
+
     #[Url]
     public $selectedRate = 0;
+
     #[Url]
     public $vat_included = 'include';
 
     public $rates = [];
+
     public $customRate = null;
+
     public $useCustomRate = false;
 
     public $vat_options = [
@@ -52,7 +59,9 @@ class VatCalculator extends Component
 
     #[Url]
     public $selectedCountry1;
+
     public $selectedCountry2 = null;
+
     public $selectedCountryObject = null;
 
     public $saved_searches = [];
@@ -77,18 +86,19 @@ class VatCalculator extends Component
         }
         $this->country = $country;
         $this->countries = Cache::remember('all_countries_with_flags', 600, function () {
-            return Country::orderBy('name', 'ASC')->get()->map(function($c) {
+            return Country::orderBy('name', 'ASC')->get()->map(function ($c) {
                 // Calculate flag emoji
                 $iso = strtoupper($c->iso_code);
                 $flag = '';
                 if (strlen($iso) === 2) {
-                    $flag = mb_chr(ord($iso[0]) + 127397) . mb_chr(ord($iso[1]) + 127397);
+                    $flag = mb_chr(ord($iso[0]) + 127397).mb_chr(ord($iso[1]) + 127397);
                 }
-                $c->name_with_flag = $flag . ' ' . $c->name;
+                $c->name_with_flag = $flag.' '.$c->name;
+
                 return $c;
             });
         });
-        
+
         if ($slug) {
             $this->selectedCountry1 = $slug;
             $this->slug = $slug;
@@ -103,12 +113,12 @@ class VatCalculator extends Component
             }
         }
         $this->getRates();
-        
+
         // Set initial rate
-        if (!$this->selectedRate && count($this->rates) > 0) {
+        if (! $this->selectedRate && count($this->rates) > 0) {
             $this->selectedRate = $this->rates[array_key_first($this->rates)]['value'];
         }
-        
+
         // Calculate initial values
         $this->calculateVat();
         $this->result = $this->total; // Initialize result
@@ -140,7 +150,7 @@ class VatCalculator extends Component
                     'amount' => $this->amount,
                     'rate_used' => $this->selectedRate,
                     'result' => $this->total,
-                    'vat_included' => $this->vat_included
+                    'vat_included' => $this->vat_included,
                 ]
             );
         }
@@ -177,15 +187,15 @@ class VatCalculator extends Component
                         break;
                     }
                 }
-                
-                if (!$rateExists) {
+
+                if (! $rateExists) {
                     $this->selectedRate = $this->rates[array_key_first($this->rates)]['value'];
                 }
             }
             $this->useCustomRate = false;
             $this->calculateVat();
         }
-        
+
         if ($property === 'customRate') {
             if ($this->useCustomRate && is_numeric($this->customRate)) {
                 $this->selectedRate = floatval($this->customRate);
@@ -245,15 +255,16 @@ class VatCalculator extends Component
                 $cleanAmount = $this->normalizeNumber($this->amount);
                 $amount = round(floatval($cleanAmount), 2);
             }
-            
-            if (!$this->isValidAmount($amount)) {
-                throw new \InvalidArgumentException("Please enter a valid positive number");
+
+            if (! $this->isValidAmount($amount)) {
+                throw new \InvalidArgumentException('Please enter a valid positive number');
             }
 
             $this->amount = $amount;
 
-            if (!$this->selectedRate) {
+            if (! $this->selectedRate) {
                 $this->resetCalculation();
+
                 return;
             }
 
@@ -265,10 +276,11 @@ class VatCalculator extends Component
         }
     }
 
-    private function normalizeNumber($input): string 
+    private function normalizeNumber($input): string
     {
         // Handle European number format
         $cleaned = str_replace(['.', ','], ['', '.'], $input);
+
         return preg_replace('/[^0-9.]/', '', $cleaned);
     }
 
@@ -291,9 +303,9 @@ class VatCalculator extends Component
             $this->total = round($amount + $this->vat_amount, 2);
         }
 
-        $this->amount = (float)$amount;
-        $this->total = (float)$this->total;
-        $this->vat_amount = (float)$this->vat_amount;
+        $this->amount = (float) $amount;
+        $this->total = (float) $this->total;
+        $this->vat_amount = (float) $this->vat_amount;
     }
 
     private function resetCalculation()
@@ -315,12 +327,12 @@ class VatCalculator extends Component
         if ($this->selectedCountryObject) {
             // Try to get rates from VatRate model for the current date
             $date = now()->format('Y-m-d');
-            
+
             $historicalRates = \App\Models\VatRate::where('country_id', $this->selectedCountryObject->id)
                 ->where('effective_from', '<=', $date)
                 ->where(function ($query) use ($date) {
                     $query->where('effective_to', '>=', $date)
-                          ->orWhereNull('effective_to');
+                        ->orWhereNull('effective_to');
                 })
                 ->get();
 
@@ -331,11 +343,11 @@ class VatCalculator extends Component
             if ($historicalRates->isNotEmpty()) {
                 foreach ($historicalRates as $rate) {
                     $type = strtolower($rate->type);
-                    if (!in_array($type, $addedTypes)) {
-                        $name = ucfirst(str_replace('_', ' ', $rate->type)) . ' rate';
+                    if (! in_array($type, $addedTypes)) {
+                        $name = ucfirst(str_replace('_', ' ', $rate->type)).' rate';
                         $this->rates[] = [
                             'id' => $id++,
-                            'name' => $name . ' (' . $rate->rate . '%)',
+                            'name' => $name.' ('.$rate->rate.'%)',
                             'value' => $rate->rate,
                         ];
                         $addedTypes[] = $type;
@@ -362,10 +374,10 @@ class VatCalculator extends Component
                     }
                 }
 
-                if (!$alreadyAdded && $data['value'] !== null && $data['value'] > 0) {
+                if (! $alreadyAdded && $data['value'] !== null && $data['value'] > 0) {
                     $this->rates[] = [
                         'id' => $id++,
-                        'name' => $data['name'] . ' (' . $data['value'] . '%)',
+                        'name' => $data['name'].' ('.$data['value'].'%)',
                         'value' => $data['value'],
                     ];
                 }
@@ -384,7 +396,9 @@ class VatCalculator extends Component
 
     protected function trackVisit()
     {
-        if (!$this->country) return;
+        if (! $this->country) {
+            return;
+        }
 
         $this->analyticsService->trackView(
             $this->country,
@@ -393,7 +407,7 @@ class VatCalculator extends Component
             [
                 'amount' => $this->amount,
                 'rate_used' => $this->selectedRate,
-                'result' => $this->total // Changed from $this->result to $this->total
+                'result' => $this->total, // Changed from $this->result to $this->total
             ]
         );
     }

@@ -1,10 +1,10 @@
 <?php
 
-use App\Http\Controllers\CountryController;
 use App\Http\Controllers\Api\CountryRatesController;
 use App\Http\Controllers\Api\VatValidationController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CountryController;
 use App\Models\Country;
+use Illuminate\Support\Facades\Route;
 
 // VAT Validation API
 Route::prefix('vat/validation')->group(function () {

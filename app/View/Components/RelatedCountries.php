@@ -9,6 +9,7 @@ use Illuminate\View\Component;
 class RelatedCountries extends Component
 {
     public $relatedCountries = [];
+
     /**
      * Create a new component instance.
      */

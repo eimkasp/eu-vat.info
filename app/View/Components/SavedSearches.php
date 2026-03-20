@@ -9,6 +9,7 @@ use Illuminate\View\Component;
 class SavedSearches extends Component
 {
     public $saved_searches = [];
+
     /**
      * Create a new component instance.
      */
@@ -17,7 +18,7 @@ class SavedSearches extends Component
         //
         $this->saved_searches = session()->get('saved_searched');
 
-        if(is_array($this->saved_searches)) {
+        if (is_array($this->saved_searches)) {
             $this->saved_searches = array_reverse($this->saved_searches);
             $this->saved_searches = array_slice($this->saved_searches, 0, 8);
         } else {

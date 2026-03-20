@@ -10,7 +10,9 @@ use Illuminate\Database\Eloquent\Builder;
 class AnalyticsRelationManager extends RelationManager
 {
     protected static string $relationship = 'analytics';
+
     protected static ?string $title = 'Country Analytics';
+
     protected static ?string $recordTitleAttribute = 'type';
 
     public function table(Table $table): Table
@@ -62,7 +64,7 @@ class AnalyticsRelationManager extends RelationManager
                                 $data['until'],
                                 fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
                             );
-                    })
+                    }),
             ])
             ->defaultSort('created_at', 'desc');
     }

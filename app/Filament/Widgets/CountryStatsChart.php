@@ -9,6 +9,7 @@ use Illuminate\Support\Carbon;
 class CountryStatsChart extends ChartWidget
 {
     protected static ?int $sort = 3;
+
     protected static ?string $heading = 'Analytics Over Time';
 
     protected function getData(): array

@@ -8,11 +8,15 @@ use Livewire\Component;
 class VatCalculatorSimple extends Component
 {
     public Country $country;
+
     public float $amount = 100;
+
     public string $mode = 'exclude'; // 'exclude' or 'include'
+
     public float $vatRate;
+
     public bool $useCustomRate = false;
-    
+
     public function mount(Country $country)
     {
         $this->country = $country;
@@ -65,7 +69,7 @@ class VatCalculatorSimple extends Component
         if ($this->mode === 'exclude') {
             return $this->amount;
         }
-        
+
         // Remove VAT from gross
         return $this->amount / (1 + $this->vatRate / 100);
     }
@@ -75,7 +79,7 @@ class VatCalculatorSimple extends Component
         if ($this->mode === 'exclude') {
             return $this->amount * ($this->vatRate / 100);
         }
-        
+
         return $this->amount - $this->netAmount;
     }
 
@@ -84,7 +88,7 @@ class VatCalculatorSimple extends Component
         if ($this->mode === 'exclude') {
             return $this->amount + $this->vatAmount;
         }
-        
+
         return $this->amount;
     }
 
@@ -94,7 +98,7 @@ class VatCalculatorSimple extends Component
             // Ensure VAT rate is within valid range
             $this->vatRate = max(0, min(100, $this->vatRate));
         }
-        
+
         if ($property === 'amount') {
             $this->amount = max(0, $this->amount);
         }

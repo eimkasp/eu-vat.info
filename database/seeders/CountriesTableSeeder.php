@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Country;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use League\Csv\Reader;
 
 class CountriesTableSeeder extends Seeder
@@ -20,29 +19,29 @@ class CountriesTableSeeder extends Seeder
         $csv->setHeaderOffset(0);
 
         foreach ($csv as $record) {
-            $superReducedRate = empty (trim($record['Super-reduced Rate (%)'])) ? null : $this->convertToDecimal($record['Super-reduced Rate (%)']);
-            $reducedRate = empty (trim($record['Reduced Rate (%)'])) ? null : $this->convertToDecimal($record['Reduced Rate (%)']);
-            $parkingRate = empty (trim($record['Parking Rate (%)'])) ? null : $this->convertToDecimal($record['Parking Rate (%)']);
-            $standardRate = empty (trim($record['Standard Rate (%)'])) ? null : $this->convertToDecimal($record['Standard Rate (%)']);
-            if($superReducedRate === '-') {
+            $superReducedRate = empty(trim($record['Super-reduced Rate (%)'])) ? null : $this->convertToDecimal($record['Super-reduced Rate (%)']);
+            $reducedRate = empty(trim($record['Reduced Rate (%)'])) ? null : $this->convertToDecimal($record['Reduced Rate (%)']);
+            $parkingRate = empty(trim($record['Parking Rate (%)'])) ? null : $this->convertToDecimal($record['Parking Rate (%)']);
+            $standardRate = empty(trim($record['Standard Rate (%)'])) ? null : $this->convertToDecimal($record['Standard Rate (%)']);
+            if ($superReducedRate === '-') {
                 $superReducedRate = null;
             }
 
-            if($reducedRate === '-') {
+            if ($reducedRate === '-') {
                 $reducedRate = null;
             }
 
-            if($parkingRate === '-') {
+            if ($parkingRate === '-') {
                 $parkingRate = null;
             }
 
-            if($standardRate === '-') {
+            if ($standardRate === '-') {
                 $standardRate = null;
             }
 
             $countryName = $record['Country'];
             $isoCode = $countryName;
-            
+
             // Extract ISO code if present in format "Country Name (XX)"
             if (preg_match('/^(.*?)\s*\((\w{2})\)$/', $countryName, $matches)) {
                 $countryName = trim($matches[1]);
@@ -66,6 +65,7 @@ class CountriesTableSeeder extends Seeder
     {
         if (strpos($value, '/') !== false) {
             $numbers = explode('/', $value);
+
             return array_sum($numbers) / count($numbers);
         }
 

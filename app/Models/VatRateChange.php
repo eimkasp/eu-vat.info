@@ -56,7 +56,7 @@ class VatRateChange extends Model
         if ($this->old_rate == 0) {
             return 0;
         }
-        
+
         return round((($this->new_rate - $this->old_rate) / $this->old_rate) * 100, 2);
     }
 
@@ -70,6 +70,7 @@ class VatRateChange extends Model
         } elseif ($this->new_rate < $this->old_rate) {
             return 'decrease';
         }
+
         return 'no_change';
     }
 

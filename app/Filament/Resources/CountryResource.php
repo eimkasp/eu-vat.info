@@ -12,14 +12,16 @@ use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 use Tapp\FilamentAuditing\RelationManagers\AuditsRelationManager;
-use Illuminate\Database\Eloquent\Builder;
 
 class CountryResource extends Resource
 {
     protected static ?string $recordTitleAttribute = 'name';
+
     protected static ?string $model = Country::class;
+
     protected static ?string $navigationIcon = 'heroicon-o-globe-europe-africa';
 
     public static function form(Form $form): Form
@@ -109,7 +111,7 @@ class CountryResource extends Resource
                             ])->columns(2),
                         ]),
                 ])
-                ->columnSpanFull()
+                ->columnSpanFull(),
         ]);
     }
 
@@ -127,7 +129,7 @@ class CountryResource extends Resource
                     ->sortable()
                     ->searchable(),
 
-                    Tables\Columns\TextColumn::make('analytics_count')
+                Tables\Columns\TextColumn::make('analytics_count')
                     ->counts('analytics')
                     ->label('Calculations')
                     ->sortable()
@@ -153,7 +155,6 @@ class CountryResource extends Resource
                 //     ->sortable()
                 //     ->toggleable(),
 
-                
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('has_reduced_rate')

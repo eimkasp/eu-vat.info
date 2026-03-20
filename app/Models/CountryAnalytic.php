@@ -20,7 +20,7 @@ class CountryAnalytic extends Model
         'location_city',
         'amount',
         'rate_used',
-        'meta_data'
+        'meta_data',
     ];
 
     protected $casts = [

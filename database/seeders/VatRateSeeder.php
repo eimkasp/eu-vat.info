@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Country;
 use App\Models\VatRate;
+use Illuminate\Database\Seeder;
 use League\Csv\Reader;
 
 class VatRateSeeder extends Seeder
@@ -15,8 +15,9 @@ class VatRateSeeder extends Seeder
     public function run()
     {
         // Check if file exists
-        if (!file_exists(base_path('data/vat_rates.csv'))) {
+        if (! file_exists(base_path('data/vat_rates.csv'))) {
             $this->command->error('File data/vat_rates.csv not found.');
+
             return;
         }
 
@@ -27,7 +28,7 @@ class VatRateSeeder extends Seeder
             // CSV columns: start_date, stop_date, territory_codes, currency_code, rate, rate_type, description
             // territory_codes can be "AT" or multiple? Assuming single for now based on head.
             $countryCode = $record['territory_codes'];
-            
+
             // Skip if no country code
             if (empty($countryCode)) {
                 continue;
@@ -36,7 +37,7 @@ class VatRateSeeder extends Seeder
             // Match country by ISO code (e.g. "AT", "DE")
             $country = Country::where('iso_code', $countryCode)->first();
 
-            if (!$country) {
+            if (! $country) {
                 continue;
             }
 

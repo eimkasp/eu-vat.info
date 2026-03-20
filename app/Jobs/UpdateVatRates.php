@@ -17,6 +17,7 @@ class UpdateVatRates implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public int $tries = 3;
+
     public int $backoff = 60;
 
     public function __construct()
@@ -48,12 +49,12 @@ class UpdateVatRates implements ShouldQueue
 
         $response = Http::timeout(30)->get($url);
 
-        if (!$response->successful()) {
+        if (! $response->successful()) {
             Log::error("Failed to download VAT rates CSV. Status: {$response->status()}");
             throw new \RuntimeException("Failed to download VAT rates CSV: HTTP {$response->status()}");
         }
 
-        if (!File::exists(dirname($path))) {
+        if (! File::exists(dirname($path))) {
             File::makeDirectory(dirname($path), 0755, true);
         }
 

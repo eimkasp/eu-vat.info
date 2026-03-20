@@ -31,7 +31,7 @@ return [
         'pt' => ['name' => 'Portuguese', 'native' => 'Português',  'flag' => 'pt', 'deepl_code' => 'PT-PT'],
         'ro' => ['name' => 'Romanian',   'native' => 'Română',     'flag' => 'ro', 'deepl_code' => 'RO'],
         'sk' => ['name' => 'Slovak',     'native' => 'Slovenčina', 'flag' => 'sk', 'deepl_code' => 'SK'],
-        'sl' => ['name' => 'Slovenian',  'native' => 'Slovenščina','flag' => 'si', 'deepl_code' => 'SL'],
+        'sl' => ['name' => 'Slovenian',  'native' => 'Slovenščina', 'flag' => 'si', 'deepl_code' => 'SL'],
         'sv' => ['name' => 'Swedish',    'native' => 'Svenska',    'flag' => 'se', 'deepl_code' => 'SV'],
     ],
 

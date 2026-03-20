@@ -18,7 +18,7 @@ return new class extends Migration
             $table->text('value');
             $table->string('group')->nullable()->index();
             $table->timestamps();
-            
+
             $table->unique(['key', 'locale', 'group']);
         });
     }

@@ -26,7 +26,7 @@ class CountryFactory extends Factory
         static $index = 0;
         $country = $this->countries[$index % count($this->countries)];
         $index++;
-        
+
         return [
             'name' => $country['name'],
             'iso_code' => $country['iso'],

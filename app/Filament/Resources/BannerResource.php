@@ -15,6 +15,7 @@ class BannerResource extends Resource
     protected static ?string $model = Banner::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-megaphone';
+
     protected static ?string $navigationGroup = 'Content';
 
     public static function form(Form $form): Form
@@ -25,7 +26,7 @@ class BannerResource extends Resource
                     ->schema([
                         Forms\Components\TextInput::make('title')
                             ->maxLength(255),
-                        
+
                         Forms\Components\Select::make('position')
                             ->options([
                                 'sidebar' => 'Sidebar (Home)',
@@ -58,7 +59,7 @@ class BannerResource extends Resource
 
                         Forms\Components\DateTimePicker::make('starts_at'),
                         Forms\Components\DateTimePicker::make('ends_at'),
-                    ])->columns(2)
+                    ])->columns(2),
             ]);
     }
 

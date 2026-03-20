@@ -16,8 +16,11 @@ class TranslateText implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $key;
+
     public $targetLocale;
+
     public $sourceLocale;
+
     public $group;
 
     /**
@@ -38,8 +41,9 @@ class TranslateText implements ShouldQueue
     {
         $apiKey = config('translation.api_key');
 
-        if (!$apiKey) {
+        if (! $apiKey) {
             Log::warning('DeepL API key not configured for translation job.');
+
             return;
         }
 
@@ -55,21 +59,22 @@ class TranslateText implements ShouldQueue
             }
 
             $translator = new Translator($apiKey);
-            
+
             $deeplCode = config("translation.supported_languages.{$this->targetLocale}.deepl_code");
-            
-            if (!$deeplCode) {
+
+            if (! $deeplCode) {
                 Log::warning("Unsupported language for DeepL: {$this->targetLocale}");
+
                 return;
             }
 
             // Map 'en' to 'EN-GB' or 'EN-US' if needed, or let DeepL handle 'EN' (deprecated) or specific
             // config("translation.supported_languages.en.deepl_code") usually returns 'EN-GB' or similar
-            
+
             $result = $translator->translateText(
                 $this->key,
-                null, // Source language auto-detect or specify if needed. 
-                // Ideally we pass source lang, but 'en' might need mapping. 
+                null, // Source language auto-detect or specify if needed.
+                // Ideally we pass source lang, but 'en' might need mapping.
                 // If source is 'en', let's try to leave it null for auto-detect or pass explicitly if mapped.
                 $deeplCode
             );
@@ -84,7 +89,7 @@ class TranslateText implements ShouldQueue
             }
 
         } catch (\Exception $e) {
-            Log::error("Translation job failed for key '{$this->key}': " . $e->getMessage());
+            Log::error("Translation job failed for key '{$this->key}': ".$e->getMessage());
         }
     }
 }

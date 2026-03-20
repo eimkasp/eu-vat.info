@@ -2,24 +2,29 @@
 
 namespace App\Livewire;
 
-use Livewire\Component;
-use Illuminate\Support\Facades\Http;
-use App\Models\VatValidationLog;
 use App\Models\Country;
+use App\Models\VatValidationLog;
+use Illuminate\Support\Facades\Http;
+use Livewire\Component;
 
 class VatValidator extends Component
 {
     public $countryCode;
+
     public $vatNumber;
+
     public $result = null;
+
     public $error = null;
+
     public $countries;
+
     public $validationCount = 0;
 
     public function mount($country = null, $slug = null)
     {
         $this->countries = Country::orderBy('name')->get();
-        
+
         if ($country) {
             $this->countryCode = $country->iso_code;
         } elseif ($slug) {
@@ -50,7 +55,7 @@ class VatValidator extends Component
 
             if ($response->successful()) {
                 $data = $response->json();
-                
+
                 $this->result = [
                     'valid' => $data['valid'] ?? false,
                     'name' => $data['name'] ?? 'N/A',
@@ -76,11 +81,11 @@ class VatValidator extends Component
                     ->count();
 
             } else {
-                $this->error = 'Validation service unavailable or invalid input. ' . ($response->json()['errorWrapper']['error'] ?? '');
+                $this->error = 'Validation service unavailable or invalid input. '.($response->json()['errorWrapper']['error'] ?? '');
             }
 
         } catch (\Exception $e) {
-            $this->error = 'Error connecting to VIES service: ' . $e->getMessage();
+            $this->error = 'Error connecting to VIES service: '.$e->getMessage();
         }
     }
 

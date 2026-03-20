@@ -7,7 +7,9 @@ use App\Models\Country;
 class SitemapGenerator
 {
     protected string $baseUrl;
+
     protected array $locales;
+
     protected string $defaultLocale;
 
     public function __construct()
@@ -20,6 +22,7 @@ class SitemapGenerator
     public function setBaseUrl(string $url): self
     {
         $this->baseUrl = rtrim($url, '/');
+
         return $this;
     }
 
@@ -35,9 +38,9 @@ class SitemapGenerator
     {
         $countries = Country::orderBy('name')->get();
 
-        $xml  = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
-        $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"' . "\n";
-        $xml .= '        xmlns:xhtml="http://www.w3.org/1999/xhtml">' . "\n";
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>'."\n";
+        $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"'."\n";
+        $xml .= '        xmlns:xhtml="http://www.w3.org/1999/xhtml">'."\n";
 
         // ── Static pages ───────────────────────────────────────────
         $staticPages = [
@@ -63,7 +66,7 @@ class SitemapGenerator
 
             // Country overview
             $xml .= $this->urlEntry(
-                '/country/' . $country->slug,
+                '/country/'.$country->slug,
                 $lastmod,
                 'monthly',
                 '0.9',
@@ -71,7 +74,7 @@ class SitemapGenerator
 
             // Country VAT calculator (tab URL)
             $xml .= $this->urlEntry(
-                '/country/' . $country->slug . '/vat-calculator',
+                '/country/'.$country->slug.'/vat-calculator',
                 $lastmod,
                 'monthly',
                 '0.8',
@@ -79,7 +82,7 @@ class SitemapGenerator
 
             // Standalone calculator URL
             $xml .= $this->urlEntry(
-                '/vat-calculator/' . $country->slug,
+                '/vat-calculator/'.$country->slug,
                 $lastmod,
                 'monthly',
                 '0.7',
@@ -95,9 +98,9 @@ class SitemapGenerator
 
         foreach ($utilityPages as $page) {
             $xml .= "    <url>\n";
-            $xml .= '        <loc>' . $this->escape($this->baseUrl . $page['path']) . "</loc>\n";
+            $xml .= '        <loc>'.$this->escape($this->baseUrl.$page['path'])."</loc>\n";
             $xml .= "        <changefreq>weekly</changefreq>\n";
-            $xml .= '        <priority>' . $page['priority'] . "</priority>\n";
+            $xml .= '        <priority>'.$page['priority']."</priority>\n";
             $xml .= "    </url>\n";
         }
 
@@ -113,6 +116,7 @@ class SitemapGenerator
     {
         $path = public_path('sitemap.xml');
         file_put_contents($path, $this->generate());
+
         return $path;
     }
 
@@ -124,20 +128,20 @@ class SitemapGenerator
         // Canonical URL (default locale, no prefix)
         $canonicalUrl = $this->buildUrl($path, $this->defaultLocale);
 
-        $entry  = "    <url>\n";
-        $entry .= '        <loc>' . $this->escape($canonicalUrl) . "</loc>\n";
-        $entry .= '        <lastmod>' . $lastmod . "</lastmod>\n";
-        $entry .= '        <changefreq>' . $changefreq . "</changefreq>\n";
-        $entry .= '        <priority>' . $priority . "</priority>\n";
+        $entry = "    <url>\n";
+        $entry .= '        <loc>'.$this->escape($canonicalUrl)."</loc>\n";
+        $entry .= '        <lastmod>'.$lastmod."</lastmod>\n";
+        $entry .= '        <changefreq>'.$changefreq."</changefreq>\n";
+        $entry .= '        <priority>'.$priority."</priority>\n";
 
         // hreflang alternates
         foreach ($this->locales as $locale) {
             $localeUrl = $this->buildUrl($path, $locale);
-            $entry .= '        <xhtml:link rel="alternate" hreflang="' . $locale . '" href="' . $this->escape($localeUrl) . '" />' . "\n";
+            $entry .= '        <xhtml:link rel="alternate" hreflang="'.$locale.'" href="'.$this->escape($localeUrl).'" />'."\n";
         }
 
         // x-default points to the default locale
-        $entry .= '        <xhtml:link rel="alternate" hreflang="x-default" href="' . $this->escape($canonicalUrl) . '" />' . "\n";
+        $entry .= '        <xhtml:link rel="alternate" hreflang="x-default" href="'.$this->escape($canonicalUrl).'" />'."\n";
         $entry .= "    </url>\n";
 
         return $entry;
@@ -151,10 +155,10 @@ class SitemapGenerator
         $path = $path === '/' ? '' : $path;
 
         if ($locale === $this->defaultLocale) {
-            return $this->baseUrl . ($path ?: '/');
+            return $this->baseUrl.($path ?: '/');
         }
 
-        return $this->baseUrl . '/' . $locale . $path;
+        return $this->baseUrl.'/'.$locale.$path;
     }
 
     protected function escape(string $value): string

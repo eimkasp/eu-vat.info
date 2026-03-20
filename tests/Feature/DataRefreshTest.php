@@ -1,7 +1,6 @@
 <?php
 
 use App\Jobs\GenerateVatRateChanges;
-use App\Jobs\UpdateVatRates;
 use App\Jobs\VerifyVatRatesIntegrity;
 use App\Models\Country;
 use App\Models\VatRate;
@@ -21,7 +20,7 @@ it('loads vat-changes page with correct layout', function () {
 
 it('vat-changes page shows country filter', function () {
     Country::factory()->create(['name' => 'TestCountry', 'iso_code' => 'TC']);
-    
+
     $this->get('/vat-changes')
         ->assertStatus(200)
         ->assertSee('All Countries')
@@ -70,7 +69,7 @@ it('verify integrity job syncs all rate types', function () {
     $job->handle();
 
     $country->refresh();
-    expect((float)$country->standard_rate)->toBe(20.0);
+    expect((float) $country->standard_rate)->toBe(20.0);
 });
 
 it('generate changes job creates change records', function () {
@@ -97,8 +96,8 @@ it('generate changes job creates change records', function () {
 
     $changes = VatRateChange::where('country_id', $country->id)->get();
     expect($changes)->toHaveCount(1);
-    expect((float)$changes->first()->old_rate)->toBe(18.0);
-    expect((float)$changes->first()->new_rate)->toBe(20.0);
+    expect((float) $changes->first()->old_rate)->toBe(18.0);
+    expect((float) $changes->first()->new_rate)->toBe(20.0);
     expect($changes->first()->change_direction)->toBe('increase');
 });
 

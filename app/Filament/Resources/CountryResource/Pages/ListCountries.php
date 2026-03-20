@@ -49,11 +49,11 @@ class ListCountries extends ListRecords
                             ->send();
                     }),
             ])
-            ->label('Actions')
-            ->icon('heroicon-m-ellipsis-vertical')
-            ->color('primary')
-            ->button(),
-            
+                ->label('Actions')
+                ->icon('heroicon-m-ellipsis-vertical')
+                ->color('primary')
+                ->button(),
+
             Actions\CreateAction::make(),
         ];
     }

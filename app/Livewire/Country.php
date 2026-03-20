@@ -3,13 +3,13 @@
 namespace App\Livewire;
 
 use App\Models\Country;
-use Livewire\Component;
 use App\Traits\TracksCountryViews;
+use Livewire\Component;
 
 class Country extends Component
 {
     use TracksCountryViews;
-    
+
     public Country $country;
 
     public function mount($slug)

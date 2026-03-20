@@ -13,7 +13,9 @@ use Illuminate\Database\Eloquent\Builder;
 class CountryAnalyticResource extends Resource
 {
     protected static ?string $model = CountryAnalytic::class;
+
     protected static ?string $navigationIcon = 'heroicon-o-chart-bar';
+
     protected static ?string $navigationGroup = 'Analytics';
 
     public static function table(Table $table): Table
@@ -70,7 +72,7 @@ class CountryAnalyticResource extends Resource
                                 $data['until'],
                                 fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
                             );
-                    })
+                    }),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),

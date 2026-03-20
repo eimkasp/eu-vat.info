@@ -10,20 +10,22 @@ class CountryController extends Controller
 {
     public function __construct(
         private readonly CountryAnalyticsService $analyticsService
-    ) {}
+    ) {
+    }
 
-    // this is api controller create rest endpoints 
+    // this is api controller create rest endpoints
 
     public function index()
     {
         $countries = Country::all();
+
         return response()->json($countries);
     }
 
     public function show(Request $request, Country $country)
     {
         $this->analyticsService->trackView($country, $request);
-        
+
         // Your existing show logic
         return view('countries.show', compact('country'));
     }
@@ -36,7 +38,7 @@ class CountryController extends Controller
         $this->analyticsService->trackView($country, $request, 'calculator', [
             'amount' => $amount,
             'rate_used' => $rate,
-            'calculation_type' => $request->input('type', 'add')
+            'calculation_type' => $request->input('type', 'add'),
         ]);
 
         // Your existing calculator logic

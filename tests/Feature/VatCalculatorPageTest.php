@@ -35,30 +35,30 @@ it('loads the main vat calculator page', function () {
 
 it('loads country specific calculator page', function () {
     $country = Country::where('slug', 'germany')->first();
-    
+
     $this->get("/vat-calculator/{$country->slug}")
         ->assertStatus(200)
-        ->assertSee($country->name . ' VAT Calculator')
+        ->assertSee($country->name.' VAT Calculator')
         ->assertSee('Current standard rate is')
-        ->assertSee($country->standard_rate . '%');
+        ->assertSee($country->standard_rate.'%');
 });
 
 it('displays current vat rates section on country page', function () {
     $country = Country::where('slug', 'germany')->first();
-    
+
     $this->get("/vat-calculator/{$country->slug}")
         ->assertStatus(200)
         ->assertSee('Current VAT Rates')
-        ->assertSee($country->standard_rate . '%');
+        ->assertSee($country->standard_rate.'%');
 });
 
 it('displays link to country guide', function () {
     $country = Country::where('slug', 'germany')->first();
-    
+
     $this->get("/vat-calculator/{$country->slug}")
         ->assertStatus(200)
         ->assertSee('Need more details?')
-        ->assertSee('View ' . $country->name . ' VAT Guide');
+        ->assertSee('View '.$country->name.' VAT Guide');
 });
 
 it('returns 404 for invalid country slug', function () {
@@ -74,7 +74,7 @@ it('displays breadcrumbs on main calculator page', function () {
 
 it('displays breadcrumbs on country calculator page', function () {
     $country = Country::where('slug', 'france')->first();
-    
+
     $this->get("/vat-calculator/{$country->slug}")
         ->assertStatus(200)
         ->assertSee('VAT Calculator')
@@ -83,13 +83,13 @@ it('displays breadcrumbs on country calculator page', function () {
 
 it('shows multiple vat rates for country with reduced rates', function () {
     $country = Country::where('slug', 'france')->first();
-    
+
     $this->get("/vat-calculator/{$country->slug}")
         ->assertStatus(200)
         ->assertSee('Current VAT Rates')
-        ->assertSee($country->standard_rate . '%')
-        ->assertSee($country->reduced_rate . '%')
-        ->assertSee($country->super_reduced_rate . '%');
+        ->assertSee($country->standard_rate.'%')
+        ->assertSee($country->reduced_rate.'%')
+        ->assertSee($country->super_reduced_rate.'%');
 });
 
 it('displays europe map component', function () {
@@ -111,21 +111,21 @@ it('displays saved searches component', function () {
 
 it('has proper seo meta tags on country page', function () {
     $country = Country::where('slug', 'germany')->first();
-    
+
     $this->get("/vat-calculator/{$country->slug}")
         ->assertStatus(200)
-        ->assertSee('VAT Calculator - ' . $country->name, false)
-        ->assertSee('Calculate VAT for ' . $country->name, false);
+        ->assertSee('VAT Calculator - '.$country->name, false)
+        ->assertSee('Calculate VAT for '.$country->name, false);
 });
 
 it('displays schema.org json-ld on country page', function () {
     $country = Country::where('slug', 'france')->first();
-    
+
     $response = $this->get("/vat-calculator/{$country->slug}")
         ->assertStatus(200);
-        
+
     expect($response->getContent())
         ->toContain('application/ld+json')
         ->toContain('WebApplication')
-        ->toContain($country->name . ' VAT Calculator');
+        ->toContain($country->name.' VAT Calculator');
 });

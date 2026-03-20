@@ -228,7 +228,7 @@ it('updates rates when country changes', function () {
         'slug' => 'country-1',
         'standard_rate' => 20,
     ]);
-    
+
     Country::factory()->create([
         'slug' => 'country-2',
         'standard_rate' => 25,
@@ -236,7 +236,7 @@ it('updates rates when country changes', function () {
 
     $component = Livewire::test(VatCalculator::class, ['slug' => 'country-1'])
         ->assertSet('selectedRate', 20);
-    
+
     $component->set('selectedCountry1', 'country-2')
         ->assertSet('selectedRate', 25);
 });
@@ -264,7 +264,7 @@ it('can save a search to session', function () {
         ->set('vat_included', 'exclude')
         ->call('calculate')
         ->call('saveSearch');
-    
+
     // Check that the search was saved to session
     expect(session('saved_searched'))->toBeArray()->not->toBeEmpty();
 });
@@ -279,13 +279,13 @@ it('can clear saved searches from session', function () {
             'amount' => 100,
             'selectedCountry1' => 'test-country',
             'selectedRate' => 20,
-            'vat_included' => 'exclude'
-        ]
+            'vat_included' => 'exclude',
+        ],
     ]);
 
     Livewire::test(VatCalculator::class, ['slug' => 'test-country'])
         ->call('clearSearch');
-    
+
     // Check that searches were cleared
     expect(session('saved_searched'))->toBeNull();
 });

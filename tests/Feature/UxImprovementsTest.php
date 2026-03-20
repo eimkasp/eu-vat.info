@@ -1,8 +1,7 @@
 <?php
 
-use App\Livewire\VatCalculator;
-use App\Livewire\VatMap;
 use App\Livewire\EuropeMap;
+use App\Livewire\VatCalculator;
 use App\Models\Country;
 use Livewire\Livewire;
 

@@ -8,9 +8,13 @@ use Livewire\Component;
 class VatValidationWidget extends Component
 {
     public string $countryCode = '';
+
     public string $vatNumber = '';
+
     public ?array $validationResult = null;
+
     public bool $isLoading = false;
+
     public ?string $errorMessage = null;
 
     protected $rules = [
@@ -34,7 +38,7 @@ class VatValidationWidget extends Component
     public function updated($propertyName)
     {
         $this->validateOnly($propertyName);
-        
+
         // Clear previous results when inputs change
         $this->validationResult = null;
         $this->errorMessage = null;
@@ -79,7 +83,7 @@ class VatValidationWidget extends Component
     public function clear()
     {
         $this->reset(['vatNumber', 'validationResult', 'errorMessage']);
-        
+
         if (empty($this->countryCode)) {
             $this->countryCode = '';
         }
