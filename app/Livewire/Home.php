@@ -2,21 +2,24 @@
 
 namespace App\Livewire;
 
-use Livewire\Component;
 use App\Models\Country;
 use Illuminate\Support\Facades\Cache;
+use Livewire\Component;
 
 class Home extends Component
 {
     public $euCountries = [];
+
     public $search = '';
+
     public $selectedCountryIso = null;
+
     public $selectedCountry = null;
 
     public function mount()
     {
         // Set default country (Lithuania or fallback to first)
-        $this->selectedCountry = Country::where('name', 'Lithuania')->first() 
+        $this->selectedCountry = Country::where('name', 'Lithuania')->first()
             ?? Country::where('name', 'United Kingdom')->first()
             ?? Country::first();
     }
@@ -28,7 +31,19 @@ class Home extends Component
 
     public function render()
     {
-        $this->euCountries = Country::where('name', 'like', '%'.$this->search.'%')->orderBy('standard_rate', 'ASC')->get();
+        $countries = Cache::remember('all_eu_countries', 3600, function () {
+            return Country::orderBy('standard_rate', 'ASC')->get();
+        });
+
+        if ($this->search) {
+            $search = strtolower($this->search);
+            $countries = $countries->filter(function ($country) use ($search) {
+                return str_contains(strtolower($country->name), $search);
+            });
+        }
+
+        $this->euCountries = $countries->values();
+
         return view('livewire.home');
     }
 }

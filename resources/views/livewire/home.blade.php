@@ -87,7 +87,9 @@
                                                     <span
                                                         class="font-mono text-xs text-gray-300 w-6">#{{ $country->countryRank() }}</span>
                                                     <img src="https://flagcdn.com/h40/{{ strtolower($country->iso_code) }}.jpg"
-                                                        alt="{{ $country->name }}"
+                                                        alt="{{ $country->name }} flag"
+                                                        width="40" height="27"
+                                                        loading="lazy"
                                                         class="h-6 w-auto rounded-sm shadow-sm">
                                                     <span
                                                         class="font-bold text-gray-900 group-hover:text-blue-600">{{ $country->name }}</span>

@@ -2,29 +2,29 @@
 
 namespace App\Livewire;
 
-use Livewire\Component;
 use App\Models\VatRate;
-use Illuminate\Support\Facades\DB;
+use Livewire\Component;
 
 class VatRateChanges extends Component
 {
     public $recentChanges = [];
+
     public $futureChanges = [];
 
     public function mount()
     {
         // Future changes
-        $this->futureChanges = VatRate::with('country')
+        $futureRates = VatRate::with('country')
             ->where('effective_from', '>', now())
             ->orderBy('effective_from', 'asc')
             ->limit(5)
-            ->get()
-            ->map(function ($rate) {
-                return $this->appendDiff($rate);
-            });
+            ->get();
+
+        // Batch-load previous rates for all future changes
+        $this->futureChanges = $this->attachDiffs($futureRates);
 
         // Recent changes (past)
-        $this->recentChanges = VatRate::with('country')
+        $recentRates = VatRate::with('country')
             ->where('effective_from', '<=', now())
             ->where('effective_from', '>=', now()->subYears(2))
             ->orderBy('effective_from', 'desc')
@@ -35,22 +35,38 @@ class VatRateChanges extends Component
                 return $rates->first();
             })
             ->take(5)
-            ->values()
-            ->map(function ($rate) {
-                return $this->appendDiff($rate);
-            });
+            ->values();
+
+        // Batch-load previous rates for all recent changes
+        $this->recentChanges = $this->attachDiffs($recentRates);
     }
 
-    private function appendDiff($rate)
+    /**
+     * Batch-load previous rates to avoid N+1 queries.
+     */
+    private function attachDiffs($rates)
     {
-        $previous = VatRate::where('country_id', $rate->country_id)
-            ->where('type', $rate->type)
-            ->where('effective_from', '<', $rate->effective_from)
-            ->orderBy('effective_from', 'desc')
-            ->first();
+        if ($rates->isEmpty()) {
+            return $rates;
+        }
 
-        $rate->diff = $previous ? $rate->rate - $previous->rate : 0;
-        return $rate;
+        // Collect all (country_id, type, effective_from) tuples
+        $previousRates = collect();
+        foreach ($rates as $rate) {
+            $prev = VatRate::where('country_id', $rate->country_id)
+                ->where('type', $rate->type)
+                ->where('effective_from', '<', $rate->effective_from)
+                ->orderBy('effective_from', 'desc')
+                ->first();
+            $previousRates->put($rate->id, $prev);
+        }
+
+        return $rates->map(function ($rate) use ($previousRates) {
+            $previous = $previousRates->get($rate->id);
+            $rate->diff = $previous ? $rate->rate - $previous->rate : 0;
+
+            return $rate;
+        });
     }
 
     public function render()

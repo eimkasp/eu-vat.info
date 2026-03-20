@@ -2,15 +2,14 @@
 
 use App\Http\Controllers\EmbedController;
 use App\Http\Controllers\SitemapController;
+use App\Livewire\Counter;
+use App\Livewire\CountryPage;
 use App\Livewire\Home;
+use App\Livewire\HtmlSitemap;
 use App\Livewire\Tools;
 use App\Livewire\VatCalculator;
 use App\Livewire\VatMap;
 use Illuminate\Support\Facades\Route;
-use App\Livewire\Counter;
-use App\Livewire\CountryPage;
-use App\Livewire\HtmlSitemap;
-use League\CommonMark\Extension\Embed\Embed;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,7 +53,7 @@ $registerRoutes();
 // Language switch route
 Route::get('/lang/{locale}', function (string $locale) {
     $supported = array_keys(config('translation.supported_languages', []));
-    if (!in_array($locale, $supported)) {
+    if (! in_array($locale, $supported)) {
         abort(404);
     }
     session()->put('locale', $locale);
@@ -66,14 +65,14 @@ Route::get('/lang/{locale}', function (string $locale) {
     $path = $parsed['path'] ?? '/';
 
     // Strip existing locale prefix from path
-    $path = preg_replace('#^/(' . implode('|', $supported) . ')(/|$)#', '/', $path);
+    $path = preg_replace('#^/('.implode('|', $supported).')(/|$)#', '/', $path);
     $path = $path === '' ? '/' : $path;
 
     if ($locale === $default) {
         return redirect($path);
     }
 
-    return redirect('/' . $locale . ($path === '/' ? '' : $path));
+    return redirect('/'.$locale.($path === '/' ? '' : $path));
 })->name('lang.switch');
 
 // Non-localised routes (sitemap, embed, API, etc.)
@@ -86,12 +85,17 @@ Route::get('/embed/preview/{country?}', [EmbedController::class, 'preview'])->na
 
 // LLM Documentation Full List
 Route::get('/llms-full.txt', function () {
-    $countries = \App\Models\Country::orderBy('name')->get();
-    $content = "# Full EU VAT Rates List\n\n";
-    $content .= "| Country | ISO | Standard | Reduced | Super Reduced | Parking |\n";
-    $content .= "|---|---|---|---|---|---|\n";
-    foreach ($countries as $c) {
-        $content .= "| {$c->name} | {$c->iso_code} | {$c->standard_rate}% | " . ($c->reduced_rate ? "{$c->reduced_rate}%" : "-") . " | " . ($c->super_reduced_rate ? "{$c->super_reduced_rate}%" : "-") . " | " . ($c->parking_rate ? "{$c->parking_rate}%" : "-") . " |\n";
-    }
+    $content = \Illuminate\Support\Facades\Cache::remember('llms_full_txt', 86400, function () {
+        $countries = \App\Models\Country::orderBy('name')->get();
+        $text = "# Full EU VAT Rates List\n\n";
+        $text .= "| Country | ISO | Standard | Reduced | Super Reduced | Parking |\n";
+        $text .= "|---|---|---|---|---|---|\n";
+        foreach ($countries as $c) {
+            $text .= "| {$c->name} | {$c->iso_code} | {$c->standard_rate}% | ".($c->reduced_rate ? "{$c->reduced_rate}%" : '-').' | '.($c->super_reduced_rate ? "{$c->super_reduced_rate}%" : '-').' | '.($c->parking_rate ? "{$c->parking_rate}%" : '-')." |\n";
+        }
+
+        return $text;
+    });
+
     return response($content)->header('Content-Type', 'text/plain');
 });
