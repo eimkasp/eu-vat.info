@@ -11,6 +11,8 @@
         <meta name="twitter:card" content="summary">
         <meta name="twitter:title" content="{{ __('ui.country_page.seo_title', ['country' => $country->name, 'rate' => $country->standard_rate]) }}">
         <meta name="twitter:description" content="{{ __('ui.country_page.seo_description', ['country' => $country->name, 'rate' => $country->standard_rate]) }}">
+        <meta property="article:modified_time" content="{{ $country->updated_at->toIso8601String() }}">
+        <meta name="last-modified" content="{{ $country->updated_at->toIso8601String() }}">
 
         <x-country.json-ld :country="$country" />
     @endpush
