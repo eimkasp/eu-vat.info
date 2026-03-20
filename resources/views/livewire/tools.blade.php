@@ -1,3 +1,11 @@
+@section('seo')
+    <x-seo-meta
+        title="EU VAT Tools & Resources - Calculators, Validators & Guides"
+        description="Free EU VAT tools: calculator, validator, rate comparison maps, and compliance guides for all 27 EU member states."
+        :url="url()->current()"
+    />
+@endsection
+
 <div class="container">
     {{-- Stop trying to control. --}}
     <h1> EU VAT Info Tools and Resources </h1>

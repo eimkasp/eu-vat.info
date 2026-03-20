@@ -1,3 +1,11 @@
+@section('seo')
+    <x-seo-meta
+        :title="__('ui.map.title') . ' - EU VAT Info'"
+        :description="__('ui.map.subtitle')"
+        :url="url()->current()"
+    />
+@endsection
+
 <div>
     <div class="bg-white p-6 shadow-xl rounded-xl">
         <div class="container">

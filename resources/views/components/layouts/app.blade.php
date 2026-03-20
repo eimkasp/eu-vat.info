@@ -14,6 +14,24 @@
     @else
         <x-seo-meta />
     @endif
+
+    <!-- hreflang tags for all supported locales -->
+    @php
+        $currentPath = request()->path();
+        $supportedLocales = array_keys(config('translation.supported_languages', []));
+        $defaultLocale = config('translation.default_language', 'en');
+        // Strip existing locale prefix
+        $cleanPath = preg_replace('#^(' . implode('|', $supportedLocales) . ')(/|$)#', '/', $currentPath);
+        $cleanPath = $cleanPath === '' ? '/' : $cleanPath;
+    @endphp
+    <link rel="alternate" hreflang="x-default" href="{{ url($cleanPath === '/' ? '/' : $cleanPath) }}">
+    @foreach($supportedLocales as $hrefLocale)
+        @if($hrefLocale === $defaultLocale)
+            <link rel="alternate" hreflang="{{ $hrefLocale }}" href="{{ url($cleanPath === '/' ? '/' : $cleanPath) }}">
+        @else
+            <link rel="alternate" hreflang="{{ $hrefLocale }}" href="{{ url('/' . $hrefLocale . ($cleanPath === '/' ? '' : $cleanPath)) }}">
+        @endif
+    @endforeach
     
     <script>
         if ('serviceWorker' in navigator) {
@@ -51,9 +69,10 @@
 </head>
 
 <body class="bg-gradient-to-br from-gray-50 to-gray-100">
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 focus:bg-blue-600 focus:text-white focus:p-3 focus:z-50 focus:rounded-br-lg">{{ __('ui.skip_to_content') ?? 'Skip to main content' }}</a>
     <x-global-header></x-global-header>
 
-    <div class="bg-gray-100">
+    <main id="main-content" class="bg-gray-100">
     <div class="absolute top-0 left-0 w-full h-[100px] opacity-20 z-0">
     </div>
     <div class="relative z-[2]">
@@ -63,7 +82,7 @@
             @yield('content')
         @endisset
         </div>
-    </div>
+    </main>
     @if (config('app.adsense_id') && app()->isProduction())
         <!-- Default -->
         <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-3925599852702124" data-ad-slot="1306180870"

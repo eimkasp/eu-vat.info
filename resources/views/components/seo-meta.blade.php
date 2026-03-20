@@ -2,7 +2,7 @@
     'title' => 'EU VAT Info - VAT Rates Calculator & Information',
     'description' => 'Calculate VAT for all EU countries. Current rates, historical data, and VAT compliance tools. Free calculator with real-time rates.',
     'url' => url()->current(),
-    'image' => asset('images/og-image.jpg'),
+    'image' => url('/favicon.ico'),
     'type' => 'website'
 ])
 

@@ -1,3 +1,11 @@
+@section('seo')
+    <x-seo-meta
+        title="VAT Navigator - Find Where & How Much VAT to Charge in the EU"
+        description="Determine the correct VAT rate for cross-border EU transactions. Enter seller and buyer details to find the applicable VAT rules."
+        :url="url()->current()"
+    />
+@endsection
+
 <div class="container !py-6">
 <div class="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
     <div class="bg-gradient-to-r from-purple-600 to-purple-700 px-6 py-4 text-white">

@@ -48,6 +48,9 @@ Crawl-delay: 2
 
 # ===== AI/LLM Crawlers - Allowed =====
 # We provide structured data for AI via llms.txt and API endpoints
+
+# ===== Sitemap =====
+Sitemap: https://eu-vat.info/sitemap.xml
 User-agent: GPTBot
 Allow: /
 Allow: /llms.txt
