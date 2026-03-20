@@ -55,6 +55,7 @@
                             <div class="flex items-center gap-3 flex-1 min-w-0">
                                 <img src="https://flagcdn.com/h40/{{ strtolower($change->country->iso_code) }}.jpg" 
                                      alt="{{ $change->country->name }}" 
+                                     loading="lazy"
                                      class="w-8 h-5 object-cover rounded shadow-sm shrink-0">
                                 <div class="flex-1 min-w-0">
                                     <div class="flex items-center gap-2 flex-wrap">
@@ -109,6 +110,7 @@
                 <div class="flex items-center gap-2 px-2.5 py-2 border border-gray-100 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                     <img src="https://flagcdn.com/h40/{{ strtolower($stat['iso_code']) }}.jpg" 
                          alt="{{ $stat['name'] }}" 
+                         loading="lazy"
                          class="w-6 h-4 object-cover rounded shadow-sm shrink-0">
                     <div class="flex-1 min-w-0">
                         <div class="text-xs font-medium truncate text-gray-900 dark:text-gray-100">{{ $stat['name'] }}</div>

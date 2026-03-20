@@ -39,7 +39,7 @@
                                 <tr class="hover:bg-gray-50 transition-colors">
                                     <td class="px-4 py-2.5">
                                         <a href="{{ locale_path('/country/' . $country->slug) }}" class="flex items-center gap-2 text-gray-900 hover:text-blue-600 font-medium">
-                                            <img src="https://flagcdn.com/h20/{{ strtolower($country->iso_code) }}.jpg" alt="{{ $country->name }}" class="h-4 rounded border">
+                                            <img src="https://flagcdn.com/h20/{{ strtolower($country->iso_code) }}.jpg" alt="{{ $country->name }}" class="h-4 rounded border" loading="lazy">
                                             {{ $country->name }}
                                         </a>
                                     </td>
