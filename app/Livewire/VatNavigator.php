@@ -54,9 +54,9 @@ class VatNavigator extends Component
         if ($this->buyerCountry === 'non-eu') {
             // Export
             $this->result = [
-                'action' => 'Zero-Rated (Export)',
+                'action' => __('ui.navigator.result_export_action'),
                 'rate' => 0,
-                'explanation' => 'Sales to countries outside the EU are generally zero-rated for VAT (exempt with credit). You must retain proof of export.',
+                'explanation' => __('ui.navigator.result_export_explanation'),
             ];
 
             return;
@@ -64,9 +64,9 @@ class VatNavigator extends Component
 
         if ($isDomestic) {
             $this->result = [
-                'action' => 'Charge Domestic VAT',
+                'action' => __('ui.navigator.result_domestic_action'),
                 'rate' => $seller->standard_rate,
-                'explanation' => "Since both buyer and seller are in {$seller->name}, you must charge the standard domestic VAT rate.",
+                'explanation' => __('ui.navigator.result_domestic_explanation', ['country' => $seller->name]),
             ];
 
             return;
@@ -76,51 +76,51 @@ class VatNavigator extends Component
         if ($this->buyerType === 'b2b') {
             if ($this->productCategory === 'construction') {
                 $this->result = [
-                    'action' => 'Reverse Charge (0% VAT)',
+                    'action' => __('ui.navigator.result_b2b_construction_action'),
                     'rate' => 0,
-                    'explanation' => 'For construction services, the Reverse Charge mechanism usually applies in B2B transactions. The recipient accounts for the VAT.',
+                    'explanation' => __('ui.navigator.result_b2b_construction_explanation'),
                 ];
             } elseif ($this->productCategory === 'events') {
                 $this->result = [
-                    'action' => 'Place of Event Rule',
+                    'action' => __('ui.navigator.result_b2b_events_action'),
                     'rate' => 'Local Rate',
-                    'explanation' => "Admission to events is taxable where the event actually takes place. If the event is in the buyer's country, you may need to register for VAT there or check specific exceptions.",
+                    'explanation' => __('ui.navigator.result_b2b_events_explanation'),
                 ];
             } else {
                 // General B2B
                 $this->result = [
-                    'action' => 'Reverse Charge (0% VAT)',
+                    'action' => __('ui.navigator.result_b2b_general_action'),
                     'rate' => 0,
-                    'explanation' => 'For B2B transactions between EU countries, the Reverse Charge mechanism typically applies. The buyer accounts for the VAT. Do not charge VAT but verify their VAT number.',
+                    'explanation' => __('ui.navigator.result_b2b_general_explanation'),
                 ];
             }
         } else {
             // B2C
             if ($this->itemType === 'goods') {
                 $this->result = [
-                    'action' => 'Charge Destination VAT (OSS)',
+                    'action' => __('ui.navigator.result_b2c_goods_action'),
                     'rate' => $buyer->standard_rate,
-                    'explanation' => "For B2C distance sales of goods (>€10k EU-wide threshold), charge VAT at the rate of the buyer's country ({$buyer->name}). Use OSS to report.",
+                    'explanation' => __('ui.navigator.result_b2c_goods_explanation', ['country' => $buyer->name]),
                 ];
             } else {
                 // Services
                 if ($this->productCategory === 'digital') {
                     $this->result = [
-                        'action' => 'Charge Destination VAT (OSS)',
+                        'action' => __('ui.navigator.result_b2c_digital_action'),
                         'rate' => $buyer->standard_rate,
-                        'explanation' => "For digital services (TBE services) to consumers, you must charge VAT at the rate of the customer's country ({$buyer->name}). Use OSS to simplify reporting.",
+                        'explanation' => __('ui.navigator.result_b2c_digital_explanation', ['country' => $buyer->name]),
                     ];
                 } elseif ($this->productCategory === 'events') {
                     $this->result = [
-                        'action' => 'Place of Event',
+                        'action' => __('ui.navigator.result_b2c_events_action'),
                         'rate' => 'Local Rate',
-                        'explanation' => 'Admission to cultural, artistic, or educational events is taxable where the event takes place.',
+                        'explanation' => __('ui.navigator.result_b2c_events_explanation'),
                     ];
                 } else {
                     $this->result = [
-                        'action' => 'Charge Domestic VAT',
+                        'action' => __('ui.navigator.result_b2c_services_action'),
                         'rate' => $seller->standard_rate,
-                        'explanation' => "For general services to consumers (consulting, etc.), the general rule is to charge VAT of the supplier's country ({$seller->name}).",
+                        'explanation' => __('ui.navigator.result_b2c_services_explanation', ['country' => $seller->name]),
                     ];
                 }
             }

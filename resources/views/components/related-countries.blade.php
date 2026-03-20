@@ -1,5 +1,15 @@
 @props(['country'])
 
+@once
+    @push('svg-sprites')
+        <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+            <symbol id="icon-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </symbol>
+        </svg>
+    @endpush
+@endonce
+
 @php
     $relatedCountries = \App\Models\Country::where('id', '!=', $country->id)
         ->inRandomOrder()
@@ -27,8 +37,8 @@
                 <div class="font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors truncate">{{ $related->name }}</div>
                 <div class="text-sm text-gray-500 dark:text-gray-400">VAT: <strong class="text-blue-600 dark:text-blue-400">{{ $related->standard_rate }}%</strong></div>
             </div>
-            <svg class="w-4 h-4 text-gray-400 dark:text-gray-500 group-hover:text-blue-600 dark:group-hover:text-blue-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            <svg class="w-4 h-4 text-gray-400 dark:text-gray-500 group-hover:text-blue-600 dark:group-hover:text-blue-400 flex-shrink-0" aria-hidden="true">
+                <use href="#icon-arrow-right"/>
             </svg>
         </a>
     @endforeach

@@ -65,7 +65,7 @@
                             <div class="text-xs text-gray-500">
                                 {{ $change->effective_from->format('M d, Y') }}
                             </div>
-                            <div class="text-xs text-gray-400">
+                            <div class="text-xs text-gray-500">
                                 {{ $change->effective_from->diffForHumans() }}
                             </div>
                         </div>

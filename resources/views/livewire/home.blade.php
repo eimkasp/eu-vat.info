@@ -147,7 +147,7 @@
                                                     <span class="text-gray-500">{{ $country->reduced_rate }}%</span>
                                                     @if ($country->super_reduced_rate)
                                                         <span
-                                                            class="text-gray-400 text-xs ml-1">({{ $country->super_reduced_rate }}%)</span>
+                                                            class="text-gray-500 text-xs ml-1">({{ $country->super_reduced_rate }}%)</span>
                                                     @endif
                                                 @else
                                                     <span class="text-gray-300">-</span>
@@ -162,7 +162,7 @@
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="4" class="px-6 py-8 text-center text-gray-400">
+                                            <td colspan="4" class="px-6 py-8 text-center text-gray-500">
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mx-auto mb-2 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                                 </svg>

@@ -4,6 +4,18 @@
 <script type="application/ld+json">
 {!! json_encode([
     '@context' => 'https://schema.org',
+    '@type' => 'BreadcrumbList',
+    'itemListElement' => [
+        ['@type' => 'ListItem', 'position' => 1, 'name' => 'Home', 'item' => url('/')],
+        ['@type' => 'ListItem', 'position' => 2, 'name' => 'Countries', 'item' => url('/')],
+        ['@type' => 'ListItem', 'position' => 3, 'name' => $country->name, 'item' => route('country.show', $country->slug)],
+    ],
+], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
+</script>
+
+<script type="application/ld+json">
+{!! json_encode([
+    '@context' => 'https://schema.org',
     '@type' => 'WebPage',
     'name' => $country->name . ' VAT Rates & Calculator',
     'description' => 'Complete VAT guide for ' . $country->name . '. Standard rate: ' . $country->standard_rate . '%. Free VAT calculator, all rates, compliance info.',

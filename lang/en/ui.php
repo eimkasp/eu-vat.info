@@ -412,6 +412,26 @@ return [
         'construction_work' => 'Construction Work (Building, Renovation)',
         'admission_events' => 'Admission to Events (Concerts, Conferences)',
         'empty_state' => 'Select country options to see VAT rules',
+
+        // Result messages
+        'result_export_action'              => 'Zero-Rated (Export)',
+        'result_export_explanation'         => 'Sales to countries outside the EU are generally zero-rated for VAT (exempt with credit). You must retain proof of export.',
+        'result_domestic_action'            => 'Charge Domestic VAT',
+        'result_domestic_explanation'       => 'Since both buyer and seller are in :country, you must charge the standard domestic VAT rate.',
+        'result_b2b_construction_action'    => 'Reverse Charge (0% VAT)',
+        'result_b2b_construction_explanation' => 'For construction services, the Reverse Charge mechanism usually applies in B2B transactions. The recipient accounts for the VAT.',
+        'result_b2b_events_action'          => 'Place of Event Rule',
+        'result_b2b_events_explanation'     => "Admission to events is taxable where the event actually takes place. If the event is in the buyer's country, you may need to register for VAT there or check specific exceptions.",
+        'result_b2b_general_action'         => 'Reverse Charge (0% VAT)',
+        'result_b2b_general_explanation'    => 'For B2B transactions between EU countries, the Reverse Charge mechanism typically applies. The buyer accounts for the VAT. Do not charge VAT but verify their VAT number.',
+        'result_b2c_goods_action'           => 'Charge Destination VAT (OSS)',
+        'result_b2c_goods_explanation'      => 'For B2C distance sales of goods (>€10k EU-wide threshold), charge VAT at the rate of the buyer\'s country (:country). Use OSS to report.',
+        'result_b2c_digital_action'         => 'Charge Destination VAT (OSS)',
+        'result_b2c_digital_explanation'    => 'For digital services (TBE services) to consumers, you must charge VAT at the rate of the customer\'s country (:country). Use OSS to simplify reporting.',
+        'result_b2c_events_action'          => 'Place of Event',
+        'result_b2c_events_explanation'     => 'Admission to cultural, artistic, or educational events is taxable where the event takes place.',
+        'result_b2c_services_action'        => 'Charge Domestic VAT',
+        'result_b2c_services_explanation'   => "For general services to consumers (consulting, etc.), the general rule is to charge VAT of the supplier's country (:country).",
     ],
 
     // ── Home Page Search ────────────────────────────────────────────────

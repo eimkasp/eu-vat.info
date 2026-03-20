@@ -71,6 +71,8 @@
 </head>
 
 <body class="bg-gradient-to-br from-gray-50 to-gray-100">
+    {{-- SVG sprite sheet — rendered once, referenced by all components --}}
+    @stack('svg-sprites')
     <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 focus:bg-blue-600 focus:text-white focus:p-3 focus:z-50 focus:rounded-br-lg">{{ __('ui.skip_to_content') ?? 'Skip to main content' }}</a>
     <x-global-header></x-global-header>
 

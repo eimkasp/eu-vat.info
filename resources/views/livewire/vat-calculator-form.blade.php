@@ -118,13 +118,13 @@
                     <div class="p-4" wire:loading.class="opacity-50" wire:target="calculate">
                         <div class="grid grid-cols-2 gap-6 mb-4">
                             <div>
-                                <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">{{ __('ui.calculator.net_amount') }}</div>
+                                <div class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">{{ __('ui.calculator.net_amount') }}</div>
                                 <div class="text-xl font-medium text-gray-900">
                                     {{ is_numeric($amount) ? ($selectedCountryObject ? $selectedCountryObject->currency_display : '€') . number_format((float)($vat_included == 'include' ? $total - $vat_amount : $amount), 2) : '0.00' }}
                                 </div>
                             </div>
                             <div class="text-right">
-                                <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">{{ __('ui.calculator.vat_percentage_label', ['rate' => $selectedRate]) }}</div>
+                                <div class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">{{ __('ui.calculator.vat_percentage_label', ['rate' => $selectedRate]) }}</div>
                                 <div class="text-xl font-medium text-blue-600">
                                     {{ is_numeric($vat_amount) ? ($selectedCountryObject ? $selectedCountryObject->currency_display : '€') . number_format((float)$vat_amount, 2) : '0.00' }}
                                 </div>
