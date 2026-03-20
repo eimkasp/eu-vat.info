@@ -9,7 +9,7 @@
             </div>
 
             {{-- Hide mobile menu button on md and up --}}
-            <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden">
+            <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden" aria-label="Toggle navigation menu">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path x-show="!mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                     <path x-show="mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -18,11 +18,11 @@
 
             {{-- Desktop navigation --}}
             <nav class="hidden md:flex items-center gap-6">
-                <a href="{{ locale_path('/') }}" title="{{ __('ui.nav.all_countries') }}">{{ __('ui.nav.all_countries') }}</a>
-                <a href="{{ locale_path('/vat-calculator') }}">{{ __('ui.nav.vat_calculator') }}</a>
-                <a href="{{ route('widget.embed') }}">{{ __('ui.nav.vat_widget') }}</a>
-                <a href="{{ locale_path('/vat-map') }}">{{ __('ui.nav.vat_map') }}</a>
-                <a href="{{ locale_path('/vat-changes') }}">{{ __('ui.nav.vat_history') }}</a>
+                <a href="{{ locale_path('/') }}" wire:navigate title="{{ __('ui.nav.all_countries') }}">{{ __('ui.nav.all_countries') }}</a>
+                <a href="{{ locale_path('/vat-calculator') }}" wire:navigate>{{ __('ui.nav.vat_calculator') }}</a>
+                <a href="{{ route('widget.embed') }}" wire:navigate>{{ __('ui.nav.vat_widget') }}</a>
+                <a href="{{ locale_path('/vat-map') }}" wire:navigate>{{ __('ui.nav.vat_map') }}</a>
+                <a href="{{ locale_path('/vat-changes') }}" wire:navigate>{{ __('ui.nav.vat_history') }}</a>
                 <a href="https://github.com/eimkasp/eu-vat.info" target="_blank" class="w-6">
                     @svg('feathericon-github')
                 </a>
@@ -39,11 +39,11 @@
              x-transition:leave-start="opacity-100 translate-y-0"
              x-transition:leave-end="opacity-0 -translate-y-2"
              class="md:hidden mt-4 space-y-3">
-            <a href="{{ locale_path('/') }}" class="block py-2" title="{{ __('ui.nav.all_countries') }}">{{ __('ui.nav.all_countries') }}</a>
-            <a href="{{ locale_path('/vat-calculator') }}" class="block py-2">{{ __('ui.nav.vat_calculator') }} 💶</a>
-            <a href="{{ route('widget.embed') }}" class="block py-2">{{ __('ui.nav.vat_widget') }}</a>
-            <a href="{{ locale_path('/vat-map') }}" class="block py-2">{{ __('ui.nav.vat_map') }} 🌍</a>
-            <a href="{{ locale_path('/vat-changes') }}" class="block py-2">{{ __('ui.nav.vat_history') }} 📊</a>
+            <a href="{{ locale_path('/') }}" wire:navigate class="block py-2" title="{{ __('ui.nav.all_countries') }}">{{ __('ui.nav.all_countries') }}</a>
+            <a href="{{ locale_path('/vat-calculator') }}" wire:navigate class="block py-2">{{ __('ui.nav.vat_calculator') }} 💶</a>
+            <a href="{{ route('widget.embed') }}" wire:navigate class="block py-2">{{ __('ui.nav.vat_widget') }}</a>
+            <a href="{{ locale_path('/vat-map') }}" wire:navigate class="block py-2">{{ __('ui.nav.vat_map') }} 🌍</a>
+            <a href="{{ locale_path('/vat-changes') }}" wire:navigate class="block py-2">{{ __('ui.nav.vat_history') }} 📊</a>
             <a href="https://github.com/eimkasp/eu-vat.info" target="_blank" class="block py-2">
                 GitHub @svg('feathericon-github', 'inline-block w-5 h-5 ml-1')
             </a>

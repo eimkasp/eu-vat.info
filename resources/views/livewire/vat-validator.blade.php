@@ -15,7 +15,7 @@
             <p>Need an example? <button type="button" wire:click="prefillExample" class="text-indigo-600 hover:underline font-medium">Try LT100019070512</button></p>
         </div>
 
-        <form wire:submit.prevent="validateVat" class="space-y-4">
+        <form wire:submit.prevent="validateVat" class="space-y-4" wire:loading.class="opacity-50 pointer-events-none" wire:target="validateVat">
             <div class="grid sm:grid-cols-3 gap-4">
                 <div class="sm:col-span-1">
                     <x-select 
