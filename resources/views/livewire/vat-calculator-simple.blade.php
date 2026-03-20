@@ -100,7 +100,7 @@
         </div>
 
         {{-- Results --}}
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border-l-4 border-blue-600 overflow-hidden">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border-l-4 border-blue-600 overflow-hidden" aria-live="polite">
             <div class="p-4">
                 <div class="grid grid-cols-2 gap-4 mb-3">
                     <div>

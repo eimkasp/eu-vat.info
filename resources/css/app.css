@@ -3,6 +3,12 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Accessible focus indicators */
+*:focus-visible {
+    outline: 2px solid #4F46E5;
+    outline-offset: 2px;
+}
+
 .container {
     @apply max-w-6xl;
     /* max-width: 1140px; */
