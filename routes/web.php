@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\EmbedController;
 use App\Http\Controllers\SitemapController;
-use App\Livewire\Counter;
 use App\Livewire\CountryPage;
 use App\Livewire\Home;
 use App\Livewire\HtmlSitemap;
@@ -26,14 +25,11 @@ $registerRoutes = function () {
     Route::get('/country/{slug}/{tab}', CountryPage::class)->name('country.tab')
         ->where('tab', 'vat-calculator|vat-validator|history|vat-guide|overview');
 
-    Route::get('/counter', Counter::class);
     Route::get('/tools', Tools::class);
 
     Route::get('/vat-calculator', VatCalculator::class)->name('vat-calculator');
     Route::get('/vat-map', VatMap::class)->name('vat-map');
     Route::get('/vat-calculator/{slug}', VatCalculator::class)->name('vat-calculator.country');
-    // Route::get('/vat-check/{slug?}', \App\Livewire\VatValidator::class)->name('vat-check');
-    // Route::get('/vat-navigator', \App\Livewire\VatNavigator::class)->name('vat-navigator');
     Route::get('/vat-changes', \App\Livewire\VatChangesHistory::class)->name('vat-changes');
     Route::get('/sitemap', HtmlSitemap::class)->name('html-sitemap');
 };
