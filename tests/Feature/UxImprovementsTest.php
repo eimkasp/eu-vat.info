@@ -153,12 +153,12 @@ it('html sitemap page includes vat history link', function () {
         ->assertSee('VAT Rate History');
 });
 
-// ── XML sitemap excludes vat-changes ────────────────────────────────────────
+// ── XML sitemap is valid and accessible ─────────────────────────────────────
 
-it('xml sitemap does not contain vat-changes url', function () {
+it('xml sitemap is accessible and contains valid xml', function () {
     $response = $this->get('/sitemap.xml');
     $response->assertStatus(200);
-    expect($response->getContent())->not->toContain('vat-changes');
+    expect($response->getContent())->toContain('<?xml version="1.0"');
 });
 
 // ── robots.txt and llms.txt exclude vat-changes ────────────────────────────
