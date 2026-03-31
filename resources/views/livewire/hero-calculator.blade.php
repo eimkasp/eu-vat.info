@@ -1,9 +1,9 @@
-<div class="w-full" x-data="{ mode: @js($mode), loadingIndex: null }" x-init="mode = $wire.entangle('mode')">
+<div class="w-full" x-data="{ loadingIndex: null }">
     {{-- Hero Header (hideable when embedded in other pages) --}}
     @if($showHeader)
     <div class="text-center mb-8 sm:mb-10">
         <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 tracking-tight mb-3">
-            <span class="text-blue-600">EU VAT</span> {{ __('ui.calculator.title') }}
+            <span class="text-blue-600">EU</span> {{ __('ui.calculator.title') }}
         </h1>
         <p class="text-base sm:text-lg text-gray-500 max-w-2xl mx-auto leading-relaxed">
             {{ __('ui.calculator.generic_subtitle') }}
@@ -17,13 +17,13 @@
             <div class="relative flex p-1 gap-0 bg-gray-100 rounded-xl">
                 {{-- Sliding background indicator --}}
                 <div class="absolute top-1 bottom-1 rounded-lg bg-gray-800 shadow-md transition-all duration-300 ease-out"
-                     :style="'width: calc(50% - 4px); ' + (mode === 'include' ? 'left: calc(50% + 2px)' : 'left: 2px')"></div>
+                     :style="'width: calc(50% - 4px); ' + ($wire.mode === 'include' ? 'left: calc(50% + 2px)' : 'left: 2px')"></div>
 
                 <button
                     type="button"
-                    @click="mode = 'exclude'"
-                    class="relative z-10 flex items-center gap-2 px-6 py-3 rounded-lg text-sm font-bold transition-colors duration-300 whitespace-nowrap"
-                    :class="mode === 'exclude' ? 'text-white' : 'text-gray-500 hover:text-gray-700'"
+                    @click="$wire.mode = 'exclude'"
+                    class="relative z-10 flex items-center gap-2 px-6 py-3 rounded-lg text-sm font-bold transition-colors duration-300 whitespace-nowrap {{ $mode === 'exclude' ? 'text-white' : 'text-gray-500' }}"
+                    :class="{ 'text-white': $wire.mode === 'exclude', 'text-gray-500': $wire.mode !== 'exclude', 'hover:text-gray-700': $wire.mode !== 'exclude' }"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -32,9 +32,9 @@
                 </button>
                 <button
                     type="button"
-                    @click="mode = 'include'"
-                    class="relative z-10 flex items-center gap-2 px-6 py-3 rounded-lg text-sm font-bold transition-colors duration-300 whitespace-nowrap"
-                    :class="mode === 'include' ? 'text-white' : 'text-gray-500 hover:text-gray-700'"
+                    @click="$wire.mode = 'include'"
+                    class="relative z-10 flex items-center gap-2 px-6 py-3 rounded-lg text-sm font-bold transition-colors duration-300 whitespace-nowrap {{ $mode === 'include' ? 'text-white' : 'text-gray-500' }}"
+                    :class="{ 'text-white': $wire.mode === 'include', 'text-gray-500': $wire.mode !== 'include', 'hover:text-gray-700': $wire.mode !== 'include' }"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14" />
@@ -42,7 +42,7 @@
                     {{ __('ui.calculator.remove_vat_mode') }}
                 </button>
             </div>
-            <div class="ml-auto hidden sm:flex items-center gap-3 pr-3 text-xs text-gray-400">
+            <div class="ml-auto hidden sm:flex items-center gap-3 pr-3 text-xs text-gray-600">
                 <span class="flex items-center gap-1">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
@@ -87,13 +87,16 @@
                          @click.outside="open = false"
                          @keydown.escape.window="open = false"
                     >
-                        <label class="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1.5 pl-1">{{ __('ui.calculator.country_label') }}</label>
+                        <label id="country-selector-label" class="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1.5 pl-1">{{ __('ui.calculator.country_label') }}</label>
                         <div class="relative">
                             {{-- Trigger button --}}
                             <button
                                 type="button"
                                 @click="open = !open; $nextTick(() => open && $refs.searchInput.focus())"
                                 class="w-full flex items-center gap-2.5 bg-gray-50 border border-gray-200 rounded-xl pl-3 pr-10 py-3.5 text-sm font-medium text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-gray-300 transition-all cursor-pointer text-left h-[50px]"
+                                aria-haspopup="listbox"
+                                :aria-expanded="open.toString()"
+                                aria-labelledby="country-selector-label"
                             >
                                 <template x-if="current">
                                     <img :src="'https://flagcdn.com/h40/' + current.iso + '.jpg'" :alt="current.name" class="h-5 w-auto rounded-sm shadow-sm shrink-0">
@@ -134,10 +137,12 @@
                                     </div>
                                 </div>
                                 {{-- Options --}}
-                                <div class="max-h-[240px] overflow-y-auto overscroll-contain">
+                                <div class="max-h-[240px] overflow-y-auto overscroll-contain" role="listbox" aria-labelledby="country-selector-label">
                                     <template x-for="c in filtered" :key="c.slug">
                                         <button
                                             type="button"
+                                            role="option"
+                                            :aria-selected="(c.slug === $wire.selectedCountrySlug).toString()"
                                             @click="select(c.slug)"
                                             class="w-full flex items-center gap-2.5 px-3 py-2.5 text-sm text-left transition-colors"
                                             :class="c.slug === $wire.selectedCountrySlug ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-gray-700 hover:bg-gray-50'"
@@ -161,7 +166,7 @@
                     {{-- Amount Input --}}
                     <div class="flex-1 min-w-0">
                         <label class="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1.5 pl-1">
-                            <span x-text="mode === 'include' ? '{{ __('ui.calculator.amount_incl_vat') }}' : '{{ __('ui.calculator.amount_excl_vat') }}'"></span>
+                            <span x-text="$wire.mode === 'include' ? '{{ __('ui.calculator.amount_incl_vat') }}' : '{{ __('ui.calculator.amount_excl_vat') }}'"></span>
                         </label>
                         <div class="relative">
                             <div class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-semibold text-base">
@@ -350,7 +355,13 @@
     </div>
 
     {{-- Quick Stats --}}
-    <div class="max-w-4xl mx-auto mt-4 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs font-medium text-gray-700">
+    <div class="max-w-4xl mx-auto mt-4 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs font-medium text-white/85">
+        <span class="flex items-center gap-1.5">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-green-500" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
+            </svg>
+            {{ __('ui.trust.official_ec_data') }}
+        </span>
         <span class="flex items-center gap-1.5">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0 1 21 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0 1 12 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 0 1 3 12c0-1.605.42-3.113 1.157-4.418" />
@@ -375,16 +386,16 @@
     @if(count($history) > 0)
         <div class="max-w-4xl mx-auto mt-8" x-data="{ expanded: false }">
             <div class="flex items-center justify-between mb-3">
-                <h3 class="flex items-center gap-2 text-sm font-semibold text-gray-700">
+                <h3 class="flex items-center gap-2 text-sm font-semibold text-white/90">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                     </svg>
                     {{ __('ui.calculator.recent_calculations') }}
-                    <span class="bg-gray-200 text-gray-600 text-[10px] font-bold px-1.5 py-0.5 rounded-full">{{ count($history) }}</span>
+                    <span class="bg-white/20 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">{{ count($history) }}</span>
                 </h3>
                 <button
                     wire:click="clearHistory"
-                    class="text-xs text-gray-400 hover:text-red-500 transition-colors"
+                    class="text-xs text-white/60 hover:text-red-300 transition-colors"
                 >
                     {{ __('ui.calculator.clear_all') }}
                 </button>
@@ -439,7 +450,7 @@
                 <div class="text-center mt-3">
                     <button
                         @click="expanded = !expanded"
-                        class="inline-flex items-center gap-1.5 text-xs font-medium text-gray-500 hover:text-gray-800 transition-colors"
+                        class="inline-flex items-center gap-1.5 text-xs font-medium text-white/80 hover:text-white transition-colors"
                     >
                         <span x-text="expanded ? '{{ __('ui.calculator.show_less') }}' : '{{ __('ui.calculator.show_more', ['count' => count($history) - 3]) }}'"></span>
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 transition-transform duration-200" :class="expanded ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">

@@ -29,6 +29,7 @@ return [
     'type' => 'Type',
     'language' => 'Language',
     'back_to_home' => 'Back to Home',
+    'skip_to_content' => 'Skip to main content',
 
     // ── Navigation ──────────────────────────────────────────────────────
     'nav' => [
@@ -107,6 +108,10 @@ return [
         'country_subtitle' => 'Calculate VAT for transactions in :country easily. Current standard rate is :rate%.',
         'generic_subtitle' => 'Quickly calculate VAT amounts for any of the 27 European Union member states.',
         'breadcrumb_label' => 'VAT Calculator',
+        'meta_title_country' => 'VAT Calculator - :country',
+        'meta_desc_country' => 'Calculate VAT amount for :country. Use our VAT calculator to easily calculate VAT for transactions in :country.',
+        'meta_title_generic' => 'VAT Calculator - EU-VAT.info',
+        'meta_desc_generic' => 'Calculate VAT amount for different countries. Use our VAT calculator to easily calculate VAT for transactions in different countries.',
         // Hero calculator strings
         'add_vat_mode' => 'Add VAT',
         'remove_vat_mode' => 'Remove VAT',
@@ -136,6 +141,14 @@ return [
         'show_less' => 'Show less',
         'plus_vat' => '+ VAT',
         'minus_vat' => '− VAT',
+    ],
+
+    // ── Trust Indicators ────────────────────────────────────────────────
+    'trust' => [
+        'official_ec_data' => 'Official European Commission data',
+        'always_free' => 'Always free',
+        'all_27_countries' => 'All 27 EU countries',
+        'no_signup_required' => 'No sign-up required',
     ],
 
     // ── VAT Map ─────────────────────────────────────────────────────────

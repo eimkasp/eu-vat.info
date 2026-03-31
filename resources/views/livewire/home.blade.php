@@ -67,9 +67,9 @@
     {{-- Full-screen Background Image with Parallax --}}
     <div class="absolute inset-0 z-0 overflow-hidden">
         <div class="absolute inset-0 will-change-transform" style="transform: translateZ(0)"
-             x-data="{ y: 0 }"
-             x-init="window.addEventListener('scroll', () => { y = window.scrollY }, { passive: true })"
-             :style="'transform: translate3d(0, ' + (y * 0.4) + 'px, 0)'"
+             x-data="{ y: 0, motionOk: !window.matchMedia('(prefers-reduced-motion: reduce)').matches }"
+             x-init="if (motionOk) window.addEventListener('scroll', () => { y = window.scrollY }, { passive: true })"
+             :style="motionOk ? 'transform: translate3d(0, ' + (y * 0.4) + 'px, 0)' : ''"
         >
             <img
                 src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABsSFBcUERsXFhceHBsgKEIrKCUlKFE6PTBCYFVlZF9VXVtqeJmBanGQc1tdhbWGkJ6jq62rZ4C8ybqmx5moq6T/2wBDARweHigjKE4rK06kbl1upKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKT/wAARCAAWACgDAREAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAECAwX/xAAfEAACAQMFAQAAAAAAAAAAAAAAAgERExQDBBJBUTH/xAAXAQEBAQEAAAAAAAAAAAAAAAAAAQID/8QAFxEBAQEBAAAAAAAAAAAAAAAAABESAf/aAAwDAQACEQMRAD8A60qvp0rnENCFqRnxSey1ILKz2XSZKwo0ZTDNUw2T8pgDGYePlS1IqupTsimtwlXnHVx1M1qDHUUhY6eCkE7dRQLt1A//2Q=="
@@ -87,7 +87,7 @@
                 height="1116"
             >
         </div>
-        <div class="absolute inset-0 bg-gradient-to-t from-gray-100 via-transparent to-transparent"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/70 to-black/50"></div>
     </div>
 
     <div class="relative z-10 mx-auto max-w-7xl px-4 py-6 sm:py-12">
@@ -95,14 +95,14 @@
         <div class="mb-12 sm:mb-16 py-6 sm:py-10">
             <div class="text-center mb-6 sm:mb-8">
                 <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight mb-3">
-                    <span class="text-white drop-shadow-lg">{{ __('ui.home_page.heading') }}</span>
-                    <span class="text-blue-300 drop-shadow-lg">{{ __('ui.home_page.heading_accent') }}</span>
+                    <span class="text-white [text-shadow:_0_2px_8px_rgba(0,0,0,0.4)]">{{ __('ui.home_page.heading') }}</span>
+                    <span class="text-blue-300 [text-shadow:_0_2px_8px_rgba(0,0,0,0.4)]">{{ __('ui.home_page.heading_accent') }}</span>
                 </h1>
-                <p class="text-base sm:text-lg text-white/80 max-w-2xl mx-auto leading-relaxed drop-shadow">
+                <p class="text-base sm:text-lg text-white/90 max-w-2xl mx-auto leading-relaxed [text-shadow:_0_1px_4px_rgba(0,0,0,0.3)]">
                     {{ __('ui.home_page.subtitle') }}
                 </p>
             </div>
-            <livewire:hero-calculator />
+            <livewire:hero-calculator :show-header="false" />
         </div>
 
         {{-- Country Table + Sidebar --}}

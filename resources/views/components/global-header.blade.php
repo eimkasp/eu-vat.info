@@ -18,11 +18,11 @@
 
             {{-- Desktop navigation --}}
             <nav class="hidden md:flex items-center gap-6">
-                <a href="{{ locale_path('/') }}" wire:navigate title="{{ __('ui.nav.all_countries') }}" @if(request()->routeIs('home')) aria-current="page" @endif>{{ __('ui.nav.all_countries') }}</a>
-                <a href="{{ locale_path('/vat-calculator') }}" wire:navigate @if(request()->routeIs('vat-calculator*')) aria-current="page" @endif>{{ __('ui.nav.vat_calculator') }}</a>
-                <a href="{{ route('widget.embed') }}" wire:navigate>{{ __('ui.nav.vat_widget') }}</a>
-                <a href="{{ locale_path('/vat-map') }}" wire:navigate @if(request()->routeIs('vat-map')) aria-current="page" @endif>{{ __('ui.nav.vat_map') }}</a>
-                <a href="{{ locale_path('/vat-changes') }}" wire:navigate @if(request()->routeIs('vat-changes')) aria-current="page" @endif>{{ __('ui.nav.vat_history') }}</a>
+                <a href="{{ locale_path('/') }}" wire:navigate title="{{ __('ui.nav.all_countries') }}" class="hover:text-blue-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2 rounded transition-colors" @if(request()->routeIs('home')) aria-current="page" @endif>{{ __('ui.nav.all_countries') }}</a>
+                <a href="{{ locale_path('/vat-calculator') }}" wire:navigate class="hover:text-blue-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2 rounded transition-colors" @if(request()->routeIs('vat-calculator*')) aria-current="page" @endif>{{ __('ui.nav.vat_calculator') }}</a>
+                <a href="{{ route('widget.embed') }}" wire:navigate class="hover:text-blue-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2 rounded transition-colors">{{ __('ui.nav.vat_widget') }}</a>
+                <a href="{{ locale_path('/vat-map') }}" wire:navigate class="hover:text-blue-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2 rounded transition-colors" @if(request()->routeIs('vat-map')) aria-current="page" @endif>{{ __('ui.nav.vat_map') }}</a>
+                <a href="{{ locale_path('/vat-changes') }}" wire:navigate class="hover:text-blue-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2 rounded transition-colors" @if(request()->routeIs('vat-changes')) aria-current="page" @endif>{{ __('ui.nav.vat_history') }}</a>
                 <a href="https://github.com/eimkasp/eu-vat.info" target="_blank" class="w-6">
                     @svg('feathericon-github')
                 </a>

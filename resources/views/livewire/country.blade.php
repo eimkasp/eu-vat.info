@@ -26,7 +26,7 @@
             @else
                 <img src="/images/eu-vat-calculator-background.jpg" alt="" class="w-full h-full object-cover" loading="eager">
             @endif
-            <div class="absolute inset-0 bg-gradient-to-b from-white/60 via-white/80 to-white"></div>
+            <div class="absolute inset-0 bg-gradient-to-b from-white/70 via-white/85 to-white"></div>
         </div>
 
         <div class="container relative">

@@ -1,12 +1,6 @@
 @isset($selectedCountryObject)
-    @section('title', 'VAT Calculator - ' . $selectedCountryObject->name)
-@section('meta_description',
-    'Calculate VAT amount for ' .
-    $selectedCountryObject->name .
-    '. Use our VAT
-    calculator to easily calculate VAT for transactions in ' .
-    $selectedCountryObject->name .
-    '.')
+    @section('title', __('ui.calculator.meta_title_country', ['country' => $selectedCountryObject->name]))
+@section('meta_description', __('ui.calculator.meta_desc_country', ['country' => $selectedCountryObject->name]))
 @section('seo')
     <x-seo-meta :title="'VAT Calculator - ' . $selectedCountryObject->name . ' | EU VAT Info'" :description="'Calculate VAT for ' .
         $selectedCountryObject->name .
@@ -47,10 +41,8 @@
     </x-seo-meta>
 @endsection
 @else
-@section('title', 'VAT Calculator - EU-VAT.info')
-@section('meta_description',
-    'Calculate VAT amount for different countries. Use our VAT
-    calculator to easily calculate VAT for transactions in different countries.')
+@section('title', __('ui.calculator.meta_title_generic'))
+@section('meta_description', __('ui.calculator.meta_desc_generic'))
 @section('seo')
     <x-seo-meta title="VAT Calculator - EU Countries | EU VAT Info"
         description="Calculate VAT for all EU countries. Free online calculator with current rates, historical data, and comparison tools." />
