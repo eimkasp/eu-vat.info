@@ -21,10 +21,10 @@
     <div class="relative pt-8 pb-12">
         {{-- Background image --}}
         <div class="absolute inset-0 z-0">
-            @if(file_exists(public_path('images/countries/' . strtolower($country->iso_code) . '.jpg')))
-                <img src="/images/countries/{{ strtolower($country->iso_code) }}.jpg" alt="" class="w-full h-full object-cover" loading="eager">
+            @if(file_exists(public_path('build/images/countries/' . strtolower($country->iso_code) . '.jpg')))
+                <img src="/build/images/countries/{{ strtolower($country->iso_code) }}.jpg" alt="" class="w-full h-full object-cover" loading="eager">
             @else
-                <img src="/images/eu-vat-calculator-background.jpg" alt="" class="w-full h-full object-cover" loading="eager">
+                <img src="/build/images/eu-vat-calculator-background.jpg" alt="" class="w-full h-full object-cover" loading="eager">
             @endif
             <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-white/95"></div>
         </div>

@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
-import { readFileSync, mkdirSync } from 'fs';
+import { readFileSync, mkdirSync, cpSync, existsSync } from 'fs';
 import { resolve, dirname } from 'path';
 
 /**
@@ -31,6 +31,26 @@ function ogImagePlugin() {
     };
 }
 
+/**
+ * Vite plugin — copies public/images/ → public/build/images/
+ * so static images are available alongside built assets.
+ */
+function copyImagesPlugin() {
+    return {
+        name: 'copy-images',
+        apply: 'build',
+        closeBundle() {
+            const src = resolve(process.cwd(), 'public/images');
+            const dest = resolve(process.cwd(), 'public/build/images');
+            if (existsSync(src)) {
+                mkdirSync(dest, { recursive: true });
+                cpSync(src, dest, { recursive: true });
+                console.log('  ✓ Images copied → public/build/images/');
+            }
+        },
+    };
+}
+
 export default defineConfig({
     plugins: [
         laravel({
@@ -38,5 +58,6 @@ export default defineConfig({
             refresh: true,
         }),
         ogImagePlugin(),
+        copyImagesPlugin(),
     ],
 });

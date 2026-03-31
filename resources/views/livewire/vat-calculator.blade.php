@@ -64,13 +64,13 @@
         <div class="absolute inset-0 z-0">
             @isset($selectedCountryObject)
                 {{-- Per-country image when available, fallback to default --}}
-                @if(file_exists(public_path('images/countries/' . strtolower($selectedCountryObject->iso_code) . '.jpg')))
-                    <img src="/images/countries/{{ strtolower($selectedCountryObject->iso_code) }}.jpg" alt="" class="w-full h-full object-cover" loading="eager">
+                @if(file_exists(public_path('build/images/countries/' . strtolower($selectedCountryObject->iso_code) . '.jpg')))
+                    <img src="/build/images/countries/{{ strtolower($selectedCountryObject->iso_code) }}.jpg" alt="" class="w-full h-full object-cover" loading="eager">
                 @else
-                    <img src="/images/eu-vat-calculator-background.jpg" alt="" class="w-full h-full object-cover" loading="eager">
+                    <img src="/build/images/eu-vat-calculator-background.jpg" alt="" class="w-full h-full object-cover" loading="eager">
                 @endif
             @else
-                <img src="/images/eu-vat-calculator-background.jpg" alt="" class="w-full h-full object-cover" loading="eager">
+                <img src="/build/images/eu-vat-calculator-background.jpg" alt="" class="w-full h-full object-cover" loading="eager">
             @endisset
             <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-white/95"></div>
         </div>
