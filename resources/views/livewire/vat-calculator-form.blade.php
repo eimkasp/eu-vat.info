@@ -38,7 +38,6 @@
                     wire:model.lazy="amount" 
                     type="text" 
                     suffix="{{ $selectedCountryObject?->currency_display ?? 'EUR (€)' }}" 
-                    money 
                     class="text-lg font-medium"
                 />
             </div>

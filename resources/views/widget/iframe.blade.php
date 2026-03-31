@@ -1,9 +1,13 @@
 @extends('components.layouts.app-embed')
 @section('content')
     <div class="p-6">
-        <livewire:vat-calculator-form />
+        @if(request()->query('style') === 'horizontal')
+            <livewire:hero-calculator :initial-country="$country" :show-header="false" />
+        @else
+            <livewire:vat-calculator-form />
+        @endif
         <div class="mt-3 text-right">
-            Powered by <a href="https://vat.businesspress.io" target="_blank" class="text-blue-500">VAT.BusinessPress.io</a>
+            Powered by <a href="https://eu-vat.info" target="_blank" class="text-blue-500">eu-vat.info</a>
         </div>
     </div>
 @endsection

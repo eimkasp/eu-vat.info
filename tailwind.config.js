@@ -18,15 +18,15 @@ export default {
 		themes: [
 			{
 				mytheme: {
-					"primary": "#000000",
-					"secondary": "#ff00ff",
-					"accent": "#00ffff",
-					"neutral": "#ff00ff",
+					"primary": "#003399",
+					"secondary": "#0EA5E9",
+					"accent": "#F59E0B",
+					"neutral": "#374151",
 					"base-100": "#ffffff",
-					"info": "#0000ff",
-					"success": "#00ff00",
-					"warning": "#00ff00",
-					"error": "#ff0000",
+					"info": "#3b82f6",
+					"success": "#10B981",
+					"warning": "#F59E0B",
+					"error": "#EF4444",
 				},
 			},
 		],

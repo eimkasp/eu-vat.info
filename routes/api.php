@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\CountryRatesController;
+use App\Http\Controllers\Api\McpController;
 use App\Http\Controllers\Api\VatValidationController;
 use App\Http\Controllers\CountryController;
 use App\Models\Country;
@@ -35,3 +36,6 @@ Route::get('/llm/vat-rates', function () {
         ];
     });
 })->name('api.llm.vat-rates');
+
+// MCP Server (Model Context Protocol) — read-only, no auth
+Route::post('/mcp', [McpController::class, 'handle'])->name('api.mcp');

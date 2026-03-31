@@ -7,6 +7,7 @@ use App\Livewire\Home;
 use App\Livewire\HtmlSitemap;
 use App\Livewire\Tools;
 use App\Livewire\VatCalculator;
+use App\Livewire\McpServer;
 use App\Livewire\SharedCalculation;
 use App\Livewire\VatMap;
 use Illuminate\Support\Facades\Route;
@@ -33,6 +34,7 @@ $registerRoutes = function () {
     Route::get('/vat-calculator/{slug}', VatCalculator::class)->name('vat-calculator.country');
     Route::get('/calculation', SharedCalculation::class)->name('shared-calculation');
     Route::get('/vat-changes', \App\Livewire\VatChangesHistory::class)->name('vat-changes');
+    Route::get('/mcp-server', McpServer::class)->name('mcp-server');
     Route::get('/sitemap', HtmlSitemap::class)->name('html-sitemap');
 };
 

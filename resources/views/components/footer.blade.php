@@ -29,6 +29,7 @@
                     <li><a href="{{ locale_path('/sitemap') }}" class="hover:text-white transition-colors">{{ __('ui.footer.sitemap') }}</a></li>
                     <li><a href="/llms.txt" class="hover:text-white transition-colors">{{ __('ui.footer.llms_data') }}</a></li>
                     <li><a href="/api/llm/vat-rates" class="hover:text-white transition-colors">{{ __('ui.footer.vat_rates_api') }}</a></li>
+                    <li><a href="{{ locale_path('/mcp-server') }}" class="hover:text-white transition-colors">MCP Server</a></li>
                     <li><a href="/sitemap.xml" class="hover:text-white transition-colors">{{ __('ui.footer.xml_sitemap') }}</a></li>
                 </ul>
             </div>

@@ -94,14 +94,14 @@
                         </div>
                         <span class="text-blue-600">{{ __('ui.calculator.title') }}</span>
                     @else
-                        <span class="text-blue-600">EU VAT</span> <span class="text-gray-900">Calculator</span>
+                        <span class="text-blue-600">EU VAT</span> <span class="text-gray-900">{{ __('ui.calculator.title') }}</span>
                     @endisset
                 </h1>
                 <p class="text-base sm:text-lg text-gray-500 max-w-2xl mx-auto leading-relaxed">
                     @isset($selectedCountryObject)
                         {{ __('ui.calculator.country_subtitle', ['country' => $selectedCountryObject->name, 'rate' => $selectedCountryObject->standard_rate]) }}
                     @else
-                        Calculate VAT instantly for all 27 EU member states. Add or extract VAT with real-time rates.
+                        {{ __('ui.calculator.generic_subtitle') }}
                     @endisset
                 </p>
             </div>

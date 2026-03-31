@@ -3,8 +3,8 @@
 <div class="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
     <div class="p-4 border-b border-gray-100 bg-gray-50/50">
         <div class="flex items-center justify-between mb-3">
-            <h2 class="text-lg font-bold text-gray-900">EU VAT Rates by Country</h2>
-            <span class="text-xs text-gray-400 font-medium">{{ date('Y') }} rates</span>
+            <h2 class="text-lg font-bold text-gray-900">{{ __('ui.home_page.rates_heading') }}</h2>
+            <span class="text-xs text-gray-400 font-medium">{{ __('ui.home_page.rates_year', ['year' => date('Y')]) }}</span>
         </div>
         <div class="relative">
             <input wire:model.live="search"

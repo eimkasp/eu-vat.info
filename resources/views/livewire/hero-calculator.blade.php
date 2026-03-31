@@ -1,12 +1,12 @@
-<div class="w-full" x-data="{ mode: @js($mode) }" x-init="mode = $wire.entangle('mode')">
+<div class="w-full" x-data="{ mode: @js($mode), loadingIndex: null }" x-init="mode = $wire.entangle('mode')">
     {{-- Hero Header (hideable when embedded in other pages) --}}
     @if($showHeader)
     <div class="text-center mb-8 sm:mb-10">
         <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 tracking-tight mb-3">
-            <span class="text-blue-600">EU VAT</span> Calculator
+            <span class="text-blue-600">EU VAT</span> {{ __('ui.calculator.title') }}
         </h1>
         <p class="text-base sm:text-lg text-gray-500 max-w-2xl mx-auto leading-relaxed">
-            Calculate VAT instantly for all 27 EU member states. Add or extract VAT with real-time rates.
+            {{ __('ui.calculator.generic_subtitle') }}
         </p>
     </div>
     @endif
@@ -28,7 +28,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                     </svg>
-                    Add VAT
+                    {{ __('ui.calculator.add_vat_mode') }}
                 </button>
                 <button
                     type="button"
@@ -39,7 +39,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14" />
                     </svg>
-                    Remove VAT
+                    {{ __('ui.calculator.remove_vat_mode') }}
                 </button>
             </div>
             <div class="ml-auto hidden sm:flex items-center gap-3 pr-3 text-xs text-gray-400">
@@ -47,20 +47,20 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                     </svg>
-                    Real-time rates
+                    {{ __('ui.calculator.realtime_rates') }}
                 </span>
                 <span class="flex items-center gap-1">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
                     </svg>
-                    Official EU data
+                    {{ __('ui.calculator.official_eu_data') }}
                 </span>
             </div>
         </div>
     </div>
 
     {{-- Calculator Bar --}}
-    <div class="max-w-4xl mx-auto">
+    <div id="hero-calculator" class="max-w-4xl mx-auto">
         <div class="bg-white rounded-b-2xl shadow-xl border border-t-0 border-gray-200 overflow-hidden">
             {{-- Row 1: Country + Amount + Calculate --}}
             <div class="p-4 sm:p-5 pb-0 sm:pb-0">
@@ -87,7 +87,7 @@
                          @click.outside="open = false"
                          @keydown.escape.window="open = false"
                     >
-                        <label class="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1.5 pl-1">Country</label>
+                        <label class="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1.5 pl-1">{{ __('ui.calculator.country_label') }}</label>
                         <div class="relative">
                             {{-- Trigger button --}}
                             <button
@@ -98,7 +98,7 @@
                                 <template x-if="current">
                                     <img :src="'https://flagcdn.com/h40/' + current.iso + '.jpg'" :alt="current.name" class="h-5 w-auto rounded-sm shadow-sm shrink-0">
                                 </template>
-                                <span class="truncate" x-text="current ? current.name + ' (' + current.standard_rate + '%)' : 'Select country'"></span>
+                                <span class="truncate" x-text="current ? current.name + ' (' + current.standard_rate + '%)' : '{{ __('ui.calculator.select_country') }}'"></span>
                             </button>
                             <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-gray-400">
                                 <svg class="w-4 h-4 transition-transform duration-200" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -127,7 +127,7 @@
                                             x-ref="searchInput"
                                             x-model="search"
                                             type="text"
-                                            placeholder="Search countries..."
+                                            placeholder="{{ __('ui.calculator.search_countries') }}"
                                             class="w-full pl-8 pr-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-50"
                                             @keydown.enter.prevent="if(filtered.length === 1) select(filtered[0].slug)"
                                         >
@@ -151,7 +151,7 @@
                                         </button>
                                     </template>
                                     <div x-show="filtered.length === 0" class="px-3 py-4 text-center text-sm text-gray-400">
-                                        No countries found
+                                        {{ __('ui.calculator.no_countries_found') }}
                                     </div>
                                 </div>
                             </div>
@@ -161,7 +161,7 @@
                     {{-- Amount Input --}}
                     <div class="flex-1 min-w-0">
                         <label class="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1.5 pl-1">
-                            <span x-text="mode === 'include' ? 'Amount (incl. VAT)' : 'Amount (excl. VAT)'"></span>
+                            <span x-text="mode === 'include' ? '{{ __('ui.calculator.amount_incl_vat') }}' : '{{ __('ui.calculator.amount_excl_vat') }}'"></span>
                         </label>
                         <div class="relative">
                             <div class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-semibold text-base">
@@ -190,7 +190,7 @@
                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                             </svg>
-                            Calculate
+                            {{ __('ui.calculator.calculate_btn') }}
                         </button>
                     </div>
                 </div>
@@ -199,7 +199,7 @@
             {{-- Row 2: Rate pills --}}
             <div class="px-4 sm:px-5 py-3 border-t border-gray-100 bg-gray-50/50">
                 <div class="flex flex-wrap items-center gap-2">
-                    <span class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mr-1">Rate</span>
+                    <span class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mr-1">{{ __('ui.calculator.rate_label') }}</span>
                     @foreach($rates as $rate)
                         <button
                             wire:click="selectRate({{ $rate['value'] }})"
@@ -216,7 +216,7 @@
                     {{-- Custom Rate --}}
                     @if($useCustomRate)
                         <div class="flex items-center gap-1 px-3 py-1.5 rounded-lg border-2 border-amber-400 bg-amber-50 text-amber-700">
-                            <span class="text-[10px] font-medium text-amber-500">Custom</span>
+                            <span class="text-[10px] font-medium text-amber-500">{{ __('ui.calculator.custom_label') }}</span>
                             <input
                                 type="number"
                                 wire:model.live.debounce.300ms="customRate"
@@ -235,7 +235,7 @@
                             wire:click="enableCustomRate"
                             class="px-3.5 py-2 rounded-lg text-sm font-semibold border border-dashed border-gray-300 text-gray-400 hover:border-amber-300 hover:text-amber-600 hover:bg-amber-50 transition-all duration-200"
                         >
-                            Custom %
+                            {{ __('ui.calculator.custom_percent') }}
                         </button>
                     @endif
                 </div>
@@ -260,7 +260,7 @@
                         <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
                             {{-- Net Amount --}}
                             <div class="flex-1 text-center sm:text-left">
-                                <div class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1">Net Amount</div>
+                                <div class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1">{{ __('ui.calculator.net_amount') }}</div>
                                 <div class="text-2xl sm:text-3xl font-bold text-gray-900 tabular-nums">
                                     {{ $selectedCountryObject?->currency_display ?? '€' }}{{ number_format($net_amount, 2) }}
                                 </div>
@@ -283,7 +283,7 @@
 
                             {{-- VAT Amount --}}
                             <div class="flex-1 text-center">
-                                <div class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1">VAT ({{ $selectedRate }}%)</div>
+                                <div class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1">{{ __('ui.calculator.vat_label', ['rate' => $selectedRate]) }}</div>
                                 <div class="text-2xl sm:text-3xl font-bold {{ $mode === 'exclude' ? 'text-blue-600' : 'text-red-600' }} tabular-nums">
                                     {{ $mode === 'exclude' ? '+' : '-' }}{{ $selectedCountryObject?->currency_display ?? '€' }}{{ number_format($vat_amount, 2) }}
                                 </div>
@@ -297,7 +297,7 @@
                             {{-- Total --}}
                             <div class="flex-1 text-center sm:text-right">
                                 <div class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1">
-                                    {{ $mode === 'exclude' ? 'Total (incl. VAT)' : 'You entered (incl. VAT)' }}
+                                    {{ $mode === 'exclude' ? __('ui.calculator.total_incl_vat') : __('ui.calculator.you_entered_incl_vat') }}
                                 </div>
                                 <div class="text-2xl sm:text-3xl font-extrabold text-gray-900 tabular-nums">
                                     {{ $selectedCountryObject?->currency_display ?? '€' }}{{ number_format($total, 2) }}
@@ -311,11 +311,11 @@
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z" />
                                     </svg>
-                                    Share &amp; Details
+                                    {{ __('ui.calculator.share_details') }}
                                 </a>
                                 <a href="{{ locale_path('/vat-calculator/' . $selectedCountrySlug) }}" wire:navigate
                                    class="inline-flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-medium text-gray-500 hover:text-blue-600 transition-colors duration-200">
-                                    Full Calculator
+                                    {{ __('ui.calculator.full_calculator') }}
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
                                     </svg>
@@ -355,19 +355,19 @@
             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0 1 21 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0 1 12 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 0 1 3 12c0-1.605.42-3.113 1.157-4.418" />
             </svg>
-            27 EU Countries
+            {{ __('ui.calculator.eu_countries_count') }}
         </span>
         <span class="flex items-center gap-1.5">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-green-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
             </svg>
-            100% Free
+            {{ __('ui.calculator.free_label') }}
         </span>
         <span class="flex items-center gap-1.5">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-amber-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
             </svg>
-            No Sign-up Required
+            {{ __('ui.calculator.no_signup') }}
         </span>
     </div>
 
@@ -379,14 +379,14 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                     </svg>
-                    Recent Calculations
+                    {{ __('ui.calculator.recent_calculations') }}
                     <span class="bg-gray-200 text-gray-600 text-[10px] font-bold px-1.5 py-0.5 rounded-full">{{ count($history) }}</span>
                 </h3>
                 <button
                     wire:click="clearHistory"
                     class="text-xs text-gray-400 hover:text-red-500 transition-colors"
                 >
-                    Clear all
+                    {{ __('ui.calculator.clear_all') }}
                 </button>
             </div>
 
@@ -394,17 +394,22 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                 @foreach($history as $index => $entry)
                     <button
-                        wire:click="loadFromHistory({{ $index }})"
+                        @click="
+                            loadingIndex = {{ $index }};
+                            document.getElementById('hero-calculator').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            $wire.loadFromHistory({{ $index }}).then(() => { setTimeout(() => loadingIndex = null, 600) });
+                        "
                         class="{{ $index >= 3 ? 'hidden' : '' }}"
                         :class="{ '!hidden': {{ $index }} >= 3 && !expanded, '!block': {{ $index }} >= 3 && expanded }"
                     >
-                        <div class="bg-white rounded-xl border border-gray-200 p-3.5 hover:border-blue-300 hover:shadow-md transition-all duration-200 cursor-pointer group text-left h-full">
+                        <div class="bg-white rounded-xl border border-gray-200 p-3.5 hover:border-blue-300 hover:shadow-md transition-all duration-300 cursor-pointer group text-left h-full"
+                             :class="loadingIndex === {{ $index }} ? 'border-blue-400 shadow-lg shadow-blue-100 scale-[0.97] ring-2 ring-blue-200' : ''">
                             <div class="flex items-center gap-2.5 mb-2.5">
                                 <img src="https://flagcdn.com/h40/{{ $entry['flag_iso'] }}.jpg"
                                     alt="" class="h-5 w-auto rounded-sm shadow-sm shrink-0" loading="lazy">
                                 <span class="text-sm font-semibold text-gray-900 truncate">{{ $entry['country'] }}</span>
                                 <span class="ml-auto text-[10px] font-medium px-1.5 py-0.5 rounded {{ $entry['mode'] === 'exclude' ? 'bg-blue-50 text-blue-600' : 'bg-red-50 text-red-600' }}">
-                                    {{ $entry['mode'] === 'exclude' ? '+ VAT' : '− VAT' }}
+                                    {{ $entry['mode'] === 'exclude' ? __('ui.calculator.plus_vat') : __('ui.calculator.minus_vat') }}
                                 </span>
                             </div>
                             <div class="flex items-baseline justify-between">
@@ -416,8 +421,12 @@
                                         {{ $entry['mode'] === 'exclude' ? '+' : '−' }}{{ $entry['currency'] }}{{ number_format($entry['vat'], 2) }} at {{ $entry['rate'] }}%
                                     </div>
                                 </div>
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-300 group-hover:text-blue-500 transition-colors shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                <svg x-show="loadingIndex !== {{ $index }}" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-300 group-hover:text-blue-500 transition-colors shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182" />
+                                </svg>
+                                <svg x-show="loadingIndex === {{ $index }}" class="w-4 h-4 text-blue-500 animate-spin shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                 </svg>
                             </div>
                         </div>
@@ -432,7 +441,7 @@
                         @click="expanded = !expanded"
                         class="inline-flex items-center gap-1.5 text-xs font-medium text-gray-500 hover:text-gray-800 transition-colors"
                     >
-                        <span x-text="expanded ? 'Show less' : 'Show {{ count($history) - 3 }} more'"></span>
+                        <span x-text="expanded ? '{{ __('ui.calculator.show_less') }}' : '{{ __('ui.calculator.show_more', ['count' => count($history) - 3]) }}'"></span>
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 transition-transform duration-200" :class="expanded ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
                         </svg>

@@ -194,13 +194,15 @@
                             <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                                 <button
                                     @click="open = open === {{ $i }} ? null : {{ $i }}"
+                                    :aria-expanded="(open === {{ $i }}).toString()"
+                                    aria-controls="faq-answer-{{ $i }}"
                                     class="w-full flex items-center justify-between px-5 py-4 text-left text-gray-900 font-medium hover:bg-gray-50 transition-colors">
                                     <span>{{ $faq['q'] }}</span>
-                                    <svg class="w-5 h-5 flex-shrink-0 text-gray-500 transition-transform duration-200" :class="{ 'rotate-180': open === {{ $i }} }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-5 h-5 flex-shrink-0 text-gray-500 transition-transform duration-200" :class="{ 'rotate-180': open === {{ $i }} }" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                                     </svg>
                                 </button>
-                                <div x-show="open === {{ $i }}" x-collapse>
+                                <div id="faq-answer-{{ $i }}" role="region" x-show="open === {{ $i }}" x-collapse>
                                     <div class="px-5 pb-4 text-gray-600 text-sm leading-relaxed">
                                         {{ $faq['a'] }}
                                     </div>

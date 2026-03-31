@@ -55,19 +55,7 @@
     @if (config('app.data_domain') && app()->isProduction())
         <script defer data-domain="eu-vat.info" src="https://stats.businesspress.io/js/script.js"></script>
     @endif
-    <style>
-        :root {
-            --primary: #4F46E5;
-            --primary-dark: #4338CA;
-            --secondary: #0EA5E9;
-            --accent: #F59E0B;
-            --success: #10B981;
-            --warning: #F59E0B;
-            --danger: #EF4444;
-            --background: #F8FAFC;
-            --surface: #FFFFFF;
-        }
-    </style>
+
 </head>
 
 <body class="bg-gradient-to-br from-gray-50 to-gray-100">
