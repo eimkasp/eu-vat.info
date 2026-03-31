@@ -10,9 +10,9 @@
 
     {{-- Breadcrumbs --}}
     <nav class="flex items-center gap-2 text-sm text-gray-400 mb-8">
-        <a href="{{ locale_path('/') }}" wire:navigate class="hover:text-blue-600 transition-colors">Home</a>
+        <a href="{{ locale_path('/') }}" class="hover:text-blue-600 transition-colors">Home</a>
         <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" /></svg>
-        <a href="{{ locale_path('/vat-calculator/' . $countryObject->slug) }}" wire:navigate class="hover:text-blue-600 transition-colors">VAT Calculator</a>
+        <a href="{{ locale_path('/vat-calculator/' . $countryObject->slug) }}" class="hover:text-blue-600 transition-colors">VAT Calculator</a>
         <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" /></svg>
         <span class="text-gray-600 font-medium">Shared Calculation</span>
     </nav>
@@ -238,7 +238,7 @@
         </button>
 
         {{-- Recalculate --}}
-        <a href="{{ locale_path('/vat-calculator/' . $countryObject->slug . '?amount=' . $amount . '&selectedRate=' . $rate . '&vat_included=' . $mode) }}" wire:navigate
+        <a href="{{ locale_path('/vat-calculator/' . $countryObject->slug . '?amount=' . $amount . '&selectedRate=' . $rate . '&vat_included=' . $mode) }}"
            class="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-semibold shadow-lg shadow-blue-200 transition-all w-full sm:w-auto justify-center">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 15.75V18m-7.5-6.75h.008v.008H8.25v-.008Zm0 2.25h.008v.008H8.25V13.5Zm0 2.25h.008v.008H8.25v-.008Zm0 2.25h.008v.008H8.25V18Zm2.498-6.75h.007v.008h-.007v-.008Zm0 2.25h.007v.008h-.007V13.5Zm0 2.25h.007v.008h-.007v-.008Zm0 2.25h.007v.008h-.007V18Zm2.504-6.75h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V13.5Zm0 2.25h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V18Zm2.498-6.75h.008v.008H15.75v-.008Zm0 2.25h.008v.008H15.75V13.5ZM8.25 6h7.5v2.25h-7.5V6ZM12 2.25c-1.892 0-3.758.11-5.593.322C5.307 2.7 4.5 3.65 4.5 4.757V19.5a2.25 2.25 0 0 0 2.25 2.25h10.5a2.25 2.25 0 0 0 2.25-2.25V4.757c0-1.108-.806-2.057-1.907-2.185A48.507 48.507 0 0 0 12 2.25Z" />
@@ -247,7 +247,7 @@
         </a>
 
         {{-- Country Details --}}
-        <a href="{{ locale_path('/vat-calculator/' . $countryObject->slug) }}" wire:navigate
+        <a href="{{ locale_path('/vat-calculator/' . $countryObject->slug) }}"
            class="inline-flex items-center gap-2 px-6 py-3 bg-white border border-gray-200 rounded-xl text-sm font-semibold text-gray-700 hover:bg-gray-50 hover:border-gray-300 shadow-sm transition-all w-full sm:w-auto justify-center">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0 1 21 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0 1 12 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 0 1 3 12c0-1.605.42-3.113 1.157-4.418" />

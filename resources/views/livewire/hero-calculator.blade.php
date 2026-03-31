@@ -333,7 +333,7 @@
                                     </svg>
                                     {{ __('ui.calculator.share_details') }}
                                 </a>
-                                <a href="{{ locale_path('/vat-calculator/' . $selectedCountrySlug) }}" wire:navigate
+                                <a href="{{ locale_path('/vat-calculator/' . $selectedCountrySlug) }}"
                                    class="inline-flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-medium text-gray-500 hover:text-blue-600 transition-colors duration-200">
                                     {{ __('ui.calculator.full_calculator') }}
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">

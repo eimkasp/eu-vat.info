@@ -102,7 +102,7 @@
     </div>
 
     {{-- ─── Content Section ─── --}}
-    <div class="container relative py-12">
+    <div class="container relative !py-12">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
 
             {{-- ── Main content ── --}}

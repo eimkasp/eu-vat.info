@@ -18,7 +18,7 @@
 
     <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {{-- VAT Calculator --}}
-        <a href="{{ locale_path('/vat-calculator') }}" wire:navigate
+        <a href="{{ locale_path('/vat-calculator') }}"
            class="group bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 hover:shadow-md hover:border-blue-300 dark:hover:border-blue-600 transition-all">
             <div class="flex items-center gap-3 mb-3">
                 <div class="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
@@ -32,7 +32,7 @@
         </a>
 
         {{-- VAT Map --}}
-        <a href="{{ locale_path('/vat-map') }}" wire:navigate
+        <a href="{{ locale_path('/vat-map') }}"
            class="group bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 hover:shadow-md hover:border-blue-300 dark:hover:border-blue-600 transition-all">
             <div class="flex items-center gap-3 mb-3">
                 <div class="w-10 h-10 rounded-lg bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 flex items-center justify-center shrink-0">
@@ -46,7 +46,7 @@
         </a>
 
         {{-- VAT History --}}
-        <a href="{{ locale_path('/vat-changes') }}" wire:navigate
+        <a href="{{ locale_path('/vat-changes') }}"
            class="group bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 hover:shadow-md hover:border-blue-300 dark:hover:border-blue-600 transition-all">
             <div class="flex items-center gap-3 mb-3">
                 <div class="w-10 h-10 rounded-lg bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
@@ -60,7 +60,7 @@
         </a>
 
         {{-- Embed Widget --}}
-        <a href="{{ route('widget.embed') }}" wire:navigate
+        <a href="{{ route('widget.embed') }}"
            class="group bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 hover:shadow-md hover:border-blue-300 dark:hover:border-blue-600 transition-all">
             <div class="flex items-center gap-3 mb-3">
                 <div class="w-10 h-10 rounded-lg bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0">

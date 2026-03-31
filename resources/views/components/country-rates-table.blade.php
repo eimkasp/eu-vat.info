@@ -44,7 +44,7 @@
                 @forelse ($countries as $country)
                     <tr class="hover:bg-blue-50/50 transition-colors group">
                         <td class="px-6 py-4">
-                            <a href="{{ locale_path('/vat-calculator/' . $country->slug) }}" wire:navigate
+                            <a href="{{ locale_path('/vat-calculator/' . $country->slug) }}"
                                 class="flex items-center gap-4 group-hover:text-blue-600 transition-colors">
                                 <span class="font-mono text-xs text-gray-300 w-6">#{{ $country->countryRank() }}</span>
                                 <img src="https://flagcdn.com/h40/{{ strtolower($country->iso_code) }}.jpg"
@@ -71,7 +71,7 @@
                             @endif
                         </td>
                         <td class="px-6 py-4 text-right">
-                            <a href="{{ locale_path('/vat-calculator/' . $country->slug) }}" wire:navigate
+                            <a href="{{ locale_path('/vat-calculator/' . $country->slug) }}"
                                 class="text-blue-600 font-medium hover:text-blue-800 text-xs uppercase tracking-wide transition-colors">
                                 {{ __('ui.details') }} &rarr;
                             </a>
