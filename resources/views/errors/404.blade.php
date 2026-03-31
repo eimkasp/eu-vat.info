@@ -108,7 +108,7 @@
             @endphp
 
             @foreach($popularCountries as $c)
-                <a href="{{ locale_path('/country/' . $c['slug']) }}"
+                <a href="{{ locale_path('/vat-calculator/' . $c['slug']) }}"
                    class="flex items-center gap-3 bg-white rounded-lg border border-gray-100 p-4 hover:shadow-md hover:border-blue-200 transition-all group"
                    title="{{ $c['name'] }} VAT rates and calculator">
                     <span class="text-2xl">{{ $c['flag'] }}</span>

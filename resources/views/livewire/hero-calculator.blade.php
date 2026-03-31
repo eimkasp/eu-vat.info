@@ -1,4 +1,4 @@
-<div class="w-full" x-data="{ loadingIndex: null }">
+<div class="w-full" x-data="{ loadingIndex: null, mode: 'exclude' }">
     {{-- Hero Header (hideable when embedded in other pages) --}}
     @if($showHeader)
     <div class="text-center mb-8 sm:mb-10">
@@ -17,13 +17,13 @@
             <div class="relative flex p-1 gap-0 bg-gray-100 rounded-xl">
                 {{-- Sliding background indicator --}}
                 <div class="absolute top-1 bottom-1 rounded-lg bg-gray-800 shadow-md transition-all duration-300 ease-out"
-                     :style="'width: calc(50% - 4px); ' + ($wire.mode === 'include' ? 'left: calc(50% + 2px)' : 'left: 2px')"></div>
+                     :style="'width: calc(50% - 4px); ' + (mode === 'include' ? 'left: calc(50% + 2px)' : 'left: 2px')"></div>
 
                 <button
                     type="button"
-                    @click="$wire.mode = 'exclude'"
-                    class="relative z-10 flex items-center gap-2 px-6 py-3 rounded-lg text-sm font-bold transition-colors duration-300 whitespace-nowrap {{ $mode === 'exclude' ? 'text-white' : 'text-gray-500' }}"
-                    :class="{ 'text-white': $wire.mode === 'exclude', 'text-gray-500': $wire.mode !== 'exclude', 'hover:text-gray-700': $wire.mode !== 'exclude' }"
+                    @click="mode = 'exclude'"
+                    class="relative z-10 flex items-center gap-2 px-6 py-3 rounded-lg text-sm font-bold transition-colors duration-300 whitespace-nowrap"
+                    :class="{ 'text-white': mode === 'exclude', 'text-gray-500': mode !== 'exclude', 'hover:text-gray-700': mode !== 'exclude' }"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -32,9 +32,9 @@
                 </button>
                 <button
                     type="button"
-                    @click="$wire.mode = 'include'"
-                    class="relative z-10 flex items-center gap-2 px-6 py-3 rounded-lg text-sm font-bold transition-colors duration-300 whitespace-nowrap {{ $mode === 'include' ? 'text-white' : 'text-gray-500' }}"
-                    :class="{ 'text-white': $wire.mode === 'include', 'text-gray-500': $wire.mode !== 'include', 'hover:text-gray-700': $wire.mode !== 'include' }"
+                    @click="mode = 'include'"
+                    class="relative z-10 flex items-center gap-2 px-6 py-3 rounded-lg text-sm font-bold transition-colors duration-300 whitespace-nowrap"
+                    :class="{ 'text-white': mode === 'include', 'text-gray-500': mode !== 'include', 'hover:text-gray-700': mode !== 'include' }"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14" />
@@ -166,7 +166,7 @@
                     {{-- Amount Input --}}
                     <div class="flex-1 min-w-0">
                         <label class="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1.5 pl-1">
-                            <span x-text="$wire.mode === 'include' ? '{{ __('ui.calculator.amount_incl_vat') }}' : '{{ __('ui.calculator.amount_excl_vat') }}'"></span>
+                            <span x-text="mode === 'include' ? '{{ __('ui.calculator.amount_incl_vat') }}' : '{{ __('ui.calculator.amount_excl_vat') }}'"></span>
                         </label>
                         <div class="relative">
                             <div class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-semibold text-base">
@@ -185,7 +185,7 @@
                     {{-- Calculate Button --}}
                     <div class="shrink-0 flex items-end">
                         <button
-                            wire:click="calculate"
+                            @click="$wire.set('mode', mode); $wire.calculate()"
                             class="w-full sm:w-auto px-10 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold rounded-xl shadow-lg shadow-blue-600/25 hover:shadow-xl hover:shadow-blue-600/30 active:scale-[0.98] transition-all duration-150 flex items-center justify-center gap-2 text-base whitespace-nowrap h-[50px]"
                         >
                             <svg wire:loading.remove wire:target="calculate" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -255,11 +255,12 @@
                             <img src="https://flagcdn.com/h40/{{ strtolower($selectedCountryObject?->iso_code ?? 'de') }}.jpg"
                                  alt="{{ $selectedCountryObject?->name ?? '' }}"
                                  class="h-4 w-auto rounded-[2px] shadow-sm">
-                            @if($mode === 'exclude')
-                                <span>{{ $selectedCountryObject?->currency_display ?? '€' }}{{ number_format(floatval($amount ?: 0), 2) }} + {{ $selectedRate }}% VAT in <strong class="text-gray-700">{{ $selectedCountryObject?->name ?? '' }}</strong></span>
-                            @else
-                                <span>{{ $selectedCountryObject?->currency_display ?? '€' }}{{ number_format(floatval($amount ?: 0), 2) }} including {{ $selectedRate }}% VAT in <strong class="text-gray-700">{{ $selectedCountryObject?->name ?? '' }}</strong></span>
-                            @endif
+                            <template x-if="mode === 'exclude'">
+                                <span>{{ $selectedCountryObject?->currency_display ?? '€' }}<span x-text="$wire.amount ? (parseFloat($wire.amount) || 0).toFixed(2) : '0.00'"></span> + <span x-text="$wire.selectedRate"></span>% VAT in <strong class="text-gray-700">{{ $selectedCountryObject?->name ?? '' }}</strong></span>
+                            </template>
+                            <template x-if="mode === 'include'">
+                                <span>{{ $selectedCountryObject?->currency_display ?? '€' }}<span x-text="$wire.amount ? (parseFloat($wire.amount) || 0).toFixed(2) : '0.00'"></span> including <span x-text="$wire.selectedRate"></span>% VAT in <strong class="text-gray-700">{{ $selectedCountryObject?->name ?? '' }}</strong></span>
+                            </template>
                         </div>
 
                         <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
@@ -273,24 +274,30 @@
 
                             {{-- Arrow / Plus / Minus --}}
                             <div class="hidden sm:flex items-center justify-center w-10">
-                                <div class="w-8 h-8 rounded-full {{ $mode === 'exclude' ? 'bg-blue-100 text-blue-600' : 'bg-red-100 text-red-600' }} flex items-center justify-center">
-                                    @if($mode === 'exclude')
+                                <div :class="mode === 'exclude' ? 'bg-blue-100 text-blue-600' : 'bg-red-100 text-red-600'" class="w-8 h-8 rounded-full flex items-center justify-center">
+                                    <template x-if="mode === 'exclude'">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                                         </svg>
-                                    @else
+                                    </template>
+                                    <template x-if="mode === 'include'">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14" />
                                         </svg>
-                                    @endif
+                                    </template>
                                 </div>
                             </div>
 
                             {{-- VAT Amount --}}
                             <div class="flex-1 text-center">
                                 <div class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1">{{ __('ui.calculator.vat_label', ['rate' => $selectedRate]) }}</div>
-                                <div class="text-2xl sm:text-3xl font-bold {{ $mode === 'exclude' ? 'text-blue-600' : 'text-red-600' }} tabular-nums">
-                                    {{ $mode === 'exclude' ? '+' : '-' }}{{ $selectedCountryObject?->currency_display ?? '€' }}{{ number_format($vat_amount, 2) }}
+                                <div :class="mode === 'exclude' ? 'text-blue-600' : 'text-red-600'" class="text-2xl sm:text-3xl font-bold tabular-nums">
+                                    <template x-if="mode === 'exclude'">
+                                        <span>+{{ $selectedCountryObject?->currency_display ?? '€' }}<span x-text="$wire.vat_amount ? (parseFloat($wire.vat_amount) || 0).toFixed(2) : '0.00'"></span></span>
+                                    </template>
+                                    <template x-if="mode === 'include'">
+                                        <span>−{{ $selectedCountryObject?->currency_display ?? '€' }}<span x-text="$wire.vat_amount ? (parseFloat($wire.vat_amount) || 0).toFixed(2) : '0.00'"></span></span>
+                                    </template>
                                 </div>
                             </div>
 
@@ -302,16 +309,21 @@
                             {{-- Total --}}
                             <div class="flex-1 text-center sm:text-right">
                                 <div class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1">
-                                    {{ $mode === 'exclude' ? __('ui.calculator.total_incl_vat') : __('ui.calculator.you_entered_incl_vat') }}
+                                    <template x-if="mode === 'exclude'">
+                                        <span>{{ __('ui.calculator.total_incl_vat') }}</span>
+                                    </template>
+                                    <template x-if="mode === 'include'">
+                                        <span>{{ __('ui.calculator.you_entered_incl_vat') }}</span>
+                                    </template>
                                 </div>
                                 <div class="text-2xl sm:text-3xl font-extrabold text-gray-900 tabular-nums">
-                                    {{ $selectedCountryObject?->currency_display ?? '€' }}{{ number_format($total, 2) }}
+                                    {{ $selectedCountryObject?->currency_display ?? '€' }}<span x-text="$wire.total ? (parseFloat($wire.total) || 0).toFixed(2) : '0.00'"></span>
                                 </div>
                             </div>
 
                             {{-- CTA --}}
                             <div class="flex flex-col gap-2 sm:pl-4 sm:border-l border-gray-200">
-                                <a href="{{ locale_path('/calculation?country=' . $selectedCountrySlug . '&amount=' . $amount . '&rate=' . $selectedRate . '&mode=' . $mode) }}"
+                                <a :href="'{{ locale_path('/calculation?country=' . $selectedCountrySlug . '&amount=' . ($amount ?: 0) . '&rate=' . ($selectedRate ?: 0)) }}&mode=' + mode"
                                    class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 bg-gray-800 hover:bg-gray-900 text-white rounded-lg text-xs font-semibold shadow-sm transition-all duration-200">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z" />
@@ -330,11 +342,12 @@
 
                         {{-- Mobile-only divider with formula --}}
                         <div class="sm:hidden mt-3 pt-3 border-t border-gray-200 text-center text-xs text-gray-400">
-                            @if($mode === 'exclude')
-                                {{ $selectedCountryObject?->currency_display ?? '€' }}{{ number_format($net_amount, 2) }} + {{ $selectedRate }}% VAT = {{ $selectedCountryObject?->currency_display ?? '€' }}{{ number_format($total, 2) }}
-                            @else
-                                {{ $selectedCountryObject?->currency_display ?? '€' }}{{ number_format($total, 2) }} − {{ $selectedRate }}% VAT = {{ $selectedCountryObject?->currency_display ?? '€' }}{{ number_format($net_amount, 2) }}
-                            @endif
+                            <template x-if="mode === 'exclude'">
+                                <span>{{ $selectedCountryObject?->currency_display ?? '€' }}<span x-text="$wire.net_amount ? (parseFloat($wire.net_amount) || 0).toFixed(2) : '0.00'"></span> + <span x-text="$wire.selectedRate"></span>% VAT = {{ $selectedCountryObject?->currency_display ?? '€' }}<span x-text="$wire.total ? (parseFloat($wire.total) || 0).toFixed(2) : '0.00'"></span></span>
+                            </template>
+                            <template x-if="mode === 'include'">
+                                <span>{{ $selectedCountryObject?->currency_display ?? '€' }}<span x-text="$wire.total ? (parseFloat($wire.total) || 0).toFixed(2) : '0.00'"></span> − <span x-text="$wire.selectedRate"></span>% VAT = {{ $selectedCountryObject?->currency_display ?? '€' }}<span x-text="$wire.net_amount ? (parseFloat($wire.net_amount) || 0).toFixed(2) : '0.00'"></span></span>
+                            </template>
                         </div>
                     </div>
                 </div>

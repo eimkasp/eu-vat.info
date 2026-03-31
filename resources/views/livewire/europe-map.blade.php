@@ -178,7 +178,7 @@
                         </div>
 
                         <div class="flex gap-2">
-                            <a :href="'/country/' + selectedCountry.slug"
+                            <a :href="'/vat-calculator/' + selectedCountry.slug"
                                 class="flex-1 text-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-sm font-medium">
                                 Country Details
                             </a>

@@ -26,7 +26,7 @@
                 $flag = mb_chr(ord($iso[0]) + 127397) . mb_chr(ord($iso[1]) + 127397);
             }
         @endphp
-        <a href="{{ locale_path('/country/' . $related->slug) }}" 
+        <a href="{{ locale_path('/vat-calculator/' . $related->slug) }}" 
           
            class="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 hover:shadow-md hover:border-blue-200 dark:hover:border-blue-600 transition-all group">
             <img src="https://flagcdn.com/h40/{{ strtolower($related->iso_code) }}.jpg" 

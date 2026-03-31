@@ -8,7 +8,7 @@
     'itemListElement' => [
         ['@type' => 'ListItem', 'position' => 1, 'name' => 'Home', 'item' => url('/')],
         ['@type' => 'ListItem', 'position' => 2, 'name' => 'Countries', 'item' => url('/')],
-        ['@type' => 'ListItem', 'position' => 3, 'name' => $country->name, 'item' => route('country.show', $country->slug)],
+        ['@type' => 'ListItem', 'position' => 3, 'name' => $country->name, 'item' => route('vat-calculator.country', $country->slug)],
     ],
 ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
 </script>
@@ -19,12 +19,12 @@
     '@type' => 'WebPage',
     'name' => $country->name . ' VAT Rates & Calculator',
     'description' => 'Complete VAT guide for ' . $country->name . '. Standard rate: ' . $country->standard_rate . '%. Free VAT calculator, all rates, compliance info.',
-    'url' => route('country.show', $country->slug),
+    'url' => route('vat-calculator.country', $country->slug),
     'breadcrumb' => [
         '@type' => 'BreadcrumbList',
         'itemListElement' => [
             ['@type' => 'ListItem', 'position' => 1, 'name' => 'Home', 'item' => url('/')],
-            ['@type' => 'ListItem', 'position' => 2, 'name' => $country->name, 'item' => route('country.show', $country->slug)],
+            ['@type' => 'ListItem', 'position' => 2, 'name' => $country->name, 'item' => route('vat-calculator.country', $country->slug)],
         ],
     ],
     'mainEntity' => [
@@ -47,6 +47,6 @@
     'offers' => ['@type' => 'Offer', 'price' => '0', 'priceCurrency' => 'EUR'],
     'description' => 'Free online VAT calculator for ' . $country->name . '. Calculate ' . $country->standard_rate . '% VAT instantly.',
     'operatingSystem' => 'Web Browser',
-    'url' => route('country.show', $country->slug),
+    'url' => route('vat-calculator.country', $country->slug),
 ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
 </script>

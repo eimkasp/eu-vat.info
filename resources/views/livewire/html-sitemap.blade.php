@@ -187,21 +187,9 @@
                 </div>
                 <ul class="space-y-2 text-sm">
                     <li>
-                        <a href="{{ locale_path('/country/' . $country->slug) }}" class="text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-1">
-                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                            {{ __('ui.sitemap.overview_guide', ['country' => $country->name]) }}
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ locale_path('/country/' . $country->slug . '/vat-calculator') }}" class="text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-1">
-                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                            {{ __('ui.sitemap.country_calculator', ['country' => $country->name]) }}
-                        </a>
-                    </li>
-                    <li>
                         <a href="{{ locale_path('/vat-calculator/' . $country->slug) }}" class="text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-1">
                             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                            {{ __('ui.sitemap.standalone_calculator', ['country' => $country->name]) }}
+                            {{ __('ui.sitemap.overview_guide', ['country' => $country->name]) }}
                         </a>
                     </li>
                 </ul>

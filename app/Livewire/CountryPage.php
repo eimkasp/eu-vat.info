@@ -16,10 +16,8 @@ class CountryPage extends Component
     {
         $this->country = Country::where('slug', $slug)->firstOrFail();
 
-        // If accessed via old tab URL, redirect to main country page
-        if ($tab) {
-            return $this->redirect(route('country.show', $this->country->slug), navigate: true);
-        }
+        // Always redirect to the combined vat-calculator page
+        return redirect(route('vat-calculator.country', $this->country->slug), 301);
 
         $this->trackCountryView($this->country, 'country-view');
     }

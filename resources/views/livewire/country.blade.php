@@ -2,10 +2,10 @@
 @section('meta_description', __('ui.country_page.seo_description', ['country' => $country->name, 'rate' => $country->standard_rate]))
 
 @push('head')
-    <link rel="canonical" href="{{ route('country.show', $country->slug) }}">
+    <link rel="canonical" href="{{ route('vat-calculator.country', $country->slug) }}">
     <meta property="og:title" content="{{ __('ui.country_page.seo_title', ['country' => $country->name, 'rate' => $country->standard_rate]) }}">
     <meta property="og:description" content="{{ __('ui.country_page.seo_description', ['country' => $country->name, 'rate' => $country->standard_rate]) }}">
-    <meta property="og:url" content="{{ route('country.show', $country->slug) }}">
+    <meta property="og:url" content="{{ route('vat-calculator.country', $country->slug) }}">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="{{ __('ui.country_page.seo_title', ['country' => $country->name, 'rate' => $country->standard_rate]) }}">
@@ -26,7 +26,7 @@
             @else
                 <img src="/images/eu-vat-calculator-background.jpg" alt="" class="w-full h-full object-cover" loading="eager">
             @endif
-            <div class="absolute inset-0 bg-gradient-to-b from-white/70 via-white/85 to-white"></div>
+            <div class="absolute inset-0 bg-gradient-to-b from-black/85 via-black/70 to-black/50"></div>
         </div>
 
         <div class="container relative">
@@ -39,11 +39,11 @@
                         <img src="https://flagcdn.com/h80/{{ strtolower($country->iso_code) }}.jpg"
                              alt="{{ $country->name }} flag"
                              class="h-8 sm:h-10 w-auto rounded shadow-sm">
-                        <span class="text-gray-900">{{ $country->name }}</span>
+                        <span class="text-white [text-shadow:_0_2px_8px_rgba(0,0,0,0.4)]">{{ $country->name }}</span>
                     </div>
-                    <span class="text-blue-600">VAT Rates & Calculator</span>
+                    <span class="text-blue-300 [text-shadow:_0_2px_8px_rgba(0,0,0,0.4)]">VAT Rates & Calculator</span>
                 </h1>
-                <p class="text-base sm:text-lg text-gray-500 max-w-2xl mx-auto leading-relaxed">
+                <p class="text-base sm:text-lg text-white/90 max-w-2xl mx-auto leading-relaxed [text-shadow:_0_1px_4px_rgba(0,0,0,0.3)]">
                     {{ __('ui.country_page.hero_subtitle', ['country' => $country->name]) }}
                 </p>
             </div>

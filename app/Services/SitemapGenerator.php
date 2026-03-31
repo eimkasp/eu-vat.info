@@ -64,28 +64,12 @@ class SitemapGenerator
         foreach ($countries as $country) {
             $lastmod = $country->updated_at?->toAtomString() ?? now()->toAtomString();
 
-            // Country overview
-            $xml .= $this->urlEntry(
-                '/country/'.$country->slug,
-                $lastmod,
-                'monthly',
-                '0.9',
-            );
-
-            // Country VAT calculator (tab URL)
-            $xml .= $this->urlEntry(
-                '/country/'.$country->slug.'/vat-calculator',
-                $lastmod,
-                'monthly',
-                '0.8',
-            );
-
-            // Standalone calculator URL
+            // Single canonical URL per country (calculator + guide combined)
             $xml .= $this->urlEntry(
                 '/vat-calculator/'.$country->slug,
                 $lastmod,
                 'monthly',
-                '0.7',
+                '0.9',
             );
         }
 

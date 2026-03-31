@@ -23,9 +23,12 @@ use Illuminate\Support\Facades\Route;
 // Helper: register all app routes (used for both root and locale-prefix groups)
 $registerRoutes = function () {
     Route::get('/', Home::class)->name('home');
-    Route::get('/country/{slug}', CountryPage::class)->name('country.show');
-    Route::get('/country/{slug}/{tab}', CountryPage::class)->name('country.tab')
-        ->where('tab', 'vat-calculator|vat-validator|history|vat-guide|overview');
+
+    // 301 redirects: /country/{slug}[/{tab}] → /vat-calculator/{slug}
+    Route::redirect('/country/{slug}', '/vat-calculator/{slug}', 301)->name('country.show');
+    Route::get('/country/{slug}/{tab}', function (string $slug) {
+        return redirect(route('vat-calculator.country', $slug), 301);
+    })->where('tab', 'vat-calculator|vat-validator|history|vat-guide|overview')->name('country.tab');
 
     Route::get('/tools', Tools::class);
 

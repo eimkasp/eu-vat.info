@@ -22,7 +22,7 @@ class CountryResource extends JsonResource
             ],
             'links' => [
                 'calculator' => route('vat-calculator.country', $this->slug),
-                'details' => route('country.show', $this->slug),
+                'details' => route('vat-calculator.country', $this->slug),
             ],
             'last_updated' => $this->updated_at->toISOString(),
         ];
