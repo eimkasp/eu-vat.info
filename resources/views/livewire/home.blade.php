@@ -66,7 +66,7 @@
 <div class="relative" x-data="{ showMap: true }">
     {{-- Full-screen Background Image --}}
     <div class="absolute inset-0 z-0">
-        <img src="/build/images/eu-vat-calculator-background.jpg" alt="" class="w-full h-screen object-cover" loading="eager">
+        <img src="/images/eu-vat-calculator-background.jpg" alt="" class="w-full h-screen object-cover" loading="eager">
     </div>
 
     <div class="relative z-10 mx-auto max-w-7xl px-4 py-6 sm:py-12">

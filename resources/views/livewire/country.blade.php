@@ -21,16 +21,16 @@
     <div class="relative pt-8 pb-12">
         {{-- Background image --}}
         <div class="absolute inset-0 z-0">
-            @if(file_exists(public_path('build/images/countries/' . strtolower($country->iso_code) . '.jpg')))
-                <img src="/build/images/countries/{{ strtolower($country->iso_code) }}.jpg" alt="" class="w-full h-full object-cover" loading="eager">
+            @if(file_exists(public_path('images/countries/' . strtolower($country->iso_code) . '.jpg')))
+                <img src="/images/countries/{{ strtolower($country->iso_code) }}.jpg" alt="" class="w-full h-full object-cover" loading="eager">
             @else
-                <img src="/build/images/eu-vat-calculator-background.jpg" alt="" class="w-full h-full object-cover" loading="eager">
+                <img src="/images/eu-vat-calculator-background.jpg" alt="" class="w-full h-full object-cover" loading="eager">
             @endif
-            <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-white/95"></div>
+            <div class="absolute inset-0 bg-gradient-to-b from-white/60 via-white/80 to-white"></div>
         </div>
 
-        <div class="relative z-10 max-w-7xl mx-auto px-4">
-            <x-breadcrumbs :items="[__('ui.breadcrumbs.countries') => locale_path('/'), $country->name => '']" class="text-white/80" />
+        <div class="container relative">
+            <x-breadcrumbs :items="[__('ui.breadcrumbs.countries') => locale_path('/'), $country->name => '']" />
 
             {{-- Country heading --}}
             <div class="text-center mt-6 mb-8">
@@ -39,11 +39,11 @@
                         <img src="https://flagcdn.com/h80/{{ strtolower($country->iso_code) }}.jpg"
                              alt="{{ $country->name }} flag"
                              class="h-8 sm:h-10 w-auto rounded shadow-sm">
-                        <span class="text-white drop-shadow-sm">{{ $country->name }}</span>
+                        <span class="text-gray-900">{{ $country->name }}</span>
                     </div>
-                    <span class="text-blue-400 drop-shadow-sm">VAT Rates & Calculator</span>
+                    <span class="text-blue-600">VAT Rates & Calculator</span>
                 </h1>
-                <p class="text-base sm:text-lg text-white/70 max-w-2xl mx-auto leading-relaxed">
+                <p class="text-base sm:text-lg text-gray-500 max-w-2xl mx-auto leading-relaxed">
                     {{ __('ui.country_page.hero_subtitle', ['country' => $country->name]) }}
                 </p>
             </div>
@@ -54,7 +54,7 @@
     </div>
 
     {{-- ─── Content Section ─── --}}
-    <div class="max-w-7xl mx-auto px-4 py-12">
+    <div class="container relative py-12">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
             {{-- Main content --}}
             <div class="lg:col-span-7 space-y-8">

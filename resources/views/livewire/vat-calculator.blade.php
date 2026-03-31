@@ -64,22 +64,22 @@
         <div class="absolute inset-0 z-0">
             @isset($selectedCountryObject)
                 {{-- Per-country image when available, fallback to default --}}
-                @if(file_exists(public_path('build/images/countries/' . strtolower($selectedCountryObject->iso_code) . '.jpg')))
-                    <img src="/build/images/countries/{{ strtolower($selectedCountryObject->iso_code) }}.jpg" alt="" class="w-full h-full object-cover" loading="eager">
+                @if(file_exists(public_path('images/countries/' . strtolower($selectedCountryObject->iso_code) . '.jpg')))
+                    <img src="/images/countries/{{ strtolower($selectedCountryObject->iso_code) }}.jpg" alt="" class="w-full h-full object-cover" loading="eager">
                 @else
-                    <img src="/build/images/eu-vat-calculator-background.jpg" alt="" class="w-full h-full object-cover" loading="eager">
+                    <img src="/images/eu-vat-calculator-background.jpg" alt="" class="w-full h-full object-cover" loading="eager">
                 @endif
             @else
-                <img src="/build/images/eu-vat-calculator-background.jpg" alt="" class="w-full h-full object-cover" loading="eager">
+                <img src="/images/eu-vat-calculator-background.jpg" alt="" class="w-full h-full object-cover" loading="eager">
             @endisset
-            <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-white/95"></div>
+            <div class="absolute inset-0 bg-gradient-to-b from-white/60 via-white/80 to-white"></div>
         </div>
 
-        <div class="relative z-10 max-w-7xl mx-auto px-4">
+        <div class="container relative">
             @isset($selectedCountryObject)
-                <x-breadcrumbs :items="[__('ui.calculator.breadcrumb_label') => locale_path('/vat-calculator'), $selectedCountryObject->name => '']" class="text-white/80" />
+                <x-breadcrumbs :items="[__('ui.calculator.breadcrumb_label') => locale_path('/vat-calculator'), $selectedCountryObject->name => '']" />
             @else
-                <x-breadcrumbs :items="[__('ui.calculator.breadcrumb_label') => '']" class="text-white/80" />
+                <x-breadcrumbs :items="[__('ui.calculator.breadcrumb_label') => '']" />
             @endisset
 
             {{-- Page heading --}}
@@ -90,14 +90,14 @@
                             <img src="https://flagcdn.com/h80/{{ strtolower($selectedCountryObject->iso_code) }}.jpg"
                                  alt="{{ $selectedCountryObject->name }} flag"
                                  class="h-8 sm:h-10 w-auto rounded shadow-sm">
-                            <span class="text-white drop-shadow-sm">{{ $selectedCountryObject->name }}</span>
+                            <span class="text-gray-900">{{ $selectedCountryObject->name }}</span>
                         </div>
-                        <span class="text-blue-400 drop-shadow-sm">{{ __('ui.calculator.title') }}</span>
+                        <span class="text-blue-600">{{ __('ui.calculator.title') }}</span>
                     @else
-                        <span class="text-blue-400 drop-shadow-sm">EU VAT</span> <span class="text-white drop-shadow-sm">Calculator</span>
+                        <span class="text-blue-600">EU VAT</span> <span class="text-gray-900">Calculator</span>
                     @endisset
                 </h1>
-                <p class="text-base sm:text-lg text-white/70 max-w-2xl mx-auto leading-relaxed">
+                <p class="text-base sm:text-lg text-gray-500 max-w-2xl mx-auto leading-relaxed">
                     @isset($selectedCountryObject)
                         {{ __('ui.calculator.country_subtitle', ['country' => $selectedCountryObject->name, 'rate' => $selectedCountryObject->standard_rate]) }}
                     @else
@@ -112,7 +112,7 @@
     </div>
 
     {{-- Content section --}}
-    <div class="max-w-7xl mx-auto px-4 py-12">
+    <div class="container relative py-12">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
             {{-- Main content --}}
             <div class="lg:col-span-7 space-y-8">
@@ -129,9 +129,9 @@
                 @endisset
 
                 {{-- Rate history chart --}}
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                {{-- <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                     <livewire:vat-rate-history-chart :country="$selectedCountryObject" />
-                </div>
+                </div> --}}
 
                 {{-- Map --}}
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">

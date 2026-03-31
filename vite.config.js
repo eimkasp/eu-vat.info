@@ -32,20 +32,20 @@ function ogImagePlugin() {
 }
 
 /**
- * Vite plugin — copies public/images/ → public/build/images/
- * so static images are available alongside built assets.
+ * Vite plugin — copies resources/images/ → public/images/
+ * so static images are deployed alongside built assets.
  */
 function copyImagesPlugin() {
     return {
         name: 'copy-images',
         apply: 'build',
         closeBundle() {
-            const src = resolve(process.cwd(), 'public/images');
-            const dest = resolve(process.cwd(), 'public/build/images');
+            const src = resolve(process.cwd(), 'resources/images');
+            const dest = resolve(process.cwd(), 'public/images');
             if (existsSync(src)) {
                 mkdirSync(dest, { recursive: true });
                 cpSync(src, dest, { recursive: true });
-                console.log('  ✓ Images copied → public/build/images/');
+                console.log('  ✓ Images copied → public/images/');
             }
         },
     };
