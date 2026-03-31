@@ -26,3 +26,4 @@ public/ads.txt
 
 # Generated during npm run build from resources/images/og-default.svg
 /public/images/og-default.png
+!/public/images

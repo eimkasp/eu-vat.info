@@ -1,4 +1,4 @@
-<div class="w-full" x-data="{ mode: $wire.entangle('mode') }">
+<div class="w-full" x-data="{ mode: @js($mode) }" x-init="mode = $wire.entangle('mode')">
     {{-- Hero Header (hideable when embedded in other pages) --}}
     @if($showHeader)
     <div class="text-center mb-8 sm:mb-10">
