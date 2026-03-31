@@ -2,7 +2,7 @@
 @section('content')
     <div class="p-6">
         @if(request()->query('style') === 'horizontal')
-            <livewire:hero-calculator :initial-country="$country" :show-header="false" />
+            <livewire:hero-calculator :key="'hero-calc-widget-' . $country" :initial-country="$country" :show-header="false" />
         @else
             <livewire:vat-calculator-form />
         @endif

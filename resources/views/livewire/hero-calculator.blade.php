@@ -1,4 +1,4 @@
-<div class="w-full" x-data="{ loadingIndex: null, mode: 'exclude' }">
+<div class="w-full" x-data="{ loadingIndex: null, mode: 'exclude', selectedRate: @js($selectedRate), useCustomRate: @js($useCustomRate), customRate: @js($customRate ?? '') }">
     {{-- Hero Header (hideable when embedded in other pages) --}}
     @if($showHeader)
     <div class="text-center mb-8 sm:mb-10">
@@ -185,7 +185,7 @@
                     {{-- Calculate Button --}}
                     <div class="shrink-0 flex items-end">
                         <button
-                            @click="$wire.set('mode', mode); $wire.calculate()"
+                            @click="$wire.set('mode', mode); $wire.set('selectedRate', selectedRate); $wire.set('useCustomRate', useCustomRate); $wire.set('customRate', customRate); $wire.calculate()"
                             class="w-full sm:w-auto px-10 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold rounded-xl shadow-lg shadow-blue-600/25 hover:shadow-xl hover:shadow-blue-600/30 active:scale-[0.98] transition-all duration-150 flex items-center justify-center gap-2 text-base whitespace-nowrap h-[50px]"
                         >
                             <svg wire:loading.remove wire:target="calculate" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -207,42 +207,45 @@
                     <span class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mr-1">{{ __('ui.calculator.rate_label') }}</span>
                     @foreach($rates as $rate)
                         <button
-                            wire:click="selectRate({{ $rate['value'] }})"
-                            class="relative px-3.5 py-2 rounded-lg text-sm font-semibold border transition-all duration-200
-                                {{ !$useCustomRate && $selectedRate == $rate['value']
-                                    ? 'bg-blue-50 border-blue-300 text-blue-700 ring-1 ring-blue-200'
-                                    : 'bg-white border-gray-200 text-gray-600 hover:border-gray-300 hover:text-gray-800' }}"
+                            type="button"
+                            @click="useCustomRate = false; customRate = ''; selectedRate = {{ $rate['value'] }}"
+                            class="relative px-3.5 py-2 rounded-lg text-sm font-semibold border transition-all duration-200"
+                            :class="!useCustomRate && selectedRate == {{ $rate['value'] }}
+                                ? 'bg-blue-50 border-blue-300 text-blue-700 ring-1 ring-blue-200'
+                                : 'bg-white border-gray-200 text-gray-600 hover:border-gray-300 hover:text-gray-800'"
                         >
-                            <span class="text-[10px] font-medium {{ !$useCustomRate && $selectedRate == $rate['value'] ? 'text-blue-400' : 'text-gray-400' }}">{{ $rate['name'] }}</span>
+                            <span class="text-[10px] font-medium" :class="!useCustomRate && selectedRate == {{ $rate['value'] }} ? 'text-blue-400' : 'text-gray-400'">{{ $rate['name'] }}</span>
                             {{ $rate['value'] }}%
                         </button>
                     @endforeach
 
-                    {{-- Custom Rate --}}
-                    @if($useCustomRate)
-                        <div class="flex items-center gap-1 px-3 py-1.5 rounded-lg border-2 border-amber-400 bg-amber-50 text-amber-700">
-                            <span class="text-[10px] font-medium text-amber-500">{{ __('ui.calculator.custom_label') }}</span>
-                            <input
-                                type="number"
-                                wire:model.live.debounce.300ms="customRate"
-                                step="0.1"
-                                min="0"
-                                max="100"
-                                placeholder="0"
-                                autofocus
-                                @click.stop
-                                class="w-14 px-1.5 py-0.5 text-sm font-semibold border border-amber-300 rounded bg-white focus:ring-1 focus:ring-amber-500 text-center"
-                            >
-                            <span class="text-xs font-semibold">%</span>
-                        </div>
-                    @else
-                        <button
-                            wire:click="enableCustomRate"
-                            class="px-3.5 py-2 rounded-lg text-sm font-semibold border border-dashed border-gray-300 text-gray-400 hover:border-amber-300 hover:text-amber-600 hover:bg-amber-50 transition-all duration-200"
+                    {{-- Custom Rate (active state) --}}
+                    <div x-show="useCustomRate" x-transition:enter="transition ease-out duration-150" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" class="flex items-center gap-1 px-3 py-1.5 rounded-lg border-2 border-amber-400 bg-amber-50 text-amber-700">
+                        <span class="text-[10px] font-medium text-amber-500">{{ __('ui.calculator.custom_label') }}</span>
+                        <input
+                            x-ref="customRateInput"
+                            type="number"
+                            x-model="customRate"
+                            @input="if (customRate !== '' && parseFloat(customRate) >= 0) selectedRate = parseFloat(customRate)"
+                            step="0.1"
+                            min="0"
+                            max="100"
+                            placeholder="0"
+                            @click.stop
+                            class="w-14 px-1.5 py-0.5 text-sm font-semibold border border-amber-300 rounded bg-white focus:ring-1 focus:ring-amber-500 text-center"
                         >
-                            {{ __('ui.calculator.custom_percent') }}
-                        </button>
-                    @endif
+                        <span class="text-xs font-semibold">%</span>
+                    </div>
+
+                    {{-- Custom Rate (toggle button) --}}
+                    <button
+                        x-show="!useCustomRate"
+                        type="button"
+                        @click="useCustomRate = true; $nextTick(() => $refs.customRateInput.focus())"
+                        class="px-3.5 py-2 rounded-lg text-sm font-semibold border border-dashed border-gray-300 text-gray-400 hover:border-amber-300 hover:text-amber-600 hover:bg-amber-50 transition-all duration-200"
+                    >
+                        {{ __('ui.calculator.custom_percent') }}
+                    </button>
                 </div>
             </div>
 
@@ -256,10 +259,10 @@
                                  alt="{{ $selectedCountryObject?->name ?? '' }}"
                                  class="h-4 w-auto rounded-[2px] shadow-sm">
                             <template x-if="mode === 'exclude'">
-                                <span>{{ $selectedCountryObject?->currency_display ?? '€' }}<span x-text="$wire.amount ? (parseFloat($wire.amount) || 0).toFixed(2) : '0.00'"></span> + <span x-text="$wire.selectedRate"></span>% VAT in <strong class="text-gray-700">{{ $selectedCountryObject?->name ?? '' }}</strong></span>
+                                <span>{{ $selectedCountryObject?->currency_display ?? '€' }}<span x-text="$wire.amount ? (parseFloat($wire.amount) || 0).toFixed(2) : '0.00'"></span> + <span x-text="selectedRate"></span>% VAT in <strong class="text-gray-700">{{ $selectedCountryObject?->name ?? '' }}</strong></span>
                             </template>
                             <template x-if="mode === 'include'">
-                                <span>{{ $selectedCountryObject?->currency_display ?? '€' }}<span x-text="$wire.amount ? (parseFloat($wire.amount) || 0).toFixed(2) : '0.00'"></span> including <span x-text="$wire.selectedRate"></span>% VAT in <strong class="text-gray-700">{{ $selectedCountryObject?->name ?? '' }}</strong></span>
+                                <span>{{ $selectedCountryObject?->currency_display ?? '€' }}<span x-text="$wire.amount ? (parseFloat($wire.amount) || 0).toFixed(2) : '0.00'"></span> including <span x-text="selectedRate"></span>% VAT in <strong class="text-gray-700">{{ $selectedCountryObject?->name ?? '' }}</strong></span>
                             </template>
                         </div>
 
@@ -290,7 +293,7 @@
 
                             {{-- VAT Amount --}}
                             <div class="flex-1 text-center">
-                                <div class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1">{{ __('ui.calculator.vat_label', ['rate' => $selectedRate]) }}</div>
+                                <div class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1" x-text="'VAT (' + selectedRate + '%)'"></div>
                                 <div :class="mode === 'exclude' ? 'text-blue-600' : 'text-red-600'" class="text-2xl sm:text-3xl font-bold tabular-nums">
                                     <template x-if="mode === 'exclude'">
                                         <span>+{{ $selectedCountryObject?->currency_display ?? '€' }}<span x-text="$wire.vat_amount ? (parseFloat($wire.vat_amount) || 0).toFixed(2) : '0.00'"></span></span>
@@ -323,7 +326,7 @@
 
                             {{-- CTA --}}
                             <div class="flex flex-col gap-2 sm:pl-4 sm:border-l border-gray-200">
-                                <a :href="'{{ locale_path('/calculation?country=' . $selectedCountrySlug . '&amount=' . ($amount ?: 0) . '&rate=' . ($selectedRate ?: 0)) }}&mode=' + mode"
+                                <a :href="'{{ locale_path('/calculation?country=' . $selectedCountrySlug . '&amount=' . ($amount ?: 0)) }}&rate=' + selectedRate + '&mode=' + mode"
                                    class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 bg-gray-800 hover:bg-gray-900 text-white rounded-lg text-xs font-semibold shadow-sm transition-all duration-200">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z" />
@@ -343,10 +346,10 @@
                         {{-- Mobile-only divider with formula --}}
                         <div class="sm:hidden mt-3 pt-3 border-t border-gray-200 text-center text-xs text-gray-400">
                             <template x-if="mode === 'exclude'">
-                                <span>{{ $selectedCountryObject?->currency_display ?? '€' }}<span x-text="$wire.net_amount ? (parseFloat($wire.net_amount) || 0).toFixed(2) : '0.00'"></span> + <span x-text="$wire.selectedRate"></span>% VAT = {{ $selectedCountryObject?->currency_display ?? '€' }}<span x-text="$wire.total ? (parseFloat($wire.total) || 0).toFixed(2) : '0.00'"></span></span>
+                                <span>{{ $selectedCountryObject?->currency_display ?? '€' }}<span x-text="$wire.net_amount ? (parseFloat($wire.net_amount) || 0).toFixed(2) : '0.00'"></span> + <span x-text="selectedRate"></span>% VAT = {{ $selectedCountryObject?->currency_display ?? '€' }}<span x-text="$wire.total ? (parseFloat($wire.total) || 0).toFixed(2) : '0.00'"></span></span>
                             </template>
                             <template x-if="mode === 'include'">
-                                <span>{{ $selectedCountryObject?->currency_display ?? '€' }}<span x-text="$wire.total ? (parseFloat($wire.total) || 0).toFixed(2) : '0.00'"></span> − <span x-text="$wire.selectedRate"></span>% VAT = {{ $selectedCountryObject?->currency_display ?? '€' }}<span x-text="$wire.net_amount ? (parseFloat($wire.net_amount) || 0).toFixed(2) : '0.00'"></span></span>
+                                <span>{{ $selectedCountryObject?->currency_display ?? '€' }}<span x-text="$wire.total ? (parseFloat($wire.total) || 0).toFixed(2) : '0.00'"></span> − <span x-text="selectedRate"></span>% VAT = {{ $selectedCountryObject?->currency_display ?? '€' }}<span x-text="$wire.net_amount ? (parseFloat($wire.net_amount) || 0).toFixed(2) : '0.00'"></span></span>
                             </template>
                         </div>
                     </div>
@@ -421,7 +424,13 @@
                         @click="
                             loadingIndex = {{ $index }};
                             document.getElementById('hero-calculator').scrollIntoView({ behavior: 'smooth', block: 'center' });
-                            $wire.loadFromHistory({{ $index }}).then(() => { setTimeout(() => loadingIndex = null, 600) });
+                            $wire.loadFromHistory({{ $index }}).then(() => {
+                                mode = $wire.mode;
+                                selectedRate = $wire.selectedRate;
+                                useCustomRate = $wire.useCustomRate;
+                                customRate = $wire.customRate || '';
+                                setTimeout(() => loadingIndex = null, 600);
+                            });
                         "
                         class="{{ $index >= 3 ? 'hidden' : '' }}"
                         :class="{ '!hidden': {{ $index }} >= 3 && !expanded, '!block': {{ $index }} >= 3 && expanded }"

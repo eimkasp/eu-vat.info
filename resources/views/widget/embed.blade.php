@@ -157,7 +157,7 @@
 
                 {{-- Horizontal preview: full width --}}
                 <div x-show="style === 'horizontal'" x-transition>
-                    <livewire:hero-calculator :initial-country="$selectedCountry->slug ?? 'germany'" :show-header="false" />
+                    <livewire:hero-calculator :key="'hero-calc-widget-' . ($selectedCountry->slug ?? 'germany')" :initial-country="$selectedCountry->slug ?? 'germany'" :show-header="false" />
                 </div>
 
                 <div class="mt-3 text-right text-sm">

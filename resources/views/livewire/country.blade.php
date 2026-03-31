@@ -49,7 +49,7 @@
             </div>
 
             {{-- Calculator Widget --}}
-            <livewire:hero-calculator :initial-country="$country->slug" :show-header="false" />
+            <livewire:hero-calculator :key="'hero-calc-' . $country->id" :initial-country="$country->slug" :show-header="false" />
         </div>
     </div>
 

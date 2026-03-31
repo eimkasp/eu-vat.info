@@ -97,7 +97,7 @@
             </div>
 
             {{-- Calculator Widget --}}
-            <livewire:hero-calculator :initial-country="$selectedCountryObject?->slug" :show-header="false" />
+            <livewire:hero-calculator :key="'hero-calc-' . ($selectedCountryObject?->id ?? 'default')" :initial-country="$selectedCountryObject?->slug" :show-header="false" />
         </div>
     </div>
 
