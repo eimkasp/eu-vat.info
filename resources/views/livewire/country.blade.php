@@ -18,7 +18,7 @@
 
 <div class="min-h-screen">
     {{-- ─── Hero Section with Background Image + Calculator ─── --}}
-    <div class="relative pt-8 pb-12">
+    <div class="relative pt-4 pb-12">
         {{-- Background image --}}
         <div class="absolute inset-0 z-0">
             @if(file_exists(public_path('images/countries/' . strtolower($country->iso_code) . '.jpg')))
@@ -30,10 +30,10 @@
         </div>
 
         <div class="container relative">
-            <x-breadcrumbs :items="[__('ui.breadcrumbs.countries') => locale_path('/'), $country->name => '']" />
+            <x-breadcrumbs variant="dark" :items="[__('ui.breadcrumbs.countries') => locale_path('/'), $country->name => '']" />
 
             {{-- Country heading --}}
-            <div class="text-center mt-6 mb-8">
+            <div class="text-center mt-3 mb-6">
                 <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight mb-3">
                     <div class="flex items-center justify-center gap-3 mb-2">
                         <img src="https://flagcdn.com/h80/{{ strtolower($country->iso_code) }}.jpg"

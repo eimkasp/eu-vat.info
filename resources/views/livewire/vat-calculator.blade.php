@@ -69,7 +69,7 @@
 
 <div class="min-h-screen">
     {{-- ─── Hero Section with Background Image + Calculator ─── --}}
-    <div class="relative pt-8 pb-12">
+    <div class="relative pt-4 pb-12">
         {{-- Background image --}}
         <div class="absolute inset-0 z-0">
             @isset($selectedCountryObject)
@@ -86,13 +86,13 @@
 
         <div class="container relative">
             @isset($selectedCountryObject)
-                <x-breadcrumbs :items="[__('ui.calculator.breadcrumb_label') => locale_path('/vat-calculator'), $selectedCountryObject->name => '']" />
+                <x-breadcrumbs variant="dark" :items="[__('ui.calculator.breadcrumb_label') => locale_path('/vat-calculator'), $selectedCountryObject->name => '']" />
             @else
-                <x-breadcrumbs :items="[__('ui.calculator.breadcrumb_label') => '']" />
+                <x-breadcrumbs variant="dark" :items="[__('ui.calculator.breadcrumb_label') => '']" />
             @endisset
 
             {{-- Page heading --}}
-            <div class="text-center mt-6 mb-8">
+            <div class="text-center mt-3 mb-6">
                 <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight mb-3">
                     @isset($selectedCountryObject)
                         <div class="flex items-center justify-center gap-3 mb-2">

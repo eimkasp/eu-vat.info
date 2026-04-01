@@ -13,7 +13,8 @@ class SetLocale
     /**
      * Handle an incoming request.
      *
-     * Locale priority: URL prefix > session > browser Accept-Language > default
+     * Locale is determined solely by the URL prefix.
+     * Non-prefixed URLs always resolve to the default language (English).
      */
     public function handle(Request $request, Closure $next): Response
     {
@@ -24,13 +25,13 @@ class SetLocale
         $segment = $request->segment(1);
 
         if ($segment && in_array($segment, $supported) && $segment !== $default) {
+            // Explicit locale prefix in URL — use it
             $locale = $segment;
-        } elseif ($request->hasSession() && $request->session()->has('locale') && in_array($request->session()->get('locale'), $supported)) {
-            // 2. Check session
-            $locale = $request->session()->get('locale');
         } else {
-            // 3. Check browser Accept-Language
-            $locale = $this->detectBrowserLocale($request, $supported) ?? $default;
+            // No locale prefix — always use the default language (English).
+            // Non-prefixed URLs are the English routes; users wanting another
+            // language must use the prefixed URL (e.g. /de, /fr).
+            $locale = $default;
         }
 
         App::setLocale($locale);
