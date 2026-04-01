@@ -4,21 +4,16 @@ namespace App\Livewire;
 
 use App\Models\Country;
 use App\Models\VatRate;
-use Livewire\Attributes\Url;
 use Livewire\Component;
 
 class SharedCalculation extends Component
 {
-    #[Url]
     public $country = '';
 
-    #[Url]
     public $amount = 100;
 
-    #[Url]
     public $rate = 0;
 
-    #[Url]
     public $mode = 'exclude';
 
     public $countryObject = null;
@@ -35,11 +30,12 @@ class SharedCalculation extends Component
 
     public $rateName = '';
 
-    public function mount()
+    public function mount(string $country, string $amount = '100', string $rate = '0', string $mode = 'exclude')
     {
-        if (!$this->country) {
-            abort(404);
-        }
+        $this->country = $country;
+        $this->amount = $amount;
+        $this->rate = $rate;
+        $this->mode = in_array($mode, ['include', 'exclude']) ? $mode : 'exclude';
 
         $this->countryObject = Country::where('slug', $this->country)->first();
 
@@ -54,12 +50,12 @@ class SharedCalculation extends Component
 
     public function getShareUrlProperty(): string
     {
-        return url()->current() . '?' . http_build_query([
-            'country' => $this->country,
-            'amount' => $this->amount,
-            'rate' => $this->rate,
-            'mode' => $this->mode,
-        ]);
+        return url(locale_path('/vat-calculation/' . $this->country . '/' . $this->amount . '/' . $this->rate . '/' . $this->mode));
+    }
+
+    public static function calculationUrl(string $country, $amount, $rate, string $mode): string
+    {
+        return locale_path('/vat-calculation/' . $country . '/' . $amount . '/' . $rate . '/' . $mode);
     }
 
     private function calculate()

@@ -35,7 +35,10 @@ $registerRoutes = function () {
     Route::get('/vat-calculator', VatCalculator::class)->name('vat-calculator');
     Route::get('/vat-map', VatMap::class)->name('vat-map');
     Route::get('/vat-calculator/{slug}', VatCalculator::class)->name('vat-calculator.country');
-    Route::get('/calculation', SharedCalculation::class)->name('shared-calculation');
+    Route::get('/vat-calculation/{country}/{amount}/{rate}/{mode}', SharedCalculation::class)
+        ->where(['amount' => '[0-9]+(\.[0-9]{1,2})?', 'rate' => '[0-9]+(\.[0-9]{1,2})?', 'mode' => 'exclude|include'])
+        ->name('shared-calculation');
+    Route::get('/top-vat-calculations', \App\Livewire\TopCalculations::class)->name('top-calculations');
     Route::get('/vat-changes', \App\Livewire\VatChangesHistory::class)->name('vat-changes');
     Route::get('/mcp-server', McpServer::class)->name('mcp-server');
     Route::get('/sitemap', HtmlSitemap::class)->name('html-sitemap');
@@ -52,6 +55,20 @@ Route::prefix('{locale}')
 
 // Default locale (en) — no prefix (registered LAST so names point to root URIs)
 $registerRoutes();
+
+// Legacy redirect: /calculation?country=X&amount=Y&rate=Z&mode=M → /vat-calculation/X/Y/Z/M
+Route::get('/calculation', function (\Illuminate\Http\Request $request) {
+    $country = $request->query('country', '');
+    $amount = $request->query('amount', '100');
+    $rate = $request->query('rate', '0');
+    $mode = $request->query('mode', 'exclude');
+
+    if (!$country) {
+        abort(404);
+    }
+
+    return redirect(locale_path("/vat-calculation/{$country}/{$amount}/{$rate}/{$mode}"), 301);
+});
 
 // Language switch route
 Route::get('/lang/{locale}', function (string $locale) {
