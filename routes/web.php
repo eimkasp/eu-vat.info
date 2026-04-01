@@ -25,10 +25,12 @@ $registerRoutes = function () {
     Route::get('/', Home::class)->name('home');
 
     // 301 redirects: /country/{slug}[/{tab}] → /vat-calculator/{slug} (locale-aware)
-    Route::get('/country/{slug}', function (string $slug) {
+    Route::get('/country/{slug}', function () {
+        $slug = request()->route('slug');
         return redirect(locale_path('/vat-calculator/'.$slug), 301);
     })->name('country.show');
-    Route::get('/country/{slug}/{tab}', function (string $slug) {
+    Route::get('/country/{slug}/{tab}', function () {
+        $slug = request()->route('slug');
         return redirect(locale_path('/vat-calculator/'.$slug), 301);
     })->where('tab', 'vat-calculator|vat-validator|history|vat-guide|overview')->name('country.tab');
 
@@ -36,6 +38,22 @@ $registerRoutes = function () {
 
     Route::get('/vat-calculator', VatCalculator::class)->name('vat-calculator');
     Route::get('/vat-map', VatMap::class)->name('vat-map');
+
+    // 301 redirect: /vat-calculator/{iso_code} → /vat-calculator/{slug} (e.g., /vat-calculator/mt → /vat-calculator/malta)
+    // Match 2-letter ISO codes that exist as country ISO codes but not as slugs
+    Route::get('/vat-calculator/{code}', function () {
+        $code = request()->route('code');
+        $country = \App\Models\Country::where('iso_code', strtoupper($code))
+            ->orWhere('iso_code_2', strtoupper($code))
+            ->first();
+
+        if ($country) {
+            return redirect(locale_path('/vat-calculator/'.$country->slug), 301);
+        }
+
+        abort(404);
+    })->where('code', '[a-zA-Z]{2}');
+
     Route::get('/vat-calculator/{slug}', VatCalculator::class)->name('vat-calculator.country');
     Route::get('/vat-calculation/{country}/{amount}/{rate}/{mode}', SharedCalculation::class)
         ->where(['amount' => '[0-9]+(\.[0-9]{1,2})?', 'rate' => '[0-9]+(\.[0-9]{1,2})?', 'mode' => 'exclude|include'])
