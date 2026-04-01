@@ -15,7 +15,7 @@ it('loads vat-changes page with correct layout', function () {
         ->assertStatus(200)
         ->assertSee('VAT Rate Changes History')
         ->assertSee('Country Stability Indicators')
-        ->assertSee('Filters');
+        ->assertSee('All Countries');
 });
 
 it('vat-changes page shows country filter', function () {

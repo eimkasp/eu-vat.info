@@ -9,7 +9,7 @@
 @if($mobile)
     {{-- Mobile: simple select --}}
     <div class="px-4 py-2">
-        <label class="block text-xs font-medium text-gray-500 mb-1">{{ __('ui.language_switcher.label') }}</label>
+        <label class="block text-xs font-medium text-blue-200 mb-1">{{ __('ui.language_switcher.label') }}</label>
         <select onchange="window.location.href='/lang/' + this.value"
                 class="w-full rounded-md border-gray-300 text-sm focus:ring-blue-500 focus:border-blue-500">
             @foreach($locales as $code => $config)
@@ -23,10 +23,10 @@
     {{-- Desktop: dropdown --}}
     <div x-data="{ open: false }" @click.outside="open = false" class="relative">
         <button @click="open = !open" type="button"
-                class="flex items-center gap-1.5 text-sm text-gray-600 hover:text-blue-600 transition-colors px-2 py-1 rounded-md hover:bg-gray-100"
+                class="flex items-center gap-1.5 text-sm text-white hover:text-blue-200 transition-colors px-2 py-1 rounded-md hover:bg-white/10"
                 aria-label="{{ __('ui.language_switcher.current', ['name' => $currentConfig['native'] ?? 'English']) }}">
             <img src="https://flagcdn.com/h20/{{ $currentConfig['flag'] ?? 'gb' }}.jpg"
-                 alt="" class="h-3.5 rounded-sm border border-gray-200" loading="lazy">
+                 alt="" class="h-3.5 rounded-sm border border-white/30" loading="lazy">
             <span class="uppercase font-medium">{{ $current }}</span>
             <svg class="w-3 h-3 transition-transform" :class="{ 'rotate-180': open }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>

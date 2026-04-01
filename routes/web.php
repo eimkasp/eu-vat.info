@@ -24,10 +24,12 @@ use Illuminate\Support\Facades\Route;
 $registerRoutes = function () {
     Route::get('/', Home::class)->name('home');
 
-    // 301 redirects: /country/{slug}[/{tab}] → /vat-calculator/{slug}
-    Route::redirect('/country/{slug}', '/vat-calculator/{slug}', 301)->name('country.show');
+    // 301 redirects: /country/{slug}[/{tab}] → /vat-calculator/{slug} (locale-aware)
+    Route::get('/country/{slug}', function (string $slug) {
+        return redirect(locale_path('/vat-calculator/'.$slug), 301);
+    })->name('country.show');
     Route::get('/country/{slug}/{tab}', function (string $slug) {
-        return redirect(route('vat-calculator.country', $slug), 301);
+        return redirect(locale_path('/vat-calculator/'.$slug), 301);
     })->where('tab', 'vat-calculator|vat-validator|history|vat-guide|overview')->name('country.tab');
 
     Route::get('/tools', Tools::class);

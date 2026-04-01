@@ -2,7 +2,7 @@
 @php
     $calcMetaTitle = __('ui.calculator.meta_title_country', ['country' => $selectedCountryObject->name, 'rate' => $selectedCountryObject->standard_rate]);
     $calcMetaDesc = __('ui.calculator.meta_desc_country', ['country' => $selectedCountryObject->name, 'rate' => $selectedCountryObject->standard_rate]);
-    $calcCanonical = route('vat-calculator.country', $selectedCountryObject->slug);
+    $calcCanonical = url(locale_path('/vat-calculator/' . $selectedCountryObject->slug));
 @endphp
 @section('title', $calcMetaTitle)
 @section('meta_description', $calcMetaDesc)
@@ -20,8 +20,8 @@
             '@context' => 'https://schema.org',
             '@type' => 'BreadcrumbList',
             'itemListElement' => [
-                ['@type' => 'ListItem', 'position' => 1, 'name' => __('ui.calculator.schema_breadcrumb_home'), 'item' => url('/')],
-                ['@type' => 'ListItem', 'position' => 2, 'name' => __('ui.calculator.schema_breadcrumb_calculator'), 'item' => route('vat-calculator')],
+                ['@type' => 'ListItem', 'position' => 1, 'name' => __('ui.calculator.schema_breadcrumb_home'), 'item' => url(locale_path('/'))],
+                ['@type' => 'ListItem', 'position' => 2, 'name' => __('ui.calculator.schema_breadcrumb_calculator'), 'item' => url(locale_path('/vat-calculator'))],
                 ['@type' => 'ListItem', 'position' => 3, 'name' => $selectedCountryObject->name, 'item' => $calcCanonical],
             ],
         ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
@@ -37,9 +37,9 @@
             'inLanguage' => app()->getLocale(),
             'isPartOf' => [
                 '@type' => 'WebSite',
-                '@id' => url('/') . '#website',
+                '@id' => url(locale_path('/')) . '#website',
                 'name' => __('ui.site_name'),
-                'url' => url('/'),
+                'url' => url(locale_path('/')),
             ],
             'mainEntity' => [
                 '@type' => 'WebApplication',

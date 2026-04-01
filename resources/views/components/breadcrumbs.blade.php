@@ -22,7 +22,7 @@
                             <span itemprop="name">{{ $label }}</span>
                         </a>
                     @else
-                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300" aria-current="page" itemprop="item">
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300" aria-current="page" itemprop="item" itemid="{{ request()->url() }}">
                             <span itemprop="name">{{ $label }}</span>
                         </span>
                     @endif
