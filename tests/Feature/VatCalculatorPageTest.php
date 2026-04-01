@@ -114,8 +114,8 @@ it('has proper seo meta tags on country page', function () {
 
     $this->get("/vat-calculator/{$country->slug}")
         ->assertStatus(200)
-        ->assertSee('VAT Calculator - '.$country->name, false)
-        ->assertSee('Calculate VAT for '.$country->name, false);
+        ->assertSee($country->name.' VAT Calculator', false)
+        ->assertSee('Standard Rate '.$country->standard_rate.'%', false);
 });
 
 it('displays schema.org json-ld on country page', function () {
@@ -127,5 +127,6 @@ it('displays schema.org json-ld on country page', function () {
     expect($response->getContent())
         ->toContain('application/ld+json')
         ->toContain('WebApplication')
-        ->toContain($country->name.' VAT Calculator');
+        ->toContain('FinanceApplication')
+        ->toContain($country->name);
 });

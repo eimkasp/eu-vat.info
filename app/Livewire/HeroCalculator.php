@@ -155,10 +155,13 @@ class HeroCalculator extends Component
         $this->calculateVat();
         $this->showResults = true;
 
-        // Save to history
+        // Save to history (deduplicated by country+rate+amount+mode)
         if ($this->total > 0 && !$this->error_message) {
             $countryData = collect($this->countries)->firstWhere('slug', $this->selectedCountrySlug);
+            $key = $this->selectedCountrySlug . '|' . $this->selectedRate . '|' . $this->amount . '|' . $this->mode;
             $entry = [
+                'key' => $key,
+                'slug' => $this->selectedCountrySlug,
                 'country' => $countryData['name'] ?? '',
                 'flag_iso' => $countryData['iso'] ?? '',
                 'amount' => $this->amount,
@@ -170,6 +173,9 @@ class HeroCalculator extends Component
                 'currency' => $this->selectedCountryObject?->currency_display ?? '€',
                 'timestamp' => now()->timestamp,
             ];
+
+            // Remove any existing entry with the same key
+            $this->history = array_values(array_filter($this->history, fn ($h) => ($h['key'] ?? '') !== $key));
 
             array_unshift($this->history, $entry);
             $this->history = array_slice($this->history, 0, 10);

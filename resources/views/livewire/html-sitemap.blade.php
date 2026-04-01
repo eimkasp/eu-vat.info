@@ -77,6 +77,20 @@
                     </a>
                     <p class="text-sm text-gray-500 ml-6">{{ __('ui.sitemap.history_desc') }}</p>
                 </li>
+                <li>
+                    <a href="{{ locale_path('/top-vat-calculations') }}" class="flex items-center gap-2 text-blue-600 hover:text-blue-800 hover:underline font-medium">
+                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        {{ __('ui.sitemap.top_calculations') }}
+                    </a>
+                    <p class="text-sm text-gray-500 ml-6">{{ __('ui.sitemap.top_calculations_desc') }}</p>
+                </li>
+                <li>
+                    <a href="{{ locale_path('/mcp-server') }}" class="flex items-center gap-2 text-blue-600 hover:text-blue-800 hover:underline font-medium">
+                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        {{ __('ui.sitemap.mcp_server') }}
+                    </a>
+                    <p class="text-sm text-gray-500 ml-6">{{ __('ui.sitemap.mcp_server_desc') }}</p>
+                </li>
             </ul>
         </div>
 
@@ -190,6 +204,12 @@
                         <a href="{{ locale_path('/vat-calculator/' . $country->slug) }}" class="text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-1">
                             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                             {{ __('ui.sitemap.overview_guide', ['country' => $country->name]) }}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ locale_path('/vat-calculator/' . $country->slug) }}?tab=calculator" class="text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-1">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                            {{ __('ui.sitemap.country_calculator', ['country' => $country->name]) }}
                         </a>
                     </li>
                 </ul>

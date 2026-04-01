@@ -1,40 +1,60 @@
 @isset($selectedCountryObject)
-@section('title', $selectedCountryObject->name . ' VAT Calculator & Guide | EU VAT Info')
-@section('meta_description', 'Complete ' . $selectedCountryObject->name . ' VAT guide & calculator. Standard rate: ' . $selectedCountryObject->standard_rate . '%. All rates, formulas, registration info and FAQs.')
+@php
+    $calcMetaTitle = __('ui.calculator.meta_title_country', ['country' => $selectedCountryObject->name, 'rate' => $selectedCountryObject->standard_rate]);
+    $calcMetaDesc = __('ui.calculator.meta_desc_country', ['country' => $selectedCountryObject->name, 'rate' => $selectedCountryObject->standard_rate]);
+    $calcCanonical = route('vat-calculator.country', $selectedCountryObject->slug);
+@endphp
+@section('title', $calcMetaTitle)
+@section('meta_description', $calcMetaDesc)
 @section('seo')
-    <x-seo-meta :title="$selectedCountryObject->name . ' VAT Calculator & Guide | EU VAT Info'"
-        :description="'Complete ' . $selectedCountryObject->name . ' VAT guide & calculator. Standard rate: ' . $selectedCountryObject->standard_rate . '%. All rates, formulas, registration info and FAQs.'"
-        :url="route('vat-calculator.country', $selectedCountryObject->slug)">
-        <link rel="canonical" href="{{ route('vat-calculator.country', $selectedCountryObject->slug) }}">
-        <meta property="og:url" content="{{ route('vat-calculator.country', $selectedCountryObject->slug) }}">
+    <x-seo-meta :title="$calcMetaTitle"
+        :description="$calcMetaDesc"
+        :url="$calcCanonical">
+        <link rel="canonical" href="{{ $calcCanonical }}">
+        <meta property="og:url" content="{{ $calcCanonical }}">
         <meta property="og:type" content="website">
+        <meta property="og:locale" content="{{ str_replace('-', '_', app()->getLocale()) }}">
         <meta property="article:modified_time" content="{{ $selectedCountryObject->updated_at->toIso8601String() }}">
         <script type="application/ld+json">
         {!! json_encode([
             '@context' => 'https://schema.org',
             '@type' => 'BreadcrumbList',
             'itemListElement' => [
-                ['@type' => 'ListItem', 'position' => 1, 'name' => 'Home', 'item' => url('/')],
-                ['@type' => 'ListItem', 'position' => 2, 'name' => 'VAT Calculator', 'item' => route('vat-calculator')],
-                ['@type' => 'ListItem', 'position' => 3, 'name' => $selectedCountryObject->name, 'item' => route('vat-calculator.country', $selectedCountryObject->slug)],
+                ['@type' => 'ListItem', 'position' => 1, 'name' => __('ui.calculator.schema_breadcrumb_home'), 'item' => url('/')],
+                ['@type' => 'ListItem', 'position' => 2, 'name' => __('ui.calculator.schema_breadcrumb_calculator'), 'item' => route('vat-calculator')],
+                ['@type' => 'ListItem', 'position' => 3, 'name' => $selectedCountryObject->name, 'item' => $calcCanonical],
             ],
-        ], JSON_UNESCAPED_SLASHES) !!}
+        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
         </script>
         <script type="application/ld+json">
         {!! json_encode([
             '@context' => 'https://schema.org',
             '@type' => 'WebPage',
-            'name' => $selectedCountryObject->name . ' VAT Calculator & Guide',
-            'description' => 'Complete VAT guide for ' . $selectedCountryObject->name . '. Standard rate: ' . $selectedCountryObject->standard_rate . '%. Free VAT calculator, all rates, compliance info.',
-            'url' => route('vat-calculator.country', $selectedCountryObject->slug),
-            'mainEntity' => [
-                '@type' => 'SoftwareApplication',
-                'name' => $selectedCountryObject->name . ' VAT Calculator',
-                'applicationCategory' => 'FinanceApplication',
-                'offers' => ['@type' => 'Offer', 'price' => '0', 'priceCurrency' => 'EUR'],
-                'operatingSystem' => 'Web Browser',
+            '@id' => $calcCanonical . '#webpage',
+            'name' => __('ui.calculator.schema_page_name', ['country' => $selectedCountryObject->name]),
+            'description' => __('ui.calculator.schema_page_desc', ['country' => $selectedCountryObject->name, 'rate' => $selectedCountryObject->standard_rate]),
+            'url' => $calcCanonical,
+            'inLanguage' => app()->getLocale(),
+            'isPartOf' => [
+                '@type' => 'WebSite',
+                '@id' => url('/') . '#website',
+                'name' => __('ui.site_name'),
+                'url' => url('/'),
             ],
-        ], JSON_UNESCAPED_SLASHES) !!}
+            'mainEntity' => [
+                '@type' => 'WebApplication',
+                '@id' => $calcCanonical . '#calculator',
+                'name' => __('ui.calculator.schema_app_name', ['country' => $selectedCountryObject->name]),
+                'applicationCategory' => 'FinanceApplication',
+                'operatingSystem' => 'All',
+                'offers' => ['@type' => 'Offer', 'price' => '0', 'priceCurrency' => 'EUR'],
+                'featureList' => 'VAT calculation, Add VAT, Remove VAT, Multiple rate types',
+                'about' => [
+                    '@type' => 'Country',
+                    'name' => $selectedCountryObject->name,
+                ],
+            ],
+        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
         </script>
     </x-seo-meta>
 @endsection
@@ -42,8 +62,8 @@
 @section('title', __('ui.calculator.meta_title_generic'))
 @section('meta_description', __('ui.calculator.meta_desc_generic'))
 @section('seo')
-    <x-seo-meta title="VAT Calculator - EU Countries | EU VAT Info"
-        description="Calculate VAT for all EU countries. Free online calculator with current rates, historical data, and comparison tools." />
+    <x-seo-meta :title="__('ui.calculator.meta_title_generic')"
+        :description="__('ui.calculator.meta_desc_generic')" />
 @endsection
 @endisset
 

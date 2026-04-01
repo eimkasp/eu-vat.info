@@ -70,6 +70,11 @@ class Country extends Model implements Auditable, Sitemapable
         return $this->hasMany(VatRate::class);
     }
 
+    public function vatRateChanges()
+    {
+        return $this->hasMany(VatRateChange::class);
+    }
+
     /**
      * Get the currency symbol for this country.
      * Falls back to a lookup by ISO code when the DB field is empty.

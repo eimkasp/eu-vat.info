@@ -44,11 +44,13 @@ class SitemapGenerator
 
         // ── Static pages ───────────────────────────────────────────
         $staticPages = [
-            ['path' => '/',               'changefreq' => 'daily',   'priority' => '1.0'],
-            ['path' => '/vat-calculator',  'changefreq' => 'weekly',  'priority' => '0.9'],
-            ['path' => '/vat-map',         'changefreq' => 'monthly', 'priority' => '0.8'],
-            ['path' => '/vat-changes',     'changefreq' => 'weekly',  'priority' => '0.7'],
-            ['path' => '/sitemap',         'changefreq' => 'weekly',  'priority' => '0.5'],
+            ['path' => '/',                      'changefreq' => 'daily',   'priority' => '1.0'],
+            ['path' => '/vat-calculator',         'changefreq' => 'weekly',  'priority' => '0.9'],
+            ['path' => '/vat-map',                'changefreq' => 'monthly', 'priority' => '0.8'],
+            ['path' => '/vat-changes',            'changefreq' => 'weekly',  'priority' => '0.7'],
+            ['path' => '/top-vat-calculations',   'changefreq' => 'weekly',  'priority' => '0.7'],
+            ['path' => '/mcp-server',             'changefreq' => 'monthly', 'priority' => '0.6'],
+            ['path' => '/sitemap',                'changefreq' => 'weekly',  'priority' => '0.5'],
         ];
 
         foreach ($staticPages as $page) {
