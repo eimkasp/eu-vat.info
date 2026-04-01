@@ -18,6 +18,20 @@
                 </p>
             </div>
 
+            @if($loadError)
+                <div class="max-w-4xl mx-auto mb-6">
+                    <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-3">
+                        <svg class="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                        </svg>
+                        <div>
+                            <p class="font-medium text-amber-800">{{ __('ui.errors.data_load_failed_title') }}</p>
+                            <p class="text-sm text-amber-700">{{ __('ui.errors.data_load_failed_desc') }}</p>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
             <livewire:europe-map layout="single" />
 
             {{-- Country Rate Table --}}
@@ -35,7 +49,7 @@
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-100">
-                            @foreach($countries as $country)
+                            @forelse($countries as $country)
                                 <tr class="hover:bg-gray-50 transition-colors">
                                     <td class="px-4 py-2.5">
                                         <a href="{{ locale_path('/vat-calculator/' . $country->slug) }}" class="flex items-center gap-2 text-gray-900 hover:text-blue-600 font-medium">
@@ -52,7 +66,13 @@
                                         </a>
                                     </td>
                                 </tr>
-                            @endforeach
+                            @empty
+                                <tr>
+                                    <td colspan="5" class="px-4 py-8 text-center text-gray-500">
+                                        {{ __('ui.errors.no_data_available') }}
+                                    </td>
+                                </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>

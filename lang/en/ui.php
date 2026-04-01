@@ -497,4 +497,13 @@ return [
 
     // ── Home Page Search ────────────────────────────────────────────────
     'no_results' => 'No countries found matching your search.',
+
+    // ── Error Messages ──────────────────────────────────────────────────
+    'errors' => [
+        'data_load_failed_title' => 'Unable to load VAT data',
+        'data_load_failed_desc' => 'We\'re having trouble loading the latest VAT rates. Please try refreshing the page.',
+        'no_data_available' => 'No data available at this time.',
+        'map_unavailable' => 'Map is temporarily unavailable',
+        'try_again_later' => 'Please try again later.',
+    ],
 ];
