@@ -1,4 +1,4 @@
-<div class="w-full" x-data="{ loadingIndex: null, mode: 'exclude', selectedRate: @js($selectedRate), useCustomRate: @js($useCustomRate), customRate: @js($customRate ?? '') }">
+<div class="w-full" x-data="{ loadingIndex: null, mode: @js($mode), selectedRate: @js($selectedRate), useCustomRate: @js($useCustomRate), customRate: @js($customRate ?? '') }">
     {{-- Hero Header (hideable when embedded in other pages) --}}
     @if($showHeader)
     <div class="text-center mb-8 sm:mb-10">
@@ -21,7 +21,7 @@
 
                 <button
                     type="button"
-                    @click="mode = 'exclude'"
+                    @click="mode = 'exclude'; $wire.setMode('exclude')"
                     class="relative z-10 flex items-center gap-2 px-6 py-3 rounded-lg text-sm font-bold transition-colors duration-300 whitespace-nowrap"
                     :class="{ 'text-white': mode === 'exclude', 'text-gray-500': mode !== 'exclude', 'hover:text-gray-700': mode !== 'exclude' }"
                 >
@@ -32,7 +32,7 @@
                 </button>
                 <button
                     type="button"
-                    @click="mode = 'include'"
+                    @click="mode = 'include'; $wire.setMode('include')"
                     class="relative z-10 flex items-center gap-2 px-6 py-3 rounded-lg text-sm font-bold transition-colors duration-300 whitespace-nowrap"
                     :class="{ 'text-white': mode === 'include', 'text-gray-500': mode !== 'include', 'hover:text-gray-700': mode !== 'include' }"
                 >
@@ -185,7 +185,7 @@
                     {{-- Calculate Button --}}
                     <div class="shrink-0 flex items-end">
                         <button
-                            @click="$wire.set('mode', mode); $wire.set('selectedRate', selectedRate); $wire.set('useCustomRate', useCustomRate); $wire.set('customRate', customRate); $wire.calculate()"
+                            @click="$wire.calculate(mode, selectedRate, useCustomRate, customRate)"
                             class="w-full sm:w-auto px-10 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold rounded-xl shadow-lg shadow-blue-600/25 hover:shadow-xl hover:shadow-blue-600/30 active:scale-[0.98] transition-all duration-150 flex items-center justify-center gap-2 text-base whitespace-nowrap h-[50px]"
                         >
                             <svg wire:loading.remove wire:target="calculate" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -208,7 +208,7 @@
                     @foreach($rates as $rate)
                         <button
                             type="button"
-                            @click="useCustomRate = false; customRate = ''; selectedRate = {{ $rate['value'] }}"
+                            @click="useCustomRate = false; customRate = ''; selectedRate = {{ $rate['value'] }}; $wire.selectRate({{ $rate['value'] }})"
                             class="relative px-3.5 py-2 rounded-lg text-sm font-semibold border transition-all duration-200"
                             :class="!useCustomRate && selectedRate == {{ $rate['value'] }}
                                 ? 'bg-blue-50 border-blue-300 text-blue-700 ring-1 ring-blue-200'
@@ -226,7 +226,7 @@
                             x-ref="customRateInput"
                             type="number"
                             x-model="customRate"
-                            @input="if (customRate !== '' && parseFloat(customRate) >= 0) selectedRate = parseFloat(customRate)"
+                            @input="if (customRate !== '' && parseFloat(customRate) >= 0) { selectedRate = parseFloat(customRate); $wire.enableCustomRate() }"
                             step="0.1"
                             min="0"
                             max="100"
@@ -241,7 +241,7 @@
                     <button
                         x-show="!useCustomRate"
                         type="button"
-                        @click="useCustomRate = true; $nextTick(() => $refs.customRateInput.focus())"
+                        @click="useCustomRate = true; $wire.enableCustomRate(); $nextTick(() => $refs.customRateInput.focus())"
                         class="px-3.5 py-2 rounded-lg text-sm font-semibold border border-dashed border-gray-300 text-gray-400 hover:border-amber-300 hover:text-amber-600 hover:bg-amber-50 transition-all duration-200"
                     >
                         {{ __('ui.calculator.custom_percent') }}
