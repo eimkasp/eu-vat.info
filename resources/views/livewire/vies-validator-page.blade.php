@@ -1,7 +1,11 @@
 @section('seo')
     <x-seo-meta
-        title="VIES VAT Number Validator — Verify EU VAT Numbers Online"
-        description="Free VIES VAT number validation tool. Verify any EU VAT number instantly using the official European Commission VIES database. Check company name, address, and validity."
+        :title="$countryObject
+            ? __('ui.vies_page.country_title', ['country' => $countryObject->name])
+            : __('ui.vies_page.title')"
+        :description="$countryObject
+            ? __('ui.vies_page.country_description', ['country' => $countryObject->name, 'code' => $countryObject->iso_code])
+            : __('ui.vies_page.description')"
         type="website"
     />
 @endsection
@@ -10,9 +14,13 @@
 
     {{-- Breadcrumbs --}}
     <nav class="flex items-center gap-1.5 text-sm text-gray-400 mb-8 flex-wrap" aria-label="Breadcrumb">
-        <a href="{{ locale_path('/') }}" class="hover:text-blue-600 transition-colors">Home</a>
+        <a href="{{ locale_path('/') }}" class="hover:text-blue-600 transition-colors">{{ __('ui.home') }}</a>
         <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" /></svg>
-        <span class="text-gray-600 font-medium">VIES VAT Validator</span>
+        <a href="{{ locale_path('/vat-number-validator') }}" class="hover:text-blue-600 transition-colors">{{ __('ui.vies_page.nav_title') }}</a>
+        @if($countryObject)
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" /></svg>
+            <span class="text-gray-600 font-medium">{{ $countryObject->name }}</span>
+        @endif
     </nav>
 
     {{-- Hero --}}
@@ -22,35 +30,103 @@
         </div>
 
         <div class="relative p-6 sm:p-10">
-            <h1 class="text-2xl sm:text-3xl font-extrabold mb-2">VIES VAT Number Validator</h1>
-            <p class="text-indigo-200 text-sm mb-6">Verify any EU VAT number using the official European Commission VIES database. Results are cached for faster lookups.</p>
+            <h1 class="text-2xl sm:text-3xl font-extrabold mb-2">
+                @if($countryObject)
+                    {{ __('ui.vies_page.country_h1', ['country' => $countryObject->name]) }}
+                @else
+                    {{ __('ui.vies_page.h1') }}
+                @endif
+            </h1>
+            <p class="text-indigo-200 text-sm mb-6">
+                @if($countryObject)
+                    {{ __('ui.vies_page.country_subtitle', ['country' => $countryObject->name, 'code' => $countryObject->iso_code]) }}
+                @else
+                    {{ __('ui.vies_page.subtitle') }}
+                @endif
+            </p>
 
             <form wire:submit.prevent="validateVat" class="space-y-4">
-                <div class="grid sm:grid-cols-4 gap-4">
-                    <div class="sm:col-span-1">
-                        <label class="block text-xs font-semibold text-indigo-200 mb-1.5">Country</label>
-                        <select wire:model="country_code" class="w-full rounded-xl bg-white/10 border border-white/20 text-white px-4 py-3 text-sm focus:ring-2 focus:ring-indigo-400 focus:border-transparent">
-                            <option value="">Select country</option>
-                            @foreach($countries as $c)
-                                <option value="{{ $c->iso_code }}">{{ $c->iso_code }} — {{ $c->name }}</option>
-                            @endforeach
-                        </select>
+                <div class="grid sm:grid-cols-12 gap-4">
+                    {{-- VAT Number (first, wider) --}}
+                    <div class="sm:col-span-5">
+                        <label class="block text-xs font-semibold text-indigo-200 mb-1.5">{{ __('ui.vies_page.vat_number_label') }}</label>
+                        <input type="text" wire:model.blur="vat_number" placeholder="{{ __('ui.vies_page.vat_placeholder') }}" class="w-full rounded-xl bg-white/10 border border-white/20 text-white placeholder-indigo-300/50 px-4 py-3 text-sm focus:ring-2 focus:ring-indigo-400 focus:border-transparent">
                     </div>
-                    <div class="sm:col-span-2">
-                        <label class="block text-xs font-semibold text-indigo-200 mb-1.5">VAT Number</label>
-                        <input type="text" wire:model="vat_number" placeholder="e.g. 123456789" class="w-full rounded-xl bg-white/10 border border-white/20 text-white placeholder-indigo-300/50 px-4 py-3 text-sm focus:ring-2 focus:ring-indigo-400 focus:border-transparent">
+
+                    {{-- Country Selector (searchable with flags) --}}
+                    <div class="sm:col-span-5"
+                         x-data="{
+                            open: false,
+                            search: '',
+                            countries: @js($countries->map(fn($c) => ['iso' => $c->iso_code, 'name' => $c->name, 'slug' => $c->slug, 'flag' => strtolower($c->iso_code)])->values()),
+                            get filtered() {
+                                if (!this.search) return this.countries;
+                                const q = this.search.toLowerCase();
+                                return this.countries.filter(c => c.name.toLowerCase().includes(q) || c.iso.toLowerCase().includes(q));
+                            },
+                            get current() {
+                                return this.countries.find(c => c.iso === $wire.country_code);
+                            },
+                            select(iso) {
+                                $wire.set('country_code', iso);
+                                this.open = false;
+                                this.search = '';
+                            }
+                         }"
+                         @click.outside="open = false"
+                         @keydown.escape.window="open = false"
+                    >
+                        <label class="block text-xs font-semibold text-indigo-200 mb-1.5">{{ __('ui.vies_page.country_label') }}</label>
+                        <div class="relative">
+                            <button type="button"
+                                    @click="open = !open; $nextTick(() => open && $refs.searchInput.focus())"
+                                    class="w-full flex items-center gap-2.5 bg-white/10 border border-white/20 rounded-xl pl-3 pr-10 py-3 text-sm font-medium text-white focus:ring-2 focus:ring-indigo-400 focus:border-transparent hover:bg-white/15 transition-all cursor-pointer text-left h-[46px]"
+                                    aria-haspopup="listbox" :aria-expanded="open.toString()">
+                                <template x-if="current">
+                                    <img :src="'https://flagcdn.com/h40/' + current.flag + '.jpg'" :alt="current.name" class="h-4 w-auto rounded-sm shadow-sm shrink-0">
+                                </template>
+                                <span class="truncate" x-text="current ? current.name : '{{ __('ui.vies_page.select_country') }}'"></span>
+                            </button>
+                            <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-indigo-300">
+                                <svg class="w-4 h-4 transition-transform duration-200" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                            </div>
+
+                            <div x-show="open" x-transition:enter="transition ease-out duration-150" x-transition:enter-start="opacity-0 -translate-y-1" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-100" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0 -translate-y-1"
+                                 class="absolute z-50 mt-1.5 w-full bg-white rounded-xl border border-gray-200 shadow-2xl overflow-hidden" style="display: none;">
+                                <div class="p-2 border-b border-gray-100">
+                                    <div class="relative">
+                                        <svg class="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" /></svg>
+                                        <input x-ref="searchInput" x-model="search" type="text" placeholder="{{ __('ui.vies_page.search_countries') }}" class="w-full pl-8 pr-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-gray-50 text-gray-900"
+                                               @keydown.enter.prevent="if(filtered.length === 1) select(filtered[0].iso)">
+                                    </div>
+                                </div>
+                                <div class="max-h-[240px] overflow-y-auto overscroll-contain" role="listbox">
+                                    <template x-for="c in filtered" :key="c.iso">
+                                        <button type="button" role="option" :aria-selected="(c.iso === $wire.country_code).toString()" @click="select(c.iso)"
+                                                class="w-full flex items-center gap-2.5 px-3 py-2.5 text-sm text-left transition-colors"
+                                                :class="c.iso === $wire.country_code ? 'bg-indigo-50 text-indigo-700 font-semibold' : 'text-gray-700 hover:bg-gray-50'">
+                                            <img :src="'https://flagcdn.com/h40/' + c.flag + '.jpg'" :alt="c.name" class="h-4 w-auto rounded-[2px] shadow-sm shrink-0" loading="lazy">
+                                            <span x-text="c.name" class="truncate"></span>
+                                            <span class="ml-auto text-xs text-gray-400 shrink-0" x-text="c.iso"></span>
+                                        </button>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="sm:col-span-1 flex items-end">
+
+                    {{-- Validate button --}}
+                    <div class="sm:col-span-2 flex items-end">
                         <button type="submit" class="w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-white text-indigo-900 rounded-xl text-sm font-bold hover:bg-indigo-50 transition-all shadow-lg" wire:loading.class="opacity-50" wire:target="validateVat">
                             <svg wire:loading.remove wire:target="validateVat" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
                             <svg wire:loading wire:target="validateVat" class="animate-spin w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
-                            Validate
+                            {{ __('ui.vies_page.validate_btn') }}
                         </button>
                     </div>
                 </div>
                 <p class="text-xs text-indigo-300/70">
-                    Need an example?
-                    <button type="button" wire:click="prefillExample" class="text-indigo-200 hover:text-white underline">Try LT100019070512</button>
+                    {{ __('ui.vies_page.auto_detect_hint') }}
+                    <button type="button" wire:click="prefillExample" class="text-indigo-200 hover:text-white underline">{{ __('ui.vies_page.try_example') }}</button>
                 </p>
             </form>
         </div>
@@ -66,7 +142,8 @@
 
     {{-- Result --}}
     @if($result)
-        <div class="mb-8 bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden" wire:transition>
+        <div class="mb-8 bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden" wire:transition
+             x-init="$dispatch('validation-complete', { cc: '{{ $result['country_code'] }}', vn: '{{ $result['vat_number'] }}', valid: {{ $result['valid'] ? 'true' : 'false' }}, name: {{ json_encode($result['name']) }} })">
             <div class="px-6 py-4 border-b {{ $result['valid'] ? 'bg-emerald-50 border-emerald-200' : 'bg-red-50 border-red-200' }}">
                 <div class="flex items-center gap-2">
                     @if($result['valid'])
@@ -206,13 +283,22 @@
                 <div class="px-6 py-4 border-b border-gray-100">
                     <h2 class="font-semibold text-sm text-gray-900 flex items-center gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-amber-500" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" /></svg>
-                        What is VIES?
+                        @if($countryObject)
+                            {{ __('ui.vies_page.about_vat_country', ['country' => $countryObject->name]) }}
+                        @else
+                            {{ __('ui.vies_page.what_is_vies') }}
+                        @endif
                     </h2>
                 </div>
                 <div class="p-6 text-sm text-gray-700 space-y-3">
-                    <p><strong>VIES (VAT Information Exchange System)</strong> is the official European Commission service for verifying VAT identification numbers of businesses registered in EU member states.</p>
-                    <p>When you validate a VAT number through VIES, the system checks against the national VAT databases of each EU country in real-time. A valid result confirms the company is registered for intra-community trade.</p>
-                    <p>Our validator adds a caching layer on top of VIES, so previously checked numbers return results instantly without querying the EU servers again.</p>
+                    @if($countryObject)
+                        <p>{!! __('ui.vies_page.country_vies_p1', ['country' => $countryObject->name, 'code' => $countryObject->iso_code]) !!}</p>
+                        <p>{!! __('ui.vies_page.country_vies_p2', ['country' => $countryObject->name, 'rate' => $countryObject->standard_rate, 'calculator_link' => '<a href="' . locale_path('/vat-calculator/' . $countryObject->slug) . '" class="text-indigo-600 hover:underline font-medium">' . __('ui.vies_page.country_calculator_link', ['country' => $countryObject->name]) . '</a>']) !!}</p>
+                    @else
+                        <p>{{ __('ui.vies_page.vies_p1') }}</p>
+                        <p>{{ __('ui.vies_page.vies_p2') }}</p>
+                        <p>{{ __('ui.vies_page.vies_p3') }}</p>
+                    @endif
                 </div>
             </div>
 
@@ -245,36 +331,61 @@
 
         {{-- Sidebar --}}
         <div class="space-y-6">
-            {{-- Recently validated --}}
-            @if(count($recentValidations) > 0)
-                <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-5">
-                    <h3 class="font-bold text-gray-900 text-sm mb-3">Recently Validated</h3>
-                    <div class="space-y-2">
-                        @foreach($recentValidations as $v)
-                            <button wire:click="$set('country_code', '{{ $v['country_code'] }}'); $set('vat_number', '{{ $v['vat_number'] }}')"
-                                    class="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs hover:bg-gray-50 transition-colors text-left border border-gray-100">
-                                <div>
-                                    <span class="font-mono font-semibold text-gray-900">{{ $v['country_code'] }}{{ $v['vat_number'] }}</span>
-                                    @if($v['name'] && $v['name'] !== 'N/A')
-                                        <p class="text-gray-500 truncate max-w-[180px]">{{ $v['name'] }}</p>
-                                    @endif
-                                </div>
-                                <span class="shrink-0 w-2 h-2 rounded-full {{ $v['is_valid'] ? 'bg-emerald-500' : 'bg-red-500' }}"></span>
-                            </button>
-                        @endforeach
-                    </div>
+            {{-- Recently validated (localStorage) --}}
+            <div x-data="{
+                history: [],
+                init() {
+                    try { this.history = JSON.parse(localStorage.getItem('vat_validation_history') || '[]'); } catch(e) { this.history = []; }
+                },
+                fill(cc, vn) {
+                    $wire.set('country_code', cc);
+                    $wire.set('vat_number', vn);
+                },
+                clear() {
+                    this.history = [];
+                    localStorage.removeItem('vat_validation_history');
+                }
+            }"
+                 x-on:validation-complete.window="
+                    let entry = $event.detail;
+                    history = history.filter(h => !(h.cc === entry.cc && h.vn === entry.vn));
+                    history.unshift(entry);
+                    history = history.slice(0, 10);
+                    localStorage.setItem('vat_validation_history', JSON.stringify(history));
+                 "
+                 x-show="history.length > 0" x-cloak
+                 class="bg-white rounded-2xl shadow-sm border border-gray-200 p-5">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="font-bold text-gray-900 text-sm">Your Recent Lookups</h3>
+                    <button @click="clear()" class="text-xs text-gray-400 hover:text-red-500 transition-colors">Clear</button>
                 </div>
-            @endif
+                <div class="space-y-2">
+                    <template x-for="v in history" :key="v.cc + v.vn">
+                        <button @click="fill(v.cc, v.vn)"
+                                class="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs hover:bg-gray-50 transition-colors text-left border border-gray-100">
+                            <div>
+                                <span class="font-mono font-semibold text-gray-900" x-text="v.cc + v.vn"></span>
+                                <p class="text-gray-500 truncate max-w-[180px]" x-show="v.name && v.name !== 'N/A'" x-text="v.name"></p>
+                            </div>
+                            <span class="shrink-0 w-2 h-2 rounded-full" :class="v.valid ? 'bg-emerald-500' : 'bg-red-500'"></span>
+                        </button>
+                    </template>
+                </div>
+                <p class="mt-3 text-[10px] text-gray-400 flex items-center gap-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" /></svg>
+                    Saved locally on your device only. Not shared with our servers.
+                </p>
+            </div>
 
-            {{-- EU Countries --}}
+            {{-- Country Validators --}}
             <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-5">
-                <h3 class="font-bold text-gray-900 text-sm mb-3">EU Country VAT Guides</h3>
+                <h3 class="font-bold text-gray-900 text-sm mb-3">{{ __('ui.vies_page.country_validators') }}</h3>
                 <div class="space-y-1 max-h-64 overflow-y-auto">
                     @foreach($countries as $c)
-                        <a href="{{ locale_path('/vat-calculator/' . $c->slug) }}" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs hover:bg-gray-50 transition-colors text-gray-700 hover:text-blue-600">
+                        <a href="{{ locale_path('/vat-number-validator/' . $c->slug) }}" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs transition-colors {{ $countryObject && $countryObject->id === $c->id ? 'bg-indigo-50 text-indigo-700 font-semibold' : 'text-gray-700 hover:bg-gray-50 hover:text-blue-600' }}">
                             <img src="https://flagcdn.com/h40/{{ strtolower($c->iso_code) }}.jpg" alt="" class="h-3 w-auto rounded-sm" loading="lazy">
                             {{ $c->name }}
-                            <span class="ml-auto text-gray-400">{{ $c->standard_rate }}%</span>
+                            <span class="ml-auto text-gray-400">{{ $c->iso_code }}</span>
                         </a>
                     @endforeach
                 </div>

@@ -3,7 +3,6 @@
 namespace App\Livewire;
 
 use App\Models\Country;
-use App\Models\VatValidationCache;
 use App\Models\VatValidationLog;
 use App\Services\ViesValidationService;
 use Livewire\Attributes\Url;
@@ -23,26 +22,77 @@ class ViesValidatorPage extends Component
 
     public $countries;
 
+    public $countryObject = null;
+
     public $validationCount = 0;
 
-    public $recentValidations = [];
+    /**
+     * EU country ISO code prefixes used in VAT numbers.
+     * Greece uses 'EL' in VAT numbers instead of 'GR'.
+     */
+    private const VAT_PREFIXES = [
+        'AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR',
+        'DE', 'EL', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL',
+        'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE',
+    ];
 
     public function mount(?string $slug = null)
     {
         $this->countries = Country::orderBy('name')->get();
 
         if ($slug) {
-            $country = Country::where('slug', $slug)->first();
-            if ($country) {
-                $this->country_code = $country->iso_code;
+            $this->countryObject = Country::where('slug', $slug)->first();
+            if ($this->countryObject) {
+                $this->country_code = $this->countryObject->iso_code;
             }
         }
 
-        $this->loadRecentValidations();
+        // Auto-detect country from vat_number prefix
+        if (!$this->country_code && $this->vat_number) {
+            $this->detectCountryFromVatNumber();
+        }
+
+        // Strip country prefix from vat_number if present
+        $this->stripCountryPrefix();
 
         // Auto-validate if both params provided via URL
         if ($this->country_code && $this->vat_number) {
             $this->validateVat();
+        }
+    }
+
+    public function updatedVatNumber()
+    {
+        $this->detectCountryFromVatNumber();
+        $this->stripCountryPrefix();
+    }
+
+    private function detectCountryFromVatNumber(): void
+    {
+        $cleaned = strtoupper(preg_replace('/[\s\-.]/', '', $this->vat_number));
+
+        if (strlen($cleaned) < 3) {
+            return;
+        }
+
+        $prefix = substr($cleaned, 0, 2);
+
+        if (in_array($prefix, self::VAT_PREFIXES)) {
+            // Greece uses EL in VAT but GR as ISO code
+            $isoCode = $prefix === 'EL' ? 'GR' : $prefix;
+            $this->country_code = $isoCode;
+        }
+    }
+
+    private function stripCountryPrefix(): void
+    {
+        $cleaned = strtoupper(preg_replace('/[\s\-.]/', '', $this->vat_number));
+
+        if (strlen($cleaned) >= 3) {
+            $prefix = substr($cleaned, 0, 2);
+            if (in_array($prefix, self::VAT_PREFIXES)) {
+                $this->vat_number = substr($cleaned, 2);
+            }
         }
     }
 
@@ -91,8 +141,6 @@ class ViesValidatorPage extends Component
                 ->where('country_code', $this->country_code)
                 ->count();
 
-            $this->loadRecentValidations();
-
         } catch (\Exception $e) {
             $this->error = 'Error connecting to VIES service: ' . $e->getMessage();
         }
@@ -103,21 +151,6 @@ class ViesValidatorPage extends Component
         $this->country_code = 'LT';
         $this->vat_number = '100019070512';
         $this->validateVat();
-    }
-
-    private function loadRecentValidations()
-    {
-        $this->recentValidations = VatValidationCache::orderByDesc('last_checked_at')
-            ->limit(10)
-            ->get()
-            ->map(fn ($v) => [
-                'country_code' => $v->country_code,
-                'vat_number' => $v->vat_number,
-                'name' => $v->name,
-                'is_valid' => $v->is_valid,
-                'last_checked_at' => $v->last_checked_at?->diffForHumans(),
-            ])
-            ->toArray();
     }
 
     public function render()

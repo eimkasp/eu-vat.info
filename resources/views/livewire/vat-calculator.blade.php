@@ -194,11 +194,28 @@
                                 </div>
                                 <div class="p-4">
                                     <dt class="text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('ui.country_page.vies_validation') }}</dt>
-                                    <dd class="mt-1 text-lg font-semibold text-green-600">{{ __('ui.country_page.available') }}</dd>
+                                    <dd class="mt-1 text-lg font-semibold text-green-600">
+                                        <a href="{{ locale_path('/vat-number-validator/' . $selectedCountryObject->slug) }}" class="hover:underline">{{ __('ui.country_page.available') }}</a>
+                                    </dd>
                                 </div>
                             </div>
                         </div>
                     </section>
+
+                    {{-- Validate VAT Number CTA --}}
+                    <a href="{{ locale_path('/vat-number-validator/' . $selectedCountryObject->slug) }}"
+                       class="block bg-gradient-to-r from-indigo-50 to-blue-50 rounded-xl border border-indigo-200 p-5 hover:border-indigo-300 hover:shadow-sm transition-all group">
+                        <div class="flex items-center gap-3">
+                            <div class="shrink-0 w-10 h-10 rounded-lg bg-indigo-100 flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <h3 class="font-bold text-indigo-900 text-sm">{{ __('ui.country_page.validate_vat_cta', ['country' => $selectedCountryObject->name]) }}</h3>
+                                <p class="text-xs text-indigo-700/70 mt-0.5">{{ __('ui.country_page.validate_vat_cta_desc', ['country' => $selectedCountryObject->name]) }}</p>
+                            </div>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-indigo-400 group-hover:translate-x-0.5 transition-transform shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" /></svg>
+                        </div>
+                    </a>
 
                     {{-- VAT Guide --}}
                     <section id="guide">
