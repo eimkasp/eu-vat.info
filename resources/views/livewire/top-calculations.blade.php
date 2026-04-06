@@ -1,7 +1,7 @@
 @section('seo')
     <x-seo-meta
-        title="Popular VAT Calculations — EU VAT Calculator"
-        description="Browse the most common VAT calculations across all 27 EU member states. Quick links to add or remove VAT for popular amounts like €100, €500, €1,000 and more."
+        :title="__('ui.top_calc.page_title')"
+        :description="__('ui.top_calc.page_description')"
         type="website"
     />
 @endsection
@@ -9,23 +9,22 @@
 <div class="mx-auto max-w-6xl px-4 py-8 sm:py-12">
 
     {{-- Breadcrumbs --}}
-    <x-breadcrumbs :items="[['label' => 'Popular Calculations']]" />
+    <x-breadcrumbs :items="[__('ui.top_calc.breadcrumb') => '']" />
 
     {{-- Hero --}}
     <div class="text-center mb-10">
         <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight mb-3">
-            Popular VAT Calculations
+            {{ __('ui.top_calc.heading') }}
         </h1>
         <p class="text-gray-500 max-w-2xl mx-auto">
-            Quick access to the most common VAT calculations across all 27 EU member states.
-            Click any link to see the full calculation breakdown.
+            {{ __('ui.top_calc.subheading') }}
         </p>
     </div>
 
     {{-- Quick amount navigation --}}
     <div class="flex flex-wrap justify-center gap-2 mb-10">
         @foreach($popularAmounts as $amt)
-            <a href="#amount-{{ $amt }}" class="px-4 py-2 rounded-full border border-gray-200 bg-white text-sm font-semibold text-gray-700 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700 shadow-sm transition-all">
+            <a href="{{ locale_path('/top-vat-calculations/' . $amt) }}" class="px-4 py-2 rounded-full border border-gray-200 bg-white text-sm font-semibold text-gray-700 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700 shadow-sm transition-all">
                 €{{ number_format($amt) }}
             </a>
         @endforeach
@@ -36,8 +35,9 @@
         <section id="amount-{{ $amt }}" class="mb-12 scroll-mt-20">
             <div class="flex items-center gap-3 mb-5">
                 <h2 class="text-xl sm:text-2xl font-bold text-gray-900">
-                    VAT on €{{ number_format($amt) }}
+                    {{ __('ui.top_calc.vat_on_amount', ['amount' => number_format($amt)]) }}
                 </h2>
+                <span class="text-xs text-gray-400 font-medium">{{ __('ui.top_calc.calculations_count', ['count' => count($countries) * 2]) }}</span>
                 <div class="flex-1 border-t border-gray-200"></div>
             </div>
 
@@ -46,11 +46,11 @@
                     <table class="w-full text-sm">
                         <thead>
                             <tr class="bg-gray-50 border-b border-gray-200">
-                                <th class="px-5 py-3 text-left font-semibold text-gray-600">Country</th>
-                                <th class="px-5 py-3 text-center font-semibold text-gray-600">Rate</th>
-                                <th class="px-5 py-3 text-right font-semibold text-gray-600">VAT Amount</th>
-                                <th class="px-5 py-3 text-right font-semibold text-gray-600">Total incl. VAT</th>
-                                <th class="px-5 py-3 text-center font-semibold text-gray-600">Actions</th>
+                                <th class="px-5 py-3 text-left font-semibold text-gray-600">{{ __('ui.top_calc.country') }}</th>
+                                <th class="px-5 py-3 text-center font-semibold text-gray-600">{{ __('ui.top_calc.rate') }}</th>
+                                <th class="px-5 py-3 text-right font-semibold text-gray-600">{{ __('ui.top_calc.vat_amount') }}</th>
+                                <th class="px-5 py-3 text-right font-semibold text-gray-600">{{ __('ui.top_calc.total_incl_vat') }}</th>
+                                <th class="px-5 py-3 text-center font-semibold text-gray-600">{{ __('ui.top_calc.actions') }}</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-100">
@@ -82,14 +82,12 @@
                                     <td class="px-5 py-3 text-center">
                                         <div class="inline-flex items-center gap-1.5">
                                             <a href="{{ locale_path('/vat-calculation/' . $country['slug'] . '/' . $amt . '/' . $rate . '/exclude') }}"
-                                               class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition-colors"
-                                               title="Add {{ $rate }}% VAT to €{{ number_format($amt) }}">
-                                                + Add VAT
+                                               class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition-colors">
+                                                {{ __('ui.top_calc.add_vat') }}
                                             </a>
                                             <a href="{{ locale_path('/vat-calculation/' . $country['slug'] . '/' . $amt . '/' . $rate . '/include') }}"
-                                               class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-amber-50 text-amber-700 hover:bg-amber-100 transition-colors"
-                                               title="Remove {{ $rate }}% VAT from €{{ number_format($amt) }}">
-                                                − Remove VAT
+                                               class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-amber-50 text-amber-700 hover:bg-amber-100 transition-colors">
+                                                {{ __('ui.top_calc.remove_vat') }}
                                             </a>
                                         </div>
                                     </td>
@@ -98,28 +96,27 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="px-5 py-3 bg-gray-50 border-t border-gray-100 text-center">
+                    <a href="{{ locale_path('/top-vat-calculations/' . $amt) }}" class="text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors">
+                        {{ __('ui.top_calc.view_all', ['count' => count($countries) * 2]) }}
+                    </a>
+                </div>
             </div>
         </section>
     @endforeach
 
     {{-- SEO content --}}
     <div class="prose prose-sm max-w-3xl mx-auto text-gray-600 mt-12">
-        <h2 class="text-lg font-bold text-gray-900">About These Calculations</h2>
+        <h2 class="text-lg font-bold text-gray-900">{{ __('ui.top_calc.about_title') }}</h2>
+        <p>{{ __('ui.top_calc.about_p1') }}</p>
         <p>
-            This page provides pre-calculated VAT amounts for common transaction values across all 27 EU member states.
-            Each calculation uses the current standard VAT rate for the respective country, sourced from the European Commission.
-        </p>
-        <p>
-            VAT (Value Added Tax) is a consumption tax applied to goods and services in the European Union.
-            Standard rates range from {{ collect($countries)->min('standard_rate') }}% to {{ collect($countries)->max('standard_rate') }}%
-            depending on the country. Use our <a href="{{ locale_path('/vat-calculator') }}" class="text-blue-600 hover:text-blue-700">VAT Calculator</a>
-            for custom amounts or to calculate with reduced rates.
+            {{ __('ui.top_calc.about_p2', ['min' => collect($countries)->min('standard_rate'), 'max' => collect($countries)->max('standard_rate')]) }}
+            {!! __('ui.top_calc.use_calculator', ['link' => '<a href="' . locale_path('/vat-calculator') . '" class="text-blue-600 hover:text-blue-700">' . __('ui.top_calc.calculator_link_text') . '</a>']) !!}
         </p>
     </div>
 
     {{-- Disclaimer --}}
     <div class="text-center text-xs text-gray-400 max-w-2xl mx-auto mt-8">
-        <p>Calculations are for informational purposes only. VAT rates are sourced from the European Commission and may change.
-        Always verify with your local tax authority for official compliance.</p>
+        <p>{{ __('ui.top_calc.disclaimer') }}</p>
     </div>
 </div>

@@ -10,6 +10,7 @@ use App\Livewire\VatCalculator;
 use App\Livewire\McpServer;
 use App\Livewire\SharedCalculation;
 use App\Livewire\VatMap;
+use App\Livewire\ViesValidatorPage;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -38,6 +39,8 @@ $registerRoutes = function () {
 
     Route::get('/vat-calculator', VatCalculator::class)->name('vat-calculator');
     Route::get('/vat-map', VatMap::class)->name('vat-map');
+    Route::get('/vat-number-validator', ViesValidatorPage::class)->name('vies-validator');
+    Route::get('/vat-number-validator/{slug}', ViesValidatorPage::class)->name('vies-validator.country');
 
     // 301 redirect: /vat-calculator/{iso_code} → /vat-calculator/{slug} (e.g., /vat-calculator/mt → /vat-calculator/malta)
     // Match 2-letter ISO codes that exist as country ISO codes but not as slugs
@@ -59,6 +62,9 @@ $registerRoutes = function () {
         ->where(['amount' => '[0-9]+(\.[0-9]{1,2})?', 'rate' => '[0-9]+(\.[0-9]{1,2})?', 'mode' => 'exclude|include'])
         ->name('shared-calculation');
     Route::get('/top-vat-calculations', \App\Livewire\TopCalculations::class)->name('top-calculations');
+    Route::get('/top-vat-calculations/{amount}', \App\Livewire\TopCalculationsAmount::class)
+        ->where('amount', '100|200|500|1000|2500|5000|10000')
+        ->name('top-calculations.amount');
     Route::get('/vat-changes', \App\Livewire\VatChangesHistory::class)->name('vat-changes');
     Route::get('/mcp-server', McpServer::class)->name('mcp-server');
     Route::get('/sitemap', HtmlSitemap::class)->name('html-sitemap');

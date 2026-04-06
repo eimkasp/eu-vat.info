@@ -30,6 +30,10 @@ class SharedCalculation extends Component
 
     public $rateName = '';
 
+    public $similarCountries = [];
+
+    public $similarAmounts = [100, 200, 500, 1000, 2500, 5000, 10000];
+
     public function mount(string $country, string $amount = '100', string $rate = '0', string $mode = 'exclude')
     {
         $this->country = $country;
@@ -46,6 +50,7 @@ class SharedCalculation extends Component
         $this->loadRates();
         $this->detectRateName();
         $this->calculate();
+        $this->loadSimilarCountries();
     }
 
     public function getShareUrlProperty(): string
@@ -165,6 +170,15 @@ class SharedCalculation extends Component
                 break;
             }
         }
+    }
+
+    private function loadSimilarCountries()
+    {
+        $this->similarCountries = Country::where('slug', '!=', $this->country)
+            ->orderBy('name')
+            ->get(['name', 'slug', 'iso_code', 'standard_rate'])
+            ->take(10)
+            ->toArray();
     }
 
     public function render()
