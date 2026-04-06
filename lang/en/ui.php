@@ -35,9 +35,11 @@ return [
     'nav' => [
         'all_countries' => 'All Countries',
         'vat_calculator' => 'VAT Calculator',
+        'vat_tools' => 'VAT Tools',
         'vat_widget' => 'VAT Widget',
         'vat_map' => 'VAT Map',
         'vat_history' => 'VAT History',
+        'vat_number_validator' => 'VAT Number Validator',
     ],
 
     // ── Footer ──────────────────────────────────────────────────────────

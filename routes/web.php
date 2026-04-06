@@ -10,6 +10,7 @@ use App\Livewire\VatCalculator;
 use App\Livewire\McpServer;
 use App\Livewire\SharedCalculation;
 use App\Livewire\VatMap;
+use App\Livewire\VatValidationApiDocs;
 use App\Livewire\ViesValidatorPage;
 use Illuminate\Support\Facades\Route;
 
@@ -35,12 +36,13 @@ $registerRoutes = function () {
         return redirect(locale_path('/vat-calculator/'.$slug), 301);
     })->where('tab', 'vat-calculator|vat-validator|history|vat-guide|overview')->name('country.tab');
 
-    Route::get('/tools', Tools::class);
+    Route::get('/tools', Tools::class)->name('tools');
 
     Route::get('/vat-calculator', VatCalculator::class)->name('vat-calculator');
     Route::get('/vat-map', VatMap::class)->name('vat-map');
     Route::get('/vat-number-validator', ViesValidatorPage::class)->name('vies-validator');
     Route::get('/vat-number-validator/{slug}', ViesValidatorPage::class)->name('vies-validator.country');
+    Route::get('/vat-validation-api', VatValidationApiDocs::class)->name('vat-validation-api');
 
     // 301 redirect: /vat-calculator/{iso_code} → /vat-calculator/{slug} (e.g., /vat-calculator/mt → /vat-calculator/malta)
     // Match 2-letter ISO codes that exist as country ISO codes but not as slugs

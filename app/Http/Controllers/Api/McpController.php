@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Country;
+use App\Services\ViesValidationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -13,6 +14,11 @@ class McpController extends Controller
     private const PROTOCOL_VERSION = '2024-11-05';
     private const SERVER_NAME = 'eu-vat-info';
     private const SERVER_VERSION = '1.0.0';
+
+    public function __construct(
+        private ViesValidationService $viesService
+    ) {
+    }
 
     public function handle(Request $request): JsonResponse
     {
@@ -122,6 +128,28 @@ class McpController extends Controller
                         'required' => ['countries'],
                     ],
                 ],
+                [
+                    'name' => 'validate_vat_number',
+                    'description' => 'Validate an EU VAT number against the official VIES (VAT Information Exchange System) database. Returns the registration status and, for valid numbers, the company name and address.',
+                    'inputSchema' => [
+                        'type' => 'object',
+                        'properties' => [
+                            'country_code' => [
+                                'type' => 'string',
+                                'description' => 'Two-letter ISO country code (e.g. "DE", "LT", "FR"). Greece uses "EL".',
+                            ],
+                            'vat_number' => [
+                                'type' => 'string',
+                                'description' => 'VAT number without the country code prefix (e.g. "123456789" for DE123456789)',
+                            ],
+                        ],
+                        'required' => ['country_code', 'vat_number'],
+                    ],
+                ],
+                        ],
+                        'required' => ['countries'],
+                    ],
+                ],
             ],
         ]);
     }
@@ -136,6 +164,7 @@ class McpController extends Controller
             'get_country_vat_rate' => $this->getCountryVatRate($id, $arguments),
             'calculate_vat' => $this->calculateVat($id, $arguments),
             'compare_vat_rates' => $this->compareVatRates($id, $arguments),
+            'validate_vat_number' => $this->validateVatNumber($id, $arguments),
             default => $this->errorResponse($id, -32602, "Unknown tool: {$toolName}"),
         };
     }
@@ -245,10 +274,40 @@ class McpController extends Controller
         return $this->toolResult($id, json_encode($data, JSON_PRETTY_PRINT));
     }
 
+    private function validateVatNumber(mixed $id, array $args): JsonResponse
+    {
+        $countryCode = strtoupper(trim($args['country_code'] ?? ''));
+        $vatNumber = trim($args['vat_number'] ?? '');
+
+        if (! $countryCode || strlen($countryCode) !== 2) {
+            return $this->toolResult($id, 'Error: "country_code" must be a 2-letter ISO country code (e.g. "DE", "LT").', true);
+        }
+        if (! $vatNumber || strlen($vatNumber) < 3) {
+            return $this->toolResult($id, 'Error: "vat_number" is required (without the country prefix).', true);
+        }
+
+        try {
+            $result = $this->viesService->validate($countryCode, $vatNumber);
+
+            $data = [
+                'valid' => $result['valid'] ?? false,
+                'country_code' => $result['country_code'] ?? $countryCode,
+                'vat_number' => $result['vat_number'] ?? $vatNumber,
+                'name' => $result['name'] ?? null,
+                'address' => $result['address'] ?? null,
+                'source' => $result['source'] ?? 'vies',
+                'checked_at' => now()->toIso8601String(),
+            ];
+
+            return $this->toolResult($id, json_encode($data, JSON_PRETTY_PRINT));
+        } catch (\Exception $e) {
+            return $this->toolResult($id, 'Error: VIES validation service unavailable. Please try again later.', true);
+        }
+    }
+
     private function compareVatRates(mixed $id, array $args): JsonResponse
     {
-        $queries = $args['countries'] ?? [];
-        if (count($queries) < 2) {
+        $queries = $args['countries'] ?? [];        if (count($queries) < 2) {
             return $this->toolResult($id, 'Error: Please provide at least 2 countries to compare.', true);
         }
 

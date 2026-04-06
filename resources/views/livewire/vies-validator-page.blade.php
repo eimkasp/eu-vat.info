@@ -24,7 +24,7 @@
     </nav>
 
     {{-- Hero --}}
-    <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-900 via-indigo-800 to-indigo-900 text-white mb-8">
+    <div class="relative overflow-visible rounded-2xl bg-gradient-to-br from-indigo-900 via-indigo-800 to-indigo-900 text-white mb-8">
         <div class="absolute inset-0 opacity-5">
             <svg width="100%" height="100%"><defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" stroke-width="0.5"/></pattern></defs><rect width="100%" height="100%" fill="url(#grid)"/></svg>
         </div>
@@ -225,56 +225,139 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
         <div class="lg:col-span-2 space-y-6">
             {{-- API section --}}
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-                <div class="px-6 py-4 border-b border-gray-100">
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-visible"
+                 x-data="{
+                    simCountry: 'LT',
+                    simVat: '100019070512',
+                    loading: false,
+                    response: null,
+                    error: null,
+                    elapsed: null,
+                    async runRequest() {
+                        this.loading = true;
+                        this.response = null;
+                        this.error = null;
+                        this.elapsed = null;
+                        const t0 = performance.now();
+                        try {
+                            const res = await fetch('/api/vat/validation/validate', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+                                body: JSON.stringify({ country_code: this.simCountry, vat_number: this.simVat })
+                            });
+                            const json = await res.json();
+                            this.elapsed = Math.round(performance.now() - t0);
+                            if (!res.ok) {
+                                this.error = JSON.stringify(json, null, 2);
+                            } else {
+                                this.response = JSON.stringify(json, null, 2);
+                            }
+                        } catch(e) {
+                            this.error = e.message;
+                        }
+                        this.loading = false;
+                    },
+                    get requestBody() {
+                        return JSON.stringify({ country_code: this.simCountry, vat_number: this.simVat }, null, 2);
+                    }
+                 }">
+                <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
                     <h2 class="font-semibold text-sm text-gray-900 flex items-center gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3-4.5 16.5" /></svg>
                         VAT Validation API
                     </h2>
+                    <a href="{{ locale_path('/vat-validation-api') }}" class="inline-flex items-center gap-1 text-xs font-semibold text-indigo-600 hover:text-indigo-800 transition-colors">
+                        Full API Docs
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+                    </a>
                 </div>
-                <div class="p-6 space-y-4">
-                    <p class="text-sm text-gray-600">Integrate VAT validation into your application with our REST API. Results are cached from the official VIES database for reliable, fast responses.</p>
+                <div class="p-6 space-y-5">
+                    {{-- Production endpoint --}}
+                    <div class="bg-gray-50 rounded-xl border border-gray-200 p-4">
+                        <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Production Endpoint</p>
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <span class="inline-block bg-indigo-100 text-indigo-700 text-xs font-bold px-2 py-0.5 rounded">POST</span>
+                            <code class="text-sm font-mono text-gray-800 break-all">https://vat.businesspress.io/api/vat/validation/validate</code>
+                            <button onclick="navigator.clipboard.writeText('https://vat.businesspress.io/api/vat/validation/validate')"
+                                    class="shrink-0 p-1.5 rounded-lg bg-white border border-gray-200 hover:bg-gray-100 text-gray-500 transition-colors" title="Copy URL">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                            </button>
+                        </div>
+                        <p class="mt-2 text-xs text-gray-500">No API key required · JSON body · Free to use</p>
+                    </div>
 
-                    <div class="space-y-3">
-                        <div>
-                            <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Single Validation</h3>
-                            <div class="bg-gray-900 rounded-xl p-4 font-mono text-xs text-gray-300 overflow-x-auto">
-                                <p class="text-emerald-400">POST /api/vat/validate</p>
-                                <p class="text-gray-500 mt-2">Content-Type: application/json</p>
-                                <pre class="mt-2 text-amber-300">{
-  "country_code": "LT",
-  "vat_number": "100019070512"
-}</pre>
+                    {{-- Interactive Simulator --}}
+                    <div>
+                        <p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Try It Live</p>
+                        <div class="grid sm:grid-cols-2 gap-3 mb-3">
+                            <div>
+                                <label class="block text-xs font-medium text-gray-600 mb-1">country_code</label>
+                                <input x-model="simCountry" type="text" maxlength="2" placeholder="LT"
+                                       class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg font-mono focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 uppercase bg-gray-50">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-600 mb-1">vat_number</label>
+                                <input x-model="simVat" type="text" placeholder="100019070512"
+                                       class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg font-mono focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 bg-gray-50"
+                                       @keydown.enter="runRequest()">
                             </div>
                         </div>
 
-                        <div>
-                            <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Batch Validation (up to 10)</h3>
-                            <div class="bg-gray-900 rounded-xl p-4 font-mono text-xs text-gray-300 overflow-x-auto">
-                                <p class="text-emerald-400">POST /api/vat/batch</p>
-                                <pre class="mt-2 text-amber-300">{
-  "vat_numbers": [
-    { "country_code": "LT", "vat_number": "100019070512" },
-    { "country_code": "DE", "vat_number": "123456789" }
-  ]
-}</pre>
+                        {{-- Request preview --}}
+                        <div class="bg-gray-900 rounded-t-xl overflow-hidden">
+                            <div class="flex items-center justify-between px-4 py-2 border-b border-gray-700">
+                                <div class="flex items-center gap-2 text-xs text-gray-400">
+                                    <span class="text-emerald-400 font-mono font-semibold">POST</span>
+                                    <span class="font-mono">/api/vat/validation/validate</span>
+                                </div>
+                                <button @click="runRequest()" :disabled="loading"
+                                        class="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-500 disabled:bg-gray-600 disabled:cursor-not-allowed text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors">
+                                    <svg x-show="!loading" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 3l14 9-14 9V3z"/></svg>
+                                    <svg x-show="loading" class="w-3.5 h-3.5 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+                                    <span x-text="loading ? 'Sending…' : 'Send Request'"></span>
+                                </button>
                             </div>
+                            <pre class="p-4 text-xs font-mono text-amber-300 overflow-x-auto" x-text="requestBody"></pre>
                         </div>
 
-                        <div>
-                            <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Response</h3>
-                            <div class="bg-gray-900 rounded-xl p-4 font-mono text-xs text-gray-300 overflow-x-auto">
-                                <pre class="text-amber-300">{
-  "valid": true,
-  "country_code": "LT",
-  "vat_number": "100019070512",
-  "name": "Company Name",
-  "address": "Company Address",
-  "request_identifier": "..."
-}</pre>
+                        {{-- Response --}}
+                        <div class="bg-gray-950 rounded-b-xl border-t border-gray-800 min-h-[80px] overflow-hidden">
+                            <div x-show="!response && !error && !loading" class="p-4 text-xs text-gray-600 font-mono">
+                                // Response will appear here...
+                            </div>
+                            <div x-show="loading" class="p-4 text-xs text-gray-500 font-mono flex items-center gap-2">
+                                <svg class="w-3.5 h-3.5 animate-spin text-indigo-400" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+                                Validating against VIES…
+                            </div>
+                            <div x-show="response" class="relative">
+                                <div class="flex items-center justify-between px-4 py-2 border-b border-gray-800">
+                                    <span class="text-xs text-emerald-400 font-semibold">200 OK</span>
+                                    <div class="flex items-center gap-3">
+                                        <span class="text-xs text-gray-500" x-text="elapsed ? elapsed + 'ms' : ''"></span>
+                                        <button @click="navigator.clipboard.writeText(response)" class="text-gray-500 hover:text-gray-300 transition-colors" title="Copy response">
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                                        </button>
+                                    </div>
+                                </div>
+                                <pre class="p-4 text-xs font-mono text-green-300 overflow-x-auto" x-text="response"></pre>
+                            </div>
+                            <div x-show="error" class="p-4">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <span class="text-xs text-red-400 font-semibold">Error</span>
+                                </div>
+                                <pre class="text-xs font-mono text-red-300 overflow-x-auto" x-text="error"></pre>
                             </div>
                         </div>
                     </div>
+
+                    <a href="{{ locale_path('/vat-validation-api') }}"
+                       class="flex items-center justify-between p-3 rounded-xl bg-indigo-50 border border-indigo-200 hover:bg-indigo-100 transition-colors group">
+                        <div>
+                            <p class="text-sm font-semibold text-indigo-900">Full API Documentation</p>
+                            <p class="text-xs text-indigo-600">Batch validation, error codes, SDK examples</p>
+                        </div>
+                        <svg class="w-4 h-4 text-indigo-600 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                    </a>
                 </div>
             </div>
 

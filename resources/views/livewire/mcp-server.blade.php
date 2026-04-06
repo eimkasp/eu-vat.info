@@ -62,11 +62,11 @@
                 <p class="text-sm text-gray-500">Rates synced daily from official EU sources.</p>
             </div>
             <div class="bg-gray-50 rounded-xl p-5 border border-gray-200">
-                <div class="w-10 h-10 rounded-lg bg-orange-100 text-orange-700 flex items-center justify-center mb-3">
-                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064" /></svg>
+                <div class="w-10 h-10 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center mb-3">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                 </div>
-                <h3 class="font-semibold text-gray-900 mb-1">27 EU Countries</h3>
-                <p class="text-sm text-gray-500">All member states with all rate types.</p>
+                <h3 class="font-semibold text-gray-900 mb-1">VIES Validation</h3>
+                <p class="text-sm text-gray-500">Live EU VAT number validation via VIES.</p>
             </div>
         </div>
 
@@ -260,6 +260,18 @@
                 <div class="bg-gray-50 rounded-lg p-3 border border-gray-200">
                     <p class="text-xs text-gray-400 mb-1.5 font-semibold uppercase tracking-wide">Example prompt</p>
                     <p class="text-sm text-gray-700 italic">"Compare VAT rates between Germany, France, and the Netherlands"</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl border border-gray-200 p-5 hover:shadow-md transition-shadow">
+                <div class="flex items-start gap-3 mb-3">
+                    <code class="text-sm font-mono bg-emerald-50 text-emerald-700 px-2 py-1 rounded-lg font-semibold">validate_vat_number</code>
+                    <span class="text-xs font-semibold bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full self-center">VIES</span>
+                </div>
+                <p class="text-sm text-gray-600 mb-3">Validate any EU VAT number against the official VIES database. Returns registration status, company name, and address for valid numbers.</p>
+                <div class="bg-gray-50 rounded-lg p-3 border border-gray-200">
+                    <p class="text-xs text-gray-400 mb-1.5 font-semibold uppercase tracking-wide">Example prompt</p>
+                    <p class="text-sm text-gray-700 italic">"Is VAT number LT100019070512 valid? Who does it belong to?"</p>
                 </div>
             </div>
         </div>
