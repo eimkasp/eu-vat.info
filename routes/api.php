@@ -37,5 +37,30 @@ Route::get('/llm/vat-rates', function () {
     });
 })->name('api.llm.vat-rates');
 
+// VAT Rate Changes API
+Route::get('/vat-changes', function () {
+    return \App\Models\VatRateChange::with('country:id,name,code,slug')
+        ->orderByDesc('change_date')
+        ->limit(100)
+        ->get()
+        ->map(function ($change) {
+            return [
+                'id' => $change->id,
+                'country' => [
+                    'name' => $change->country->name ?? '',
+                    'code' => $change->country->code ?? '',
+                    'slug' => $change->country->slug ?? '',
+                ],
+                'rate_type' => $change->rate_type,
+                'old_rate' => (float) $change->old_rate,
+                'new_rate' => (float) $change->new_rate,
+                'change_date' => $change->change_date?->toDateString(),
+                'change_direction' => $change->change_direction,
+                'change_reason' => $change->change_reason,
+                'description' => $change->description,
+            ];
+        });
+})->name('api.vat-changes');
+
 // MCP Server (Model Context Protocol) — read-only, no auth
 Route::post('/mcp', [McpController::class, 'handle'])->name('api.mcp');

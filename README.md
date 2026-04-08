@@ -241,6 +241,29 @@ The Filament 3 admin panel at `/admin` provides:
 
 If you discover a security vulnerability, please create an issue on [GitHub](https://github.com/eimkasp/eu-vat.info/issues).
 
+## Mobile App
+
+A native iOS and Android mobile app is available in the [`eu-vat-mobile/`](eu-vat-mobile/) directory, built with [NativePHP](https://nativephp.com) for Mobile.
+
+| Feature | Description |
+|---|---|
+| VAT Rates | Browse all 27 EU countries with current rates |
+| VAT Calculator | Add/remove VAT with country and rate type selection |
+| VAT Validator | Verify VAT numbers against VIES |
+| Platforms | iOS (Xcode 16+) and Android (Android Studio 2024.2.1+) |
+| Stack | Laravel 13, Livewire 4, Tailwind CSS, NativePHP Mobile 3.2 |
+
+The mobile app is a separate Laravel project that connects to the web app's REST API (`/api/countries`, `/api/vat/validation/validate`).
+
+```bash
+cd eu-vat-mobile
+composer install && npm install
+php artisan native:install
+php artisan native:run
+```
+
+See [eu-vat-mobile/README.md](eu-vat-mobile/README.md) for full setup instructions.
+
 ## License
 
 This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
