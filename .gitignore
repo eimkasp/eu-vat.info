@@ -27,3 +27,12 @@ public/ads.txt
 # Generated during npm run build from resources/images/
 /public/images
 .github/agents/website-optimizer.agent.md
+/eu-vat-mobile
+/eu-vat-ios
+/.continue
+/.crush
+/.factory
+/.goose
+/.junie
+/.kilocode
+/.kiro
