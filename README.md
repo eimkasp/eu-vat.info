@@ -205,6 +205,63 @@ curl -X POST https://vat.businesspress.io/api/vat/validation/validate \
   -d '{"vat_number": "DE123456789"}'
 ```
 
+## Data Management
+
+### Full Data Sync
+
+The `data:sync` command is the single entry point for keeping all data up to date. It orchestrates VAT rate refresh, country metadata validation, and change record generation.
+
+```bash
+# Full sync (VAT rates + country metadata + change records)
+php artisan data:sync
+
+# Preview what would change without modifying the database
+php artisan data:sync --dry-run
+
+# Sync only country metadata (currency, EU membership, VIES)
+php artisan data:sync --skip-rates --skip-changes
+
+# Sync only VAT rates, skip country metadata
+php artisan data:sync --skip-country-data
+```
+
+**What it does:**
+
+| Step | Description | Source |
+|------|-------------|--------|
+| 1. VAT Rates | Downloads latest rates from [kdeldycke/vat-rates](https://github.com/kdeldycke/vat-rates) and verifies integrity | GitHub CSV |
+| 2. Country Metadata | Validates and fixes currency (code, name, symbol), EU membership, and VIES availability | [REST Countries API](https://restcountries.com) + hardcoded EU member list |
+| 3. Change Records | Detects old→new rate changes and creates `VatRateChange` records for the history timeline | Database comparison |
+
+The command includes a built-in fallback dataset for currency data in case the REST Countries API is unavailable.
+
+### Individual Commands
+
+```bash
+# Validate country metadata only (dry-run by default)
+php artisan countries:validate
+php artisan countries:validate --fix
+
+# Refresh VAT rates only
+php artisan vat:refresh
+php artisan vat:refresh --skip-download
+php artisan vat:refresh --queue
+
+# Verify VAT rate accuracy against known values
+php artisan vat:verify
+php artisan vat:verify --fix
+```
+
+### Scheduled Jobs
+
+Data is kept fresh automatically via Laravel's scheduler (configured in `routes/console.php`):
+
+| Schedule | Job | Description |
+|----------|-----|-------------|
+| Weekly (Mon 03:00) | `UpdateVatRates` | Download latest VAT rates from GitHub |
+| Daily (04:00) | `VerifyVatRatesIntegrity` | Check data consistency |
+| Daily (04:30) | `GenerateVatRateChanges` | Record any rate changes |
+
 ## AI & LLM Integration
 
 The site is optimized for AI agent discovery and consumption:

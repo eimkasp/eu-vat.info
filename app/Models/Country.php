@@ -36,7 +36,17 @@ class Country extends Model implements Auditable, Sitemapable
         'currency_code',
         'currency_symbol',
         'flag',
+        'is_eu_member',
+        'vies_available',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'is_eu_member' => 'boolean',
+            'vies_available' => 'boolean',
+        ];
+    }
 
     /**
      * Get the options for generating the slug.

@@ -190,12 +190,18 @@
                                 </div>
                                 <div class="p-4">
                                     <dt class="text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('ui.country_page.eu_member') }}</dt>
-                                    <dd class="mt-1 text-lg font-semibold text-green-600">{{ __('ui.country_page.yes') }}</dd>
+                                    <dd class="mt-1 text-lg font-semibold {{ $selectedCountryObject->is_eu_member ? 'text-green-600' : 'text-gray-500' }}">
+                                        {{ $selectedCountryObject->is_eu_member ? __('ui.country_page.yes') : __('ui.country_page.no') }}
+                                    </dd>
                                 </div>
                                 <div class="p-4">
                                     <dt class="text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('ui.country_page.vies_validation') }}</dt>
-                                    <dd class="mt-1 text-lg font-semibold text-green-600">
-                                        <a href="{{ locale_path('/vat-number-validator/' . $selectedCountryObject->slug) }}" class="hover:underline">{{ __('ui.country_page.available') }}</a>
+                                    <dd class="mt-1 text-lg font-semibold {{ $selectedCountryObject->vies_available ? 'text-green-600' : 'text-gray-500' }}">
+                                        @if($selectedCountryObject->vies_available)
+                                            <a href="{{ locale_path('/vat-number-validator/' . $selectedCountryObject->slug) }}" class="hover:underline">{{ __('ui.country_page.available') }}</a>
+                                        @else
+                                            {{ __('ui.country_page.not_available') }}
+                                        @endif
                                     </dd>
                                 </div>
                             </div>
