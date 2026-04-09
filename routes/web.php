@@ -9,6 +9,7 @@ use App\Livewire\Tools;
 use App\Livewire\VatCalculator;
 use App\Livewire\McpServer;
 use App\Livewire\SharedCalculation;
+use App\Livewire\PrivacyPolicy;
 use App\Livewire\VatMap;
 use App\Livewire\VatValidationApiDocs;
 use App\Livewire\ViesValidatorPage;
@@ -69,6 +70,7 @@ $registerRoutes = function () {
         ->name('top-calculations.amount');
     Route::get('/vat-changes', \App\Livewire\VatChangesHistory::class)->name('vat-changes');
     Route::get('/mcp-server', McpServer::class)->name('mcp-server');
+    Route::get('/privacy', PrivacyPolicy::class)->name('privacy');
     Route::get('/sitemap', HtmlSitemap::class)->name('html-sitemap');
 };
 
