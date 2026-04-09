@@ -26,7 +26,7 @@
                 class="flex items-center gap-1.5 text-sm text-white hover:text-blue-200 transition-colors px-2 py-1 rounded-md hover:bg-white/10"
                 aria-label="{{ __('ui.language_switcher.current', ['name' => $currentConfig['native'] ?? 'English']) }}">
             <img src="https://flagcdn.com/h20/{{ $currentConfig['flag'] ?? 'gb' }}.jpg"
-                 alt="" class="h-3.5 rounded-sm border border-white/30" loading="lazy">
+                 alt="" class="h-3.5 rounded-sm border border-white/30" width="21" height="14">
             <span class="uppercase font-medium">{{ $current }}</span>
             <svg class="w-3 h-3 transition-transform" :class="{ 'rotate-180': open }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
@@ -43,7 +43,7 @@
                 <a href="/lang/{{ $code }}"
                    class="flex items-center gap-2 px-3 py-1.5 text-sm hover:bg-blue-50 transition-colors {{ $code === $current ? 'bg-blue-50 text-blue-700 font-medium' : 'text-gray-700' }}">
                     <img src="https://flagcdn.com/h20/{{ $config['flag'] }}.jpg"
-                         alt="" class="h-3.5 rounded-sm border border-gray-200" loading="lazy">
+                         alt="" class="h-3.5 rounded-sm border border-gray-200" width="21" height="14" loading="lazy">
                     <span>{{ $config['native'] }}</span>
                     @if($code === $current)
                         <svg class="w-3.5 h-3.5 ml-auto text-blue-600" fill="currentColor" viewBox="0 0 20 20">

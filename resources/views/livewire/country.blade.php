@@ -14,6 +14,7 @@
     <meta name="last-modified" content="{{ $country->updated_at->toIso8601String() }}">
 
     <x-country.json-ld :country="$country" />
+    <link rel="preload" as="image" type="image/webp" href="/images/eu-vat-calculator-background.webp" fetchpriority="high">
 @endpush
 
 <div class="min-h-screen">
@@ -22,9 +23,12 @@
         {{-- Background image --}}
         <div class="absolute inset-0 z-0">
             @if(file_exists(public_path('images/countries/' . strtolower($country->iso_code) . '.jpg')))
-                <img src="/images/countries/{{ strtolower($country->iso_code) }}.jpg" alt="" class="w-full h-full object-cover" loading="eager">
+                <img src="/images/countries/{{ strtolower($country->iso_code) }}.jpg" alt="" class="w-full h-full object-cover" loading="eager" fetchpriority="high">
             @else
-                <img src="/images/eu-vat-calculator-background.jpg" alt="" class="w-full h-full object-cover" loading="eager">
+                <picture>
+                    <source type="image/webp" srcset="/images/eu-vat-calculator-background.webp">
+                    <img src="/images/eu-vat-calculator-background.jpg" alt="" class="w-full h-full object-cover" loading="eager" fetchpriority="high">
+                </picture>
             @endif
             <div class="absolute inset-0 bg-gradient-to-b from-black/85 via-black/70 to-black/50"></div>
         </div>

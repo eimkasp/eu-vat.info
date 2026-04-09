@@ -63,6 +63,10 @@
     </x-seo-meta>
 @endsection
 
+@push('head')
+    <link rel="preload" as="image" type="image/webp" imagesrcset="/images/eu-vat-calculator-background-sm.webp 640w, /images/eu-vat-calculator-background-md.webp 1280w, /images/eu-vat-calculator-background-lg.webp 2000w" imagesizes="100vw" fetchpriority="high">
+@endpush
+
 <div class="relative">
     {{-- Full-screen Background Image with Parallax --}}
     <div class="absolute inset-0 z-0 overflow-hidden">
@@ -71,21 +75,30 @@
              x-init="if (motionOk) window.addEventListener('scroll', () => { y = window.scrollY }, { passive: true })"
              :style="motionOk ? 'transform: translate3d(0, ' + (y * 0.4) + 'px, 0)' : ''"
         >
-            <img
-                src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABsSFBcUERsXFhceHBsgKEIrKCUlKFE6PTBCYFVlZF9VXVtqeJmBanGQc1tdhbWGkJ6jq62rZ4C8ybqmx5moq6T/2wBDARweHigjKE4rK06kbl1upKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKT/wAARCAAWACgDAREAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAECAwX/xAAfEAACAQMFAQAAAAAAAAAAAAAAAgERExQDBBJBUTH/xAAXAQEBAQEAAAAAAAAAAAAAAAAAAQID/8QAFxEBAQEBAAAAAAAAAAAAAAAAABESAf/aAAwDAQACEQMRAD8A60qvp0rnENCFqRnxSey1ILKz2XSZKwo0ZTDNUw2T8pgDGYePlS1IqupTsimtwlXnHVx1M1qDHUUhY6eCkE7dRQLt1A//2Q=="
-                srcset="/images/eu-vat-calculator-background-sm.jpg 640w,
-                        /images/eu-vat-calculator-background-md.jpg 1280w,
-                        /images/eu-vat-calculator-background-lg.jpg 2000w"
-                sizes="100vw"
-                alt="EU VAT Calculator"
-                class="w-full h-[120vh] object-cover opacity-0 transition-opacity duration-700 ease-in"
-                onload="this.classList.remove('opacity-0')"
-                loading="eager"
-                fetchpriority="high"
-                decoding="async"
-                width="2000"
-                height="1116"
-            >
+            <picture>
+                <source
+                    type="image/webp"
+                    srcset="/images/eu-vat-calculator-background-sm.webp 640w,
+                            /images/eu-vat-calculator-background-md.webp 1280w,
+                            /images/eu-vat-calculator-background-lg.webp 2000w"
+                    sizes="100vw"
+                >
+                <img
+                    src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABsSFBcUERsXFhceHBsgKEIrKCUlKFE6PTBCYFVlZF9VXVtqeJmBanGQc1tdhbWGkJ6jq62rZ4C8ybqmx5moq6T/2wBDARweHigjKE4rK06kbl1upKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKT/wAARCAAWACgDAREAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAECAwX/xAAfEAACAQMFAQAAAAAAAAAAAAAAAgERExQDBBJBUTH/xAAXAQEBAQEAAAAAAAAAAAAAAAAAAQID/8QAFxEBAQEBAAAAAAAAAAAAAAAAABESAf/aAAwDAQACEQMRAD8A60qvp0rnENCFqRnxSey1ILKz2XSZKwo0ZTDNUw2T8pgDGYePlS1IqupTsimtwlXnHVx1M1qDHUUhY6eCkE7dRQLt1A//2Q=="
+                    srcset="/images/eu-vat-calculator-background-sm.jpg 640w,
+                            /images/eu-vat-calculator-background-md.jpg 1280w,
+                            /images/eu-vat-calculator-background-lg.jpg 2000w"
+                    sizes="100vw"
+                    alt="EU VAT Calculator"
+                    class="w-full h-[120vh] object-cover opacity-0 transition-opacity duration-700 ease-in"
+                    onload="this.classList.remove('opacity-0')"
+                    loading="eager"
+                    fetchpriority="high"
+                    decoding="async"
+                    width="2000"
+                    height="1116"
+                >
+            </picture>
         </div>
         <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/70 to-black/50"></div>
     </div>

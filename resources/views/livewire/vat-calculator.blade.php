@@ -67,6 +67,10 @@
 @endsection
 @endisset
 
+@push('head')
+    <link rel="preload" as="image" type="image/webp" href="/images/eu-vat-calculator-background.webp" fetchpriority="high">
+@endpush
+
 <div class="min-h-screen">
     {{-- ─── Hero Section with Background Image + Calculator ─── --}}
     <div class="relative pt-4 pb-12">
@@ -74,12 +78,18 @@
         <div class="absolute inset-0 z-0">
             @isset($selectedCountryObject)
                 @if(file_exists(public_path('images/countries/' . strtolower($selectedCountryObject->iso_code) . '.jpg')))
-                    <img src="/images/countries/{{ strtolower($selectedCountryObject->iso_code) }}.jpg" alt="" class="w-full h-full object-cover" loading="eager">
+                    <img src="/images/countries/{{ strtolower($selectedCountryObject->iso_code) }}.jpg" alt="" class="w-full h-full object-cover" loading="eager" fetchpriority="high">
                 @else
-                    <img src="/images/eu-vat-calculator-background.jpg" alt="" class="w-full h-full object-cover" loading="eager">
+                    <picture>
+                        <source type="image/webp" srcset="/images/eu-vat-calculator-background.webp">
+                        <img src="/images/eu-vat-calculator-background.jpg" alt="" class="w-full h-full object-cover" loading="eager" fetchpriority="high">
+                    </picture>
                 @endif
             @else
-                <img src="/images/eu-vat-calculator-background.jpg" alt="" class="w-full h-full object-cover" loading="eager">
+                <picture>
+                    <source type="image/webp" srcset="/images/eu-vat-calculator-background.webp">
+                    <img src="/images/eu-vat-calculator-background.jpg" alt="" class="w-full h-full object-cover" loading="eager" fetchpriority="high">
+                </picture>
             @endisset
             <div class="absolute inset-0 bg-gradient-to-b from-black/85 via-black/70 to-black/50"></div>
         </div>
