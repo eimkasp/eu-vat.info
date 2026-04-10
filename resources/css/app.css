@@ -3,6 +3,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Prevent Alpine.js x-cloak elements from flashing before JS initialises */
+[x-cloak] { display: none !important; }
+
 /* Accessible focus indicators */
 *:focus-visible {
     outline: 2px solid #4F46E5;

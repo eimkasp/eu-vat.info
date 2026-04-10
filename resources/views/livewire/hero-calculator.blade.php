@@ -258,7 +258,7 @@
                     @endforeach
 
                     {{-- Custom Rate (active state) --}}
-                    <div x-show="useCustomRate" x-transition:enter="transition ease-out duration-150" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" class="flex items-center gap-1 px-3 py-1.5 rounded-lg border-2 border-amber-400 bg-amber-50 text-amber-700">
+                    <div x-show="useCustomRate" x-cloak x-transition:enter="transition ease-out duration-150" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" class="flex items-center gap-1 px-3 py-1.5 rounded-lg border-2 border-amber-400 bg-amber-50 text-amber-700">
                         <span class="text-[10px] font-medium text-amber-500">{{ __('ui.calculator.custom_label') }}</span>
                         <input
                             x-ref="customRateInput"
