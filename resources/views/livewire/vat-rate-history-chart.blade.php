@@ -87,9 +87,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script>
-        document.addEventListener('livewire:navigated', () => {
-            initChart();
-        });
+      
         
         // Also init on first load
         document.addEventListener('DOMContentLoaded', () => {

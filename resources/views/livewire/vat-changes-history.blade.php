@@ -145,7 +145,6 @@
                                 </div>
                             </div>
                             <a href="{{ locale_path('/vat-calculator/' . $change->country->slug) }}" 
-                               wire:navigate
                                class="text-xs text-blue-600 dark:text-blue-400 hover:underline whitespace-nowrap shrink-0">
                                 {{ __('ui.history.view_calculator') }} →
                             </a>
@@ -186,7 +185,6 @@
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
             @foreach($countryStats as $stat)
                 <a href="{{ locale_path('/vat-calculator/' . $stat['slug']) }}"
-                   wire:navigate
                    class="flex items-center gap-2 px-2.5 py-2 border border-gray-100 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                     <img src="https://flagcdn.com/h40/{{ strtolower($stat['iso_code']) }}.jpg" 
                          alt="{{ $stat['name'] }}" 

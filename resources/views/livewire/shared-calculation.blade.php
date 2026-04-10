@@ -43,7 +43,7 @@
                     $oppositeUrl = locale_path('/vat-calculation/' . $country . '/' . $amount . '/' . $rate . '/' . $oppositeMode);
                 @endphp
                 <div class="flex items-center gap-2">
-                    <a href="{{ $oppositeUrl }}" wire:navigate
+                    <a href="{{ $oppositeUrl }}"
                        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-white/10 text-slate-300 hover:bg-white/20 ring-1 ring-white/10 transition-all"
                        title="Switch to {{ $oppositeMode === 'exclude' ? 'Add VAT' : 'Extract VAT' }}">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" /></svg>
@@ -295,7 +295,7 @@
                         $scTotal = round((float)$amount + $scVat, 2);
                     @endphp
                     <a href="{{ locale_path('/vat-calculation/' . $sc['slug'] . '/' . $amount . '/' . $sc['standard_rate'] . '/' . $mode) }}"
-                       class="flex items-center justify-between px-6 py-3 hover:bg-gray-50 transition-colors" wire:navigate>
+                       class="flex items-center justify-between px-6 py-3 hover:bg-gray-50 transition-colors">
                         <div class="flex items-center gap-2">
                             <img src="https://flagcdn.com/h40/{{ strtolower($sc['iso_code']) }}.jpg" alt="" class="h-3.5 w-auto rounded-sm" loading="lazy">
                             <span class="text-sm font-medium text-gray-900">{{ $sc['name'] }}</span>
@@ -322,7 +322,7 @@
                             $saTotal = round($sa + $saVat, 2);
                         @endphp
                         <a href="{{ locale_path('/vat-calculation/' . $country . '/' . $sa . '/' . $rate . '/' . $mode) }}"
-                           class="flex items-center justify-between px-6 py-3 hover:bg-gray-50 transition-colors" wire:navigate>
+                           class="flex items-center justify-between px-6 py-3 hover:bg-gray-50 transition-colors">
                             <span class="text-sm font-medium text-gray-900">€{{ number_format($sa, 2) }}</span>
                             <div class="flex items-center gap-3">
                                 <span class="text-sm text-emerald-600 font-semibold tabular-nums">+€{{ number_format($saVat, 2) }}</span>
