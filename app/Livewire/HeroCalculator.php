@@ -150,7 +150,7 @@ class HeroCalculator extends Component
         $this->calculateVat();
     }
 
-    public function calculate($mode = null, $selectedRate = null, $useCustomRate = null, $customRate = null)
+    public function calculate($mode = null, $selectedRate = null, $useCustomRate = null, $customRate = null, $amount = null)
     {
         if ($mode !== null) {
             $this->mode = $mode;
@@ -163,6 +163,9 @@ class HeroCalculator extends Component
         }
         if ($customRate !== null) {
             $this->customRate = $customRate;
+        }
+        if ($amount !== null) {
+            $this->amount = $amount;
         }
 
         $this->calculateVat();
