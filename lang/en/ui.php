@@ -253,6 +253,7 @@ return [
         'gross' => 'gross',
         'key_information' => 'Key Information',
         'country_code' => 'Country Code',
+        'native_name' => 'Native Name',
         'currency' => 'Currency',
         'standard_rate_label' => 'Standard Rate',
         'vat_number_format' => 'VAT Number Format',

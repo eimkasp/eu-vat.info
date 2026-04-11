@@ -100,6 +100,12 @@
                                 <dt class="text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('ui.country_page.country_code') }}</dt>
                                 <dd class="mt-1 text-lg font-semibold text-gray-900">{{ $country->iso_code }}</dd>
                             </div>
+                            @if($country->native_name)
+                            <div class="p-4">
+                                <dt class="text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('ui.country_page.native_name') }}</dt>
+                                <dd class="mt-1 text-lg font-semibold text-gray-900">{{ $country->native_name }}</dd>
+                            </div>
+                            @endif
                             <div class="p-4">
                                 <dt class="text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('ui.country_page.currency') }}</dt>
                                 <dd class="mt-1 text-lg font-semibold text-gray-900">{{ $country->currency_display }}</dd>

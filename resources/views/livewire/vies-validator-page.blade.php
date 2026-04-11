@@ -466,8 +466,8 @@
                 <div class="space-y-1 max-h-64 overflow-y-auto">
                     @foreach($countries as $c)
                         <a href="{{ locale_path('/vat-number-validator/' . $c->slug) }}" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs transition-colors {{ $countryObject && $countryObject->id === $c->id ? 'bg-indigo-50 text-indigo-700 font-semibold' : 'text-gray-700 hover:bg-gray-50 hover:text-blue-600' }}">
-                            <img src="https://flagcdn.com/h40/{{ strtolower($c->iso_code) }}.jpg" alt="" class="h-3 w-auto rounded-sm" loading="lazy">
-                            {{ $c->name }}
+                            <img src="https://flagcdn.com/h40/{{ strtolower($c->iso_code) }}.jpg" alt="{{ $c->name }} flag" class="h-3 w-auto rounded-sm" loading="lazy">
+                            {{ $c->name }} VAT Number Validator
                             <span class="ml-auto text-gray-400">{{ $c->iso_code }}</span>
                         </a>
                     @endforeach

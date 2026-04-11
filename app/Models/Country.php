@@ -26,6 +26,7 @@ class Country extends Model implements Auditable, Sitemapable
         'iso_code',
         'iso_code_2',
         'name',
+        'native_name',
         'slug',
         'standard_rate',
         'reduced_rate',

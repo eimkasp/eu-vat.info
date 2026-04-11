@@ -151,6 +151,13 @@ class SyncAllData extends Command
                         $issueCount++;
                     }
                 }
+
+                // Native name from API
+                if (! empty($api['native_name']) && $country->native_name !== $api['native_name']) {
+                    $this->line("  <comment>{$country->name}:</comment> native_name: '{$country->native_name}' → '{$api['native_name']}'");
+                    $countryFixes['native_name'] = $api['native_name'];
+                    $issueCount++;
+                }
             }
 
             if (! empty($countryFixes)) {
@@ -180,11 +187,12 @@ class SyncAllData extends Command
     private function fetchCurrencyData($countries): array
     {
         $codes = $countries->pluck('iso_code')->filter()->implode(',');
+        $fallback = $this->fallbackCurrencyData();
 
         try {
             $response = Http::timeout(15)->get('https://restcountries.com/v3.1/alpha', [
                 'codes' => $codes,
-                'fields' => 'cca2,currencies',
+                'fields' => 'cca2,currencies,name',
             ]);
 
             if ($response->successful()) {
@@ -194,12 +202,49 @@ class SyncAllData extends Command
                     if (! $cca2 || empty($item['currencies'])) {
                         continue;
                     }
-                    $currencyCode = array_key_first($item['currencies']);
-                    $info = $item['currencies'][$currencyCode];
+
+                    // When API returns multiple currencies (e.g. EUR + HUF for Hungary),
+                    // prefer the canonical currency from our fallback list.
+                    $currencies = array_keys($item['currencies']);
+                    if (count($currencies) > 1 && isset($fallback[$cca2])) {
+                        $currencyCode = $fallback[$cca2]['currency_code'];
+                    } else {
+                        $currencyCode = $currencies[0];
+                    }
+
+                    // Use API data for name/symbol if available, otherwise fallback
+                    if (isset($item['currencies'][$currencyCode])) {
+                        $info = $item['currencies'][$currencyCode];
+                    } elseif (isset($fallback[$cca2])) {
+                        $data[$cca2] = $fallback[$cca2];
+                        continue;
+                    } else {
+                        continue;
+                    }
+
+                    // Extract native name from API
+                    $nativeName = null;
+                    if (! empty($item['name']['nativeName'])) {
+                        $nativeNames = $item['name']['nativeName'];
+                        // Pick the first native name that isn't English
+                        foreach ($nativeNames as $lang => $nameData) {
+                            if ($lang !== 'eng' && ! empty($nameData['common'])) {
+                                $nativeName = $nameData['common'];
+                                break;
+                            }
+                        }
+                        // Fallback to first available
+                        if (! $nativeName) {
+                            $first = reset($nativeNames);
+                            $nativeName = $first['common'] ?? null;
+                        }
+                    }
+
                     $data[$cca2] = [
                         'currency_code' => $currencyCode,
                         'currency_name' => $info['name'] ?? null,
                         'currency_symbol' => $info['symbol'] ?? null,
+                        'native_name' => $nativeName,
                     ];
                 }
 
@@ -209,7 +254,7 @@ class SyncAllData extends Command
             $this->warn("  API unavailable ({$e->getMessage()}), using fallback data.");
         }
 
-        return $this->fallbackCurrencyData();
+        return $fallback;
     }
 
     private function fallbackCurrencyData(): array

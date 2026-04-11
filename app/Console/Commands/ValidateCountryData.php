@@ -187,15 +187,23 @@ class ValidateCountryData extends Command
                 ]);
 
             if ($response->successful()) {
+                $fallbackForLookup = $this->getFallbackCurrencyData();
                 foreach ($response->json() as $item) {
                     $cca2 = $item['cca2'] ?? null;
                     if (! $cca2 || empty($item['currencies'])) {
                         continue;
                     }
 
-                    // Get the first (primary) currency
-                    $currencyCode = array_key_first($item['currencies']);
-                    $currencyInfo = $item['currencies'][$currencyCode];
+                    // When API returns multiple currencies, prefer canonical from fallback
+                    $currencies = array_keys($item['currencies']);
+                    if (count($currencies) > 1 && isset($fallbackForLookup[$cca2])) {
+                        $currencyCode = $fallbackForLookup[$cca2]['currency_code'];
+                    } else {
+                        $currencyCode = $currencies[0];
+                    }
+
+                    $currencyInfo = $item['currencies'][$currencyCode]
+                        ?? $item['currencies'][array_key_first($item['currencies'])];
 
                     $data[$cca2] = [
                         'currency_code' => $currencyCode,

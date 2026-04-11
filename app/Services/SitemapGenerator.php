@@ -46,6 +46,7 @@ class SitemapGenerator
         $staticPages = [
             ['path' => '/',                      'changefreq' => 'daily',   'priority' => '1.0'],
             ['path' => '/vat-calculator',         'changefreq' => 'weekly',  'priority' => '0.9'],
+            ['path' => '/vat-number-validator',   'changefreq' => 'weekly',  'priority' => '0.8'],
             ['path' => '/vat-map',                'changefreq' => 'monthly', 'priority' => '0.8'],
             ['path' => '/vat-changes',            'changefreq' => 'weekly',  'priority' => '0.7'],
             ['path' => '/top-vat-calculations',   'changefreq' => 'weekly',  'priority' => '0.7'],
@@ -72,6 +73,14 @@ class SitemapGenerator
                 $lastmod,
                 'monthly',
                 '0.9',
+            );
+
+            // Country-specific VAT number validator page
+            $xml .= $this->urlEntry(
+                '/vat-number-validator/'.$country->slug,
+                $lastmod,
+                'monthly',
+                '0.7',
             );
         }
 

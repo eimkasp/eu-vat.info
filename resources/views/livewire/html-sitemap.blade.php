@@ -212,6 +212,12 @@
                             {{ __('ui.sitemap.country_calculator', ['country' => $country->name]) }}
                         </a>
                     </li>
+                    <li>
+                        <a href="{{ locale_path('/vat-number-validator/' . $country->slug) }}" class="text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-1">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                            {{ $country->name }} VAT Number Validator
+                        </a>
+                    </li>
                 </ul>
             </div>
         @endforeach
