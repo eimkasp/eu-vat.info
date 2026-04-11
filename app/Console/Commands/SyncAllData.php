@@ -120,7 +120,7 @@ class SyncAllData extends Command
         $fixes = [];
 
         foreach ($countries as $country) {
-            $iso = $country->iso_code;
+            $iso = strtoupper($country->iso_code);
             $countryFixes = [];
 
             // EU membership
@@ -186,7 +186,7 @@ class SyncAllData extends Command
 
     private function fetchCurrencyData($countries): array
     {
-        $codes = $countries->pluck('iso_code')->filter()->implode(',');
+        $codes = $countries->pluck('iso_code')->map(fn ($c) => strtoupper($c))->filter()->implode(',');
         $fallback = $this->fallbackCurrencyData();
 
         try {
