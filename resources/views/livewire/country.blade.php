@@ -108,7 +108,10 @@
                             @endif
                             <div class="p-4">
                                 <dt class="text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('ui.country_page.currency') }}</dt>
-                                <dd class="mt-1 text-lg font-semibold text-gray-900">{{ $country->currency_display }}</dd>
+                                <dd class="mt-1 text-lg font-semibold text-gray-900">{{ $country->currency_display }} <span class="text-sm font-medium text-gray-500">{{ $country->currency_code }}</span></dd>
+                                @if($country->currency)
+                                    <dd class="text-xs text-gray-500">{{ $country->currency }}</dd>
+                                @endif
                             </div>
                             <div class="p-4">
                                 <dt class="text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('ui.country_page.standard_rate_label') }}</dt>
