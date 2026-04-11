@@ -81,6 +81,7 @@ $localePattern = implode('|', $nonDefault);
 
 Route::prefix('{locale}')
     ->where(['locale' => $localePattern])
+    ->name('locale.')
     ->group($registerRoutes);
 
 // Default locale (en) — no prefix (registered LAST so names point to root URIs)
