@@ -17,7 +17,7 @@
 
         <div class="relative container py-14 sm:py-20 px-4">
             <x-breadcrumbs :items="[__('ui.breadcrumbs.tools') => locale_path('/tools'), 'Chrome Extension' => '']" variant="dark" />
-            <div class="max-w-3xl">
+            <div class="max-w-3xl py-6">
                 <div class="inline-flex items-center gap-2 bg-white/10 rounded-full px-3 py-1 text-xs font-semibold text-blue-100 mb-4">
                     <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C8.21 0 4.831 1.757 2.632 4.501l3.953 6.848A5.454 5.454 0 0 1 12 6.545h10.691A12 12 0 0 0 12 0zM1.931 5.47A11.943 11.943 0 0 0 0 12c0 6.012 4.42 10.991 10.189 11.864l3.953-6.847a5.45 5.45 0 0 1-6.865-2.29zm13.342 2.166a5.446 5.446 0 0 1 1.45 7.09l.002.001-3.952 6.848c.2.014.4.025.6.025 6.627 0 12-5.373 12-12 0-.691-.073-1.365-.18-2.024zM12 16.364a4.364 4.364 0 1 1 0-8.728 4.364 4.364 0 0 1 0 8.728z"/></svg>
                     Free Chrome Extension
@@ -32,7 +32,7 @@
         </div>
     </div>
 
-    <div class="container py-12 px-4">
+    <div class="container !py-12">
 
         {{-- Key Features --}}
         <h2 class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-5">Features</h2>
