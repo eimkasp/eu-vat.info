@@ -7,7 +7,7 @@
             <livewire:vat-calculator-form />
         @endif
         <div class="mt-3 text-right">
-            Powered by <a href="https://eu-vat.info" target="_blank" class="text-blue-500">eu-vat.info</a>
+            Powered by <a href="https://businesspress.io" target="_blank" class="text-blue-500">BusinessPress</a>
         </div>
     </div>
 @endsection

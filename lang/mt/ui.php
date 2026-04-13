@@ -37,6 +37,7 @@ return array (
     'interactive_map' => 'Mappa Interattiva tal-VAT',
     'vat_rate_history' => 'Storja tar-Rati tal-VAT',
     'embed_widget' => 'Inkorporat il-Widget tal-VAT',
+        'chrome_extension' => 'Chrome Extension',
     'sitemap' => 'Mappa tas-sit',
     'llms_data' => 'llms.txt - Dejta AI/LLM',
     'vat_rates_api' => 'API tar-Rati tal-VAT (JSON)',

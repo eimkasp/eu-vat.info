@@ -37,6 +37,7 @@ return array (
     'interactive_map' => 'Interaktiivne käibemaksu kaart',
     'vat_rate_history' => 'Käibemaksumäärade ajalugu',
     'embed_widget' => 'Manusta käibemaksu vidin',
+        'chrome_extension' => 'Chrome Extension',
     'sitemap' => 'Saidikaart',
     'llms_data' => 'llms.txt - AI/LLM andmed',
     'vat_rates_api' => 'Käibemaksumäärade API (JSON)',

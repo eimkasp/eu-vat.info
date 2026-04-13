@@ -37,6 +37,7 @@ return array (
     'interactive_map' => 'Interaktive MwSt.-Karte',
     'vat_rate_history' => 'MwSt.-Satz-Verlauf',
     'embed_widget' => 'MwSt.-Widget einbetten',
+        'chrome_extension' => 'Chrome Extension',
     'sitemap' => 'Sitemap',
     'llms_data' => 'llms.txt – KI/LLM-Daten',
     'vat_rates_api' => 'MwSt.-Sätze API (JSON)',

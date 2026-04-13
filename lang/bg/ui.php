@@ -37,6 +37,7 @@ return array (
     'interactive_map' => 'Интерактивна карта на ДДС',
     'vat_rate_history' => 'История на ставките на ДДС',
     'embed_widget' => 'Вграждане на ДДС уиджет',
+        'chrome_extension' => 'Chrome Extension',
     'sitemap' => 'Карта на сайта',
     'llms_data' => 'llms.txt - Данни за AI/LLM',
     'vat_rates_api' => 'API за ставки на ДДС (JSON)',

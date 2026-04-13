@@ -37,6 +37,7 @@ return array (
     'interactive_map' => 'Carte interactive de la TVA',
     'vat_rate_history' => 'Historique des taux de TVA',
     'embed_widget' => 'Widget TVA intégrable',
+        'chrome_extension' => 'Chrome Extension',
     'sitemap' => 'Plan du site',
     'llms_data' => 'llms.txt - Données IA/LLM',
     'vat_rates_api' => 'API des taux de TVA (JSON)',

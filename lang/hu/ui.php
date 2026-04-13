@@ -37,6 +37,7 @@ return array (
     'interactive_map' => 'Interaktív ÁFA-térkép',
     'vat_rate_history' => 'ÁFA-kulcsok története',
     'embed_widget' => 'ÁFA widget beágyazása',
+        'chrome_extension' => 'Chrome Extension',
     'sitemap' => 'Oldaltérkép',
     'llms_data' => 'llms.txt - AI/LLM adatok',
     'vat_rates_api' => 'ÁFA-kulcsok API (JSON)',

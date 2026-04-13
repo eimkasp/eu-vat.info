@@ -37,6 +37,7 @@ return array (
     'interactive_map' => 'Mappa IVA interattiva',
     'vat_rate_history' => 'Storico delle aliquote IVA',
     'embed_widget' => 'Widget IVA incorporabile',
+        'chrome_extension' => 'Chrome Extension',
     'sitemap' => 'Mappa del sito',
     'llms_data' => 'llms.txt - Dati per IA/LLM',
     'vat_rates_api' => 'API aliquote IVA (JSON)',

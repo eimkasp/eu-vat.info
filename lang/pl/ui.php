@@ -37,6 +37,7 @@ return array (
     'interactive_map' => 'Interaktywna mapa VAT',
     'vat_rate_history' => 'Historia stawek VAT',
     'embed_widget' => 'Widget VAT do osadzenia',
+        'chrome_extension' => 'Chrome Extension',
     'sitemap' => 'Mapa strony',
     'llms_data' => 'llms.txt - Dane AI/LLM',
     'vat_rates_api' => 'API stawek VAT (JSON)',

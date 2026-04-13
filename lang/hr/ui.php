@@ -37,6 +37,7 @@ return array (
     'interactive_map' => 'Interaktivna karta PDV-a',
     'vat_rate_history' => 'Povijest stopa PDV-a',
     'embed_widget' => 'Ugradi PDV widget',
+        'chrome_extension' => 'Chrome Extension',
     'sitemap' => 'Karta stranice',
     'llms_data' => 'llms.txt - AI/LLM podaci',
     'vat_rates_api' => 'API za stope PDV-a (JSON)',

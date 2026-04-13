@@ -37,6 +37,7 @@ return array (
     'interactive_map' => 'Interaktīvā PVN karte',
     'vat_rate_history' => 'PVN likmju vēsture',
     'embed_widget' => 'Iegult PVN logrīku',
+        'chrome_extension' => 'Chrome Extension',
     'sitemap' => 'Vietnes karte',
     'llms_data' => 'llms.txt - AI/LLM dati',
     'vat_rates_api' => 'PVN likmju API (JSON)',

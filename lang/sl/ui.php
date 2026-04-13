@@ -37,6 +37,7 @@ return array (
     'interactive_map' => 'Interaktivni zemljevid DDV',
     'vat_rate_history' => 'Zgodovina stopenj DDV',
     'embed_widget' => 'Vdelaj DDV pripomoček',
+        'chrome_extension' => 'Chrome Extension',
     'sitemap' => 'Zemljevid spletnega mesta',
     'llms_data' => 'llms.txt - Podatki za AI/LLM',
     'vat_rates_api' => 'API stopenj DDV (JSON)',

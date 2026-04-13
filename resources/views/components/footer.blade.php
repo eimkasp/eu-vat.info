@@ -11,6 +11,11 @@
                         @svg('feathericon-github', 'w-6 h-6')
                     </a>
                 </div>
+                <div class="mt-4">
+                    <a href="https://chromewebstore.google.com/detail/eu-vat-calculator/fifmbbpgopnifnoginhmjjedjnabdkka" target="_blank" rel="noopener noreferrer" class="inline-block hover:opacity-80 transition-opacity">
+                        <img src="/images/chrome-web-store-badge.png" alt="Available in the Chrome Web Store" class="h-10" loading="lazy">
+                    </a>
+                </div>
             </div>
             
             <div>
@@ -20,6 +25,7 @@
                     <li><a href="{{ locale_path('/vat-map') }}" class="hover:text-white transition-colors">{{ __('ui.footer.interactive_map') }}</a></li>
                     <li><a href="{{ locale_path('/vat-changes') }}" class="hover:text-white transition-colors">{{ __('ui.footer.vat_rate_history') }}</a></li>
                     <li><a href="{{ route('widget.embed') }}" class="hover:text-white transition-colors">{{ __('ui.footer.embed_widget') }}</a></li>
+                    <li><a href="{{ locale_path('/chrome-extension') }}" class="hover:text-white transition-colors">{{ __('ui.footer.chrome_extension') }}</a></li>
                 </ul>
             </div>
 

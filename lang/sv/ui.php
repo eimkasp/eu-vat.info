@@ -37,6 +37,7 @@ return array (
     'interactive_map' => 'Interaktiv momskarta',
     'vat_rate_history' => 'Historik över momssatser',
     'embed_widget' => 'Bädda in momswidget',
+        'chrome_extension' => 'Chrome Extension',
     'sitemap' => 'Webbplatskarta',
     'llms_data' => 'llms.txt - AI/LLM-data',
     'vat_rates_api' => 'Momssatser API (JSON)',

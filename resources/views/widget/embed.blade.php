@@ -161,7 +161,7 @@
                 </div>
 
                 <div class="mt-3 text-right text-sm">
-                    Powered by <a href="https://eu-vat.info" target="_blank" class="text-blue-500 hover:underline">eu-vat.info</a>
+                    Powered by <a href="https://businesspress.io" target="_blank" class="text-blue-500">BusinessPress</a>
                 </div>
             </div>
 

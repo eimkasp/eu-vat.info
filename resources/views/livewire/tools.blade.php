@@ -182,6 +182,19 @@
                 <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">See the most common VAT calculations across popular amounts (€100, €500, €1,000+) for all 27 EU member states side by side.</p>
                 <div class="mt-4 flex items-center gap-1 text-xs font-semibold text-purple-600 dark:text-purple-400 group-hover:translate-x-1 transition-transform">View calculations <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg></div>
             </a>
+
+            {{-- Chrome Extension --}}
+            <a href="{{ locale_path('/chrome-extension') }}"
+               class="group bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 hover:shadow-md hover:border-orange-300 dark:hover:border-orange-600 transition-all">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-10 h-10 rounded-xl bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 flex items-center justify-center shrink-0">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C8.21 0 4.831 1.757 2.632 4.501l3.953 6.848A5.454 5.454 0 0 1 12 6.545h10.691A12 12 0 0 0 12 0zM1.931 5.47A11.943 11.943 0 0 0 0 12c0 6.012 4.42 10.991 10.189 11.864l3.953-6.847a5.45 5.45 0 0 1-6.865-2.29zm13.342 2.166a5.446 5.446 0 0 1 1.45 7.09l.002.001-3.952 6.848c.2.014.4.025.6.025 6.627 0 12-5.373 12-12 0-.691-.073-1.365-.18-2.024zM12 16.364a4.364 4.364 0 1 1 0-8.728 4.364 4.364 0 0 1 0 8.728z"/></svg>
+                    </div>
+                    <h3 class="text-base font-bold text-gray-900 dark:text-white group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">{{ __('ui.footer.chrome_extension') }}</h3>
+                </div>
+                <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">Calculate EU VAT instantly from your browser toolbar. Popup calculator, new-tab mode, calculation history, and offline support.</p>
+                <div class="mt-4 flex items-center gap-1 text-xs font-semibold text-orange-600 dark:text-orange-400 group-hover:translate-x-1 transition-transform">Get extension <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg></div>
+            </a>
         </div>
 
         {{-- CTA Banner --}}

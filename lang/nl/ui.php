@@ -37,6 +37,7 @@ return array (
     'interactive_map' => 'Interactieve BTW-kaart',
     'vat_rate_history' => 'Geschiedenis BTW-tarieven',
     'embed_widget' => 'Insluitbare BTW-widget',
+        'chrome_extension' => 'Chrome Extension',
     'sitemap' => 'Sitemap',
     'llms_data' => 'llms.txt - AI/LLM-gegevens',
     'vat_rates_api' => 'BTW-tarieven API (JSON)',

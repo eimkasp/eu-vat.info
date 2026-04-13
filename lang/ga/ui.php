@@ -37,6 +37,7 @@ return array (
     'interactive_map' => 'Léarscáil Idirghníomhach CBL',
     'vat_rate_history' => 'Stair Rátaí CBL',
     'embed_widget' => 'Leabaigh Giuirléid CBL',
+        'chrome_extension' => 'Chrome Extension',
     'sitemap' => 'Léarscáil an tSuímh',
     'llms_data' => 'llms.txt - Sonraí AI/LLM',
     'vat_rates_api' => 'API Rátaí CBL (JSON)',

@@ -37,6 +37,7 @@ return array (
     'interactive_map' => 'Interaktivní mapa DPH',
     'vat_rate_history' => 'Historie sazeb DPH',
     'embed_widget' => 'Vložit DPH widget',
+        'chrome_extension' => 'Chrome Extension',
     'sitemap' => 'Mapa webu',
     'llms_data' => 'llms.txt - Data pro AI/LLM',
     'vat_rates_api' => 'API sazeb DPH (JSON)',

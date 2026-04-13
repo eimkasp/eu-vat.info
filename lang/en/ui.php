@@ -52,6 +52,7 @@ return [
         'interactive_map' => 'Interactive VAT Map',
         'vat_rate_history' => 'VAT Rate History',
         'embed_widget' => 'Embed VAT Widget',
+        'chrome_extension' => 'Chrome Extension',
         'sitemap' => 'Sitemap',
         'llms_data' => 'llms.txt - AI/LLM Data',
         'vat_rates_api' => 'VAT Rates API (JSON)',

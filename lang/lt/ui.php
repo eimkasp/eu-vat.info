@@ -37,6 +37,7 @@ return array (
     'interactive_map' => 'Interaktyvus PVM žemėlapis',
     'vat_rate_history' => 'PVM tarifų istorija',
     'embed_widget' => 'Įterpti PVM valdiklį',
+        'chrome_extension' => 'Chrome Extension',
     'sitemap' => 'Svetainės žemėlapis',
     'llms_data' => 'llms.txt - AI/LLM duomenys',
     'vat_rates_api' => 'PVM tarifų API (JSON)',

@@ -37,6 +37,7 @@ return array (
     'interactive_map' => 'Διαδραστικός χάρτης ΦΠΑ',
     'vat_rate_history' => 'Ιστορικό συντελεστών ΦΠΑ',
     'embed_widget' => 'Ενσωμάτωση widget ΦΠΑ',
+        'chrome_extension' => 'Chrome Extension',
     'sitemap' => 'Χάρτης ιστοτόπου',
     'llms_data' => 'llms.txt - Δεδομένα AI/LLM',
     'vat_rates_api' => 'API συντελεστών ΦΠΑ (JSON)',

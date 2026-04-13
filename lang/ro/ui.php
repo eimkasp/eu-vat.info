@@ -37,6 +37,7 @@ return array (
     'interactive_map' => 'Hartă interactivă TVA',
     'vat_rate_history' => 'Istoricul cotelor de TVA',
     'embed_widget' => 'Încorporați widget-ul TVA',
+        'chrome_extension' => 'Chrome Extension',
     'sitemap' => 'Hartă a site-ului',
     'llms_data' => 'llms.txt - Date AI/LLM',
     'vat_rates_api' => 'API cote TVA (JSON)',

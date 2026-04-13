@@ -37,6 +37,7 @@ return array (
     'interactive_map' => 'Interaktiivinen ALV-kartta',
     'vat_rate_history' => 'ALV-kantojen historia',
     'embed_widget' => 'Upota ALV-widget',
+        'chrome_extension' => 'Chrome Extension',
     'sitemap' => 'Sivukartta',
     'llms_data' => 'llms.txt - AI/LLM-data',
     'vat_rates_api' => 'ALV-kantojen API (JSON)',
