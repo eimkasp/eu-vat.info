@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Route;
 
 // API root — discovery index for all available endpoints
 Route::get('/', function () {
-    $baseUrl = config('app.url');
+    $baseUrl = rtrim(config('app.url'), '/');
 
     return response()->json([
         'name' => 'EU VAT Info API',
@@ -103,6 +103,9 @@ Route::post('/mcp', [McpController::class, 'handle'])->name('api.mcp');
 
 // x402 Payment Protocol — info endpoint (free, describes paid routes)
 Route::get('/x402/info', [X402Controller::class, 'info'])->name('api.x402.info');
+
+// x402 Bazaar-compatible resource discovery
+Route::get('/x402/discovery/resources', [X402Controller::class, 'discoveryResources'])->name('api.x402.discovery');
 
 // x402 Payment Protocol — paid endpoints (require x402 payment when enabled)
 Route::middleware(\App\Http\Middleware\X402PaymentMiddleware::class)->group(function () {

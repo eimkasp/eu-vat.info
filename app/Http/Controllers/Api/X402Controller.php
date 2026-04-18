@@ -137,7 +137,7 @@ class X402Controller extends Controller
     {
         $routes = config('x402.routes', []);
         $enabled = config('x402.enabled', false);
-        $baseUrl = config('app.url');
+        $baseUrl = rtrim(config('app.url'), '/');
 
         return response()->json([
             'protocol' => 'x402',
@@ -167,5 +167,44 @@ class X402Controller extends Controller
                 'POST /api/vat/validation/validate' => 'VIES VAT number validation (free)',
             ],
         ]);
+    }
+
+    /**
+     * Bazaar-compatible x402 resource discovery — returns protected resources as a JSON array.
+     */
+    public function discoveryResources()
+    {
+        $routes = config('x402.routes', []);
+        $baseUrl = rtrim(config('app.url'), '/');
+        $walletAddress = config('x402.wallet_address');
+        $network = config('x402.network');
+
+        $resources = collect($routes)->map(function ($config, $route) use ($baseUrl, $walletAddress, $network) {
+            [$method, $path] = explode(' ', $route, 2);
+
+            return [
+                'url' => $baseUrl . $path,
+                'method' => $method,
+                'network' => $network,
+                'payTo' => $walletAddress,
+                'maxAmountRequired' => $this->priceToAtomic($config['price']),
+                'asset' => 'USDC',
+                'scheme' => 'exact',
+                'description' => $config['description'],
+                'mimeType' => $config['mime_type'] ?? 'application/json',
+            ];
+        })->values();
+
+        return response()->json($resources);
+    }
+
+    /**
+     * Convert a human-readable price ("$0.10") to USDC atomic units (6 decimals).
+     */
+    private function priceToAtomic(string $price): string
+    {
+        $usd = (float) str_replace(['$', ','], '', $price);
+
+        return (string) (int) round($usd * 1_000_000);
     }
 }

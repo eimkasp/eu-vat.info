@@ -123,3 +123,6 @@ Route::get('/embed/preview/{country?}', [EmbedController::class, 'preview'])->na
 
 // LLM-optimised full VAT rates table
 Route::get('/llms-full.txt', [LlmsController::class, 'fullTxt']);
+
+// Bazaar-compatible x402 resource discovery (scanner probes this path)
+Route::get('/platform/v2/x402/discovery/resources', [\App\Http\Controllers\Api\X402Controller::class, 'discoveryResources']);
