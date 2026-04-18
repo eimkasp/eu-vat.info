@@ -43,7 +43,7 @@
         </div>
     </div>
 
-    <div class="container py-12 px-4">
+    <div class="container !py-12 px-4">
 
         {{-- Primary Tools --}}
         <h2 class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-5">Core Tools</h2>

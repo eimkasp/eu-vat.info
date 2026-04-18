@@ -71,7 +71,7 @@
         </div>
     </div>
 
-    <div class="container py-12 px-4">
+    <div class="container !py-12 px-4">
 
         {{-- QUICK REFERENCE: HOW TO DONATE --}}
         <div class="grid sm:grid-cols-2 gap-5 mb-12">
