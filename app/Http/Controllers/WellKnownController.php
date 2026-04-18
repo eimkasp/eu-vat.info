@@ -214,7 +214,7 @@ class WellKnownController extends Controller
                 'protocol_version' => 2,
                 'donate'        => $baseUrl . '/api/x402/donate',
                 'network'       => config('x402.network'),
-                'facilitator'   => config('x402.facilitator_url'),
+                'facilitator'   => $baseUrl . '/api/x402',
                 'enabled'       => (bool) config('x402.enabled', false),
                 'paid_endpoints' => collect(config('x402.routes', []))->map(fn ($cfg, $route) => [
                     'route'       => $route,
