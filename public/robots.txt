@@ -3,6 +3,7 @@
 
 # ===== General Search Engines =====
 User-agent: *
+Content-Signal: ai-train=yes, search=yes, ai-input=yes
 Allow: /
 Allow: /vat-calculator
 Allow: /vat-map
