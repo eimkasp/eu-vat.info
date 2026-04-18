@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\CountryRatesController;
 use App\Http\Controllers\Api\McpController;
+use App\Http\Controllers\Api\V1Controller;
 use App\Http\Controllers\Api\VatValidationController;
 use App\Http\Controllers\Api\X402Controller;
 use App\Http\Controllers\CountryController;
@@ -15,8 +16,11 @@ Route::get('/', function () {
     return response()->json([
         'name' => 'EU VAT Info API',
         'description' => 'Free, open-source EU VAT data for developers, businesses, and AI agents.',
-        'documentation' => $baseUrl . '/llms.txt',
+        'documentation' => $baseUrl . '/api/v1/openapi.json',
         'api_catalog' => $baseUrl . '/.well-known/api-catalog',
+        'versions' => [
+            'v1' => $baseUrl . '/api/v1',
+        ],
         'endpoints' => [
             'countries'       => $baseUrl . '/api/countries',
             'country'         => $baseUrl . '/api/countries/{slug}',
@@ -97,6 +101,16 @@ Route::get('/vat-changes', function () {
             ];
         });
 })->name('api.vat-changes');
+
+// API v1 — versioned, documented endpoints
+Route::prefix('v1')->name('api.v1.')->group(function () {
+    Route::get('/', [V1Controller::class, 'index'])->name('index');
+    Route::get('/countries', [V1Controller::class, 'countries'])->name('countries');
+    Route::get('/countries/{slug}', [V1Controller::class, 'country'])->name('country');
+    Route::get('/calculate', [V1Controller::class, 'calculate'])->name('calculate');
+    Route::post('/validate', [V1Controller::class, 'validateVat'])->name('validate');
+    Route::get('/openapi.json', [V1Controller::class, 'openapi'])->name('openapi');
+});
 
 // MCP Server (Model Context Protocol) — read-only, no auth
 Route::post('/mcp', [McpController::class, 'handle'])->name('api.mcp');

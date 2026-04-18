@@ -92,11 +92,12 @@
     @endif
 
     {{-- WebMCP — expose site tools to AI agents via the browser --}}
-    <script>
+    {{-- data-cfasync=false prevents Cloudflare Rocket Loader from deferring this script --}}
+    <script data-cfasync="false">
     (function() {
         if (!navigator.modelContext) return;
 
-        const baseUrl = @json(config('app.url'));
+        const baseUrl = @json(rtrim(config('app.url'), '/'));
 
         navigator.modelContext.registerTool({
             name: 'get_all_vat_rates',
