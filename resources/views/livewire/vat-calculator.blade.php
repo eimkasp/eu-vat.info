@@ -78,17 +78,17 @@
         <div class="absolute inset-0 z-0">
             @isset($selectedCountryObject)
                 @if(file_exists(public_path('images/countries/' . strtolower($selectedCountryObject->iso_code) . '.jpg')))
-                    <img src="/images/countries/{{ strtolower($selectedCountryObject->iso_code) }}.jpg" alt="" class="w-full h-full object-cover" loading="eager" fetchpriority="high">
+                    <img src="/images/countries/{{ strtolower($selectedCountryObject->iso_code) }}.jpg" alt="" role="presentation" class="w-full h-full object-cover" loading="eager" fetchpriority="high">
                 @else
                     <picture>
                         <source type="image/webp" srcset="/images/eu-vat-calculator-background.webp">
-                        <img src="/images/eu-vat-calculator-background.jpg" alt="" class="w-full h-full object-cover" loading="eager" fetchpriority="high">
+                        <img src="/images/eu-vat-calculator-background.jpg" alt="" role="presentation" class="w-full h-full object-cover" loading="eager" fetchpriority="high">
                     </picture>
                 @endif
             @else
                 <picture>
                     <source type="image/webp" srcset="/images/eu-vat-calculator-background.webp">
-                    <img src="/images/eu-vat-calculator-background.jpg" alt="" class="w-full h-full object-cover" loading="eager" fetchpriority="high">
+                    <img src="/images/eu-vat-calculator-background.jpg" alt="" role="presentation" class="w-full h-full object-cover" loading="eager" fetchpriority="high">
                 </picture>
             @endisset
             <div class="absolute inset-0 bg-gradient-to-b from-black/85 via-black/70 to-black/50"></div>
@@ -168,7 +168,7 @@
                     {{-- Current VAT Rates --}}
                     <section id="rates">
                         <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                            <img src="https://flagcdn.com/h40/{{ strtolower($selectedCountryObject->iso_code) }}.jpg" alt="" class="h-5 w-auto rounded-sm shadow-sm">
+                            <img src="https://flagcdn.com/h40/{{ strtolower($selectedCountryObject->iso_code) }}.jpg" alt="{{ $selectedCountryObject->name }} flag" class="h-5 w-auto rounded-sm shadow-sm">
                             {{ __('ui.calculator.current_vat_rates') }}
                         </h2>
                         <x-country-rates :country="$selectedCountryObject" />

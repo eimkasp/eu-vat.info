@@ -23,11 +23,11 @@
         {{-- Background image --}}
         <div class="absolute inset-0 z-0">
             @if(file_exists(public_path('images/countries/' . strtolower($country->iso_code) . '.jpg')))
-                <img src="/images/countries/{{ strtolower($country->iso_code) }}.jpg" alt="" class="w-full h-full object-cover" loading="eager" fetchpriority="high">
+                <img src="/images/countries/{{ strtolower($country->iso_code) }}.jpg" alt="" role="presentation" class="w-full h-full object-cover" loading="eager" fetchpriority="high">
             @else
                 <picture>
                     <source type="image/webp" srcset="/images/eu-vat-calculator-background.webp">
-                    <img src="/images/eu-vat-calculator-background.jpg" alt="" class="w-full h-full object-cover" loading="eager" fetchpriority="high">
+                    <img src="/images/eu-vat-calculator-background.jpg" alt="" role="presentation" class="w-full h-full object-cover" loading="eager" fetchpriority="high">
                 </picture>
             @endif
             <div class="absolute inset-0 bg-gradient-to-b from-black/85 via-black/70 to-black/50"></div>

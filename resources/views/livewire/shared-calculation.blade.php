@@ -115,7 +115,7 @@
                             <td class="px-6 py-3.5 text-gray-500">{{ __('ui.shared_calc.country') }}</td>
                             <td class="px-6 py-3.5 text-right font-semibold text-gray-900">
                                 <a href="{{ locale_path('/country/' . $countryObject->slug) }}" class="inline-flex items-center gap-2 hover:text-blue-600 transition-colors">
-                                    <img src="https://flagcdn.com/h40/{{ strtolower($countryObject->iso_code) }}.jpg" alt="" class="h-4 w-auto rounded-sm" loading="lazy">
+                                    <img src="https://flagcdn.com/h40/{{ strtolower($countryObject->iso_code) }}.jpg" alt="{{ $countryObject->name }} flag" class="h-4 w-auto rounded-sm" loading="lazy">
                                     {{ $countryObject->name }}
                                 </a>
                             </td>
@@ -297,7 +297,7 @@
                     <a href="{{ locale_path('/vat-calculation/' . $sc['slug'] . '/' . $amount . '/' . $sc['standard_rate'] . '/' . $mode) }}"
                        class="flex items-center justify-between px-6 py-3 hover:bg-gray-50 transition-colors">
                         <div class="flex items-center gap-2">
-                            <img src="https://flagcdn.com/h40/{{ strtolower($sc['iso_code']) }}.jpg" alt="" class="h-3.5 w-auto rounded-sm" loading="lazy">
+                            <img src="https://flagcdn.com/h40/{{ strtolower($sc['iso_code']) }}.jpg" alt="{{ $sc['name'] }} flag" class="h-3.5 w-auto rounded-sm" loading="lazy">
                             <span class="text-sm font-medium text-gray-900">{{ $sc['name'] }}</span>
                             <span class="text-xs text-gray-400">{{ $sc['standard_rate'] }}%</span>
                         </div>

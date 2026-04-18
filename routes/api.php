@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\CountryRatesController;
 use App\Http\Controllers\Api\McpController;
 use App\Http\Controllers\Api\VatValidationController;
+use App\Http\Controllers\Api\X402Controller;
 use App\Http\Controllers\CountryController;
 use App\Models\Country;
 use Illuminate\Support\Facades\Route;
@@ -64,3 +65,13 @@ Route::get('/vat-changes', function () {
 
 // MCP Server (Model Context Protocol) — read-only, no auth
 Route::post('/mcp', [McpController::class, 'handle'])->name('api.mcp');
+
+// x402 Payment Protocol — info endpoint (free, describes paid routes)
+Route::get('/x402/info', [X402Controller::class, 'info'])->name('api.x402.info');
+
+// x402 Payment Protocol — paid endpoints (require x402 payment when enabled)
+Route::middleware(\App\Http\Middleware\X402PaymentMiddleware::class)->group(function () {
+    Route::get('/x402/donate', [X402Controller::class, 'donate'])->name('api.x402.donate');
+    Route::get('/x402/premium/vat-rates', [X402Controller::class, 'premiumVatRates'])->name('api.x402.premium.vat-rates');
+    Route::get('/x402/premium/country/{slug}', [X402Controller::class, 'premiumCountry'])->name('api.x402.premium.country');
+});

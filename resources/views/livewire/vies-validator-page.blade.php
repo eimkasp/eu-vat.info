@@ -168,7 +168,7 @@
                             @php $countryObj = $countries->firstWhere('iso_code', $result['country_code']); @endphp
                             @if($countryObj)
                                 <a href="{{ locale_path('/vat-calculator/' . $countryObj->slug) }}" class="inline-flex items-center gap-2 hover:text-blue-600 transition-colors">
-                                    <img src="https://flagcdn.com/h40/{{ strtolower($result['country_code']) }}.jpg" alt="" class="h-4 w-auto rounded-sm" loading="lazy">
+                                    <img src="https://flagcdn.com/h40/{{ strtolower($result['country_code']) }}.jpg" alt="{{ $countryObj->name }} flag" class="h-4 w-auto rounded-sm" loading="lazy">
                                     {{ $countryObj->name }}
                                 </a>
                             @else

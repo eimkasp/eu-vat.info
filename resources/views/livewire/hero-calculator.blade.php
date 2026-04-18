@@ -481,7 +481,7 @@
                              :class="loadingIndex === {{ $index }} ? 'border-blue-400 shadow-lg shadow-blue-100 scale-[0.97] ring-2 ring-blue-200' : ''">
                             <div class="flex items-center gap-2.5 mb-2.5">
                                 <img src="https://flagcdn.com/h40/{{ $entry['flag_iso'] }}.jpg"
-                                    alt="" class="h-5 w-auto rounded-sm shadow-sm shrink-0" loading="lazy">
+                                    alt="{{ $entry['country'] }} flag" class="h-5 w-auto rounded-sm shadow-sm shrink-0" loading="lazy">
                                 <span class="text-sm font-semibold text-gray-900 truncate">{{ $entry['country'] }}</span>
                                 <span class="ml-auto text-[10px] font-medium px-1.5 py-0.5 rounded {{ $entry['mode'] === 'exclude' ? 'bg-blue-50 text-blue-600' : 'bg-red-50 text-red-600' }}">
                                     {{ $entry['mode'] === 'exclude' ? __('ui.calculator.plus_vat') : __('ui.calculator.minus_vat') }}

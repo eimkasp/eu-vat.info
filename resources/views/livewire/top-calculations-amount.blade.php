@@ -68,7 +68,7 @@
                             <td class="px-5 py-3">
                                 <a href="{{ locale_path('/vat-calculator/' . $country['slug']) }}" class="inline-flex items-center gap-2.5 font-semibold text-gray-900 hover:text-blue-600 transition-colors">
                                     <img src="https://flagcdn.com/h40/{{ strtolower($country['iso_code']) }}.jpg"
-                                         alt="" class="h-4 w-auto rounded-sm" loading="lazy">
+                                         alt="{{ $country['name'] }} flag" class="h-4 w-auto rounded-sm" loading="lazy">
                                     {{ $country['name'] }}
                                 </a>
                             </td>

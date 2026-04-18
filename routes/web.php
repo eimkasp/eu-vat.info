@@ -97,6 +97,9 @@ Route::get('/.well-known/oauth-authorization-server', [WellKnownController::clas
 // RFC 7517 — JSON Web Key Set
 Route::get('/.well-known/jwks.json', [WellKnownController::class, 'jwks'])->name('jwks');
 
+// Agent discovery index (JSON) — lists all available agent skills
+Route::get('/.well-known/agent-skills', [WellKnownController::class, 'agentSkillsIndex'])->name('agent-skills-index');
+
 // Agent skill files (text/markdown) for AI agent discovery
 Route::get('/.well-known/agent-skills/{skill}/SKILL.md', [WellKnownController::class, 'agentSkill'])
     ->where('skill', '[a-z0-9\-]+')

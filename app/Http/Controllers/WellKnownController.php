@@ -72,6 +72,60 @@ class WellKnownController extends Controller
     }
 
     /**
+     * Agent skills discovery index — lists all available skills with metadata.
+     */
+    public function agentSkillsIndex(): JsonResponse
+    {
+        $baseUrl = config('app.url');
+
+        return response()->json([
+            'schema_version' => '1.0',
+            'name'           => 'EU VAT Info',
+            'description'    => 'Free, daily-updated EU VAT rates, calculators, VIES validation, and MCP server for all 27 EU member states.',
+            'url'            => $baseUrl,
+            'skills'         => [
+                [
+                    'id'          => 'vat-rates',
+                    'name'        => 'EU VAT Rates',
+                    'description' => 'Query live EU VAT rates (standard, reduced, super-reduced, parking) for all 27 EU countries. Calculate VAT and compare rates.',
+                    'skill_url'   => $baseUrl . '/.well-known/agent-skills/vat-rates/SKILL.md',
+                    'mcp_endpoint' => $baseUrl . '/api/mcp',
+                    'api_endpoints' => [
+                        $baseUrl . '/api/countries',
+                        $baseUrl . '/api/countries/{slug}',
+                        $baseUrl . '/api/llm/vat-rates',
+                    ],
+                    'auth' => 'none',
+                    'tags' => ['vat', 'tax', 'eu', 'rates', 'calculator'],
+                ],
+                [
+                    'id'          => 'vies-validation',
+                    'name'        => 'VIES VAT Number Validation',
+                    'description' => 'Validate EU VAT numbers against the official VIES database. Single and batch validation with company name and address lookup.',
+                    'skill_url'   => $baseUrl . '/.well-known/agent-skills/vies-validation/SKILL.md',
+                    'mcp_endpoint' => $baseUrl . '/api/mcp',
+                    'api_endpoints' => [
+                        $baseUrl . '/api/vat/validation/validate',
+                        $baseUrl . '/api/vat/validation/batch',
+                        $baseUrl . '/api/vat/validation/health',
+                    ],
+                    'auth' => 'none',
+                    'tags' => ['vat', 'vies', 'validation', 'eu', 'company'],
+                ],
+            ],
+            'mcp_server' => [
+                'endpoint' => $baseUrl . '/api/mcp',
+                'transport' => 'http-json-rpc',
+                'server_card' => $baseUrl . '/.well-known/mcp/server-card.json',
+                'auth' => 'none',
+            ],
+            'llms_txt'    => $baseUrl . '/llms.txt',
+            'agents_md'   => $baseUrl . '/agents.md',
+            'api_catalog' => $baseUrl . '/.well-known/api-catalog',
+        ]);
+    }
+
+    /**
      * Agent skill files served as text/markdown for AI agent discovery.
      * Files live in public/.well-known/agent-skills/{skill}/SKILL.md
      */

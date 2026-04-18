@@ -66,6 +66,16 @@ Each country page includes: VAT rate overview, country-specific calculator, VIES
 - [HTML Sitemap](https://vat.businesspress.io/sitemap): Human-readable sitemap of all pages
 - [XML Sitemap](https://vat.businesspress.io/sitemap.xml): Machine-readable sitemap for crawlers
 
+## Agent Payments (x402 Protocol)
+EU VAT Info supports the [x402 payment protocol](https://x402.org) for agent-native HTTP payments. AI agents can donate or access premium data endpoints by paying with USDC via standard HTTP headers.
+
+- [x402 Info](https://vat.businesspress.io/api/x402/info): Discover available paid endpoints and pricing
+- [Donate $0.10](https://vat.businesspress.io/api/x402/donate): Support the project via x402 micropayment
+- [Premium VAT Rates $0.01](https://vat.businesspress.io/api/x402/premium/vat-rates): Enriched VAT data with change history
+- [Premium Country Data $0.005](https://vat.businesspress.io/api/x402/premium/country/{slug}): Full country data with compliance context
+
+Protocol: When requesting a paid endpoint without payment, the server returns HTTP 402 with a `PAYMENT-REQUIRED` header containing Base64-encoded payment requirements. Clients pay with USDC on Base network and retry with a `PAYMENT-SIGNATURE` header.
+
 ## Contact & Source
 - Website: https://vat.businesspress.io
 - Source Code: https://github.com/eimkasp/eu-vat.info
