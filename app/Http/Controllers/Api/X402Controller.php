@@ -146,7 +146,7 @@ class X402Controller extends Controller
             'docs' => 'https://x402.org',
             'description' => 'EU VAT Info supports the x402 payment protocol for agent-native HTTP payments. AI agents can donate or access premium endpoints by paying with USDC via the x402 protocol.',
             'network' => config('x402.network'),
-            'facilitator' => config('x402.facilitator_url'),
+            'facilitator' => $baseUrl . '/api/x402',
             'payTo' => config('x402.wallet_address'),
             'asset' => 'USDC',
             'donate_page' => $baseUrl . '/donate',

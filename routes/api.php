@@ -33,6 +33,7 @@ Route::get('/', function () {
         ],
         'x402' => [
             'info'       => $baseUrl . '/api/x402/info',
+            'discovery'  => $baseUrl . '/api/x402/discovery/resources',
             'protocol'   => 'https://x402.org',
             'version'    => 2,
             'network'    => config('x402.network'),
