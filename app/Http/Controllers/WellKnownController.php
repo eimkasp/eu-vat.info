@@ -90,7 +90,7 @@ class WellKnownController extends Controller
         }
 
         return response(file_get_contents($path))
-            ->header('Content-Type', 'text/markdown; charset=utf-8');
+            ->header('Content-Type', 'text/plain; charset=utf-8');
     }
 
     /**
