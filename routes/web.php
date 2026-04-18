@@ -105,6 +105,9 @@ Route::get('/.well-known/agent-skills/{skill}/SKILL.md', [WellKnownController::c
 // RFC 9728 — OAuth Protected Resource Metadata
 Route::get('/.well-known/oauth-protected-resource', [WellKnownController::class, 'oauthProtectedResource'])->name('oauth-protected-resource');
 
+// SEP-1649 — MCP Server Card for agent discovery
+Route::get('/.well-known/mcp/server-card.json', [WellKnownController::class, 'mcpServerCard'])->name('mcp-server-card');
+
 Route::get('/embed/{country?}', [EmbedController::class, 'index'])->name('widget.embed');
 Route::get('/public/embed/{country?}', [EmbedController::class, 'iframe'])->name('widget.iframe');
 Route::get('/embed/preview/{country?}', [EmbedController::class, 'preview'])->name('widget.preview');

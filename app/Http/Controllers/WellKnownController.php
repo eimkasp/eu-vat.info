@@ -136,4 +136,38 @@ class WellKnownController extends Controller
             ],
         ]);
     }
+
+    /**
+     * SEP-1649 — MCP Server Card for agent discovery.
+     * https://github.com/modelcontextprotocol/modelcontextprotocol/pull/2127
+     */
+    public function mcpServerCard(): JsonResponse
+    {
+        $baseUrl = config('app.url');
+
+        return response()->json([
+            'serverInfo' => [
+                'name'    => 'eu-vat-info',
+                'version' => '1.0.0',
+            ],
+            'transport' => [
+                'type'     => 'http',
+                'endpoint' => $baseUrl . '/api/mcp',
+            ],
+            'capabilities' => [
+                'tools' => [
+                    'listChanged' => false,
+                ],
+            ],
+            'tools' => [
+                ['name' => 'get_all_vat_rates',    'description' => 'Get current VAT rates for all 27 EU member states.'],
+                ['name' => 'get_country_vat_rate',  'description' => 'Get VAT rates for a specific EU country by name, ISO code, or slug.'],
+                ['name' => 'calculate_vat',         'description' => 'Calculate VAT for a given amount and country (add or remove VAT).'],
+                ['name' => 'compare_vat_rates',     'description' => 'Compare VAT rates between two or more EU countries.'],
+                ['name' => 'validate_vat_number',   'description' => 'Validate an EU VAT number against the official VIES database.'],
+            ],
+            'authentication' => null,
+            'documentation'  => $baseUrl . '/mcp-server',
+        ]);
+    }
 }
