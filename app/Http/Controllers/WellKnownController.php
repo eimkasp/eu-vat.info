@@ -112,64 +112,33 @@ class WellKnownController extends Controller
     }
 
     /**
-     * Agent skills discovery index — lists all available skills with metadata.
+     * Agent Skills Discovery Index — RFC v0.2.0.
+     *
+     * @see https://github.com/cloudflare/agent-skills-discovery-rfc
      */
     public function agentSkillsIndex(): JsonResponse
     {
-        $baseUrl = config('app.url');
+        $skills = [
+            [
+                'name'        => 'vat-rates',
+                'type'        => 'skill-md',
+                'description' => 'Query live EU VAT rates (standard, reduced, super-reduced, parking) for all 27 EU countries. Calculate VAT and compare rates.',
+                'url'         => '/.well-known/agent-skills/vat-rates/SKILL.md',
+                'digest'      => 'sha256:' . hash_file('sha256', public_path('.well-known/agent-skills/vat-rates/SKILL.md')),
+            ],
+            [
+                'name'        => 'vies-validation',
+                'type'        => 'skill-md',
+                'description' => 'Validate EU VAT numbers against the official VIES database. Single and batch validation with company name and address lookup.',
+                'url'         => '/.well-known/agent-skills/vies-validation/SKILL.md',
+                'digest'      => 'sha256:' . hash_file('sha256', public_path('.well-known/agent-skills/vies-validation/SKILL.md')),
+            ],
+        ];
 
         return response()->json([
-            'schema_version' => '1.0',
-            'name'           => 'EU VAT Info',
-            'description'    => 'Free, daily-updated EU VAT rates, calculators, VIES validation, and MCP server for all 27 EU member states.',
-            'url'            => $baseUrl,
-            'skills'         => [
-                [
-                    'id'          => 'vat-rates',
-                    'name'        => 'EU VAT Rates',
-                    'description' => 'Query live EU VAT rates (standard, reduced, super-reduced, parking) for all 27 EU countries. Calculate VAT and compare rates.',
-                    'skill_url'   => $baseUrl . '/.well-known/agent-skills/vat-rates/SKILL.md',
-                    'mcp_endpoint' => $baseUrl . '/api/mcp',
-                    'api_endpoints' => [
-                        $baseUrl . '/api/countries',
-                        $baseUrl . '/api/countries/{slug}',
-                        $baseUrl . '/api/llm/vat-rates',
-                    ],
-                    'auth' => 'none',
-                    'tags' => ['vat', 'tax', 'eu', 'rates', 'calculator'],
-                ],
-                [
-                    'id'          => 'vies-validation',
-                    'name'        => 'VIES VAT Number Validation',
-                    'description' => 'Validate EU VAT numbers against the official VIES database. Single and batch validation with company name and address lookup.',
-                    'skill_url'   => $baseUrl . '/.well-known/agent-skills/vies-validation/SKILL.md',
-                    'mcp_endpoint' => $baseUrl . '/api/mcp',
-                    'api_endpoints' => [
-                        $baseUrl . '/api/vat/validation/validate',
-                        $baseUrl . '/api/vat/validation/batch',
-                        $baseUrl . '/api/vat/validation/health',
-                    ],
-                    'auth' => 'none',
-                    'tags' => ['vat', 'vies', 'validation', 'eu', 'company'],
-                ],
-            ],
-            'mcp_server' => [
-                'endpoint' => $baseUrl . '/api/mcp',
-                'transport' => 'http-json-rpc',
-                'server_card' => $baseUrl . '/.well-known/mcp/server-card.json',
-                'auth' => 'none',
-            ],
-            'llms_txt'    => $baseUrl . '/llms.txt',
-            'agents_md'   => $baseUrl . '/agents.md',
-            'api_catalog' => $baseUrl . '/.well-known/api-catalog',
-            'x402' => [
-                'discovery' => $baseUrl . '/api/x402/info',
-                'protocol'  => 'https://x402.org',
-                'donate'    => $baseUrl . '/api/x402/donate',
-                'network'   => config('x402.network'),
-                'enabled'   => (bool) config('x402.enabled', false),
-            ],
-        ]);
+            '$schema' => 'https://schemas.agentskills.io/discovery/0.2.0/schema.json',
+            'skills'  => $skills,
+        ])->header('Cache-Control', 'public, max-age=3600');
     }
 
     /**

@@ -102,8 +102,9 @@ Route::get('/.well-known/jwks.json', [WellKnownController::class, 'jwks'])->name
 // IETF WebBotAuth — HTTP Message Signatures Directory
 Route::get('/.well-known/http-message-signatures-directory', [WellKnownController::class, 'httpMessageSignaturesDirectory'])->name('web-bot-auth');
 
-// Agent discovery index (JSON) — lists all available agent skills
-Route::get('/.well-known/agent-skills', [WellKnownController::class, 'agentSkillsIndex'])->name('agent-skills-index');
+// Agent Skills Discovery Index (RFC v0.2.0)
+Route::get('/.well-known/agent-skills/index.json', [WellKnownController::class, 'agentSkillsIndex'])->name('agent-skills-index');
+Route::redirect('/.well-known/agent-skills', '/.well-known/agent-skills/index.json', 301);
 
 // Agent skill files (text/markdown) for AI agent discovery
 Route::get('/.well-known/agent-skills/{skill}/SKILL.md', [WellKnownController::class, 'agentSkill'])
