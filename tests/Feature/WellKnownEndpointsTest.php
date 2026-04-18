@@ -178,3 +178,25 @@ it('includes x402 in oauth-protected-resource metadata', function () {
     expect($response->json('x402.protocol'))->toBe('https://x402.org');
     expect($response->json('x402.discovery'))->toContain('/api/x402/info');
 });
+
+// ── ACP Discovery Document ──────────────────────────────────────────────────
+
+it('serves ACP discovery document at /.well-known/acp.json', function () {
+    $response = $this->getJson('/.well-known/acp.json');
+
+    $response->assertSuccessful()
+        ->assertJsonStructure([
+            'protocol' => ['name', 'version', 'supported_versions', 'documentation_url'],
+            'api_base_url',
+            'transports',
+            'capabilities' => ['services'],
+        ])
+        ->assertJsonPath('protocol.name', 'acp');
+
+    expect($response->headers->get('Cache-Control'))->toContain('public')
+        ->toContain('max-age=3600');
+
+    expect($response->json('transports'))->toBeArray()->not->toBeEmpty();
+    expect($response->json('capabilities.services'))->toBeArray()->not->toBeEmpty();
+    expect($response->json('api_base_url'))->toStartWith('http');
+});

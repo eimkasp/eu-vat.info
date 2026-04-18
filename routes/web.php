@@ -117,6 +117,9 @@ Route::get('/.well-known/oauth-protected-resource', [WellKnownController::class,
 // SEP-1649 — MCP Server Card for agent discovery
 Route::get('/.well-known/mcp/server-card.json', [WellKnownController::class, 'mcpServerCard'])->name('mcp-server-card');
 
+// ACP Discovery Document — Agentic Commerce Protocol
+Route::get('/.well-known/acp.json', [WellKnownController::class, 'acpDiscovery'])->name('acp-discovery');
+
 Route::get('/embed/{country?}', [EmbedController::class, 'index'])->name('widget.embed');
 Route::get('/public/embed/{country?}', [EmbedController::class, 'iframe'])->name('widget.iframe');
 Route::get('/embed/preview/{country?}', [EmbedController::class, 'preview'])->name('widget.preview');

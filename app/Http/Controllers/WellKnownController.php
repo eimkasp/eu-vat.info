@@ -258,4 +258,35 @@ class WellKnownController extends Controller
             'documentation'  => $baseUrl . '/mcp-server',
         ]);
     }
+
+    /**
+     * ACP Discovery Document — /.well-known/acp.json
+     * https://agenticcommerce.dev
+     * https://github.com/agentic-commerce-protocol/agentic-commerce-protocol/pull/137
+     */
+    public function acpDiscovery(): JsonResponse
+    {
+        $baseUrl = rtrim(config('app.url'), '/');
+
+        return response()->json([
+            'protocol' => [
+                'name'               => 'acp',
+                'version'            => '2026-01-30',
+                'supported_versions' => ['2026-01-30'],
+                'documentation_url'  => 'https://agenticcommerce.dev',
+            ],
+            'api_base_url' => $baseUrl . '/api',
+            'transports'   => ['rest'],
+            'capabilities' => [
+                'services'             => ['checkout'],
+                'extensions'           => [
+                    ['name' => 'vat_calculation', 'spec' => $baseUrl . '/api/v1/openapi.json'],
+                ],
+                'supported_currencies' => ['eur', 'usd'],
+                'supported_locales'    => ['en', 'de', 'fr', 'es', 'it', 'nl', 'pl', 'pt', 'sv', 'da', 'fi', 'el', 'cs', 'hu', 'ro', 'bg', 'hr', 'sk', 'sl', 'lt', 'lv', 'et', 'ga', 'mt'],
+            ],
+        ], 200, [
+            'Cache-Control' => 'public, max-age=3600',
+        ]);
+    }
 }
