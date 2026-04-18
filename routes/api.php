@@ -32,13 +32,14 @@ Route::get('/', function () {
             'mcp'             => $baseUrl . '/api/mcp',
         ],
         'x402' => [
-            'info'       => $baseUrl . '/api/x402/info',
-            'discovery'  => $baseUrl . '/api/x402/discovery/resources',
-            'protocol'   => 'https://x402.org',
-            'version'    => 2,
-            'network'    => config('x402.network'),
-            'enabled'    => (bool) config('x402.enabled', false),
-            'endpoints'  => collect(config('x402.routes', []))->map(fn ($cfg, $route) => [
+            'info'        => $baseUrl . '/api/x402/info',
+            'discovery'   => $baseUrl . '/api/x402/discovery/resources',
+            'facilitator' => $baseUrl . '/api/x402',
+            'protocol'    => 'https://x402.org',
+            'version'     => 2,
+            'network'     => config('x402.network'),
+            'enabled'     => (bool) config('x402.enabled', false),
+            'endpoints'   => collect(config('x402.routes', []))->map(fn ($cfg, $route) => [
                 'route'       => $route,
                 'url'         => $baseUrl . '/' . ltrim(explode(' ', $route, 2)[1] ?? '', '/'),
                 'price'       => $cfg['price'],
