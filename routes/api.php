@@ -8,6 +8,41 @@ use App\Http\Controllers\CountryController;
 use App\Models\Country;
 use Illuminate\Support\Facades\Route;
 
+// API root — discovery index for all available endpoints
+Route::get('/', function () {
+    $baseUrl = config('app.url');
+
+    return response()->json([
+        'name' => 'EU VAT Info API',
+        'description' => 'Free, open-source EU VAT data for developers, businesses, and AI agents.',
+        'documentation' => $baseUrl . '/llms.txt',
+        'api_catalog' => $baseUrl . '/.well-known/api-catalog',
+        'endpoints' => [
+            'countries'       => $baseUrl . '/api/countries',
+            'country'         => $baseUrl . '/api/countries/{slug}',
+            'llm_vat_rates'   => $baseUrl . '/api/llm/vat-rates',
+            'vat_changes'     => $baseUrl . '/api/vat-changes',
+            'vat_validate'    => $baseUrl . '/api/vat/validation/validate',
+            'vat_batch'       => $baseUrl . '/api/vat/validation/batch',
+            'health'          => $baseUrl . '/api/vat/validation/health',
+            'mcp'             => $baseUrl . '/api/mcp',
+        ],
+        'x402' => [
+            'info'       => $baseUrl . '/api/x402/info',
+            'protocol'   => 'https://x402.org',
+            'version'    => 2,
+            'network'    => config('x402.network'),
+            'enabled'    => (bool) config('x402.enabled', false),
+            'endpoints'  => collect(config('x402.routes', []))->map(fn ($cfg, $route) => [
+                'route'       => $route,
+                'url'         => $baseUrl . '/' . ltrim(explode(' ', $route, 2)[1] ?? '', '/'),
+                'price'       => $cfg['price'],
+                'description' => $cfg['description'],
+            ])->values(),
+        ],
+    ]);
+})->name('api.index');
+
 // VAT Validation API
 Route::prefix('vat/validation')->group(function () {
     Route::post('/validate', [VatValidationController::class, 'validate'])->name('api.vat.validate');

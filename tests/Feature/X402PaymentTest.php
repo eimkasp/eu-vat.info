@@ -201,3 +201,63 @@ it('returns full country data from premium country endpoint', function () {
     expect($response->json('rate_history'))->toBeArray();
     expect($response->json('meta'))->toHaveKeys(['updated_at', 'source', 'api_url', 'web_url']);
 });
+
+// ── GET /api root discovery endpoint ────────────────────────────────────────
+
+it('returns API discovery index from /api root', function () {
+    $this->getJson('/api')
+        ->assertSuccessful()
+        ->assertJsonPath('name', 'EU VAT Info API')
+        ->assertJsonStructure([
+            'name',
+            'description',
+            'documentation',
+            'api_catalog',
+            'endpoints',
+            'x402' => ['info', 'protocol', 'version', 'network', 'enabled', 'endpoints'],
+        ]);
+});
+
+it('includes x402 endpoints in /api root discovery', function () {
+    $response = $this->getJson('/api');
+
+    expect($response->json('x402.version'))->toBe(2);
+    expect($response->json('x402.protocol'))->toBe('https://x402.org');
+    expect($response->json('x402.endpoints'))->toHaveCount(3);
+});
+
+// ── x402 info endpoint includes full discovery fields ───────────────────────
+
+it('includes payTo and asset in x402 info response', function () {
+    config(['x402.wallet_address' => '0xTestWallet123']);
+
+    $this->getJson('/api/x402/info')
+        ->assertSuccessful()
+        ->assertJsonPath('payTo', '0xTestWallet123')
+        ->assertJsonPath('asset', 'USDC')
+        ->assertJsonStructure(['donate_page']);
+});
+
+it('includes full URL in x402 info endpoint listings', function () {
+    $response = $this->getJson('/api/x402/info');
+
+    $endpoints = $response->json('endpoints');
+    foreach ($endpoints as $endpoint) {
+        expect($endpoint)->toHaveKeys(['route', 'url', 'price', 'description', 'mime_type']);
+        expect($endpoint['url'])->toContain('/api/x402/');
+    }
+});
+
+// ── 402 response includes CORS expose headers ───────────────────────────────
+
+it('returns Access-Control-Expose-Headers on 402 response', function () {
+    config([
+        'x402.enabled' => true,
+        'x402.wallet_address' => '0xTestWalletAddress',
+    ]);
+
+    $response = $this->getJson('/api/x402/donate');
+
+    $response->assertStatus(402);
+    $response->assertHeader('Access-Control-Expose-Headers', 'PAYMENT-REQUIRED, PAYMENT-RESPONSE');
+});

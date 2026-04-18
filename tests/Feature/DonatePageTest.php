@@ -19,9 +19,9 @@ it('has correct SEO meta on donate page', function () {
 it('shows x402 agent payment section', function () {
     $this->get('/donate')
         ->assertSuccessful()
-        ->assertSee('x402 Agent Payment')
+        ->assertSee('x402 Micropayment')
         ->assertSee('/api/x402/donate')
-        ->assertSee('PAYMENT-REQUIRED');
+        ->assertSee('PAYMENT-SIGNATURE');
 });
 
 it('shows GitHub Sponsors section', function () {
@@ -55,4 +55,12 @@ it('includes donate link in footer', function () {
     $this->get('/')
         ->assertSuccessful()
         ->assertSee('href="' . locale_path('/donate') . '"', false);
+});
+
+it('shows x402 test connection section', function () {
+    $this->get('/donate')
+        ->assertSuccessful()
+        ->assertSee('Test x402 Connection')
+        ->assertSee('Test Connection')
+        ->assertSee('curl -i');
 });

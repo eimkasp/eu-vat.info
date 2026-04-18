@@ -137,6 +137,7 @@ class X402Controller extends Controller
     {
         $routes = config('x402.routes', []);
         $enabled = config('x402.enabled', false);
+        $baseUrl = config('app.url');
 
         return response()->json([
             'protocol' => 'x402',
@@ -146,13 +147,19 @@ class X402Controller extends Controller
             'description' => 'EU VAT Info supports the x402 payment protocol for agent-native HTTP payments. AI agents can donate or access premium endpoints by paying with USDC via the x402 protocol.',
             'network' => config('x402.network'),
             'facilitator' => config('x402.facilitator_url'),
+            'payTo' => config('x402.wallet_address'),
+            'asset' => 'USDC',
+            'donate_page' => $baseUrl . '/donate',
             'endpoints' => collect($routes)->map(fn ($config, $route) => [
                 'route' => $route,
+                'url' => $baseUrl . '/' . ltrim(explode(' ', $route, 2)[1] ?? '', '/'),
                 'price' => $config['price'],
                 'description' => $config['description'],
                 'mime_type' => $config['mime_type'] ?? 'application/json',
             ])->values(),
             'free_endpoints' => [
+                'GET /api' => 'API discovery index (free)',
+                'GET /api/x402/info' => 'x402 payment discovery (free, this endpoint)',
                 'GET /api/countries' => 'All EU country VAT rates (free)',
                 'GET /api/countries/{slug}' => 'Single country VAT data (free)',
                 'GET /api/llm/vat-rates' => 'LLM-optimized VAT rates (free)',

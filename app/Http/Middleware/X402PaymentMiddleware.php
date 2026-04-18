@@ -59,6 +59,7 @@ class X402PaymentMiddleware
             'network' => config('x402.network'),
         ]));
         $response->headers->set('PAYMENT-RESPONSE', $settlementResponse);
+        $response->headers->set('Access-Control-Expose-Headers', 'PAYMENT-REQUIRED, PAYMENT-RESPONSE');
 
         return $response;
     }
@@ -128,6 +129,7 @@ class X402PaymentMiddleware
             'x402' => $paymentRequired,
         ], 402, [
             'PAYMENT-REQUIRED' => $encoded,
+            'Access-Control-Expose-Headers' => 'PAYMENT-REQUIRED, PAYMENT-RESPONSE',
         ]);
     }
 

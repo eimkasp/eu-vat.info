@@ -1,13 +1,13 @@
 @section('seo')
     <x-seo-meta
         title="Donate — Support EU VAT Info"
-        description="Support EU VAT Info, a free open-source platform providing VAT rates, calculators, and validators for all 27 EU member states. Donate via x402 crypto payments or traditional methods."
+        description="Support EU VAT Info, a free open-source platform providing VAT rates, calculators, and validators for all 27 EU member states. Donate via x402 crypto payments or GitHub Sponsors."
         :url="url()->current()"
     />
 @endsection
 
 <div>
-    {{-- Hero --}}
+    {{-- Hero with key actions --}}
     <div class="relative bg-gradient-to-br from-emerald-700 via-emerald-600 to-teal-600 text-white overflow-hidden">
         <div class="absolute inset-0 opacity-5">
             <svg width="100%" height="100%">
@@ -25,37 +25,46 @@
         <div class="relative container py-14 sm:py-20 px-4">
             <x-breadcrumbs :items="['Donate' => '']" variant="dark" />
             <div class="max-w-3xl">
-                <div class="inline-flex items-center gap-2 bg-white/10 rounded-full px-3 py-1 text-xs font-semibold text-emerald-100 mb-4">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
-                    </svg>
-                    Support Open Source
-                </div>
                 <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-4 leading-tight">
                     Support EU VAT Info
                 </h1>
-                <p class="text-emerald-100 text-base sm:text-lg max-w-2xl leading-relaxed">
-                    EU VAT Info is a free, open-source platform serving developers, businesses, and AI agents with comprehensive EU VAT data. Your donation helps keep it running and improving.
+                <p class="text-emerald-100 text-base sm:text-lg max-w-2xl leading-relaxed mb-8">
+                    Free, open-source EU VAT data for developers, businesses, and AI agents. Keep it running with a donation.
                 </p>
 
-                <div class="mt-8 flex flex-wrap gap-6">
-                    <div class="flex items-center gap-2 text-sm text-emerald-100">
-                        <svg class="w-4 h-4 text-emerald-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                {{-- Hero action cards --}}
+                <div class="grid sm:grid-cols-2 gap-4 max-w-2xl">
+                    {{-- Human donation --}}
+                    <a href="https://github.com/sponsors/eimkasp" target="_blank" rel="noopener noreferrer"
+                       class="group flex items-center gap-4 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-2xl p-5 transition-all border border-white/10">
+                        <div class="w-12 h-12 rounded-xl bg-pink-500/20 flex items-center justify-center shrink-0">
+                            <svg class="w-6 h-6 text-pink-300" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                            </svg>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="font-bold text-white group-hover:text-pink-100 transition-colors">GitHub Sponsors</div>
+                            <div class="text-sm text-emerald-200">One-time or recurring &middot; For humans</div>
+                        </div>
+                        <svg class="w-5 h-5 text-white/50 group-hover:text-white/80 shrink-0 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
                         </svg>
-                        <span>27 EU Countries</span>
-                    </div>
-                    <div class="flex items-center gap-2 text-sm text-emerald-100">
-                        <svg class="w-4 h-4 text-emerald-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"/>
-                        </svg>
-                        <span>24 Languages</span>
-                    </div>
-                    <div class="flex items-center gap-2 text-sm text-emerald-100">
-                        <svg class="w-4 h-4 text-emerald-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
-                        </svg>
-                        <span>Free & Open Source</span>
+                    </a>
+
+                    {{-- Agent donation --}}
+                    <div class="flex items-center gap-4 bg-white/10 backdrop-blur-sm rounded-2xl p-5 border border-white/10">
+                        <div class="w-12 h-12 rounded-xl bg-emerald-400/20 flex items-center justify-center shrink-0">
+                            <svg class="w-6 h-6 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                            </svg>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="font-bold text-white">x402 Micropayment</div>
+                            <div class="text-sm text-emerald-200">$0.10 USDC on Base &middot; For AI agents</div>
+                        </div>
+                        <a href="#x402-test" class="text-xs font-semibold text-emerald-200 hover:text-white bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-lg transition-colors shrink-0">
+                            Test it
+                        </a>
                     </div>
                 </div>
             </div>
@@ -63,6 +72,203 @@
     </div>
 
     <div class="container py-12 px-4">
+
+        {{-- QUICK REFERENCE: HOW TO DONATE --}}
+        <div class="grid sm:grid-cols-2 gap-5 mb-12">
+
+            {{-- x402 AGENT PAYMENT --}}
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="text-xs font-semibold text-emerald-500 bg-emerald-50 dark:bg-emerald-900/20 px-2.5 py-1 rounded-full">For AI Agents</span>
+                    <span class="text-xs font-semibold text-gray-400 dark:text-gray-500">x402 Protocol</span>
+                </div>
+
+                <div class="bg-gray-50 dark:bg-gray-900 rounded-xl p-4 mb-4">
+                    <span class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider block mb-2">Donate Endpoint</span>
+                    <code class="block text-sm text-emerald-600 dark:text-emerald-400 font-mono break-all">
+                        GET {{ url('/api/x402/donate') }}
+                    </code>
+                    <div class="mt-3 flex items-center gap-3 text-xs text-gray-500 dark:text-gray-400">
+                        <span class="inline-flex items-center gap-1">
+                            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                            $0.10 USDC
+                        </span>
+                        <span>Base Network</span>
+                        <span>x402 v2</span>
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 dark:bg-gray-900 rounded-xl p-4">
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mb-2 font-semibold">How it works:</p>
+                    <ol class="space-y-1.5 text-xs text-gray-500 dark:text-gray-400">
+                        <li class="flex items-start gap-2">
+                            <span class="w-4 h-4 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 text-[10px] font-bold mt-0.5">1</span>
+                            Agent sends <code class="text-gray-600 dark:text-gray-300">GET</code> request to the donate endpoint
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="w-4 h-4 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 text-[10px] font-bold mt-0.5">2</span>
+                            Server returns <code class="text-gray-600 dark:text-gray-300">HTTP 402</code> with payment requirements
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="w-4 h-4 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 text-[10px] font-bold mt-0.5">3</span>
+                            Agent signs USDC payment &amp; retries with <code class="text-gray-600 dark:text-gray-300">PAYMENT-SIGNATURE</code>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="w-4 h-4 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 text-[10px] font-bold mt-0.5">4</span>
+                            Payment verified, settled, and thank-you returned
+                        </li>
+                    </ol>
+                </div>
+            </div>
+
+            {{-- GITHUB SPONSORS --}}
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="text-xs font-semibold text-pink-500 bg-pink-50 dark:bg-pink-900/20 px-2.5 py-1 rounded-full">For Humans</span>
+                    <span class="text-xs font-semibold text-gray-400 dark:text-gray-500">GitHub Sponsors</span>
+                </div>
+
+                <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed mb-5">
+                    Support development through GitHub Sponsors with one-time or recurring donations. GitHub matches contributions during sponsorship events.
+                </p>
+
+                <a href="https://github.com/sponsors/eimkasp" target="_blank" rel="noopener noreferrer"
+                   class="inline-flex items-center gap-2 bg-pink-600 hover:bg-pink-700 text-white font-semibold text-sm px-5 py-2.5 rounded-xl transition-colors shadow-sm mb-5">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                    </svg>
+                    Sponsor on GitHub
+                </a>
+
+                <div class="bg-gray-50 dark:bg-gray-900 rounded-xl p-4">
+                    <ul class="space-y-1.5 text-xs text-gray-500 dark:text-gray-400">
+                        <li class="flex items-center gap-2">
+                            <svg class="w-3.5 h-3.5 text-pink-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                            One-time donations from $1
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <svg class="w-3.5 h-3.5 text-pink-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                            Monthly recurring sponsorship
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <svg class="w-3.5 h-3.5 text-pink-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                            GitHub Sponsors matching (when available)
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        {{-- TEST x402 CONNECTION --}}
+        <div id="x402-test" class="scroll-mt-24 mb-12" x-data="x402Test()">
+            <h2 class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-5">Test x402 Connection</h2>
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                <div class="flex flex-col sm:flex-row sm:items-center gap-4 mb-5">
+                    <p class="text-sm text-gray-500 dark:text-gray-400 flex-1">
+                        Verify the x402 payment endpoint is responding correctly. This sends a request <strong>without</strong> a payment signature — you should see an HTTP <code class="text-gray-600 dark:text-gray-300">402</code> response with payment requirements.
+                    </p>
+                    <button @click="testEndpoint()" :disabled="loading"
+                            class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-wait text-white font-semibold text-sm px-5 py-2.5 rounded-xl transition-colors shadow-sm shrink-0">
+                        <svg x-show="!loading" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                        </svg>
+                        <svg x-show="loading" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <span x-text="loading ? 'Testing...' : 'Test Connection'"></span>
+                    </button>
+                </div>
+
+                {{-- curl example --}}
+                <div class="bg-gray-50 dark:bg-gray-900 rounded-xl p-4 mb-5">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Or try with curl</span>
+                    </div>
+                    <code class="block text-sm text-emerald-600 dark:text-emerald-400 font-mono break-all">
+                        curl -i {{ url('/api/x402/donate') }}
+                    </code>
+                </div>
+
+                {{-- Test result --}}
+                <template x-if="result !== null">
+                    <div class="rounded-xl border overflow-hidden" :class="result.success ? 'border-emerald-200 dark:border-emerald-800' : 'border-red-200 dark:border-red-800'">
+                        {{-- Status header --}}
+                        <div class="px-4 py-3 flex items-center gap-3" :class="result.success ? 'bg-emerald-50 dark:bg-emerald-900/20' : 'bg-red-50 dark:bg-red-900/20'">
+                            <template x-if="result.success">
+                                <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                            </template>
+                            <template x-if="!result.success">
+                                <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                            </template>
+                            <div>
+                                <span class="text-sm font-bold" :class="result.success ? 'text-emerald-700 dark:text-emerald-300' : 'text-red-700 dark:text-red-300'" x-text="result.title"></span>
+                                <span class="ml-2 text-xs font-mono px-2 py-0.5 rounded" :class="result.success ? 'bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400' : 'bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400'" x-text="'HTTP ' + result.status"></span>
+                            </div>
+                        </div>
+                        {{-- Response body --}}
+                        <div class="bg-gray-50 dark:bg-gray-900 p-4">
+                            <pre class="text-xs text-gray-600 dark:text-gray-400 font-mono whitespace-pre-wrap break-all max-h-64 overflow-y-auto" x-text="result.body"></pre>
+                        </div>
+                        {{-- Explanation --}}
+                        <div class="px-4 py-3 border-t border-gray-200 dark:border-gray-700">
+                            <p class="text-xs text-gray-500 dark:text-gray-400" x-text="result.explanation"></p>
+                        </div>
+                    </div>
+                </template>
+
+                {{-- Error --}}
+                <template x-if="error !== null">
+                    <div class="rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20 p-4">
+                        <div class="flex items-center gap-2 text-sm font-bold text-red-700 dark:text-red-300 mb-1">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            Connection Failed
+                        </div>
+                        <p class="text-xs text-red-600 dark:text-red-400" x-text="error"></p>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+        {{-- PREMIUM API ENDPOINTS --}}
+        <h2 class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-5">Premium API Endpoints (x402)</h2>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mb-5 max-w-2xl">
+            These endpoints provide enriched data via <a href="https://x402.org" target="_blank" rel="noopener noreferrer" class="text-emerald-600 dark:text-emerald-400 font-medium hover:underline">x402 micropayments</a>. All core data remains free via our <a href="/api/countries" class="text-blue-600 dark:text-blue-400 font-medium hover:underline">public API</a>.
+        </p>
+
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-12">
+            @foreach ($x402Routes as $route => $config)
+                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-5">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-xs font-mono font-semibold text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-900 rounded px-2 py-0.5">{{ $config['price'] }}</span>
+                        <span class="text-xs text-emerald-600 dark:text-emerald-400 font-semibold">USDC</span>
+                    </div>
+                    <h3 class="text-sm font-bold text-gray-900 dark:text-white mb-2">{{ $config['description'] }}</h3>
+                    <code class="block text-xs text-gray-500 dark:text-gray-400 font-mono break-all bg-gray-50 dark:bg-gray-900 rounded-lg p-2">{{ $route }}</code>
+                </div>
+            @endforeach
+        </div>
+
+        {{-- DISCOVERY ENDPOINT --}}
+        <div class="bg-gray-50 dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 mb-12">
+            <h3 class="text-sm font-bold text-gray-900 dark:text-white mb-3">Machine-Readable Discovery</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">AI agents can discover all paid endpoints and pricing programmatically:</p>
+            <code class="block text-sm text-emerald-600 dark:text-emerald-400 font-mono bg-white dark:bg-gray-800 rounded-xl p-4 break-all border border-gray-200 dark:border-gray-700">
+                GET {{ url('/api/x402/info') }}
+            </code>
+        </div>
 
         {{-- WHAT YOUR DONATION SUPPORTS --}}
         <h2 class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-5">What Your Donation Supports</h2>
@@ -153,147 +359,6 @@
             </div>
         </div>
 
-        {{-- DONATION METHODS --}}
-        <h2 class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-5">How to Donate</h2>
-        <div class="grid sm:grid-cols-2 gap-5 mb-12">
-
-            {{-- x402 AGENT PAYMENT --}}
-            <div class="relative bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 overflow-hidden">
-                <div class="absolute top-0 right-0 w-32 h-32 rounded-full bg-emerald-50 dark:bg-emerald-900/10 -translate-y-12 translate-x-12 pointer-events-none"></div>
-                <div class="relative">
-                    <div class="flex items-start gap-4 mb-4">
-                        <div class="w-12 h-12 rounded-xl bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                            </svg>
-                        </div>
-                        <div class="flex-1 min-w-0">
-                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-1">
-                                x402 Agent Payment
-                            </h3>
-                            <span class="text-xs font-semibold text-emerald-500 bg-emerald-50 dark:bg-emerald-900/20 px-2 py-0.5 rounded-full">For AI Agents</span>
-                        </div>
-                    </div>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed mb-4">
-                        AI agents can donate instantly via the <a href="https://x402.org" target="_blank" rel="noopener noreferrer" class="text-emerald-600 dark:text-emerald-400 font-medium hover:underline">x402 protocol</a> — no accounts, no API keys, just a single HTTP request with USDC on Base.
-                    </p>
-
-                    <div class="bg-gray-50 dark:bg-gray-900 rounded-xl p-4 mb-4">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Agent Endpoint</span>
-                        </div>
-                        <code class="block text-sm text-emerald-600 dark:text-emerald-400 font-mono break-all">
-                            GET {{ url('/api/x402/donate') }}
-                        </code>
-                        <div class="mt-3 flex items-center gap-3 text-xs text-gray-500 dark:text-gray-400">
-                            <span class="inline-flex items-center gap-1">
-                                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-                                $0.10 USDC
-                            </span>
-                            <span>Base Network</span>
-                            <span>x402 v2</span>
-                        </div>
-                    </div>
-
-                    <div class="bg-gray-50 dark:bg-gray-900 rounded-xl p-4">
-                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-2 font-semibold">How it works:</p>
-                        <ol class="space-y-1.5 text-xs text-gray-500 dark:text-gray-400">
-                            <li class="flex items-start gap-2">
-                                <span class="w-4 h-4 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 text-[10px] font-bold mt-0.5">1</span>
-                                Agent sends GET request to the donate endpoint
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <span class="w-4 h-4 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 text-[10px] font-bold mt-0.5">2</span>
-                                Server returns HTTP 402 with <code class="text-gray-600 dark:text-gray-300">PAYMENT-REQUIRED</code> header
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <span class="w-4 h-4 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 text-[10px] font-bold mt-0.5">3</span>
-                                Agent signs payment with USDC on Base and retries with <code class="text-gray-600 dark:text-gray-300">PAYMENT-SIGNATURE</code> header
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <span class="w-4 h-4 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 text-[10px] font-bold mt-0.5">4</span>
-                                Payment is verified, settled, and a thank-you message is returned
-                            </li>
-                        </ol>
-                    </div>
-                </div>
-            </div>
-
-            {{-- GITHUB SPONSORS --}}
-            <div class="relative bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 overflow-hidden">
-                <div class="absolute top-0 right-0 w-32 h-32 rounded-full bg-pink-50 dark:bg-pink-900/10 -translate-y-12 translate-x-12 pointer-events-none"></div>
-                <div class="relative">
-                    <div class="flex items-start gap-4 mb-4">
-                        <div class="w-12 h-12 rounded-xl bg-pink-100 dark:bg-pink-900/30 text-pink-600 dark:text-pink-400 flex items-center justify-center shrink-0">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
-                            </svg>
-                        </div>
-                        <div class="flex-1 min-w-0">
-                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-1">
-                                GitHub Sponsors
-                            </h3>
-                            <span class="text-xs font-semibold text-pink-500 bg-pink-50 dark:bg-pink-900/20 px-2 py-0.5 rounded-full">For Humans</span>
-                        </div>
-                    </div>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed mb-4">
-                        Support development through GitHub Sponsors with one-time or recurring donations. GitHub matches contributions during sponsorship events.
-                    </p>
-
-                    <a href="https://github.com/sponsors/eimkasp" target="_blank" rel="noopener noreferrer"
-                       class="inline-flex items-center gap-2 bg-pink-600 hover:bg-pink-700 text-white font-semibold text-sm px-5 py-2.5 rounded-xl transition-colors shadow-sm mb-4">
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                        </svg>
-                        Sponsor on GitHub
-                    </a>
-
-                    <div class="bg-gray-50 dark:bg-gray-900 rounded-xl p-4">
-                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-2 font-semibold">Also available:</p>
-                        <ul class="space-y-1.5 text-xs text-gray-500 dark:text-gray-400">
-                            <li class="flex items-center gap-2">
-                                <svg class="w-3.5 h-3.5 text-pink-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                                </svg>
-                                One-time donations
-                            </li>
-                            <li class="flex items-center gap-2">
-                                <svg class="w-3.5 h-3.5 text-pink-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                                </svg>
-                                Monthly recurring sponsorship
-                            </li>
-                            <li class="flex items-center gap-2">
-                                <svg class="w-3.5 h-3.5 text-pink-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                                </svg>
-                                GitHub Sponsors matching (when available)
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {{-- PREMIUM API ENDPOINTS --}}
-        <h2 class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-5">Premium API Endpoints (x402)</h2>
-        <p class="text-sm text-gray-500 dark:text-gray-400 mb-5 max-w-2xl">
-            These endpoints provide enriched data and are accessible via <a href="https://x402.org" target="_blank" rel="noopener noreferrer" class="text-emerald-600 dark:text-emerald-400 font-medium hover:underline">x402 micropayments</a>. All core data remains free via our <a href="/api/countries" class="text-blue-600 dark:text-blue-400 font-medium hover:underline">public API</a>.
-        </p>
-
-        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-12">
-            @foreach ($x402Routes as $route => $config)
-                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-5">
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="text-xs font-mono font-semibold text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-900 rounded px-2 py-0.5">{{ $config['price'] }}</span>
-                        <span class="text-xs text-emerald-600 dark:text-emerald-400 font-semibold">USDC</span>
-                    </div>
-                    <h3 class="text-sm font-bold text-gray-900 dark:text-white mb-2">{{ $config['description'] }}</h3>
-                    <code class="block text-xs text-gray-500 dark:text-gray-400 font-mono break-all bg-gray-50 dark:bg-gray-900 rounded-lg p-2">{{ $route }}</code>
-                </div>
-            @endforeach
-        </div>
-
         {{-- x402 PROTOCOL INFO --}}
         <h2 class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-5">About x402 Protocol</h2>
         <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-12">
@@ -320,15 +385,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-
-        {{-- DISCOVERY ENDPOINT --}}
-        <div class="bg-gray-50 dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 mb-12">
-            <h3 class="text-sm font-bold text-gray-900 dark:text-white mb-3">Machine-Readable Discovery</h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">AI agents can discover all paid endpoints and pricing programmatically:</p>
-            <code class="block text-sm text-emerald-600 dark:text-emerald-400 font-mono bg-white dark:bg-gray-800 rounded-xl p-4 break-all border border-gray-200 dark:border-gray-700">
-                GET {{ url('/api/x402/info') }}
-            </code>
         </div>
 
         {{-- CTA --}}
@@ -368,3 +424,66 @@
         </div>
     </div>
 </div>
+
+<script>
+function x402Test() {
+    return {
+        loading: false,
+        result: null,
+        error: null,
+
+        async testEndpoint() {
+            this.loading = true;
+            this.result = null;
+            this.error = null;
+
+            try {
+                const response = await fetch('{{ url("/api/x402/donate") }}', {
+                    method: 'GET',
+                    headers: { 'Accept': 'application/json' },
+                });
+
+                const status = response.status;
+                let body = '';
+                try {
+                    const json = await response.json();
+                    body = JSON.stringify(json, null, 2);
+                } catch {
+                    body = await response.text();
+                }
+
+                if (status === 402) {
+                    const paymentHeader = response.headers.get('X-PAYMENT') || response.headers.get('PAYMENT-REQUIRED');
+                    this.result = {
+                        success: true,
+                        status: status,
+                        title: 'x402 is working correctly',
+                        body: body,
+                        explanation: 'The server returned HTTP 402 (Payment Required) as expected. An x402-compatible agent would now sign a USDC payment and retry the request with a PAYMENT-SIGNATURE header to complete the donation.'
+                    };
+                } else if (status === 200) {
+                    this.result = {
+                        success: true,
+                        status: status,
+                        title: 'Endpoint reachable (x402 may be disabled)',
+                        body: body,
+                        explanation: 'The server returned HTTP 200 instead of 402. The x402 middleware may be disabled in configuration. The donate endpoint is reachable but not requiring payment.'
+                    };
+                } else {
+                    this.result = {
+                        success: false,
+                        status: status,
+                        title: 'Unexpected response',
+                        body: body,
+                        explanation: 'Expected HTTP 402 (Payment Required) but received ' + status + '. Check that the x402 middleware is configured and the route is registered correctly.'
+                    };
+                }
+            } catch (e) {
+                this.error = 'Could not connect to the API endpoint. Error: ' + e.message;
+            } finally {
+                this.loading = false;
+            }
+        }
+    };
+}
+</script>

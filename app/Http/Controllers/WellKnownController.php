@@ -35,6 +35,17 @@ class WellKnownController extends Controller
                     'service-doc'  => [['href' => $baseUrl . '/llms.txt', 'type' => 'text/plain']],
                     'status'       => [['href' => $baseUrl . '/up']],
                 ],
+                // x402 Payment Protocol — paid endpoints
+                [
+                    'anchor'       => $baseUrl . '/api/x402/info',
+                    'service-desc' => [['href' => 'https://x402.org', 'type' => 'text/html']],
+                    'service-doc'  => [['href' => $baseUrl . '/donate', 'type' => 'text/html']],
+                    'status'       => [['href' => $baseUrl . '/up']],
+                    'describes'    => collect(config('x402.routes', []))->map(fn ($cfg, $route) => [
+                        'href' => $baseUrl . '/' . ltrim(explode(' ', $route, 2)[1] ?? '', '/'),
+                        'type' => $cfg['mime_type'] ?? 'application/json',
+                    ])->values()->all(),
+                ],
             ],
         ];
 
@@ -151,6 +162,13 @@ class WellKnownController extends Controller
             'llms_txt'    => $baseUrl . '/llms.txt',
             'agents_md'   => $baseUrl . '/agents.md',
             'api_catalog' => $baseUrl . '/.well-known/api-catalog',
+            'x402' => [
+                'discovery' => $baseUrl . '/api/x402/info',
+                'protocol'  => 'https://x402.org',
+                'donate'    => $baseUrl . '/api/x402/donate',
+                'network'   => config('x402.network'),
+                'enabled'   => (bool) config('x402.enabled', false),
+            ],
         ]);
     }
 
@@ -218,6 +236,22 @@ class WellKnownController extends Controller
                     'validate_vat_number',
                 ],
                 'clients' => ['VS Code Copilot', 'Cursor', 'Claude Desktop', 'any MCP-compatible client'],
+            ],
+
+            // x402 Payment Protocol — agent-native HTTP payments
+            'x402' => [
+                'discovery'     => $baseUrl . '/api/x402/info',
+                'protocol'      => 'https://x402.org',
+                'protocol_version' => 2,
+                'donate'        => $baseUrl . '/api/x402/donate',
+                'network'       => config('x402.network'),
+                'facilitator'   => config('x402.facilitator_url'),
+                'enabled'       => (bool) config('x402.enabled', false),
+                'paid_endpoints' => collect(config('x402.routes', []))->map(fn ($cfg, $route) => [
+                    'route'       => $route,
+                    'price'       => $cfg['price'],
+                    'description' => $cfg['description'],
+                ])->values()->all(),
             ],
         ]);
     }

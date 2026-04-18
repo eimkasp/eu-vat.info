@@ -149,3 +149,32 @@ it('stores private key with d parameter in private-key.json', function () {
     expect($privateJwk)->toHaveKeys(['kty', 'crv', 'x', 'y', 'd', 'kid', 'alg']);
     expect($privateJwk['d'])->not->toBeEmpty();
 });
+
+// ── API Catalog includes x402 discovery ─────────────────────────────────────
+
+it('includes x402 entry in api-catalog linkset', function () {
+    $response = $this->getJson('/.well-known/api-catalog');
+
+    $response->assertSuccessful();
+    $response->assertHeader('Content-Type', 'application/linkset+json');
+
+    $linkset = $response->json('linkset');
+    expect($linkset)->toHaveCount(4);
+
+    // Last entry should be the x402 discovery anchor
+    $x402Entry = $linkset[3];
+    expect($x402Entry['anchor'])->toContain('/api/x402/info');
+    expect($x402Entry['service-desc'][0]['href'])->toBe('https://x402.org');
+    expect($x402Entry)->toHaveKey('describes');
+});
+
+// ── OAuth Protected Resource includes x402 ──────────────────────────────────
+
+it('includes x402 in oauth-protected-resource metadata', function () {
+    $response = $this->getJson('/.well-known/oauth-protected-resource');
+
+    $response->assertSuccessful();
+    expect($response->json('x402'))->not->toBeNull();
+    expect($response->json('x402.protocol'))->toBe('https://x402.org');
+    expect($response->json('x402.discovery'))->toContain('/api/x402/info');
+});
