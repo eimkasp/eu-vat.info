@@ -132,6 +132,55 @@ Route::get('/lang/{locale}', function (string $locale) {
 Route::get('/sitemap/generate', [SitemapController::class, 'index'])->name('sitemap.generate');
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
+// RFC 9727 API Catalog (application/linkset+json per RFC 9264)
+Route::get('/.well-known/api-catalog', function () {
+    $baseUrl = config('app.url');
+
+    $linkset = [
+        'linkset' => [
+            [
+                'anchor' => $baseUrl . '/api/countries',
+                'service-desc' => [
+                    ['href' => $baseUrl . '/llms.txt', 'type' => 'text/plain'],
+                ],
+                'service-doc' => [
+                    ['href' => $baseUrl . '/llms.txt', 'type' => 'text/plain'],
+                ],
+                'status' => [
+                    ['href' => $baseUrl . '/up'],
+                ],
+            ],
+            [
+                'anchor' => $baseUrl . '/api/vat/validation',
+                'service-desc' => [
+                    ['href' => $baseUrl . '/llms.txt', 'type' => 'text/plain'],
+                ],
+                'service-doc' => [
+                    ['href' => $baseUrl . '/vat-validation-api', 'type' => 'text/html'],
+                ],
+                'status' => [
+                    ['href' => $baseUrl . '/api/vat/validation/health'],
+                ],
+            ],
+            [
+                'anchor' => $baseUrl . '/api/llm/vat-rates',
+                'service-desc' => [
+                    ['href' => $baseUrl . '/llms.txt', 'type' => 'text/plain'],
+                ],
+                'service-doc' => [
+                    ['href' => $baseUrl . '/llms.txt', 'type' => 'text/plain'],
+                ],
+                'status' => [
+                    ['href' => $baseUrl . '/up'],
+                ],
+            ],
+        ],
+    ];
+
+    return response()->json($linkset)
+        ->header('Content-Type', 'application/linkset+json');
+})->name('api-catalog');
+
 Route::get('/embed/{country?}', [EmbedController::class, 'index'])->name('widget.embed');
 Route::get('/public/embed/{country?}', [EmbedController::class, 'iframe'])->name('widget.iframe');
 Route::get('/embed/preview/{country?}', [EmbedController::class, 'preview'])->name('widget.preview');
