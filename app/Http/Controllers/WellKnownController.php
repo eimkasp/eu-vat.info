@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Storage;
 
 class WellKnownController extends Controller
 {
@@ -64,11 +65,39 @@ class WellKnownController extends Controller
 
     /**
      * RFC 7517 — JSON Web Key Set.
-     * Empty key set; no token signing (public API).
+     * Returns bot auth public key if generated, otherwise empty set.
      */
     public function jwks(): JsonResponse
     {
-        return response()->json(['keys' => []]);
+        $jwks = $this->loadBotAuthJwks();
+
+        return response()->json($jwks);
+    }
+
+    /**
+     * Web Bot Auth — HTTP Message Signatures Directory.
+     * IETF WebBotAuth WG: https://datatracker.ietf.org/wg/webbotauth/about/
+     *
+     * Publishes a JWKS so receiving sites can verify signed requests from this bot/agent.
+     */
+    public function httpMessageSignaturesDirectory(): JsonResponse
+    {
+        $jwks = $this->loadBotAuthJwks();
+
+        return response()->json($jwks)
+            ->header('Cache-Control', 'public, max-age=86400');
+    }
+
+    /**
+     * Load the bot auth JWKS from storage.
+     */
+    private function loadBotAuthJwks(): array
+    {
+        if (Storage::disk('local')->exists('bot-auth/public-key.json')) {
+            return json_decode(Storage::disk('local')->get('bot-auth/public-key.json'), true) ?? ['keys' => []];
+        }
+
+        return ['keys' => []];
     }
 
     /**
@@ -158,11 +187,13 @@ class WellKnownController extends Controller
 
         return response()->json([
             'resource'                 => $baseUrl,
-            'authorization_servers'    => [$baseUrl . '/.well-known/oauth-authorization-server'],
+            'authorization_servers'    => [$baseUrl],
             'scopes_supported'         => [],
             'bearer_methods_supported' => [],
+            'resource_signing_alg_values_supported' => ['ES256'],
             'resource_documentation'   => $baseUrl . '/llms.txt',
             'resource_policy_uri'      => $baseUrl . '/privacy-policy',
+            'jwks_uri'                 => $baseUrl . '/.well-known/jwks.json',
 
             // Agent skill discovery — Markdown files describing how to use each capability
             'agent_skills' => [

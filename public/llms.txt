@@ -76,6 +76,13 @@ EU VAT Info supports the [x402 payment protocol](https://x402.org) for agent-nat
 
 Protocol: When requesting a paid endpoint without payment, the server returns HTTP 402 with a `PAYMENT-REQUIRED` header containing Base64-encoded payment requirements. Clients pay with USDC on Base network and retry with a `PAYMENT-SIGNATURE` header.
 
+## Agent Authentication & Discovery
+- [OAuth Protected Resource](https://vat.businesspress.io/.well-known/oauth-protected-resource): RFC 9728 metadata describing how agents authenticate (all endpoints are currently public)
+- [OAuth Authorization Server](https://vat.businesspress.io/.well-known/oauth-authorization-server): RFC 8414 authorization server metadata
+- [JWKS](https://vat.businesspress.io/.well-known/jwks.json): JSON Web Key Set for verifying signatures
+- [Web Bot Auth](https://vat.businesspress.io/.well-known/http-message-signatures-directory): IETF WebBotAuth JWKS for verifying bot request signatures
+- [API Catalog](https://vat.businesspress.io/.well-known/api-catalog): RFC 9727 machine-readable API catalog
+
 ## Contact & Source
 - Website: https://vat.businesspress.io
 - Source Code: https://github.com/eimkasp/eu-vat.info

@@ -97,6 +97,9 @@ Route::get('/.well-known/oauth-authorization-server', [WellKnownController::clas
 // RFC 7517 — JSON Web Key Set
 Route::get('/.well-known/jwks.json', [WellKnownController::class, 'jwks'])->name('jwks');
 
+// IETF WebBotAuth — HTTP Message Signatures Directory
+Route::get('/.well-known/http-message-signatures-directory', [WellKnownController::class, 'httpMessageSignaturesDirectory'])->name('web-bot-auth');
+
 // Agent discovery index (JSON) — lists all available agent skills
 Route::get('/.well-known/agent-skills', [WellKnownController::class, 'agentSkillsIndex'])->name('agent-skills-index');
 
