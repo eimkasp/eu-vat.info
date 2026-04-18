@@ -12,6 +12,7 @@ use App\Livewire\HtmlSitemap;
 use App\Livewire\Tools;
 use App\Livewire\VatCalculator;
 use App\Livewire\ChromeExtension;
+use App\Livewire\Donate;
 use App\Livewire\McpServer;
 use App\Livewire\SharedCalculation;
 use App\Livewire\PrivacyPolicy;
@@ -61,6 +62,7 @@ $registerRoutes = function () {
     Route::get('/vat-changes', \App\Livewire\VatChangesHistory::class)->name('vat-changes');
     Route::get('/mcp-server', McpServer::class)->name('mcp-server');
     Route::get('/chrome-extension', ChromeExtension::class)->name('chrome-extension');
+    Route::get('/donate', Donate::class)->name('donate');
     Route::get('/privacy', PrivacyPolicy::class)->name('privacy');
     Route::get('/sitemap', HtmlSitemap::class)->name('html-sitemap');
 };

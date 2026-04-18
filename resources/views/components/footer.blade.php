@@ -32,6 +32,7 @@
             <div>
                 <h3 class="text-white font-semibold mb-4">{{ __('ui.footer.resources') }}</h3>
                 <ul class="space-y-2 text-sm">
+                    <li><a href="{{ locale_path('/donate') }}" class="hover:text-white transition-colors">Donate</a></li>
                     <li><a href="{{ locale_path('/sitemap') }}" class="hover:text-white transition-colors">{{ __('ui.footer.sitemap') }}</a></li>
                     <li><a href="/llms.txt" class="hover:text-white transition-colors">{{ __('ui.footer.llms_data') }}</a></li>
                     <li><a href="/api/llm/vat-rates" class="hover:text-white transition-colors">{{ __('ui.footer.vat_rates_api') }}</a></li>
