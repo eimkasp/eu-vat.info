@@ -15,6 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->web(append: [
             \App\Http\Middleware\SetLocale::class,
             \App\Http\Middleware\AddLinkHeaders::class,
+            \App\Http\Middleware\MarkdownNegotiation::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
