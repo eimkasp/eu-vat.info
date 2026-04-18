@@ -146,10 +146,6 @@ class McpController extends Controller
                         'required' => ['country_code', 'vat_number'],
                     ],
                 ],
-                        ],
-                        'required' => ['countries'],
-                    ],
-                ],
             ],
         ]);
     }
