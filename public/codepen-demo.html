@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EU VAT Widget — Embed Demo</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen font-sans">
+
+  <div class="max-w-2xl mx-auto px-4 py-12">
+
+    <!-- Header -->
+    <div class="mb-8 text-center">
+      <span class="inline-block bg-blue-100 text-blue-700 text-xs font-semibold px-3 py-1 rounded-full mb-4">Free widget · No signup</span>
+      <h1 class="text-3xl font-bold text-gray-900 tracking-tight mb-2">EU VAT Calculator Widget</h1>
+      <p class="text-gray-500">Embed real-time EU VAT rates on any site. Pick a layout, copy the code.</p>
+    </div>
+
+    <!-- Style toggle -->
+    <div class="flex gap-3 mb-5">
+      <button id="btn-vertical" onclick="setMode('vertical')"
+        class="flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all bg-blue-600 text-white shadow-sm">
+        ▥ Vertical
+      </button>
+      <button id="btn-horizontal" onclick="setMode('horizontal')"
+        class="flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all bg-white text-gray-600 border border-gray-200 hover:border-gray-300">
+        ▤ Horizontal
+      </button>
+    </div>
+
+    <!-- Widget preview -->
+    <div class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm mb-5">
+      <div class="flex items-center gap-1.5 px-4 py-2.5 border-b border-gray-100 bg-gray-50">
+        <span class="w-2.5 h-2.5 rounded-full bg-red-400"></span>
+        <span class="w-2.5 h-2.5 rounded-full bg-yellow-400"></span>
+        <span class="w-2.5 h-2.5 rounded-full bg-green-400"></span>
+        <span id="url-label" class="ml-3 text-xs text-gray-400 font-mono truncate">
+          https://vat.businesspress.io/public/embed/united-kingdom
+        </span>
+      </div>
+      <iframe
+        id="widget-iframe"
+        src="https://vat.businesspress.io/public/embed/united-kingdom"
+        height="400"
+        width="100%"
+        style="border:none;display:block;"
+        frameborder="0"
+        loading="lazy"
+      ></iframe>
+    </div>
+
+    <!-- Embed code -->
+    <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden mb-6">
+      <div class="flex items-center justify-between px-4 py-3 border-b border-gray-100">
+        <span class="text-sm font-semibold text-gray-700">Embed code</span>
+        <button id="copy-btn" onclick="copyCode()"
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold text-white bg-gray-900 hover:bg-gray-700 transition-colors">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+      <pre id="code-block" class="text-xs text-gray-700 p-4 overflow-x-auto leading-relaxed bg-gray-50">&lt;iframe
+  src="https://vat.businesspress.io/public/embed/united-kingdom"
+  width="100%"
+  height="400"
+  style="border:none;"
+  frameborder="0"
+&gt;&lt;/iframe&gt;</pre>
+    </div>
+
+    <!-- Footer link -->
+    <p class="text-center text-sm text-gray-400">
+      Widget by <a href="https://vat.businesspress.io/embed" target="_blank" class="text-blue-600 font-medium hover:underline">EU VAT Info</a> &middot; always free, always up to date
+    </p>
+
+  </div>
+
+<script>
+  var mode = 'vertical';
+  var BASE = 'https://vat.businesspress.io/public/embed/united-kingdom';
+
+  function setMode(m) {
+    mode = m;
+    var src = BASE + (m === 'horizontal' ? '?style=horizontal' : '');
+    var height = m === 'horizontal' ? '320' : '400';
+
+    document.getElementById('widget-iframe').src = src;
+    document.getElementById('widget-iframe').height = height;
+    document.getElementById('url-label').textContent = src;
+    document.getElementById('code-block').textContent =
+      '<iframe\n  src="' + src + '"\n  width="100%"\n  height="' + height + '"\n  style="border:none;"\n  frameborder="0"\n></iframe>';
+
+    var active   = 'bg-blue-600 text-white shadow-sm';
+    var inactive = 'bg-white text-gray-600 border border-gray-200 hover:border-gray-300';
+    document.getElementById('btn-vertical').className   = 'flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all ' + (m === 'vertical'   ? active : inactive);
+    document.getElementById('btn-horizontal').className = 'flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all ' + (m === 'horizontal' ? active : inactive);
+  }
+
+  function copyCode() {
+    var text = document.getElementById('code-block').textContent;
+    navigator.clipboard.writeText(text).then(function() {
+      var btn = document.getElementById('copy-btn');
+      btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> Copied!';
+      btn.classList.replace('bg-gray-900', 'bg-green-500');
+      btn.classList.remove('hover:bg-gray-700');
+      setTimeout(function() {
+        btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy';
+        btn.classList.replace('bg-green-500', 'bg-gray-900');
+        btn.classList.add('hover:bg-gray-700');
+      }, 2000);
+    });
+  }
+</script>
+</body>
+</html>

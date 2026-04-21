@@ -120,9 +120,11 @@ Route::get('/.well-known/mcp/server-card.json', [WellKnownController::class, 'mc
 // ACP Discovery Document — Agentic Commerce Protocol
 Route::get('/.well-known/acp.json', [WellKnownController::class, 'acpDiscovery'])->name('acp-discovery');
 
-Route::get('/embed/{country?}', [EmbedController::class, 'index'])->name('widget.embed');
-Route::get('/public/embed/{country?}', [EmbedController::class, 'iframe'])->name('widget.iframe');
-Route::get('/embed/preview/{country?}', [EmbedController::class, 'preview'])->name('widget.preview');
+Route::middleware(\App\Http\Middleware\AllowEmbedding::class)->group(function () {
+    Route::get('/embed/{country?}', [EmbedController::class, 'index'])->name('widget.embed');
+    Route::get('/public/embed/{country?}', [EmbedController::class, 'iframe'])->name('widget.iframe');
+    Route::get('/embed/preview/{country?}', [EmbedController::class, 'preview'])->name('widget.preview');
+});
 
 // LLM-optimised full VAT rates table
 Route::get('/llms-full.txt', [LlmsController::class, 'fullTxt']);
