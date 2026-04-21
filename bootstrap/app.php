@@ -17,6 +17,10 @@ return Application::configure(basePath: dirname(__DIR__))
             \App\Http\Middleware\AddLinkHeaders::class,
             \App\Http\Middleware\MarkdownNegotiation::class,
         ]);
+
+        // Must be global (not web-group) so it runs AFTER StartSession and
+        // EncryptCookies have already set the session cookie on the response.
+        $middleware->append(\App\Http\Middleware\EmbedCookieFix::class);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

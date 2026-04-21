@@ -15,6 +15,12 @@ class AllowEmbedding
         $response->headers->remove('X-Frame-Options');
         $response->headers->set('Content-Security-Policy', "frame-ancestors *");
 
+        // Flag this session so EmbedCookieFix (global middleware) can identify
+        // subsequent Livewire AJAX requests that belong to an embed context.
+        if ($request->hasSession()) {
+            $request->session()->put('_embed_context', true);
+        }
+
         return $response;
     }
 }
