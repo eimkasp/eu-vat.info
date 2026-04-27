@@ -47,6 +47,7 @@ class SitemapGenerator
             ['path' => '/',                      'changefreq' => 'daily',   'priority' => '1.0'],
             ['path' => '/vat-calculator',         'changefreq' => 'weekly',  'priority' => '0.9'],
             ['path' => '/vat-number-validator',   'changefreq' => 'weekly',  'priority' => '0.8'],
+            ['path' => '/vat-validation-api',      'changefreq' => 'monthly', 'priority' => '0.7'],
             ['path' => '/vat-map',                'changefreq' => 'monthly', 'priority' => '0.8'],
             ['path' => '/vat-changes',            'changefreq' => 'weekly',  'priority' => '0.7'],
             ['path' => '/top-vat-calculations',   'changefreq' => 'weekly',  'priority' => '0.7'],

@@ -23,6 +23,11 @@
         // Strip existing locale prefix
         $cleanPath = preg_replace('#^(' . implode('|', $supportedLocales) . ')(/|$)#', '/', $currentPath);
         $cleanPath = $cleanPath === '' ? '/' : $cleanPath;
+        // request()->path() has no leading slash; ensure $cleanPath always has one
+        // so locale URL concatenation produces /es/vat-validation-api, not /esvat-validation-api
+        if ($cleanPath !== '/' && !str_starts_with($cleanPath, '/')) {
+            $cleanPath = '/' . $cleanPath;
+        }
     @endphp
     <link rel="alternate" hreflang="x-default" href="{{ url($cleanPath === '/' ? '/' : $cleanPath) }}">
     @foreach($supportedLocales as $hrefLocale)
