@@ -48,10 +48,6 @@
         }
     </script>
 
-    @if (config('app.adsense_id') && app()->isProduction())
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ config('app.adsense_id') }}"
-            crossorigin="anonymous"></script>
-    @endif
     @if (config('app.data_domain') && app()->isProduction())
         <script defer data-domain="eu-vat.info" src="https://stats.businesspress.io/js/script.js"></script>
     @endif
@@ -75,14 +71,6 @@
         @endisset
         </div>
     </main>
-    @if (config('app.adsense_id') && app()->isProduction())
-        <!-- Default -->
-        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-3925599852702124" data-ad-slot="1306180870"
-            data-ad-format="auto" data-full-width-responsive="true"></ins>
-        <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
-    @endif
     <x-footer></x-footer>
     <x-toast />
 

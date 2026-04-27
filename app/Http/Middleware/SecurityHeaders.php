@@ -11,15 +11,18 @@ class SecurityHeaders
     /**
      * External script sources required by the application.
      * - stats.businesspress.io: Plausible analytics
-     * - pagead2.googlesyndication.com: Google AdSense
-     * - cdn.jsdelivr.net: ApexCharts (history chart)
+     * - consent.cookiebot.com: Cookiebot consent manager (optional, config-driven)
+     *
+     * 'unsafe-eval' is required by Alpine.js 3 which uses `new AsyncFunction`
+     * internally for reactive expression evaluation (x-init, x-on, etc.).
+     * 'unsafe-inline' is required by Livewire 3 for component hydration scripts.
      */
     private const SCRIPT_SOURCES = [
         "'self'",
-        "'unsafe-inline'", // Required by Livewire 3, Alpine.js, and SW registration
-        'https://pagead2.googlesyndication.com',
+        "'unsafe-inline'",
+        "'unsafe-eval'",
         'https://stats.businesspress.io',
-        'https://cdn.jsdelivr.net',
+        'https://consent.cookiebot.com',
     ];
 
     private const STYLE_SOURCES = [
@@ -31,20 +34,11 @@ class SecurityHeaders
         "'self'",
         'data:',
         'https://flagcdn.com',
-        'https://*.googlesyndication.com', // AdSense
     ];
 
     private const CONNECT_SOURCES = [
         "'self'",
         'https://stats.businesspress.io', // Plausible beacon
-    ];
-
-    /**
-     * AdSense renders ads in iframes from these origins.
-     */
-    private const FRAME_SOURCES = [
-        'https://*.googlesyndication.com',
-        'https://*.doubleclick.net',
     ];
 
     public function handle(Request $request, Closure $next): Response
@@ -81,7 +75,7 @@ class SecurityHeaders
             'img-src ' . implode(' ', self::IMG_SOURCES),
             "font-src 'self'",
             'connect-src ' . implode(' ', self::CONNECT_SOURCES),
-            'frame-src ' . implode(' ', self::FRAME_SOURCES),
+            "frame-src 'none'",
             "object-src 'none'",   // No Flash/plugins
             "base-uri 'self'",     // Prevent base-tag injection
             "frame-ancestors 'self'", // AllowEmbedding will override this for embed routes
