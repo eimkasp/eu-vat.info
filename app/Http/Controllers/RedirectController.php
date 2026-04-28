@@ -19,6 +19,7 @@ class RedirectController extends Controller
     /**
      * 301 redirect: /vat-calculator/{iso_code} → /vat-calculator/{slug}
      * Handles 2-letter ISO codes (e.g. /vat-calculator/mt → /vat-calculator/malta).
+     * Falls back to /vat-calculator if the code doesn't match any country (e.g. locale codes).
      */
     public function isoCode(string $code): RedirectResponse
     {
@@ -30,7 +31,7 @@ class RedirectController extends Controller
             return redirect(locale_path('/vat-calculator/' . $country->slug), 301);
         }
 
-        abort(404);
+        return redirect(locale_path('/vat-calculator'), 301);
     }
 
     /**
