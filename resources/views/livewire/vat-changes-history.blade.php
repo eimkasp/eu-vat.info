@@ -37,6 +37,29 @@
             }
         }
         </script>
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Dataset",
+            "name": "EU VAT Rate Changes 2000–{{ now()->year }}",
+            "description": "{{ __('ui.history.meta_desc') }}",
+            "url": "{{ url(locale_path('/vat-changes')) }}",
+            "creator": {
+                "@type": "Organization",
+                "name": "{{ __('ui.site_name') }}",
+                "url": "{{ url('/') }}"
+            },
+            "dateModified": "{{ now()->toIso8601String() }}",
+            "license": "https://creativecommons.org/licenses/by/4.0/",
+            "keywords": ["VAT rate changes", "EU VAT history", "European VAT rates", "tax rate changes"],
+            "spatialCoverage": "European Union",
+            "temporalCoverage": "2000/{{ now()->year }}",
+            "variableMeasured": [
+                {"@type": "PropertyValue", "name": "Standard VAT Rate", "unitText": "percent"},
+                {"@type": "PropertyValue", "name": "Reduced VAT Rate", "unitText": "percent"}
+            ]
+        }
+        </script>
     </x-seo-meta>
 @endsection
 

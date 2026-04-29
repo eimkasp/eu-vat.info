@@ -465,4 +465,18 @@ return array (
   'amount_page_desc' => 'Ríomh CBL ar €:amount do gach 27 ballstát.',
   'back_to_all' => '← Gach ríomh coitianta',
 ),
+
+  // Changelog Page
+  'changelog' => 
+  array (
+    'meta_title' => 'Changelog — EU VAT Info | Feature Updates & Fixes',
+    'meta_desc' => 'See what\'s new in EU VAT Info. Release notes, new features, bug fixes, accessibility improvements and VAT data updates.',
+    'nav_label' => 'Changelog',
+    'heading' => 'Changelog',
+    'subheading' => 'All notable changes to EU VAT Info are documented here, newest first.',
+    'unreleased' => 'Unreleased',
+    'empty' => 'No changelog entries found.',
+    'no_details' => 'No details available for this release.',
+    'format_note' => 'Format follows <a href=":url" target="_blank" rel="noopener noreferrer" class="underline hover:text-gray-600">Keep a Changelog</a>.',
+  ),
 );

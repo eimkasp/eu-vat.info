@@ -11,6 +11,7 @@ use App\Livewire\Home;
 use App\Livewire\HtmlSitemap;
 use App\Livewire\Tools;
 use App\Livewire\VatCalculator;
+use App\Livewire\Changelog;
 use App\Livewire\ChromeExtension;
 use App\Livewire\Donate;
 use App\Livewire\McpServer;
@@ -60,6 +61,7 @@ $registerRoutes = function () {
         ->where('amount', '100|200|500|1000|2500|5000|10000')
         ->name('top-calculations.amount');
     Route::get('/vat-changes', \App\Livewire\VatChangesHistory::class)->name('vat-changes');
+    Route::get('/changelog', Changelog::class)->name('changelog');
     Route::get('/mcp-server', McpServer::class)->name('mcp-server');
     Route::get('/chrome-extension', ChromeExtension::class)->name('chrome-extension');
     Route::get('/donate', Donate::class)->name('donate');

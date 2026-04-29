@@ -64,8 +64,8 @@ return [
 
     // ── Home Page ───────────────────────────────────────────────────────
     'home_page' => [
-        'title' => 'EU VAT Info - VAT Rates Calculator & Information for All EU Countries',
-        'meta_desc' => 'Compare VAT rates across all 27 EU countries. Free online calculator, historical rate data, and compliance guides for every member state.',
+        'title' => 'EU VAT Calculator — All 27 Countries | Free & Real-Time | EU VAT Info',
+        'meta_desc' => 'Free VAT calculator for all 27 EU countries. Add or remove VAT instantly with official 2026 rates. Validate EU VAT numbers, track rate changes & access compliance guides.',
         'heading' => 'VAT Rates in the',
         'heading_accent' => 'European Union',
         'subtitle' => 'Compare standard and reduced VAT rates, calculate taxes, and stay compliant across all 27 EU member states.',
@@ -111,10 +111,10 @@ return [
         'country_subtitle' => 'Calculate VAT for transactions in :country easily. Current standard rate is :rate%.',
         'generic_subtitle' => 'Quickly calculate VAT amounts for any of the 27 European Union member states.',
         'breadcrumb_label' => 'VAT Calculator',
-        'meta_title_country' => ':country VAT Calculator — Standard Rate :rate% | EU VAT Info',
-        'meta_desc_country' => 'Free :country VAT calculator. Standard rate :rate%. Instantly add or remove VAT, view all rates (reduced, super-reduced, parking), and access compliance guides.',
-        'meta_title_generic' => 'EU VAT Calculator — All 27 Countries | EU VAT Info',
-        'meta_desc_generic' => 'Free online EU VAT calculator for all 27 member states. Add or remove VAT instantly with current official rates. No sign-up required.',
+        'meta_title_country' => ':country VAT Calculator 2026 — :rate% Standard Rate | EU VAT Info',
+        'meta_desc_country' => 'Calculate :country VAT instantly. Standard rate :rate% — add or remove VAT from any amount. All rate types: standard, reduced & parking. Official 2026 data. Free.',
+        'meta_title_generic' => 'EU VAT Calculator 2026 — All 27 Countries, Free & Real-Time | EU VAT Info',
+        'meta_desc_generic' => 'Free EU VAT calculator for all 27 member states. Add or remove VAT instantly with official 2026 rates. No registration required.',
         'schema_breadcrumb_home' => 'Home',
         'schema_breadcrumb_calculator' => 'VAT Calculator',
         'schema_page_name' => ':country VAT Calculator & Guide',
@@ -185,8 +185,8 @@ return [
     // ── VAT History / Changes ───────────────────────────────────────────
     'history' => [
         'title' => 'VAT Rate Changes History',
-        'meta_title' => 'VAT Rate Changes History - EU Countries | EU VAT Info',
-        'meta_desc' => 'Complete history of VAT rate changes across all EU countries from 2000 onwards. Track standard and reduced rate modifications with country stability indicators.',
+        'meta_title' => 'EU VAT Rate Changes History 2026 — All 27 Countries | EU VAT Info',
+        'meta_desc' => 'Track every EU VAT rate change from 2000 to 2026. Standard, reduced & parking rate increases and decreases across all 27 countries with stability rankings. Updated weekly.',
         'subtitle' => 'Track all VAT rate modifications across EU countries over the past decade',
         'stability_title' => 'Country Stability Indicators',
         'stability_desc' => 'Countries with fewer VAT rate changes indicate more stable tax environments',
@@ -423,10 +423,10 @@ return [
 
     // ── VIES Validator Page ─────────────────────────────────────────────
     'vies_page' => [
-        'title' => 'VIES VAT Number Validator — Verify EU VAT Numbers Online',
-        'description' => 'Free VIES VAT number validation tool. Verify any EU VAT number instantly using the official European Commission VIES database. Check company name, address, and validity.',
-        'country_title' => ':country VAT Number Validator — Verify :country VAT Numbers via VIES',
-        'country_description' => 'Validate :country (:code) VAT numbers instantly using the official EU VIES database. Check company registration status, name, and address.',
+        'title' => 'VIES VAT Number Validator — Verify EU VAT Numbers Free | EU VAT Info',
+        'description' => 'Free EU VAT number validator. Verify any EU VAT number instantly via the official European Commission VIES database. Get company name, address & validity. No sign-up.',
+        'country_title' => ':country VAT Number Validator — Free VIES Lookup | EU VAT Info',
+        'country_description' => 'Free :country (:code) VAT number validator. Instantly check company registration via the official EU VIES database — get name & address. No sign-up needed.',
         'h1' => 'VIES VAT Number Validator',
         'country_h1' => ':country VAT Number Validator',
         'subtitle' => 'Verify any EU VAT number using the official European Commission VIES database. Results are cached for faster lookups.',
@@ -621,5 +621,18 @@ return [
         'no_data_available' => 'No data available at this time.',
         'map_unavailable' => 'Map is temporarily unavailable',
         'try_again_later' => 'Please try again later.',
+    ],
+
+    // ── Changelog Page ──────────────────────────────────────────────────
+    'changelog' => [
+        'meta_title'   => 'Changelog — EU VAT Info | Feature Updates & Fixes',
+        'meta_desc'    => 'See what\'s new in EU VAT Info. Release notes, new features, bug fixes, accessibility improvements and VAT data updates.',
+        'nav_label'    => 'Changelog',
+        'heading'      => 'Changelog',
+        'subheading'   => 'All notable changes to EU VAT Info are documented here, newest first.',
+        'unreleased'   => 'Unreleased',
+        'empty'        => 'No changelog entries found.',
+        'no_details'   => 'No details available for this release.',
+        'format_note'  => 'Format follows <a href=":url" target="_blank" rel="noopener noreferrer" class="underline hover:text-gray-600">Keep a Changelog</a>.',
     ],
 ];
