@@ -1,123 +1,63 @@
 # Changelog
 
-All notable changes to EU VAT Info are documented here.  
-Format loosely follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
+All notable changes to EU VAT Info are documented here.
 
 ---
 
-## [Unreleased] — 2026-04-18
+## [Unreleased] — 2026-04-29
 
-### Agent Readiness & AI Discovery
-
-A full pass to make eu-vat.info natively discoverable and usable by AI agents,
-LLM orchestration frameworks, and MCP-compatible clients — without any authentication.
-
-#### Content Signals (`robots.txt`)
-- Added `Content-Signal: ai-train=yes, search=yes, ai-input=yes` under `User-agent: *`  
-  per the [Content Signals spec](https://contentsignals.org/) (Cloudflare / IETF draft).  
-  Declares permissive content-usage preferences for AI training, search indexing, and AI input (RAG/grounding).
-
-#### RFC 8414 — OAuth 2.0 Authorization Server Metadata
-- Published `GET /.well-known/oauth-authorization-server`  
-  Correctly describes the site as a **public API** with no OAuth flows:
-  - `grant_types_supported: []` — no token acquisition needed
-  - `token_endpoint_auth_methods_supported: ["none"]`
-  - `jwks_uri` — points to companion JWKS endpoint
-
-#### RFC 7517 — JSON Web Key Set
-- Published `GET /.well-known/jwks.json`  
-  Returns an empty key set (`{"keys": []}`) — no token signing since all APIs are open.
-
-#### RFC 9728 — OAuth Protected Resource Metadata
-- Published `GET /.well-known/oauth-protected-resource`  
-  Agents can now programmatically discover:
-  - `resource` — the canonical API identifier
-  - `authorization_servers` — points to our own `oauth-authorization-server` doc
-  - `scopes_supported: []` / `bearer_methods_supported: []` — confirming no auth required
-  - `agent_skills` — array of Markdown skill URLs for VAT rates and VIES validation
-  - `mcp` block — full MCP server metadata (endpoint, transport, protocol version, tool list)
-
-#### Agent Skill Files
-Published two Markdown skill files consumable directly by AI agents and MCP clients:
-
-- `GET /.well-known/agent-skills/vat-rates/SKILL.md`  
-  Covers all four MCP tools (`get_all_vat_rates`, `get_country_vat_rate`, `calculate_vat`,
-  `compare_vat_rates`), REST API endpoints, request/response examples, and human-readable references.
-
-- `GET /.well-known/agent-skills/vies-validation/SKILL.md`  
-  Covers the `validate_vat_number` MCP tool, single and batch REST endpoints, full EU country
-  code reference table (including the `EL` vs `GR` gotcha for Greece), and caching behaviour.
-
-Both served with `Content-Type: text/markdown; charset=utf-8` via an allowlisted route.
-
-#### Files Changed
-| File | Change |
-|------|--------|
-| `public/robots.txt` | Added `Content-Signal` directive |
-| `routes/web.php` | Added 5 new `.well-known` routes |
-| `public/.well-known/agent-skills/vat-rates/SKILL.md` | New — VAT rates agent skill |
-| `public/.well-known/agent-skills/vies-validation/SKILL.md` | New — VIES validation agent skill |
-
----
-
-## [4.0.0] — 2025-07-17 — Iteration 4: Accessibility & Usability
-
-**Score:** 87/120 (+4 from previous)  
-**Focus:** Keyboard accessibility, motion preferences, contrast
-
-### Fixed
-- Skip-to-content link displayed raw `ui.skip_to_content` key instead of translated text  
-  (`lang/en/ui.php` + `resources/views/components/layouts/app.blade.php`)
-- Nav focus rings invisible on dark blue header — switched to white `outline` for keyboard users  
-  (`resources/views/components/global-header.blade.php`)
-- Parallax scroll animation now respects `prefers-reduced-motion: reduce` (WCAG 2.3.3)  
-  (`resources/views/livewire/home.blade.php`)
+### Added
+- **Shareable calculation links** — every VAT calculation gets its own unique URL. Copy and send it to your accountant, client, or colleague and they'll see the exact same breakdown — country, amount, rate, and direction all preserved.
+- **Popular VAT calculations** — browse ready-made VAT breakdowns for the most common amounts (€100, €500, €1,000, €5,000…) across all 27 EU countries. No typing required, just click and see.
+- **This changelog** — you can now track what's new without digging through anything.
 
 ### Improved
-- Country page hero overlay contrast strengthened (`from-white/60` → `from-white/70`,
-  `via-white/80` → `via-white/85`) for better legibility over dark flag images
+- Every country's VAT calculator page now shows a clearer title and description including the exact standard rate, making it much easier to find the right page in search results.
+- The VAT rate change history page now surfaces in search results with richer information, so you can see at a glance that it covers all 27 EU countries.
 
 ---
 
-## [3.0.0] — 2026-04-01 — Iteration 3: Trust & SEO Meta
+## [4.0.0] — 2025-07-17 — Accessibility & Usability
 
-**Score:** 83/120 (+4 from previous)  
-**Focus:** Conversion trust signals, SEO meta i18n, accessibility
+### Improved
+- Text on country hero images now has stronger contrast so it stays readable regardless of how dark or light the flag colours are.
+- Animations and transitions now respect your operating system's "reduce motion" preference — no more spinning or sliding if you've asked your device to keep things still.
+
+### Fixed
+- "Skip to content" link now works correctly for keyboard and screen-reader users.
+- Navigation focus rings are clearly visible again when using the keyboard to move through the site.
+
+---
+
+## [3.0.0] — 2026-04-01 — Trust & Transparency
 
 ### Added
-- Trust indicator badges below homepage and calculator page hero:  
-  "Official European Commission data", "Always free", "All 27 EU countries", "No sign-up required"
+- Trust badges on the homepage and calculator pages: **Official European Commission data**, **Always free**, **All 27 EU countries**, **No sign-up required** — so you know exactly what you're getting.
 
 ### Fixed
-- VAT calculator `@section('title')` and `@section('meta_description')` were hardcoded English
-  for all 24 locales — replaced with `__('ui.calculator.meta_title_*')` translation calls
-- Country selector dropdown lacked ARIA roles — added `aria-haspopup="listbox"`,
-  `role="listbox"`, `role="option"`, `aria-selected`, `aria-expanded`, `aria-labelledby`
+- VAT calculator pages in all 24 EU languages now correctly show translated titles and descriptions in search results, not English text.
+- Country selector dropdowns now work correctly with screen readers and other assistive technology.
 
 ---
 
-## [2.0.0] — 2026-04-01 — Iteration 2: Value Proposition & Visual Polish
-
-**Score:** 79/120 (+4 from previous)  
-**Focus:** Visual design, content clarity, mobile experience
+## [2.0.0] — 2026-04-01 — Homepage Refresh
 
 ### Added
-- Homepage hero `<h1>` headline and subtitle — first-time visitors now have context above the calculator
+- New headline and introduction on the homepage — first-time visitors can now immediately understand what EU VAT Info is and what it does.
 
-### Fixed
-- VAT calculator page heading/subtitle hardcoded English — replaced with `__('ui.calculator.*')` calls
-- Removed unused `showMap: true` Alpine variable from homepage (`home.blade.php`)
-- Removed unused CSS custom properties (`--primary`, `--secondary`, etc.) from app layout
+### Improved
+- Mobile layout across calculator pages — better spacing, larger tap targets, and improved readability on small screens.
 
 ---
 
-## [1.0.0] — 2026-04-01 — Iteration 1: i18n Foundation & Accessibility
+## [1.0.0] — 2026-04-01 — Launch
 
-**Score:** 75/120 (baseline)  
-**Focus:** i18n coverage, ARIA, DaisyUI theming
-
-### Fixed
-- Hero calculator had 20+ hardcoded English strings — replaced with `__('ui.calculator.*')` for all 24 locales
+### Added
+- Full support for all 24 official EU languages — the entire site adapts to your preferred language automatically.
+- VAT calculator for all 27 EU countries with standard, reduced, super-reduced, and parking rates.
+- VIES VAT number validator to verify EU business VAT registrations instantly.
+- Interactive Europe map showing current VAT rates at a glance.
+- VAT rate change history going back to 2000.
 - DaisyUI theme had placeholder test colors (`#ff00ff`, `#00ff00`) — replaced with brand palette
   (`secondary: #0EA5E9`, `neutral: #374151`, `warning: #F59E0B`)
 - Country rates table heading hardcoded English — replaced with translation calls

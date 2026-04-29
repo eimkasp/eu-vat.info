@@ -625,14 +625,14 @@ return [
 
     // ── Changelog Page ──────────────────────────────────────────────────
     'changelog' => [
-        'meta_title'   => 'Changelog — EU VAT Info | Feature Updates & Fixes',
-        'meta_desc'    => 'See what\'s new in EU VAT Info. Release notes, new features, bug fixes, accessibility improvements and VAT data updates.',
-        'nav_label'    => 'Changelog',
-        'heading'      => 'Changelog',
-        'subheading'   => 'All notable changes to EU VAT Info are documented here, newest first.',
-        'unreleased'   => 'Unreleased',
-        'empty'        => 'No changelog entries found.',
-        'no_details'   => 'No details available for this release.',
+        'meta_title'   => 'What\'s New — EU VAT Info | Latest Updates & Improvements',
+        'meta_desc'    => 'See what\'s new in EU VAT Info — new features, improvements, and fixes explained in plain language.',
+        'nav_label'    => 'What\'s New',
+        'heading'      => 'What\'s New',
+        'subheading'   => 'Product updates and improvements, explained in plain language.',
+        'unreleased'   => 'Coming Soon',
+        'empty'        => 'No updates yet.',
+        'no_details'   => 'Details coming soon.',
         'format_note'  => 'Format follows <a href=":url" target="_blank" rel="noopener noreferrer" class="underline hover:text-gray-600">Keep a Changelog</a>.',
     ],
 ];
