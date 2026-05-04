@@ -4,7 +4,7 @@
 
 The most comprehensive, daily-updated source for VAT rates, calculators, validators, and historical data for all 27 EU member states. Built with Laravel 11, Livewire 3, and Tailwind CSS.
 
-**Live site:** [eu-vat.info](https://vat.businesspress.io)
+**Live site:** [vat.businesspress.io](https://vat.businesspress.io)
 
 ## Features
 
