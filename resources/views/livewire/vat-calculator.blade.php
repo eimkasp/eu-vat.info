@@ -68,6 +68,9 @@
 @endisset
 
 @push('head')
+    @isset($selectedCountryObject)
+        <link rel="amphtml" href="{{ url('/amp/vat-calculator/' . $selectedCountryObject->slug) }}">
+    @endisset
     <link rel="preload" as="image" type="image/webp" href="/images/eu-vat-calculator-background.webp" fetchpriority="high">
 @endpush
 

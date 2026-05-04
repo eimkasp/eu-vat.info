@@ -64,6 +64,7 @@
 @endsection
 
 @push('head')
+    <link rel="amphtml" href="{{ url('/amp') }}">
     <link rel="preload" as="image" type="image/webp" imagesrcset="/images/eu-vat-calculator-background-sm.webp 640w, /images/eu-vat-calculator-background-md.webp 1280w, /images/eu-vat-calculator-background-lg.webp 2000w" imagesizes="100vw" fetchpriority="high">
 @endpush
 

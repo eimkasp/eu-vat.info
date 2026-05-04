@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AmpController;
 use App\Http\Controllers\EmbedController;
 use App\Http\Controllers\LangController;
 use App\Http\Controllers\LlmsController;
@@ -121,6 +122,16 @@ Route::get('/.well-known/mcp/server-card.json', [WellKnownController::class, 'mc
 
 // ACP Discovery Document — Agentic Commerce Protocol
 Route::get('/.well-known/acp.json', [WellKnownController::class, 'acpDiscovery'])->name('acp-discovery');
+
+// AMP pages — lightweight static HTML for Google AMP index
+// Canonical pages have <link rel="amphtml"> pointing to these URLs
+Route::prefix('amp')->name('amp.')->group(function () {
+    Route::get('/', [AmpController::class, 'home'])->name('home');
+    Route::get('/vat-rates', [AmpController::class, 'vatRates'])->name('vat-rates');
+    Route::get('/vat-calculator/{slug}', [AmpController::class, 'country'])
+        ->where('slug', '[a-z0-9\-]+')
+        ->name('country');
+});
 
 Route::middleware(\App\Http\Middleware\AllowEmbedding::class)->group(function () {
     Route::get('/embed/{country?}', [EmbedController::class, 'index'])->name('widget.embed');
