@@ -28,9 +28,12 @@
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f1f5f9; color: #1e293b; font-size: 16px; line-height: 1.5; }
         a { color: #2563eb; text-decoration: none; }
         a:hover { text-decoration: underline; }
-        header { background: #1e3a8a; color: #fff; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; }
+        header { background: #1e3a8a; color: #fff; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
         header a { color: #fff; font-weight: 700; font-size: 1.2rem; }
+        header nav { display: flex; align-items: center; gap: 12px; }
         header nav a { font-size: 0.9rem; opacity: 0.85; }
+        .header-cta { display: inline-block; background: #f59e0b; color: #1e293b !important; font-weight: 700; padding: 7px 16px; border-radius: 6px; font-size: 0.85rem; white-space: nowrap; opacity: 1 !important; }
+        .header-cta:hover { background: #d97706; text-decoration: none; }
         .container { max-width: 960px; margin: 0 auto; padding: 24px 16px; }
         h1 { font-size: 1.75rem; font-weight: 800; color: #1e293b; margin-bottom: 8px; }
         .subtitle { color: #64748b; margin-bottom: 24px; font-size: 0.95rem; }
@@ -46,6 +49,7 @@
         td.rate-none { color: #94a3b8; text-align: right; }
         td.country-name a { font-weight: 600; color: #1e293b; }
         td.country-name a:hover { color: #2563eb; }
+        .calc-link { display: inline-block; font-size: 0.75rem; font-weight: 600; color: #2563eb; white-space: nowrap; }
         .flag { font-size: 1.25rem; margin-right: 6px; }
         .badge { display: inline-block; padding: 2px 7px; border-radius: 10px; font-size: 0.75rem; font-weight: 600; background: #dbeafe; color: #1d4ed8; }
         .info-box { background: #eff6ff; border-left: 4px solid #3b82f6; padding: 14px 18px; border-radius: 4px; margin-bottom: 24px; font-size: 0.9rem; color: #1e40af; }
@@ -60,7 +64,10 @@
 <body>
     <header>
         <a href="{{ url('/') }}">EU VAT Info</a>
-        <nav><a href="{{ url('/amp') }}">← All Rates</a></nav>
+        <nav>
+            <a href="{{ url('/amp') }}">← All Rates</a>
+            <a class="header-cta" href="{{ url('/vat-calculator') }}">Open Full Calculator →</a>
+        </nav>
     </header>
 
     <div class="container">
@@ -90,7 +97,8 @@
                     <tr>
                         <td class="country-name">
                             <span class="flag">{{ $country->flag }}</span>
-                            <a href="{{ url('/amp/vat-calculator/' . $country->slug) }}">{{ $country->name }}</a>
+                            <a href="{{ url('/amp/vat-calculator/' . $country->slug) }}">{{ $country->name }}</a><br>
+                            <a class="calc-link" href="{{ url('/vat-calculator/' . $country->slug) }}">Calculate →</a>
                         </td>
                         <td><span class="badge">{{ $country->iso_code }}</span></td>
                         <td class="rate">{{ $country->standard_rate }}%</td>

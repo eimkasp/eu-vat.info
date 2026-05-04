@@ -45,7 +45,10 @@
         a:hover { text-decoration: underline; }
         header { background: #1e3a8a; color: #fff; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
         header a { color: #fff; font-weight: 700; font-size: 1.2rem; }
+        header nav { display: flex; align-items: center; gap: 12px; }
         header nav a { font-size: 0.9rem; opacity: 0.85; }
+        .header-cta { display: inline-block; background: #f59e0b; color: #1e293b !important; font-weight: 700; padding: 7px 16px; border-radius: 6px; font-size: 0.85rem; white-space: nowrap; opacity: 1 !important; }
+        .header-cta:hover { background: #d97706; text-decoration: none; }
         .container { max-width: 800px; margin: 0 auto; padding: 24px 16px; }
         .breadcrumb { font-size: 0.85rem; color: #64748b; margin-bottom: 20px; }
         .breadcrumb a { color: #2563eb; }
@@ -74,9 +77,7 @@
         tbody tr:nth-child(even) { background: #f8fafc; }
         td { padding: 9px 14px; border-bottom: 1px solid #e2e8f0; }
         td.rate { font-weight: 700; color: #1e3a8a; }
-        .cta-box { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 20px 24px; text-align: center; margin-top: 28px; }
-        .cta-box p { color: #1e40af; margin-bottom: 12px; font-size: 0.95rem; }
-        .cta-btn { display: inline-block; background: #2563eb; color: #fff; font-weight: 700; padding: 10px 24px; border-radius: 6px; font-size: 0.95rem; }
+        .cta-btn { display: inline-block; background: #2563eb; color: #fff; font-weight: 700; padding: 12px 28px; border-radius: 6px; font-size: 1rem; margin-top: 20px; }
         .cta-btn:hover { background: #1d4ed8; text-decoration: none; }
         footer { background: #1e293b; color: #94a3b8; text-align: center; padding: 20px 16px; font-size: 0.85rem; margin-top: 40px; }
         footer a { color: #60a5fa; }
@@ -90,7 +91,10 @@
 <body>
     <header>
         <a href="{{ url('/') }}">EU VAT Info</a>
-        <nav><a href="{{ url('/amp/vat-rates') }}">← All EU Rates</a></nav>
+        <nav>
+            <a href="{{ url('/amp/vat-rates') }}">← All EU Rates</a>
+            <a class="header-cta" href="{{ url('/vat-calculator/' . $country->slug) }}">Open Full Calculator →</a>
+        </nav>
     </header>
 
     <div class="container">
@@ -137,6 +141,10 @@
                 </div>
                 @endif
             </div>
+
+            <div style="text-align:center;margin-top:20px;">
+                <a class="cta-btn" href="{{ url('/vat-calculator/' . $country->slug) }}">Open Full {{ $country->name }} VAT Calculator →</a>
+            </div>
         </div>
 
         <div class="section-title">Country Details</div>
@@ -174,10 +182,6 @@
         </div>
         @endif
 
-        <div class="cta-box">
-            <p>Calculate {{ $country->name }} VAT, validate VAT numbers, and view detailed rate history on the full site.</p>
-            <a class="cta-btn" href="{{ url('/vat-calculator/' . $country->slug) }}">Open Full {{ $country->name }} VAT Calculator →</a>
-        </div>
     </div>
 
     <footer>

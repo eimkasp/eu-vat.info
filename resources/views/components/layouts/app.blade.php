@@ -80,8 +80,6 @@
     <x-toast />
 
     @if (config('app.cookiebot_id') && app()->isProduction())
-        <script defer id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="{{ config('app.cookiebot_id') }}"
-            data-blockingmode="auto" type="text/javascript"></script>
     @endif
 
     {{-- WebMCP — expose site tools to AI agents via the browser --}}

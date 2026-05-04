@@ -12,6 +12,7 @@ class SecurityHeaders
      * External script sources required by the application.
      * - stats.businesspress.io: Plausible analytics
      * - consent.cookiebot.com: Cookiebot consent manager (optional, config-driven)
+     * - cdn.ampproject.org: AMP runtime for AMP pages (/amp/*)
      *
      * 'unsafe-eval' is required by Alpine.js 3 which uses `new AsyncFunction`
      * internally for reactive expression evaluation (x-init, x-on, etc.).
@@ -23,6 +24,7 @@ class SecurityHeaders
         "'unsafe-eval'",
         'https://stats.businesspress.io',
         'https://consent.cookiebot.com',
+        'https://cdn.ampproject.org',
     ];
 
     private const STYLE_SOURCES = [
@@ -39,6 +41,7 @@ class SecurityHeaders
     private const CONNECT_SOURCES = [
         "'self'",
         'https://stats.businesspress.io', // Plausible beacon
+        'https://cdn.ampproject.org',     // AMP runtime fetch calls
     ];
 
     public function handle(Request $request, Closure $next): Response

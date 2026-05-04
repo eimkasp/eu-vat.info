@@ -29,14 +29,18 @@
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f1f5f9; color: #1e293b; font-size: 16px; line-height: 1.5; }
         a { color: #2563eb; text-decoration: none; }
         a:hover { text-decoration: underline; }
-        header { background: #1e3a8a; color: #fff; padding: 16px 20px; }
-        header a { color: #fff; font-weight: 700; font-size: 1.25rem; }
+        header { background: #1e3a8a; color: #fff; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+        header a.site-name { color: #fff; font-weight: 700; font-size: 1.25rem; }
+        .header-cta { display: inline-block; background: #f59e0b; color: #1e293b !important; font-weight: 700; padding: 7px 16px; border-radius: 6px; font-size: 0.85rem; white-space: nowrap; }
+        .header-cta:hover { background: #d97706; text-decoration: none; }
         .container { max-width: 900px; margin: 0 auto; padding: 24px 16px; }
         h1 { font-size: 1.75rem; font-weight: 800; color: #1e293b; margin-bottom: 8px; }
         .subtitle { color: #64748b; margin-bottom: 24px; font-size: 0.95rem; }
         .table-wrap { overflow-x: auto; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
         table { width: 100%; border-collapse: collapse; background: #fff; font-size: 0.9rem; }
         thead th { background: #1e3a8a; color: #fff; padding: 12px 16px; text-align: left; font-weight: 600; white-space: nowrap; }
+        .calc-link { display: inline-block; font-size: 0.78rem; font-weight: 600; color: #2563eb; white-space: nowrap; }
+        .calc-link:hover { text-decoration: underline; }
         tbody tr:nth-child(even) { background: #f8fafc; }
         tbody tr:hover { background: #eff6ff; }
         td { padding: 11px 16px; border-bottom: 1px solid #e2e8f0; }
@@ -56,7 +60,8 @@
 </head>
 <body>
     <header>
-        <a href="{{ url('/') }}">EU VAT Info</a>
+        <a class="site-name" href="{{ url('/') }}">EU VAT Info</a>
+        <a class="header-cta" href="{{ url('/vat-calculator') }}">Open Full Calculator →</a>
     </header>
 
     <div class="container">
@@ -80,7 +85,8 @@
                     <tr>
                         <td class="country-name">
                             <span class="flag">{{ $country->flag }}</span>
-                            <a href="{{ url('/amp/vat-calculator/' . $country->slug) }}">{{ $country->name }}</a>
+                            <a href="{{ url('/amp/vat-calculator/' . $country->slug) }}">{{ $country->name }}</a><br>
+                            <a class="calc-link" href="{{ url('/vat-calculator/' . $country->slug) }}">Calculate VAT →</a>
                         </td>
                         <td class="rate">{{ $country->standard_rate }}%</td>
                         <td>{{ $country->reduced_rate ? $country->reduced_rate.'%' : '—' }}</td>
