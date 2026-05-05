@@ -286,7 +286,7 @@ class HeroCalculator extends Component
                 if (!in_array($type, $addedTypes)) {
                     $this->rates[] = [
                         'name' => ucfirst(str_replace('_', ' ', $rate->type)),
-                        'value' => $rate->rate,
+                        'value' => (float) $rate->rate,
                         'type' => $type,
                     ];
                     $addedTypes[] = $type;
@@ -299,7 +299,7 @@ class HeroCalculator extends Component
             if ($this->selectedCountryObject->standard_rate && !in_array('standard', $addedTypes)) {
                 array_unshift($this->rates, [
                     'name' => 'Standard',
-                    'value' => $this->selectedCountryObject->standard_rate,
+                    'value' => (float) $this->selectedCountryObject->standard_rate,
                     'type' => 'standard',
                 ]);
             }
@@ -308,7 +308,7 @@ class HeroCalculator extends Component
         if ($this->selectedCountryObject->reduced_rate && !in_array('reduced', $addedTypes)) {
             $this->rates[] = [
                 'name' => 'Reduced',
-                'value' => $this->selectedCountryObject->reduced_rate,
+                'value' => (float) $this->selectedCountryObject->reduced_rate,
                 'type' => 'reduced',
             ];
         }
@@ -316,7 +316,7 @@ class HeroCalculator extends Component
         if ($this->selectedCountryObject->super_reduced_rate && !in_array('super_reduced', $addedTypes)) {
             $this->rates[] = [
                 'name' => 'Super reduced',
-                'value' => $this->selectedCountryObject->super_reduced_rate,
+                'value' => (float) $this->selectedCountryObject->super_reduced_rate,
                 'type' => 'super_reduced',
             ];
         }
@@ -324,7 +324,7 @@ class HeroCalculator extends Component
         if ($this->selectedCountryObject->parking_rate && !in_array('parking', $addedTypes)) {
             $this->rates[] = [
                 'name' => 'Parking',
-                'value' => $this->selectedCountryObject->parking_rate,
+                'value' => (float) $this->selectedCountryObject->parking_rate,
                 'type' => 'parking',
             ];
         }

@@ -344,11 +344,12 @@ class VatCalculator extends Component
                 foreach ($historicalRates as $rate) {
                     $type = strtolower($rate->type);
                     if (! in_array($type, $addedTypes)) {
+                        $rateValue = (float) $rate->rate;
                         $name = ucfirst(str_replace('_', ' ', $rate->type)).' rate';
                         $this->rates[] = [
                             'id' => $id++,
-                            'name' => $name.' ('.$rate->rate.'%)',
-                            'value' => $rate->rate,
+                            'name' => $name.' ('.$rateValue.'%)',
+                            'value' => $rateValue,
                         ];
                         $addedTypes[] = $type;
                     }
@@ -357,11 +358,11 @@ class VatCalculator extends Component
 
             // 2. Add rates from Country model (Current snapshot) if not already added
             $snapshotRates = [
-                'standard' => ['name' => 'Standard rate', 'value' => $this->selectedCountryObject->standard_rate],
-                'reduced' => ['name' => 'Reduced rate', 'value' => $this->selectedCountryObject->reduced_rate],
-                'zero' => ['name' => 'Zero rate', 'value' => $this->selectedCountryObject->zero_rate],
-                'super_reduced' => ['name' => 'Super reduced rate', 'value' => $this->selectedCountryObject->super_reduced_rate],
-                'parking' => ['name' => 'Parking rate', 'value' => $this->selectedCountryObject->parking_rate],
+                'standard' => ['name' => 'Standard rate', 'value' => (float) $this->selectedCountryObject->standard_rate],
+                'reduced' => ['name' => 'Reduced rate', 'value' => (float) $this->selectedCountryObject->reduced_rate],
+                'zero' => ['name' => 'Zero rate', 'value' => (float) $this->selectedCountryObject->zero_rate],
+                'super_reduced' => ['name' => 'Super reduced rate', 'value' => (float) $this->selectedCountryObject->super_reduced_rate],
+                'parking' => ['name' => 'Parking rate', 'value' => (float) $this->selectedCountryObject->parking_rate],
             ];
 
             foreach ($snapshotRates as $type => $data) {

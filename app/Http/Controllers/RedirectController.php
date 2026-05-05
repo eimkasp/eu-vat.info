@@ -11,8 +11,10 @@ class RedirectController extends Controller
     /**
      * 301 redirect: /country/{slug}[/{tab}] → /vat-calculator/{slug}
      */
-    public function country(string $slug): RedirectResponse
+    public function country(): RedirectResponse
     {
+        $slug = request()->route('slug');
+
         return redirect(locale_path('/vat-calculator/' . $slug), 301);
     }
 
@@ -21,8 +23,10 @@ class RedirectController extends Controller
      * Handles 2-letter ISO codes (e.g. /vat-calculator/mt → /vat-calculator/malta).
      * Falls back to /vat-calculator if the code doesn't match any country (e.g. locale codes).
      */
-    public function isoCode(string $code): RedirectResponse
+    public function isoCode(): RedirectResponse
     {
+        $code = request()->route('code');
+
         $country = Country::where('iso_code', strtoupper($code))
             ->orWhere('iso_code_2', strtoupper($code))
             ->first();
