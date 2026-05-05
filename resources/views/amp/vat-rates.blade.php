@@ -7,7 +7,7 @@
     <link rel="canonical" href="{{ url('/amp/vat-rates') }}">
     <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
     <script async src="https://cdn.ampproject.org/v0.js"></script>
-    <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style>
+    <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style>
     <noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
     <script type="application/ld+json">
     {
@@ -32,7 +32,7 @@
         header a { color: #fff; font-weight: 700; font-size: 1.2rem; }
         header nav { display: flex; align-items: center; gap: 12px; }
         header nav a { font-size: 0.9rem; opacity: 0.85; }
-        .header-cta { display: inline-block; background: #f59e0b; color: #1e293b !important; font-weight: 700; padding: 7px 16px; border-radius: 6px; font-size: 0.85rem; white-space: nowrap; opacity: 1 !important; }
+        .header-cta { display: inline-block; background: #f59e0b; color: #1e293b; font-weight: 700; padding: 7px 16px; border-radius: 6px; font-size: 0.85rem; white-space: nowrap; opacity: 1; }
         .header-cta:hover { background: #d97706; text-decoration: none; }
         .container { max-width: 960px; margin: 0 auto; padding: 24px 16px; }
         h1 { font-size: 1.75rem; font-weight: 800; color: #1e293b; margin-bottom: 8px; }
