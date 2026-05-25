@@ -79,12 +79,6 @@ class VatCalculator extends Component
 
     public function mount($country = null, $slug = null)
     {
-        if ($slug) {
-            $this->country = Country::where('slug', $slug)->firstOrFail();
-            // Track the view when mounting with a slug
-            $this->trackCountryView($this->country, 'calculator-view');
-        }
-        $this->country = $country;
         $this->countries = Cache::remember('all_countries_with_flags', 600, function () {
             return Country::orderBy('name', 'ASC')->get()->map(function ($c) {
                 // Calculate flag emoji
@@ -100,13 +94,23 @@ class VatCalculator extends Component
         });
 
         if ($slug) {
-            $this->selectedCountry1 = $slug;
-            $this->slug = $slug;
-            $this->selectedCountryObject = Country::where('slug', $this->slug)->first();
+            $this->selectedCountryObject = Country::where('slug', $slug)->firstOrFail();
+            $this->country = $this->selectedCountryObject;
+            $this->selectedCountry1 = $this->selectedCountryObject->slug;
+            $this->slug = $this->selectedCountryObject->slug;
+
+            // Track the view when mounting with a slug
+            $this->trackCountryView($this->country, 'calculator-view');
+        } elseif ($country instanceof Country) {
+            $this->country = $country;
+            $this->selectedCountryObject = $country;
+            $this->selectedCountry1 = $country->slug;
+            $this->slug = $country->slug;
         } else {
             // Fallback to Lithuania or first available
             $default = Country::where('name', 'Lithuania')->first() ?? Country::first();
             if ($default) {
+                $this->country = $default;
                 $this->selectedCountry1 = $default->slug;
                 $this->slug = $default->slug;
                 $this->selectedCountryObject = $default;

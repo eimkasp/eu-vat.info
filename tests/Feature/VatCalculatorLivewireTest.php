@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\HeroCalculator;
 use App\Livewire\VatCalculator;
 use App\Models\Country;
 use Livewire\Livewire;
@@ -251,7 +252,55 @@ it('mounts with correct country when slug is provided', function () {
 
     Livewire::test(VatCalculator::class, ['slug' => 'germany'])
         ->assertSet('slug', 'germany')
+        ->assertSet('country.id', $country->id)
+        ->assertSet('selectedCountryObject.id', $country->id)
+        ->assertSet('selectedCountry1', 'germany')
         ->assertSet('selectedRate', 19);
+});
+
+it('uses the route slug as the selected calculator country', function () {
+    Country::factory()->create([
+        'name' => 'Germany',
+        'slug' => 'germany',
+        'standard_rate' => 19,
+    ]);
+
+    $luxembourg = Country::factory()->create([
+        'name' => 'Luxembourg',
+        'slug' => 'luxembourg',
+        'iso_code' => 'LU',
+        'standard_rate' => 17,
+    ]);
+
+    Livewire::test(VatCalculator::class, ['slug' => 'luxembourg'])
+        ->assertSet('slug', 'luxembourg')
+        ->assertSet('country.id', $luxembourg->id)
+        ->assertSet('selectedCountryObject.id', $luxembourg->id)
+        ->assertSet('selectedCountry1', 'luxembourg')
+        ->assertSet('selectedRate', 17);
+});
+
+it('lets an explicit initial country override the remembered hero calculator country', function () {
+    Country::factory()->create([
+        'name' => 'Germany',
+        'slug' => 'germany',
+        'iso_code' => 'DE',
+        'standard_rate' => 19,
+    ]);
+
+    Country::factory()->create([
+        'name' => 'Luxembourg',
+        'slug' => 'luxembourg',
+        'iso_code' => 'LU',
+        'standard_rate' => 17,
+    ]);
+
+    $this->withCookie('hero_calc_country', 'germany');
+
+    Livewire::test(HeroCalculator::class, ['initialCountry' => 'luxembourg'])
+        ->assertSet('selectedCountrySlug', 'luxembourg')
+        ->assertSet('selectedCountryObject.slug', 'luxembourg')
+        ->assertSet('selectedRate', 17);
 });
 
 // Test saved search functionality

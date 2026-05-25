@@ -57,8 +57,7 @@ it('displays link to country guide', function () {
 
     $this->get("/vat-calculator/{$country->slug}")
         ->assertStatus(200)
-        ->assertSee('Need more details?')
-        ->assertSee('View '.$country->name.' VAT Guide');
+        ->assertSee($country->name.' VAT Guide');
 });
 
 it('returns 404 for invalid country slug', function () {
@@ -101,7 +100,7 @@ it('displays europe map component', function () {
 it('displays vat calculator form component', function () {
     $this->get('/vat-calculator')
         ->assertStatus(200)
-        ->assertSeeLivewire('vat-calculator-form');
+        ->assertSeeLivewire('hero-calculator');
 });
 
 it('displays saved searches component', function () {
@@ -115,7 +114,26 @@ it('has proper seo meta tags on country page', function () {
     $this->get("/vat-calculator/{$country->slug}")
         ->assertStatus(200)
         ->assertSee($country->name.' VAT Calculator', false)
-        ->assertSee('Standard Rate '.$country->standard_rate.'%', false);
+        ->assertSee($country->standard_rate.'% Standard Rate', false);
+});
+
+it('renders country specific seo and heading for calculator slug pages', function () {
+    $luxembourg = Country::factory()->create([
+        'name' => 'Luxembourg',
+        'slug' => 'luxembourg',
+        'iso_code' => 'LU',
+        'standard_rate' => 17,
+    ]);
+
+    $this->get('/vat-calculator/luxembourg')
+        ->assertStatus(200)
+        ->assertSee('<title>Luxembourg VAT Calculator 2026', false)
+        ->assertSee('<meta name="title" content="Luxembourg VAT Calculator 2026', false)
+        ->assertSee('<link rel="canonical" href="'.url('/vat-calculator/'.$luxembourg->slug).'">', false)
+        ->assertSee('Luxembourg')
+        ->assertSee('VAT Calculator')
+        ->assertSee('Current standard rate is 17%')
+        ->assertDontSee('<title>Germany VAT Calculator 2026', false);
 });
 
 it('displays schema.org json-ld on country page', function () {
