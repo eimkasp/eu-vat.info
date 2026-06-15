@@ -6,7 +6,6 @@ use Carbon\CarbonImmutable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
-use Symfony\Component\Yaml\Yaml;
 
 class BlogPostRepository
 {
@@ -41,7 +40,7 @@ class BlogPostRepository
         $content = $raw;
 
         if (preg_match('/\A---\s*\R(.*?)\R---\s*\R?(.*)\z/s', $raw, $matches)) {
-            $frontMatter = Yaml::parse($matches[1]) ?? [];
+            $frontMatter = $this->parseFrontMatter($matches[1]);
             $content = $matches[2];
         }
 
@@ -69,6 +68,89 @@ class BlogPostRepository
     protected function path(): string
     {
         return base_path('content/blog');
+    }
+
+    protected function parseFrontMatter(string $frontMatter): array
+    {
+        $data = [];
+        $currentList = null;
+        $currentMapIndex = null;
+
+        foreach (preg_split('/\R/', $frontMatter) as $line) {
+            if (trim($line) === '') {
+                continue;
+            }
+
+            if (preg_match('/^([A-Za-z0-9_\-]+):(?:\s*(.*))?$/', $line, $matches)) {
+                $key = $matches[1];
+                $value = $matches[2] ?? '';
+
+                if ($value === '') {
+                    $data[$key] = [];
+                    $currentList = $key;
+                    $currentMapIndex = null;
+                } else {
+                    $data[$key] = $this->parseFrontMatterValue($value);
+                    $currentList = null;
+                    $currentMapIndex = null;
+                }
+
+                continue;
+            }
+
+            if ($currentList && preg_match('/^\s+-\s+(.*)$/', $line, $matches)) {
+                $value = $matches[1];
+
+                if (preg_match('/^([A-Za-z0-9_\-]+):\s*(.*)$/', $value, $mapMatches)) {
+                    $data[$currentList][] = [
+                        $mapMatches[1] => $this->parseFrontMatterValue($mapMatches[2]),
+                    ];
+                    $currentMapIndex = array_key_last($data[$currentList]);
+                } else {
+                    $data[$currentList][] = $this->parseFrontMatterValue($value);
+                    $currentMapIndex = null;
+                }
+
+                continue;
+            }
+
+            if ($currentList && $currentMapIndex !== null && preg_match('/^\s+([A-Za-z0-9_\-]+):\s*(.*)$/', $line, $matches)) {
+                $data[$currentList][$currentMapIndex][$matches[1]] = $this->parseFrontMatterValue($matches[2]);
+            }
+        }
+
+        return $data;
+    }
+
+    protected function parseFrontMatterValue(string $value): mixed
+    {
+        $value = trim($value);
+
+        if ($value === '') {
+            return '';
+        }
+
+        if ($value === 'true') {
+            return true;
+        }
+
+        if ($value === 'false') {
+            return false;
+        }
+
+        if ($value === 'null') {
+            return null;
+        }
+
+        if (str_starts_with($value, '"') && str_ends_with($value, '"')) {
+            return str_replace(['\\"', '\\\\'], ['"', '\\'], substr($value, 1, -1));
+        }
+
+        if (str_starts_with($value, "'") && str_ends_with($value, "'")) {
+            return str_replace("''", "'", substr($value, 1, -1));
+        }
+
+        return $value;
     }
 
     protected function date(mixed $value): CarbonImmutable
