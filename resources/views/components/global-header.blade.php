@@ -63,6 +63,8 @@
                     </div>
                 </div>
 
+                <a href="{{ locale_path('/blog') }}" class="hover:text-blue-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2 rounded transition-colors" @if(request()->routeIs('blog.*')) aria-current="page" @endif>VAT updates</a>
+
                 <a href="https://github.com/eimkasp/eu-vat.info" target="_blank" class="w-6">
                     @svg('feathericon-github')
                 </a>
@@ -81,6 +83,7 @@
              class="md:hidden mt-4 space-y-3">
             <a href="{{ locale_path('/') }}" class="block py-2" title="{{ __('ui.nav.all_countries') }}">{{ __('ui.nav.all_countries') }}</a>
             <a href="{{ locale_path('/vat-calculator') }}" class="block py-2">{{ __('ui.nav.vat_calculator') }} 💶</a>
+            <a href="{{ locale_path('/blog') }}" class="block py-2">VAT updates</a>
             <div class="border-t border-white/20 pt-2 pb-1">
                 <p class="text-xs font-semibold text-blue-200 uppercase tracking-wider mb-2">{{ __('ui.nav.vat_tools') }}</p>
                 <a href="{{ route('widget.embed') }}" class="block py-2 pl-2">{{ __('ui.nav.vat_widget') }}</a>

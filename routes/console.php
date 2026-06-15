@@ -32,3 +32,8 @@ Schedule::job(new VerifyVatRatesIntegrity)->dailyAt('04:00')
 Schedule::job(new GenerateVatRateChanges)->dailyAt('04:30')
     ->withoutOverlapping()
     ->onOneServer();
+
+Schedule::command('vat-changes:notify-subscribers')->dailyAt('05:00')
+    ->withoutOverlapping()
+    ->onOneServer()
+    ->appendOutputTo(storage_path('logs/vat-change-notifications.log'));

@@ -11,6 +11,7 @@ EU VAT Info (https://vat.businesspress.io) is a free, open-source platform provi
 - [VAT Rate History](https://vat.businesspress.io/vat-changes): Complete history of VAT rate changes across all EU countries with stability indicators.
 - [VAT Number Validator](https://vat.businesspress.io/country/germany/vat-validator): VIES-powered VAT number validation with fuzzy company name matching (available per-country).
 - [Embed Widget](https://vat.businesspress.io/embed): Embeddable VAT calculator widget for third-party websites.
+- [VAT Updates](https://vat.businesspress.io/blog): Research-backed guides to confirmed EU VAT changes, including the 2026-2027 VAT changes tracker.
 
 ## Data Endpoints (for AI Agents & RAG)
 - [Full VAT Rates (Markdown)](https://vat.businesspress.io/llms-full.txt): Complete table of standard, reduced, super-reduced, and parking rates for all 27 EU countries in Markdown format.
@@ -65,6 +66,7 @@ Each country page includes: VAT rate overview, country-specific calculator, VIES
 ## Sitemap
 - [HTML Sitemap](https://vat.businesspress.io/sitemap): Human-readable sitemap of all pages
 - [XML Sitemap](https://vat.businesspress.io/sitemap.xml): Machine-readable sitemap for crawlers
+- [Upcoming VAT Changes in 2026 and 2027](https://vat.businesspress.io/blog/upcoming-vat-changes-2026-2027): Source-backed guide to known VAT rate changes, ViDA milestones, and EU e-commerce import changes.
 
 ## Agent Payments (x402 Protocol)
 EU VAT Info supports the [x402 payment protocol](https://x402.org) for agent-native HTTP payments. AI agents can donate or access premium data endpoints by paying with USDC via standard HTTP headers.

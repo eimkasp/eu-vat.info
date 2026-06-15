@@ -33,6 +33,7 @@
                 <h3 class="text-white font-semibold mb-4">{{ __('ui.footer.resources') }}</h3>
                 <ul class="space-y-2 text-sm">
                     <li><a href="{{ locale_path('/donate') }}" class="hover:text-white transition-colors">Donate</a></li>
+                    <li><a href="{{ locale_path('/blog') }}" class="hover:text-white transition-colors">VAT updates</a></li>
                     <li><a href="{{ locale_path('/sitemap') }}" class="hover:text-white transition-colors">{{ __('ui.footer.sitemap') }}</a></li>
                     <li><a href="{{ locale_path('/changelog') }}" class="hover:text-white transition-colors">{{ __('ui.changelog.nav_label') }}</a></li>
                     <li><a href="/llms.txt" class="hover:text-white transition-colors">{{ __('ui.footer.llms_data') }}</a></li>

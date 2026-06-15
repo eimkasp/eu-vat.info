@@ -72,6 +72,10 @@
         <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('ui.history.subtitle') }}</p>
     </div>
 
+    <div class="mb-6">
+        @livewire('vat-change-signup', ['source' => 'vat-changes'])
+    </div>
+
     <!-- Filters -->
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 mb-6">
         <div class="grid sm:grid-cols-3 gap-3">

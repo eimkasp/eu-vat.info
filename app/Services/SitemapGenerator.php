@@ -50,6 +50,7 @@ class SitemapGenerator
             ['path' => '/vat-validation-api',      'changefreq' => 'monthly', 'priority' => '0.7'],
             ['path' => '/vat-map',                'changefreq' => 'monthly', 'priority' => '0.8'],
             ['path' => '/vat-changes',            'changefreq' => 'weekly',  'priority' => '0.7'],
+            ['path' => '/blog',                   'changefreq' => 'weekly',  'priority' => '0.7'],
             ['path' => '/changelog',               'changefreq' => 'monthly', 'priority' => '0.6'],
             ['path' => '/top-vat-calculations',   'changefreq' => 'weekly',  'priority' => '0.7'],
             ['path' => '/mcp-server',             'changefreq' => 'monthly', 'priority' => '0.6'],
@@ -62,6 +63,15 @@ class SitemapGenerator
                 now()->toAtomString(),
                 $page['changefreq'],
                 $page['priority'],
+            );
+        }
+
+        foreach (app(BlogPostRepository::class)->all() as $post) {
+            $xml .= $this->urlEntry(
+                '/blog/'.$post['slug'],
+                $post['updated_at']->toAtomString(),
+                'weekly',
+                '0.8',
             );
         }
 

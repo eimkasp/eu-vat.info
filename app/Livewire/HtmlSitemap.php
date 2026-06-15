@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Country;
+use App\Services\BlogPostRepository;
 use Illuminate\Support\Facades\Cache;
 use Livewire\Component;
 
@@ -16,6 +17,7 @@ class HtmlSitemap extends Component
 
         return view('livewire.html-sitemap', [
             'countries' => $countries,
+            'blogPosts' => app(BlogPostRepository::class)->all(),
         ]);
     }
 }

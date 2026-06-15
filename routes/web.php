@@ -6,18 +6,20 @@ use App\Http\Controllers\LangController;
 use App\Http\Controllers\LlmsController;
 use App\Http\Controllers\RedirectController;
 use App\Http\Controllers\SitemapController;
+use App\Http\Controllers\VatChangeSubscriptionController;
 use App\Http\Controllers\WellKnownController;
-use App\Livewire\CountryPage;
-use App\Livewire\Home;
-use App\Livewire\HtmlSitemap;
-use App\Livewire\Tools;
-use App\Livewire\VatCalculator;
+use App\Livewire\BlogIndex;
+use App\Livewire\BlogShow;
 use App\Livewire\Changelog;
 use App\Livewire\ChromeExtension;
 use App\Livewire\Donate;
+use App\Livewire\Home;
+use App\Livewire\HtmlSitemap;
 use App\Livewire\McpServer;
-use App\Livewire\SharedCalculation;
 use App\Livewire\PrivacyPolicy;
+use App\Livewire\SharedCalculation;
+use App\Livewire\Tools;
+use App\Livewire\VatCalculator;
 use App\Livewire\VatMap;
 use App\Livewire\VatValidationApiDocs;
 use App\Livewire\ViesValidatorPage;
@@ -48,6 +50,10 @@ $registerRoutes = function () {
     Route::get('/vat-number-validator', ViesValidatorPage::class)->name('vies-validator');
     Route::get('/vat-number-validator/{slug}', ViesValidatorPage::class)->name('vies-validator.country');
     Route::get('/vat-validation-api', VatValidationApiDocs::class)->name('vat-validation-api');
+    Route::get('/blog', BlogIndex::class)->name('blog.index');
+    Route::get('/blog/{slug}', BlogShow::class)
+        ->where('slug', '[a-z0-9\-]+')
+        ->name('blog.show');
 
     // 301 redirect: /vat-calculator/{iso_code} → /vat-calculator/{slug} (e.g., /vat-calculator/mt → /vat-calculator/malta)
     Route::get('/vat-calculator/{code}', [RedirectController::class, 'isoCode'])
@@ -88,6 +94,10 @@ Route::get('/calculation', [RedirectController::class, 'legacyCalculation']);
 
 // Language switch route
 Route::get('/lang/{locale}', [LangController::class, 'switch'])->name('lang.switch');
+
+Route::get('/vat-change-alerts/unsubscribe/{subscription}', [VatChangeSubscriptionController::class, 'unsubscribe'])
+    ->middleware('signed')
+    ->name('vat-change-alerts.unsubscribe');
 
 // Non-localised routes (sitemap, embed, API, etc.)
 Route::get('/sitemap/generate', [SitemapController::class, 'index'])->name('sitemap.generate');

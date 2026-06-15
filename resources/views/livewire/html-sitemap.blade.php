@@ -78,6 +78,13 @@
                     <p class="text-sm text-gray-500 ml-6">{{ __('ui.sitemap.history_desc') }}</p>
                 </li>
                 <li>
+                    <a href="{{ locale_path('/blog') }}" class="flex items-center gap-2 text-blue-600 hover:text-blue-800 hover:underline font-medium">
+                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        VAT updates
+                    </a>
+                    <p class="text-sm text-gray-500 ml-6">Confirmed EU VAT changes and practical compliance guides.</p>
+                </li>
+                <li>
                     <a href="{{ locale_path('/top-vat-calculations') }}" class="flex items-center gap-2 text-blue-600 hover:text-blue-800 hover:underline font-medium">
                         <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                         {{ __('ui.sitemap.top_calculations') }}
@@ -130,6 +137,15 @@
                     </a>
                     <p class="text-sm text-gray-500 ml-6">{{ __('ui.sitemap.xml_sitemap_desc') }}</p>
                 </li>
+                @foreach($blogPosts as $post)
+                    <li>
+                        <a href="{{ locale_path('/blog/'.$post['slug']) }}" class="flex items-center gap-2 text-blue-600 hover:text-blue-800 hover:underline font-medium">
+                            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                            {{ $post['title'] }}
+                        </a>
+                        <p class="text-sm text-gray-500 ml-6">{{ $post['description'] }}</p>
+                    </li>
+                @endforeach
             </ul>
         </div>
 
