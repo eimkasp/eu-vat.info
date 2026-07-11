@@ -64,6 +64,8 @@ class VatCalculator extends Component
 
     public $selectedCountryObject = null;
 
+    public bool $isCountryPage = false;
+
     public $saved_searches = [];
 
     public $countries;
@@ -79,22 +81,29 @@ class VatCalculator extends Component
 
     public function mount($country = null, $slug = null)
     {
-        $this->countries = Cache::remember('all_countries_with_flags', 600, function () {
-            return Country::orderBy('name', 'ASC')->get()->map(function ($c) {
-                // Calculate flag emoji
-                $iso = strtoupper($c->iso_code);
-                $flag = '';
-                if (strlen($iso) === 2) {
-                    $flag = mb_chr(ord($iso[0]) + 127397).mb_chr(ord($iso[1]) + 127397);
-                }
-                $c->name_with_flag = $flag.' '.$c->name;
+        $this->countries = Cache::remember('calculator_countries_v2', 600, function () {
+            return Country::calculatorAvailable()
+                ->orderByDesc('is_eu_member')
+                ->orderBy('name', 'ASC')
+                ->get()
+                ->map(function ($c) {
+                    // Calculate flag emoji
+                    $iso = strtoupper($c->iso_code);
+                    $flag = '';
+                    if (strlen($iso) === 2) {
+                        $flag = mb_chr(ord($iso[0]) + 127397).mb_chr(ord($iso[1]) + 127397);
+                    }
+                    $c->name_with_flag = $flag.' '.$c->name;
 
-                return $c;
-            });
+                    return $c;
+                });
         });
 
         if ($slug) {
-            $this->selectedCountryObject = Country::where('slug', $slug)->firstOrFail();
+            $this->isCountryPage = true;
+            $this->selectedCountryObject = Country::calculatorAvailable()
+                ->where('slug', $slug)
+                ->firstOrFail();
             $this->country = $this->selectedCountryObject;
             $this->selectedCountry1 = $this->selectedCountryObject->slug;
             $this->slug = $this->selectedCountryObject->slug;
@@ -102,13 +111,16 @@ class VatCalculator extends Component
             // Track the view when mounting with a slug
             $this->trackCountryView($this->country, 'calculator-view');
         } elseif ($country instanceof Country) {
+            $this->isCountryPage = true;
+            abort_unless($country->isCalculatorAvailable(), 404);
             $this->country = $country;
             $this->selectedCountryObject = $country;
             $this->selectedCountry1 = $country->slug;
             $this->slug = $country->slug;
         } else {
             // Fallback to Lithuania or first available
-            $default = Country::where('name', 'Lithuania')->first() ?? Country::first();
+            $default = Country::calculatorAvailable()->where('name', 'Lithuania')->first()
+                ?? Country::calculatorAvailable()->first();
             if ($default) {
                 $this->country = $default;
                 $this->selectedCountry1 = $default->slug;
@@ -177,8 +189,21 @@ class VatCalculator extends Component
     public function updated($property)
     {
         if ($property === 'selectedCountry1') {
-            $this->slug = $this->selectedCountry1;
-            $this->selectedCountryObject = Country::where('slug', $this->slug)->first();
+            $country = Country::calculatorAvailable()
+                ->where('slug', $this->selectedCountry1)
+                ->first();
+
+            if (! $country) {
+                $this->selectedCountry1 = $this->country?->slug;
+                $this->slug = $this->country?->slug ?? '';
+                $this->error_message = __('ui.calculator.unsupported_country');
+
+                return;
+            }
+
+            $this->slug = $country->slug;
+            $this->selectedCountryObject = $country;
+            $this->country = $country;
             $this->getRates();
             // Reset rate to standard rate when changing country
             if (count($this->rates) > 0) {
@@ -231,14 +256,23 @@ class VatCalculator extends Component
 
     public function calculate()
     {
-        $this->selectedCountryObject = Country::where('slug', $this->slug)->first();
-        if ($this->selectedCountryObject) {
-            $this->country = $this->selectedCountryObject; // Ensure country is set
-            $this->getRates();
-            $this->vat = $this->selectedCountryObject->standard_rate;
-            $this->calculateVat();
-            $this->trackVisit(); // Keep tracking here
+        $country = Country::calculatorAvailable()
+            ->where('slug', $this->slug)
+            ->first();
+
+        if (! $country) {
+            $this->error_message = __('ui.calculator.unsupported_country');
+            $this->resetCalculation();
+
+            return;
         }
+
+        $this->selectedCountryObject = $country;
+        $this->country = $country;
+        $this->getRates();
+        $this->vat = $this->selectedCountryObject->standard_rate;
+        $this->calculateVat();
+        $this->trackVisit();
     }
 
     public function render()

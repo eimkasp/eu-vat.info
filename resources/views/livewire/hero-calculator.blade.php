@@ -42,6 +42,13 @@
     </div>
     @endif
 
+    @if(empty($countries))
+        <div data-calculator-unavailable role="status" class="mx-auto max-w-4xl border border-line bg-white px-6 py-10 text-center">
+            <h2 class="text-xl font-bold text-ink">{{ __('ui.calculator.unavailable_title') }}</h2>
+            <p class="mx-auto mt-2 max-w-lg text-sm leading-6 text-ink-muted">{{ __('ui.calculator.unavailable_desc') }}</p>
+        </div>
+    @else
+
     {{-- Mode Tabs --}}
     <div class="mx-auto mb-0 max-w-4xl">
         <div class="flex items-center gap-3 rounded-t-xl border border-b-0 border-line bg-white p-2">
@@ -82,14 +89,14 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
                     </svg>
-                    {{ __('ui.calculator.official_eu_data') }}
+                    {{ $selectedCountryObject?->is_eu_member !== false ? __('ui.calculator.official_eu_data') : __('ui.calculator.maintained_rate_data') }}
                 </span>
             </div>
         </div>
     </div>
 
     {{-- Calculator Bar --}}
-    <div id="hero-calculator" class="mx-auto max-w-4xl">
+    <div id="hero-calculator" class="scroll-mb-24 mx-auto max-w-4xl md:scroll-mb-0">
         <div class="relative rounded-b-xl border border-t-0 border-line bg-white shadow-workflow">
             {{-- Row 1: Country + Amount + Calculate --}}
             <div class="p-4 sm:p-5 pb-0 sm:pb-0">
@@ -99,10 +106,21 @@
                          x-data="{
                             open: false,
                             search: '',
+                            groupOrder: ['eu', 'other_europe'],
+                            groupLabels: @js([
+                                'eu' => __('ui.calculator.groups.eu'),
+                                'other_europe' => __('ui.calculator.groups.other_europe'),
+                            ]),
                             get filtered() {
                                 if (!this.search) return $wire.countries;
                                 const q = this.search.toLowerCase();
                                 return $wire.countries.filter(c => c.name.toLowerCase().includes(q));
+                            },
+                            get filteredGroups() {
+                                return {
+                                    eu: this.filtered.filter(c => c.group === 'eu'),
+                                    other_europe: this.filtered.filter(c => c.group === 'other_europe'),
+                                };
                             },
                             select(slug) {
                                 $wire.set('selectedCountrySlug', slug).then(() => {
@@ -174,22 +192,27 @@
                                 </div>
                                 {{-- Options --}}
                                 <div class="max-h-[240px] overflow-y-auto overscroll-contain" role="listbox" aria-labelledby="country-selector-label">
-                                    <template x-for="c in filtered" :key="c.slug">
-                                        <button
-                                            type="button"
-                                            role="option"
-                                            :aria-selected="(c.slug === $wire.selectedCountrySlug).toString()"
-                                            @click="select(c.slug)"
-                                            class="w-full flex items-center gap-2.5 px-3 py-2.5 text-sm text-left transition-colors"
-                                            :class="c.slug === $wire.selectedCountrySlug ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-gray-700 hover:bg-gray-50'"
-                                        >
-                                            <img :src="'https://flagcdn.com/h40/' + c.iso + '.jpg'" :alt="c.name" class="h-4 w-auto rounded-[2px] shadow-sm shrink-0" loading="lazy">
-                                            <span x-text="c.name" class="truncate"></span>
-                                            <span class="ml-auto shrink-0 text-sm tabular-nums text-ink-muted sm:text-xs" x-text="c.standard_rate + '%'"></span>
-                                            <svg x-show="c.slug === $wire.selectedCountrySlug" class="w-4 h-4 text-blue-500 shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                                            </svg>
-                                        </button>
+                                    <template x-for="group in groupOrder" :key="group">
+                                        <div x-show="filteredGroups[group].length > 0" role="group" :aria-label="groupLabels[group]">
+                                            <div class="sticky top-0 border-y border-line bg-surface-subtle px-3 py-1.5 text-xs font-semibold text-ink-muted" x-text="groupLabels[group]"></div>
+                                            <template x-for="c in filteredGroups[group]" :key="c.slug">
+                                                <button
+                                                    type="button"
+                                                    role="option"
+                                                    :aria-selected="(c.slug === $wire.selectedCountrySlug).toString()"
+                                                    @click="select(c.slug)"
+                                                    class="flex min-h-11 w-full items-center gap-2.5 px-3 py-2.5 text-left text-sm transition-colors"
+                                                    :class="c.slug === $wire.selectedCountrySlug ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-gray-700 hover:bg-gray-50'"
+                                                >
+                                                    <img :src="'https://flagcdn.com/h40/' + c.iso + '.jpg'" :alt="c.name" class="h-4 w-auto shrink-0 rounded-[2px] shadow-sm" loading="lazy">
+                                                    <span x-text="c.name" class="truncate"></span>
+                                                    <span class="ml-auto shrink-0 text-sm tabular-nums text-ink-muted sm:text-xs" x-text="c.standard_rate + '%'"></span>
+                                                    <svg x-show="c.slug === $wire.selectedCountrySlug" class="h-4 w-4 shrink-0 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                                                    </svg>
+                                                </button>
+                                            </template>
+                                        </div>
                                     </template>
                                     <div x-show="filtered.length === 0" class="px-3 py-4 text-center text-sm text-gray-400">
                                         {{ __('ui.calculator.no_countries_found') }}
@@ -221,7 +244,7 @@
                     {{-- Calculate Button --}}
                     <div class="shrink-0 flex items-end">
                         <button
-                            @click="compute(); hasResults = true; $wire.calculate(mode, selectedRate, useCustomRate, customRate, amount)"
+                            @click="compute(); hasResults = true; $wire.calculate(mode, selectedRate, useCustomRate, customRate, amount).then(() => $nextTick(() => $refs.resultPanel?.scrollIntoView({ behavior: 'smooth', block: 'center' })))"
                             class="app-button-primary h-12 w-full gap-2 whitespace-nowrap px-8 text-base sm:w-auto"
                         >
                             <svg wire:loading.remove wire:target="calculate" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -287,7 +310,7 @@
             </div>
 
             {{-- Results Panel --}}
-                <div x-show="hasResults && total > 0 && !errorMsg" x-cloak x-transition class="rounded-b-xl border-t border-line bg-white">
+                <div x-ref="resultPanel" data-calculator-result x-show="hasResults && total > 0 && !errorMsg" x-cloak x-transition class="scroll-mb-24 rounded-b-xl border-t border-line bg-white md:scroll-mb-0">
                     <div class="p-4 sm:p-5">
                         {{-- Context sentence with flag --}}
                         <div class="mb-4 flex items-center gap-2 text-sm text-ink-muted">
@@ -373,6 +396,7 @@
                                     </svg>
                                     {{ __('ui.calculator.share_details') }}
                                 </a>
+                                @if($surface !== 'workspace')
                                 <a :href="'{{ locale_path('/vat-calculator') }}/' + $wire.selectedCountrySlug"
                                    class="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-lg px-3 text-sm font-semibold text-ink-muted transition-colors duration-150 hover:bg-surface-subtle hover:text-action-deep sm:text-xs">
                                     {{ __('ui.calculator.full_calculator') }}
@@ -380,6 +404,7 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
                                     </svg>
                                 </a>
+                                @endif
                             </div>
                         </div>
 
@@ -408,12 +433,12 @@
     </div>
 
     {{-- Source and freshness --}}
-    <div class="mx-auto mt-4 flex max-w-4xl flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm font-medium text-blue-50 sm:text-xs">
+    <div class="mx-auto mt-4 flex max-w-4xl flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm font-medium sm:text-xs {{ $surface === 'workspace' ? 'text-ink-muted' : 'text-blue-50' }}">
         <span class="flex items-center gap-1.5">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-emerald-300" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
             </svg>
-            {{ __('ui.trust.official_ec_data') }}
+            {{ $selectedCountryObject?->is_eu_member !== false ? __('ui.trust.official_ec_data') : __('ui.calculator.maintained_rate_data') }}
         </span>
         <span class="flex items-center gap-1.5">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-200" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -427,7 +452,7 @@
     @if(count($history) > 0)
         <div class="max-w-4xl mx-auto mt-8" x-data="{ expanded: false }">
             <div class="flex items-center justify-between mb-3">
-                <h3 class="flex items-center gap-2 text-sm font-semibold text-white/90">
+                <h3 class="flex items-center gap-2 text-sm font-semibold {{ $surface === 'workspace' ? 'text-ink' : 'text-white/90' }}">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                     </svg>
@@ -436,7 +461,7 @@
                 </h3>
                 <button
                     wire:click="clearHistory"
-                    class="inline-flex min-h-11 items-center rounded-md px-2 text-xs text-blue-100 transition-colors hover:bg-white/10 hover:text-white"
+                    class="inline-flex min-h-11 items-center rounded-md px-2 text-xs transition-colors {{ $surface === 'workspace' ? 'text-action hover:bg-action-soft' : 'text-blue-100 hover:bg-white/10 hover:text-white' }}"
                 >
                     {{ __('ui.calculator.clear_all') }}
                 </button>
@@ -519,5 +544,6 @@
                 </div>
             @endif
         </div>
+    @endif
     @endif
 </div>

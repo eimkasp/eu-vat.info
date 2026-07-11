@@ -17,9 +17,12 @@ class CountryCalculatorList extends Component
      */
     public function __construct()
     {
-        //
-        $this->countries = Cache::remember('all_countries', 600, function () {
-            return Country::orderBy('name', 'ASC')->get();
+        $this->countries = Cache::remember('calculator_country_directory_v2', 600, function () {
+            return Country::calculatorAvailable()
+                ->orderByDesc('is_eu_member')
+                ->orderBy('name', 'ASC')
+                ->get()
+                ->groupBy(fn (Country $country) => $country->calculatorGroup());
         });
     }
 

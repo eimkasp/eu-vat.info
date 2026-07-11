@@ -18,6 +18,17 @@ class InternalLinkService
             ->get();
     }
 
+    public function relatedCalculatorCountries(Country $country, int $limit = 6): Collection
+    {
+        return Country::calculatorAvailable()
+            ->whereKeyNot($country->getKey())
+            ->orderByRaw('ABS(standard_rate - ?)', [(float) $country->standard_rate])
+            ->orderByDesc('is_eu_member')
+            ->orderBy('name')
+            ->limit($limit)
+            ->get();
+    }
+
     public function approvedPairsFor(Country $country): Collection
     {
         return collect(config('seo.comparisons', []))

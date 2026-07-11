@@ -14,6 +14,8 @@ class HeroCalculator extends Component
 
     public $showHeader = true;
 
+    public $surface = 'dark';
+
     #[Url(as: 'country', history: true)]
     public $selectedCountrySlug = '';
 
@@ -43,10 +45,12 @@ class HeroCalculator extends Component
 
     public $showResults = false;
 
-    public function mount($initialCountry = null)
+    public function mount($initialCountry = null, $surface = 'dark')
     {
-        $this->countries = Cache::remember('hero_calc_eu_countries_v2', 600, function () {
-            return Country::where('is_eu_member', true)
+        $this->surface = $surface;
+        $this->countries = Cache::remember('hero_calc_countries_v3', 600, function () {
+            return Country::calculatorAvailable()
+                ->orderByDesc('is_eu_member')
                 ->orderBy('name', 'ASC')
                 ->get()
                 ->map(function ($c) {
@@ -59,6 +63,7 @@ class HeroCalculator extends Component
                     return [
                         'slug' => $c->slug,
                         'name' => $c->name,
+                        'group' => $c->calculatorGroup(),
                         'flag' => $flag,
                         'iso' => strtolower($c->iso_code),
                         'standard_rate' => $c->standard_rate,
@@ -90,9 +95,21 @@ class HeroCalculator extends Component
         $this->history = session()->get('hero_calc_history', []);
     }
 
-    public function loadCountry()
+    public function loadCountry(): bool
     {
-        $this->selectedCountryObject = Country::where('slug', $this->selectedCountrySlug)->first();
+        $previousSlug = $this->selectedCountryObject?->slug;
+        $country = Country::calculatorAvailable()
+            ->where('slug', $this->selectedCountrySlug)
+            ->first();
+
+        if (! $country) {
+            $this->selectedCountrySlug = $previousSlug ?? '';
+            $this->error_message = __('ui.calculator.unsupported_country');
+
+            return false;
+        }
+
+        $this->selectedCountryObject = $country;
         $this->loadRates();
 
         if (! $this->useCustomRate && count($this->rates) > 0) {
@@ -100,13 +117,17 @@ class HeroCalculator extends Component
         }
 
         $this->calculateVat();
+
+        return true;
     }
 
     public function updatedSelectedCountrySlug()
     {
         $this->useCustomRate = false;
         $this->customRate = null;
-        $this->loadCountry();
+        if (! $this->loadCountry()) {
+            return;
+        }
 
         // Remember selection for 90 days
         cookie()->queue('hero_calc_country', $this->selectedCountrySlug, 60 * 24 * 90);

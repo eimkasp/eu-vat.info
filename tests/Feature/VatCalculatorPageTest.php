@@ -65,6 +65,30 @@ it('returns 404 for invalid country slug', function () {
         ->assertStatus(404);
 });
 
+it('loads configured non-EU calculator pages and rejects unsupported countries', function () {
+    config()->set('calculator.additional_country_slugs', ['norway']);
+    cache()->forget('all_countries_with_flags');
+    cache()->forget('calculator_countries_v2');
+
+    Country::factory()->create([
+        'name' => 'Norway',
+        'slug' => 'norway',
+        'iso_code' => 'NO',
+        'standard_rate' => 25,
+        'is_eu_member' => false,
+    ]);
+    Country::factory()->create([
+        'name' => 'Canada',
+        'slug' => 'canada',
+        'iso_code' => 'CA',
+        'standard_rate' => 5,
+        'is_eu_member' => false,
+    ]);
+
+    $this->get('/vat-calculator/norway')->assertOk();
+    $this->get('/vat-calculator/canada')->assertNotFound();
+});
+
 it('displays breadcrumbs on main calculator page', function () {
     $this->get('/vat-calculator')
         ->assertStatus(200)
@@ -147,4 +171,50 @@ it('displays schema.org json-ld on country page', function () {
         ->toContain('WebApplication')
         ->toContain('FinanceApplication')
         ->toContain($country->name);
+});
+
+it('renders country calculators as a compact reference workspace', function () {
+    $response = $this->get('/vat-calculator/germany')
+        ->assertOk()
+        ->assertSee('data-country-header', false)
+        ->assertSee('data-country-reference', false)
+        ->assertSee('Germany VAT Guide')
+        ->assertDontSee('eu-vat-calculator-background')
+        ->assertDontSee('Full Calculator');
+
+    $html = $response->getContent();
+
+    expect(strpos($html, 'data-country-header'))
+        ->toBeLessThan(strpos($html, 'id="hero-calculator"'))
+        ->and(strpos($html, 'id="hero-calculator"'))
+        ->toBeLessThan(strpos($html, 'data-country-reference'));
+});
+
+it('renders a grouped country directory without a horizontal carousel', function () {
+    config()->set('calculator.additional_country_slugs', ['norway']);
+    cache()->forget('calculator_country_directory_v2');
+
+    Country::factory()->create([
+        'name' => 'Norway',
+        'slug' => 'norway',
+        'iso_code' => 'NO',
+        'standard_rate' => 25,
+        'is_eu_member' => false,
+    ]);
+
+    $this->get('/vat-calculator/germany')
+        ->assertOk()
+        ->assertSee('data-country-directory', false)
+        ->assertSee('Browse all country calculators')
+        ->assertSee('European Union')
+        ->assertSee('Other European countries')
+        ->assertDontSee('snap-x')
+        ->assertDontSee('overflow-x-auto');
+});
+
+it('reserves mobile navigation clearance for calculator results', function () {
+    $this->get('/vat-calculator/germany')
+        ->assertOk()
+        ->assertSee('mobile-nav-safe', false)
+        ->assertSee('id="hero-calculator" class="scroll-mb-24', false);
 });

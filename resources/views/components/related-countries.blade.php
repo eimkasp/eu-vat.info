@@ -1,42 +1,21 @@
 @props(['country'])
 
-@once
-    @push('svg-sprites')
-        <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
-            <symbol id="icon-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-            </symbol>
-        </svg>
-    @endpush
-@endonce
-
 @php
-    $relatedCountries = app(\App\Services\Seo\InternalLinkService::class)->relatedCountries($country, 6);
+    $relatedCountries = app(\App\Services\Seo\InternalLinkService::class)->relatedCalculatorCountries($country, 6);
 @endphp
 
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-    @foreach ($relatedCountries as $related)
-        @php
-            $iso = strtoupper($related->iso_code);
-            $flag = '';
-            if (strlen($iso) === 2) {
-                $flag = mb_chr(ord($iso[0]) + 127397) . mb_chr(ord($iso[1]) + 127397);
-            }
-        @endphp
-        <a href="{{ locale_path('/vat-calculator/' . $related->slug) }}" 
-          
-           class="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 hover:shadow-md hover:border-blue-200 dark:hover:border-blue-600 transition-all group">
-            <img src="https://flagcdn.com/h40/{{ strtolower($related->iso_code) }}.jpg" 
-                 alt="{{ $related->name }} flag" 
-                 class="w-8 h-auto rounded shadow-sm"
-                 loading="lazy">
-            <div class="flex-1 min-w-0">
-                <div class="font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors truncate">{{ $related->name }}</div>
-                <div class="text-sm text-gray-500 dark:text-gray-400">VAT: <strong class="text-blue-600 dark:text-blue-400">{{ $related->standard_rate }}%</strong></div>
-            </div>
-            <svg class="w-4 h-4 text-gray-400 dark:text-gray-500 group-hover:text-blue-600 dark:group-hover:text-blue-400 flex-shrink-0" aria-hidden="true">
-                <use href="#icon-arrow-right"/>
-            </svg>
+<div class="divide-y divide-line border-y border-line">
+    @foreach($relatedCountries as $related)
+        <a
+            href="{{ locale_path('/vat-calculator/' . $related->slug) }}"
+            class="group flex min-h-14 items-center gap-3 py-2.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action"
+        >
+            <img src="https://flagcdn.com/h40/{{ strtolower($related->iso_code) }}.jpg" alt="" class="h-5 w-auto shrink-0 rounded-[2px] ring-1 ring-black/10" loading="lazy">
+            <span class="min-w-0 flex-1">
+                <span class="block truncate text-sm font-semibold text-ink group-hover:text-action">{{ $related->name }}</span>
+                <span class="block text-xs text-ink-muted">{{ $related->is_eu_member ? __('ui.calculator.scope.eu') : __('ui.calculator.scope.other_europe') }}</span>
+            </span>
+            <span class="shrink-0 text-sm font-bold tabular-nums text-ink">{{ $related->standard_rate }}%</span>
         </a>
     @endforeach
 </div>
