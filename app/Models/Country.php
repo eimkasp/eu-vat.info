@@ -70,6 +70,7 @@ class Country extends Model implements Auditable, Sitemapable
     {
         return $query
             ->whereNotNull('slug')
+            ->whereRaw("TRIM(slug) <> ''")
             ->whereRaw('LENGTH(iso_code) = 2')
             ->where('standard_rate', '>', 0)
             ->where(fn (Builder $scope) => $scope

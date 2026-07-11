@@ -33,7 +33,7 @@
         "@type": "BreadcrumbList",
         "itemListElement": [
             { "@type": "ListItem", "position": 1, "name": "Home", "item": "{{ url('/') }}" },
-            { "@type": "ListItem", "position": 2, "name": "VAT Rates", "item": "{{ url('/amp/vat-rates') }}" },
+            { "@type": "ListItem", "position": 2, "name": "{{ $country->is_eu_member ? 'VAT Rates' : 'VAT Calculator' }}", "item": "{{ $country->is_eu_member ? url('/amp/vat-rates') : url('/vat-calculator') }}" },
             { "@type": "ListItem", "position": 3, "name": "{{ $country->name }}", "item": "{{ url('/amp/vat-calculator/' . $country->slug) }}" }
         ]
     }
@@ -92,7 +92,9 @@
     <header>
         <a href="{{ url('/') }}">EU VAT Info</a>
         <nav>
+            @if($country->is_eu_member)
             <a href="{{ url('/amp/vat-rates') }}">← All EU Rates</a>
+            @endif
             <a class="header-cta" href="{{ url('/vat-calculator/' . $country->slug) }}">Open Full Calculator →</a>
         </nav>
     </header>
@@ -101,7 +103,11 @@
         <div class="breadcrumb">
             <a href="{{ url('/amp') }}">Home</a>
             <span>›</span>
-            <a href="{{ url('/amp/vat-rates') }}">VAT Rates</a>
+            @if($country->is_eu_member)
+                <a href="{{ url('/amp/vat-rates') }}">VAT Rates</a>
+            @else
+                <a href="{{ url('/vat-calculator') }}">VAT Calculator</a>
+            @endif
             <span>›</span>
             <strong>{{ $country->name }}</strong>
         </div>
@@ -153,10 +159,12 @@
             <div class="info-row"><span class="info-key">ISO Code</span><span class="info-val">{{ $country->iso_code }}</span></div>
             <div class="info-row"><span class="info-key">Currency</span><span class="info-val">{{ $country->currency ?? 'Euro' }} ({{ $country->currency_code ?? 'EUR' }}){{ $country->currency_symbol ? ' — '.$country->currency_symbol : '' }}</span></div>
             <div class="info-row"><span class="info-key">EU Member</span><span class="info-val">{{ $country->is_eu_member ? 'Yes' : 'No' }}</span></div>
-            <div class="info-row"><span class="info-key">VIES Available</span><span class="info-val">{{ $country->vies_available ? 'Yes' : 'No' }}</span></div>
+            @if($country->is_eu_member)
+                <div class="info-row"><span class="info-key">VIES Available</span><span class="info-val">{{ $country->vies_available ? 'Yes' : 'No' }}</span></div>
+            @endif
         </div>
 
-        @if($vatRates->count() > 0)
+        @if($country->is_eu_member && $vatRates->count() > 0)
         <div class="section-title">VAT Rate History</div>
         <div class="table-wrap">
             <table>
@@ -185,7 +193,11 @@
     </div>
 
     <footer>
-        <p>Data sourced from the European Commission. &copy; {{ date('Y') }} <a href="{{ url('/') }}">EU VAT Info</a></p>
+        @if($country->is_eu_member)
+            <p>Data sourced from the European Commission. &copy; {{ date('Y') }} <a href="{{ url('/') }}">EU VAT Info</a></p>
+        @else
+            <p>Maintained VAT rate data. Verify compliance with the local tax authority. &copy; {{ date('Y') }} <a href="{{ url('/') }}">EU VAT Info</a></p>
+        @endif
     </footer>
 </body>
 </html>

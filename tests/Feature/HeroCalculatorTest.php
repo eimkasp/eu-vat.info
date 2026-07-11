@@ -1,6 +1,7 @@
 <?php
 
 use App\Livewire\HeroCalculator;
+use App\Livewire\VatCalculator;
 use App\Models\Country;
 use Livewire\Livewire;
 
@@ -137,4 +138,43 @@ it('groups EU and other European countries in the hero calculator', function () 
         ->assertSet('countries', fn (array $rows) => collect($rows)->pluck('slug')->all() === ['malta', 'norway'])
         ->assertSet('countries.0.group', 'eu')
         ->assertSet('countries.1.group', 'other_europe');
+});
+
+it('rejects unsupported country mutations across Livewire calculators', function () {
+    Country::factory()->create([
+        'name' => 'Germany',
+        'slug' => 'germany',
+        'iso_code' => 'DE',
+        'standard_rate' => 19,
+        'is_eu_member' => true,
+    ]);
+    Country::factory()->create([
+        'name' => 'Canada',
+        'slug' => 'canada',
+        'iso_code' => 'CA',
+        'standard_rate' => 5,
+        'is_eu_member' => false,
+    ]);
+
+    Livewire::test(HeroCalculator::class, ['initialCountry' => 'germany'])
+        ->set('selectedCountrySlug', 'canada')
+        ->assertSet('selectedCountrySlug', 'germany')
+        ->assertSet('selectedCountryObject.slug', 'germany')
+        ->assertSet('error_message', 'That country is not available in this VAT calculator.');
+
+    Livewire::test(VatCalculator::class, ['slug' => 'germany'])
+        ->set('selectedCountry1', 'canada')
+        ->assertSet('selectedCountry1', 'germany')
+        ->assertSet('selectedCountryObject.slug', 'germany')
+        ->assertSet('error_message', 'That country is not available in this VAT calculator.')
+        ->set('slug', 'canada')
+        ->call('calculate')
+        ->assertSet('total', 0);
+});
+
+it('renders a disabled state when no calculator countries are available', function () {
+    Livewire::test(HeroCalculator::class)
+        ->assertSee('VAT calculator is temporarily unavailable')
+        ->assertDontSee('Official EU data')
+        ->assertDontSee('app-button-primary', false);
 });

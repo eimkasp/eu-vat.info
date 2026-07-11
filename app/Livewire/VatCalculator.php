@@ -189,8 +189,21 @@ class VatCalculator extends Component
     public function updated($property)
     {
         if ($property === 'selectedCountry1') {
-            $this->slug = $this->selectedCountry1;
-            $this->selectedCountryObject = Country::where('slug', $this->slug)->first();
+            $country = Country::calculatorAvailable()
+                ->where('slug', $this->selectedCountry1)
+                ->first();
+
+            if (! $country) {
+                $this->selectedCountry1 = $this->country?->slug;
+                $this->slug = $this->country?->slug ?? '';
+                $this->error_message = __('ui.calculator.unsupported_country');
+
+                return;
+            }
+
+            $this->slug = $country->slug;
+            $this->selectedCountryObject = $country;
+            $this->country = $country;
             $this->getRates();
             // Reset rate to standard rate when changing country
             if (count($this->rates) > 0) {
@@ -243,14 +256,23 @@ class VatCalculator extends Component
 
     public function calculate()
     {
-        $this->selectedCountryObject = Country::where('slug', $this->slug)->first();
-        if ($this->selectedCountryObject) {
-            $this->country = $this->selectedCountryObject; // Ensure country is set
-            $this->getRates();
-            $this->vat = $this->selectedCountryObject->standard_rate;
-            $this->calculateVat();
-            $this->trackVisit(); // Keep tracking here
+        $country = Country::calculatorAvailable()
+            ->where('slug', $this->slug)
+            ->first();
+
+        if (! $country) {
+            $this->error_message = __('ui.calculator.unsupported_country');
+            $this->resetCalculation();
+
+            return;
         }
+
+        $this->selectedCountryObject = $country;
+        $this->country = $country;
+        $this->getRates();
+        $this->vat = $this->selectedCountryObject->standard_rate;
+        $this->calculateVat();
+        $this->trackVisit();
     }
 
     public function render()

@@ -42,6 +42,13 @@
     </div>
     @endif
 
+    @if(empty($countries))
+        <div data-calculator-unavailable role="status" class="mx-auto max-w-4xl border border-line bg-white px-6 py-10 text-center">
+            <h2 class="text-xl font-bold text-ink">{{ __('ui.calculator.unavailable_title') }}</h2>
+            <p class="mx-auto mt-2 max-w-lg text-sm leading-6 text-ink-muted">{{ __('ui.calculator.unavailable_desc') }}</p>
+        </div>
+    @else
+
     {{-- Mode Tabs --}}
     <div class="mx-auto mb-0 max-w-4xl">
         <div class="flex items-center gap-3 rounded-t-xl border border-b-0 border-line bg-white p-2">
@@ -537,5 +544,6 @@
                 </div>
             @endif
         </div>
+    @endif
     @endif
 </div>

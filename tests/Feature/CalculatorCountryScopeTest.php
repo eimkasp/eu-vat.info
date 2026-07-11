@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Country;
+use App\Models\VatRate;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
@@ -119,4 +120,46 @@ it('uses scope-aware content and currency on a non-EU calculator page', function
         ->assertDontSee('Official European Commission data')
         ->assertDontSee('Validate Norway VAT Numbers')
         ->assertDontSee('VAT Rates Map');
+});
+
+it('keeps non-EU AMP calculator pages free of EU-only claims and history', function () {
+    config()->set('calculator.additional_country_slugs', ['norway']);
+
+    $norway = Country::factory()->create([
+        'name' => 'Norway',
+        'slug' => 'norway',
+        'iso_code' => 'NO',
+        'standard_rate' => 25,
+        'currency_code' => 'NOK',
+        'is_eu_member' => false,
+        'vies_available' => false,
+    ]);
+
+    VatRate::create([
+        'country_id' => $norway->id,
+        'type' => 'standard',
+        'rate' => 25,
+        'effective_from' => now()->subYear(),
+    ]);
+
+    $this->get('/amp/vat-calculator/norway')
+        ->assertOk()
+        ->assertSee('Maintained VAT rate data')
+        ->assertDontSee('All EU Rates')
+        ->assertDontSee('VIES Available')
+        ->assertDontSee('VAT Rate History')
+        ->assertDontSee('European Commission');
+});
+
+it('excludes countries with blank slugs from calculator availability', function () {
+    $country = Country::factory()->create([
+        'name' => 'Blank Slug',
+        'slug' => 'temporary-slug',
+        'iso_code' => 'BS',
+        'standard_rate' => 10,
+        'is_eu_member' => true,
+    ]);
+    $country->newQuery()->whereKey($country)->update(['slug' => '']);
+
+    expect(Country::calculatorAvailable()->whereKey($country)->exists())->toBeFalse();
 });
