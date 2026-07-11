@@ -25,7 +25,7 @@ class PublicDiscoveryCacheHeaders
         $response = $next($request);
         $routeName = $request->route()?->getName();
 
-        if ($routeName && isset(self::ROUTE_MAX_AGE[$routeName])) {
+        if ($response->isSuccessful() && $routeName && isset(self::ROUTE_MAX_AGE[$routeName])) {
             $response->headers->set('Cache-Control', 'public, max-age='.self::ROUTE_MAX_AGE[$routeName]);
             $response->headers->remove('Pragma');
             $response->headers->remove('Expires');

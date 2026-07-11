@@ -3,6 +3,8 @@
 use App\Models\Country;
 use App\Models\VatRateRule;
 use App\Services\Seo\VatCategorySeoService;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 function categoryCountry(string $name, string $slug, string $iso, bool $eu = true): Country
 {
@@ -50,14 +52,57 @@ it('limits current category rules to their effective date range', function () {
     expect(VatRateRule::indexable()->current()->pluck('id')->all())->toBe([$current->id]);
 });
 
-it('rejects blank and unsafe category source URLs from publication', function () {
+it('rejects malformed category source URLs at write time and from existing rows', function () {
     $country = categoryCountry('Germany', 'germany', 'DE');
     $valid = categoryRule($country);
-    categoryRule($country, ['category_slug' => 'blank-source', 'source_url' => '']);
-    categoryRule($country, ['category_slug' => 'unsafe-source', 'source_url' => 'javascript:alert(1)']);
-    categoryRule($country, ['category_slug' => 'malformed-source', 'source_url' => 'example.gov/books']);
+
+    foreach (['', 'javascript:alert(1)', 'example.gov/books', 'https://', 'https://not a valid host'] as $source) {
+        expect(fn () => categoryRule($country, [
+            'category_slug' => 'invalid-'.md5($source),
+            'source_url' => $source,
+        ]))->toThrow(ValidationException::class);
+    }
+
+    DB::table('vat_rate_rules')->insert([
+        'country_id' => $country->id,
+        'category_slug' => 'legacy-invalid-source',
+        'category_name' => 'Legacy invalid source',
+        'rate_type' => 'reduced',
+        'rate' => 7,
+        'effective_from' => now()->subYear()->toDateString(),
+        'source_url' => 'https://not a valid host',
+        'verified_at' => now()->subDay(),
+        'published_at' => now()->subDay(),
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
 
     expect(VatRateRule::indexable()->current()->pluck('id')->all())->toBe([$valid->id]);
+});
+
+it('uses only the latest current country rule in category aggregates', function () {
+    config()->set('seo.category_minimum_country_coverage', 3);
+
+    $germany = categoryCountry('Germany', 'germany', 'DE');
+    categoryRule($germany, [
+        'rate' => 30,
+        'effective_from' => now()->subYears(2)->toDateString(),
+        'verified_at' => now(),
+    ]);
+    categoryRule($germany, [
+        'rate' => 7,
+        'effective_from' => now()->subYear()->toDateString(),
+        'verified_at' => now()->subDay(),
+    ]);
+    categoryRule(categoryCountry('France', 'france', 'FR'), ['rate' => 5.5]);
+    categoryRule(categoryCountry('Spain', 'spain', 'ES'), ['rate' => 4]);
+
+    $books = app(VatCategorySeoService::class)->eligibleCategories()->firstWhere('slug', 'books');
+
+    expect($books['country_count'])->toBe(3)
+        ->and($books['minimum_rate'])->toBe(4.0)
+        ->and($books['maximum_rate'])->toBe(7.0)
+        ->and((string) $books['last_verified_at'])->toContain(now()->subDay()->toDateString());
 });
 
 it('qualifies category hubs only after verified EU country coverage reaches the threshold', function () {

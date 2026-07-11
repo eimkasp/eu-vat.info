@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Validation\ValidationException;
 
 class VatRateRule extends Model
 {
@@ -34,6 +35,26 @@ class VatRateRule extends Model
         ];
     }
 
+    protected static function booted(): void
+    {
+        static::saving(function (VatRateRule $rule) {
+            if ($rule->source_url !== null && ! static::hasValidSourceUrl($rule->source_url)) {
+                throw ValidationException::withMessages([
+                    'source_url' => 'The source URL must be a valid HTTP or HTTPS URL.',
+                ]);
+            }
+        });
+    }
+
+    public static function hasValidSourceUrl(?string $url): bool
+    {
+        if (! is_string($url) || trim($url) === '' || filter_var($url, FILTER_VALIDATE_URL) === false) {
+            return false;
+        }
+
+        return in_array(parse_url($url, PHP_URL_SCHEME), ['http', 'https'], true);
+    }
+
     public function country()
     {
         return $this->belongsTo(Country::class);
@@ -47,6 +68,8 @@ class VatRateRule extends Model
                     ->where('source_url', 'like', 'https://%')
                     ->orWhere('source_url', 'like', 'http://%');
             })
+            ->where('source_url', 'not like', '% %')
+            ->whereRaw('LENGTH(source_url) >= 12')
             ->whereNotNull('verified_at')
             ->whereNotNull('published_at')
             ->where('published_at', '<=', now())

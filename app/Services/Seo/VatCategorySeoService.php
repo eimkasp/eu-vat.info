@@ -4,7 +4,9 @@ namespace App\Services\Seo;
 
 use App\Models\VatRateRule;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class VatCategorySeoService
 {
@@ -26,7 +28,7 @@ class VatCategorySeoService
 
     public function eligibleCategories(): Collection
     {
-        return $this->currentRulesQuery()
+        return $this->canonicalCurrentRulesQuery()
             ->select('category_slug')
             ->selectRaw('MIN(category_name) as category_name')
             ->selectRaw('COUNT(DISTINCT country_id) as country_count')
@@ -37,7 +39,7 @@ class VatCategorySeoService
             ->havingRaw('COUNT(DISTINCT country_id) >= ?', [$this->minimumCountryCoverage()])
             ->orderBy('category_name')
             ->get()
-            ->map(fn (VatRateRule $rule) => [
+            ->map(fn ($rule) => [
                 'slug' => $rule->category_slug,
                 'name' => (string) $rule->category_name,
                 'country_count' => (int) $rule->country_count,
@@ -97,5 +99,16 @@ class VatCategorySeoService
         return VatRateRule::query()
             ->indexable()
             ->current();
+    }
+
+    protected function canonicalCurrentRulesQuery(): QueryBuilder
+    {
+        $rankedRules = $this->currentRulesQuery()
+            ->select('vat_rate_rules.*')
+            ->selectRaw('ROW_NUMBER() OVER (PARTITION BY country_id, category_slug ORDER BY effective_from DESC, verified_at DESC, id DESC) as seo_rule_rank');
+
+        return DB::query()
+            ->fromSub($rankedRules, 'canonical_rules')
+            ->where('seo_rule_rank', 1);
     }
 }
