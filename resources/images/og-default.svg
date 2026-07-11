@@ -112,7 +112,7 @@
         font-family="'Segoe UI', Helvetica, Arial, sans-serif"
         font-size="22" font-weight="500"
         fill="#64748b" text-anchor="middle"
-        letter-spacing="3">eu-vat.info</text>
+        letter-spacing="3">vat.businesspress.io</text>
 
   <!-- ── Bottom accent bar ────────────────────── -->
   <rect y="624" width="1200" height="6" fill="url(#bar)"/>

@@ -57,7 +57,7 @@
                     </div>
                     <h3 class="text-base font-bold text-gray-900 dark:text-white">All 27 EU Countries</h3>
                 </div>
-                <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">Standard, reduced, super-reduced, and parking rates for every EU member state. Rates auto-sync from eu-vat.info every 12 hours.</p>
+                <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">Standard, reduced, super-reduced, and parking rates for every EU member state. Rates auto-sync from vat.businesspress.io every 12 hours.</p>
             </div>
 
             {{-- New Tab Mode --}}

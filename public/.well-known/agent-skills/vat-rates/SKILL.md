@@ -1,6 +1,6 @@
 # EU VAT Rates Skill
 
-Query live EU VAT rates for all 27 EU member states via the eu-vat.info API or MCP server.
+Query live EU VAT rates for all 27 EU member states via the vat.businesspress.io API or MCP server.
 
 ## What You Can Do
 
@@ -22,7 +22,7 @@ Connect via the Model Context Protocol for structured tool access:
   "mcpServers": {
     "eu-vat-info": {
       "type": "http",
-      "url": "https://eu-vat.info/api/mcp"
+      "url": "https://vat.businesspress.io/api/mcp"
     }
   }
 }
@@ -81,21 +81,21 @@ Compare standard and reduced rates across multiple EU countries.
 ### Get All Countries
 
 ```
-GET https://eu-vat.info/api/countries
+GET https://vat.businesspress.io/api/countries
 ```
 
 ### Get a Single Country
 
 ```
-GET https://eu-vat.info/api/countries/{slug}
+GET https://vat.businesspress.io/api/countries/{slug}
 ```
 
-Example: `GET https://eu-vat.info/api/countries/germany`
+Example: `GET https://vat.businesspress.io/api/countries/germany`
 
 ### LLM-Optimised Rates List
 
 ```
-GET https://eu-vat.info/api/llm/vat-rates
+GET https://vat.businesspress.io/api/llm/vat-rates
 ```
 
 Returns a compact JSON array of all countries with their rates — ideal for context injection.
@@ -119,7 +119,7 @@ Returns a compact JSON array of all countries with their rates — ideal for con
 
 ## Human-Readable Reference
 
-- Country pages: `https://eu-vat.info/country/{slug}`
-- VAT calculator: `https://eu-vat.info/vat-calculator`
-- Full rates table: `https://eu-vat.info/llms-full.txt`
-- MCP server guide: `https://eu-vat.info/mcp-server`
+- Country pages: `https://vat.businesspress.io/country/{slug}`
+- VAT calculator: `https://vat.businesspress.io/vat-calculator`
+- Full rates table: `https://vat.businesspress.io/llms-full.txt`
+- MCP server guide: `https://vat.businesspress.io/mcp-server`

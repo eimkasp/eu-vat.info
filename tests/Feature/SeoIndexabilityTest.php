@@ -3,9 +3,9 @@
 use App\Models\Country;
 
 it('redirects the legacy SEO host to the canonical host', function () {
-    $response = $this->get('https://vat.businesspress.io/vat-calculator/germany?amount=100');
+    $response = $this->get('https://eu-vat.info/vat-calculator/germany?amount=100');
 
-    $response->assertRedirect('https://eu-vat.info/vat-calculator/germany?amount=100');
+    $response->assertRedirect('https://vat.businesspress.io/vat-calculator/germany?amount=100');
     expect($response->getStatusCode())->toBe(301);
 });
 
@@ -22,7 +22,7 @@ it('indexes only explicitly ready locales and limits hreflang to them', function
     $german
         ->assertOk()
         ->assertSee('<meta name="robots" content="noindex, follow">', false)
-        ->assertSee('<link rel="canonical" href="https://eu-vat.info/de">', false)
+        ->assertSee('<link rel="canonical" href="https://vat.businesspress.io/de">', false)
         ->assertDontSee('hreflang="de"', false);
 });
 
@@ -40,6 +40,6 @@ it('keeps shared calculations usable but out of the search index', function () {
     $response
         ->assertOk()
         ->assertSee('<meta name="robots" content="noindex, follow">', false)
-        ->assertSee('<link rel="canonical" href="https://eu-vat.info/vat-calculator/germany">', false)
+        ->assertSee('<link rel="canonical" href="https://vat.businesspress.io/vat-calculator/germany">', false)
         ->assertDontSee('hreflang=', false);
 });

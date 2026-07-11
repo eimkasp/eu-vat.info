@@ -6,7 +6,7 @@ class SeoPolicy
 {
     public function canonicalHost(): string
     {
-        return rtrim((string) config('seo.canonical_url', 'https://eu-vat.info'), '/');
+        return rtrim((string) config('seo.canonical_url', 'https://vat.businesspress.io'), '/');
     }
 
     public function indexableLocales(): array

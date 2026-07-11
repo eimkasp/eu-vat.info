@@ -53,7 +53,7 @@
     </script>
 
     @if (config('app.data_domain') && app()->isProduction())
-        <script defer data-domain="eu-vat.info" src="https://stats.businesspress.io/js/script.js"></script>
+        <script defer data-domain="vat.businesspress.io" src="https://stats.businesspress.io/js/script.js"></script>
     @endif
 
 </head>

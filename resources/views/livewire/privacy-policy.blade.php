@@ -21,7 +21,7 @@
             <h2>1. Introduction</h2>
             <p>
                 EU VAT Info ("we", "us", or "our") operates the website
-                <a href="https://eu-vat.info">eu-vat.info</a> and the EU VAT Info mobile applications
+                <a href="https://vat.businesspress.io">vat.businesspress.io</a> and the EU VAT Info mobile applications
                 for iOS and Android (collectively, the "Service"). This Privacy Policy explains how we collect,
                 use, disclose, and safeguard your information when you use our Service.
             </p>
@@ -177,7 +177,7 @@
             <p>If you have questions about this Privacy Policy or our data practices, please contact us:</p>
             <ul>
                 <li><strong>Email:</strong> <a href="mailto:privacy@businesspress.io">privacy@businesspress.io</a></li>
-                <li><strong>Website:</strong> <a href="https://eu-vat.info">eu-vat.info</a></li>
+                <li><strong>Website:</strong> <a href="https://vat.businesspress.io">vat.businesspress.io</a></li>
             </ul>
 
         </div>

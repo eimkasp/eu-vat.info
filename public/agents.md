@@ -4,7 +4,7 @@
 
 ## Overview
 
-EU VAT Info (`eu-vat.info`) provides free, daily-updated VAT data for all 27 EU member states.
+EU VAT Info (`vat.businesspress.io`) provides free, daily-updated VAT data for all 27 EU member states.
 No authentication required. All endpoints are publicly accessible.
 
 ## MCP Server (Recommended)
@@ -16,7 +16,7 @@ Connect via the Model Context Protocol for structured tool access:
   "mcpServers": {
     "eu-vat-info": {
       "type": "http",
-      "url": "https://eu-vat.info/api/mcp"
+      "url": "https://vat.businesspress.io/api/mcp"
     }
   }
 }
@@ -68,5 +68,5 @@ VAT rates are synchronised daily from official EU sources. Cached responses are 
 
 ## Source
 
-- Website: https://eu-vat.info
+- Website: https://vat.businesspress.io
 - Repository: https://github.com/eimkasp/eu-vat.info
