@@ -2,6 +2,8 @@
     <x-seo-meta
         :title="($mode === 'exclude' ? 'Add' : 'Remove') . ' ' . $rate . '% VAT on ' . ($countryObject?->currency_display ?? '€') . number_format((float)$amount, 2) . ' — ' . $countryObject->name . ' VAT Calculation'"
         :description="'Detailed VAT calculation for ' . $countryObject->name . '. ' . ($mode === 'exclude' ? 'Adding' : 'Removing') . ' ' . $rate . '% VAT on ' . ($countryObject?->currency_display ?? '€') . number_format((float)$amount, 2) . '. Net: ' . ($countryObject?->currency_display ?? '€') . number_format($net_amount, 2) . ', VAT: ' . ($countryObject?->currency_display ?? '€') . number_format($vat_amount, 2) . ', Total: ' . ($countryObject?->currency_display ?? '€') . number_format($total, 2)"
+        :url="app(\App\Support\Seo\SeoPolicy::class)->localizedUrl('/vat-calculator/' . $countryObject->slug, config('translation.default_language', 'en'))"
+        robots="noindex, follow"
         type="website"
     />
 @endsection

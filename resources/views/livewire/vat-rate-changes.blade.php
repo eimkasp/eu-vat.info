@@ -1,19 +1,19 @@
-<div class="bg-white p-6 rounded-xl shadow-xl mb-6">
-    <h3 class="text-lg font-bold mb-4">📊 {{ __('ui.rate_changes.title') }}</h3>
+<div class="app-surface p-4 sm:p-5">
+    <h3 class="mb-4 text-lg font-bold text-ink">{{ __('ui.rate_changes.title') }}</h3>
     
     @if($futureChanges->count() > 0)
         <div class="mb-6">
-            <h4 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">{{ __('ui.rate_changes.upcoming') }}</h4>
+            <h4 class="mb-3 text-sm font-semibold text-ink-muted">{{ __('ui.rate_changes.upcoming') }}</h4>
             <div class="space-y-3">
                 @foreach($futureChanges as $change)
-                    <div class="flex items-center justify-between p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors border border-blue-100">
+                    <div class="flex items-center justify-between rounded-lg border border-blue-200 bg-action-soft p-3 transition-colors hover:bg-blue-100">
                         <div class="flex items-center gap-3 flex-1">
                             <img src="https://flagcdn.com/h40/{{ strtolower($change->country->iso_code) }}.jpg" 
                                  alt="{{ $change->country->name }} flag" 
                                  class="w-8 h-5 object-cover rounded shadow-sm">
                             <div class="flex-1">
-                                <div class="font-medium text-gray-900">{{ $change->country->name }}</div>
-                                <div class="text-sm text-gray-500">
+                                <div class="font-medium text-ink">{{ $change->country->name }}</div>
+                                <div class="text-sm text-ink-muted">
                                     {{ ucfirst(str_replace('_', ' ', $change->type)) }} rate: 
                                     <span class="font-semibold">{{ $change->rate }}%</span>
                                     @if($change->diff != 0)
@@ -40,17 +40,17 @@
 
     @if($recentChanges->count() > 0)
         <div>
-            <h4 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">{{ __('ui.rate_changes.recent') }}</h4>
+            <h4 class="mb-3 text-sm font-semibold text-ink-muted">{{ __('ui.rate_changes.recent') }}</h4>
             <div class="space-y-3">
                 @foreach($recentChanges as $change)
-                    <div class="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors border border-transparent hover:border-gray-200">
+                    <div class="flex items-center justify-between rounded-lg border border-transparent p-3 transition-colors hover:border-line hover:bg-surface-subtle">
                         <div class="flex items-center gap-3 flex-1">
                             <img src="https://flagcdn.com/h40/{{ strtolower($change->country->iso_code) }}.jpg" 
                                  alt="{{ $change->country->name }} flag" 
                                  class="w-8 h-5 object-cover rounded shadow-sm">
                             <div class="flex-1">
-                                <div class="font-medium text-gray-900">{{ $change->country->name }}</div>
-                                <div class="text-sm text-gray-500">
+                                <div class="font-medium text-ink">{{ $change->country->name }}</div>
+                                <div class="text-sm text-ink-muted">
                                     {{ ucfirst(str_replace('_', ' ', $change->type)) }} rate: 
                                     <span class="font-semibold">{{ $change->rate }}%</span>
                                     @if($change->diff != 0)
@@ -82,8 +82,8 @@
         </div>
     @endif
     
-    <div class="mt-4 pt-4 border-t flex justify-between">
-        <a href="{{ locale_path('/vat-changes') }}" class="text-sm text-blue-600 hover:underline">{{ __('ui.rate_changes.full_history') }} →</a>
-        <a href="{{ locale_path('/vat-map') }}" class="text-sm text-blue-600 hover:underline">{{ __('ui.rate_changes.explore_map') }} →</a>
+    <div class="mt-4 flex justify-between gap-3 border-t border-line pt-4">
+        <a href="{{ locale_path('/vat-changes') }}" class="inline-flex min-h-11 items-center text-sm font-semibold text-action hover:text-action-deep">{{ __('ui.rate_changes.full_history') }} →</a>
+        <a href="{{ locale_path('/vat-map') }}" class="inline-flex min-h-11 items-center text-right text-sm font-semibold text-action hover:text-action-deep">{{ __('ui.rate_changes.explore_map') }} →</a>
     </div>
 </div>

@@ -1,7 +1,20 @@
+@php
+    $countryCount = count($countries);
+    $minimumRate = collect($countries)->min('standard_rate');
+    $maximumRate = collect($countries)->max('standard_rate');
+    $amountDescription = __('ui.top_calc.amount_page_desc', [
+        'amount' => number_format($amount),
+        'count' => $countryCount,
+        'member_label' => $countryCount === 1 ? 'member state' : 'member states',
+        'min' => $minimumRate,
+        'max' => $maximumRate,
+    ]);
+@endphp
+
 @section('seo')
     <x-seo-meta
         :title="__('ui.top_calc.vat_on_amount', ['amount' => number_format($amount)]) . ' — ' . __('ui.top_calc.page_title')"
-        :description="__('ui.top_calc.amount_page_desc', ['rate' => '', 'amount' => number_format($amount)])"
+        :description="$amountDescription"
         type="website"
     />
 @endsection

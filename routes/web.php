@@ -7,11 +7,14 @@ use App\Http\Controllers\LlmsController;
 use App\Http\Controllers\RedirectController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\VatChangeSubscriptionController;
+use App\Http\Controllers\VatDatasetDownloadController;
 use App\Http\Controllers\WellKnownController;
 use App\Livewire\BlogIndex;
 use App\Livewire\BlogShow;
 use App\Livewire\Changelog;
 use App\Livewire\ChromeExtension;
+use App\Livewire\CountryVatCategory;
+use App\Livewire\CountryVatHistory;
 use App\Livewire\Donate;
 use App\Livewire\Home;
 use App\Livewire\HtmlSitemap;
@@ -20,7 +23,14 @@ use App\Livewire\PrivacyPolicy;
 use App\Livewire\SharedCalculation;
 use App\Livewire\Tools;
 use App\Livewire\VatCalculator;
+use App\Livewire\VatCategoryHub;
+use App\Livewire\VatCategoryIndex;
+use App\Livewire\VatChangeEvent;
+use App\Livewire\VatChangesArchive;
+use App\Livewire\VatComparison;
+use App\Livewire\VatDataset;
 use App\Livewire\VatMap;
+use App\Livewire\VatScenarioGuide;
 use App\Livewire\VatValidationApiDocs;
 use App\Livewire\ViesValidatorPage;
 use Illuminate\Support\Facades\Route;
@@ -68,12 +78,38 @@ $registerRoutes = function () {
         ->where('amount', '100|200|500|1000|2500|5000|10000')
         ->name('top-calculations.amount');
     Route::get('/vat-changes', \App\Livewire\VatChangesHistory::class)->name('vat-changes');
+    Route::get('/vat-changes/upcoming', VatChangesArchive::class)
+        ->defaults('archiveType', 'upcoming')
+        ->name('vat-changes.upcoming');
+    Route::get('/vat-changes/year/{year}', VatChangesArchive::class)
+        ->whereNumber('year')
+        ->name('vat-changes.year');
+    Route::get('/vat-changes/{slug}/{rateType}/{date}', VatChangeEvent::class)
+        ->where('rateType', 'standard|reduced|super_reduced|parking|zero')
+        ->where('date', '\\d{4}-\\d{2}-\\d{2}')
+        ->name('vat-changes.event');
+    Route::get('/vat-rates/categories', VatCategoryIndex::class)->name('vat-rates.categories');
+    Route::get('/vat-rates/categories/{category}', VatCategoryHub::class)
+        ->where('category', '[a-z0-9-]+')
+        ->name('vat-rates.category');
+    Route::get('/vat-rates/{slug}/history', CountryVatHistory::class)->name('vat-rates.country-history');
+    Route::get('/vat-rates/{country}/categories/{category}', CountryVatCategory::class)
+        ->where(['country' => '[a-z0-9-]+', 'category' => '[a-z0-9-]+'])
+        ->name('vat-rates.country-category');
+    Route::get('/compare/{pair}-vat', VatComparison::class)
+        ->where('pair', '[a-z0-9-]+-vs-[a-z0-9-]+')
+        ->middleware(\App\Http\Middleware\CanonicalizeVatComparison::class)
+        ->name('vat-comparison');
+    Route::get('/vat-guides/{scenario}', VatScenarioGuide::class)
+        ->where('scenario', '[a-z0-9-]+')
+        ->name('vat-scenario-guide');
     Route::get('/changelog', Changelog::class)->name('changelog');
     Route::get('/mcp-server', McpServer::class)->name('mcp-server');
     Route::get('/chrome-extension', ChromeExtension::class)->name('chrome-extension');
     Route::get('/donate', Donate::class)->name('donate');
     Route::get('/privacy', PrivacyPolicy::class)->name('privacy');
     Route::get('/sitemap', HtmlSitemap::class)->name('html-sitemap');
+    Route::get('/datasets/eu-vat-rates', VatDataset::class)->name('vat-dataset');
 };
 
 // Locale-prefixed routes for non-default languages (registered FIRST)
@@ -102,6 +138,11 @@ Route::get('/vat-change-alerts/unsubscribe/{subscription}', [VatChangeSubscripti
 // Non-localised routes (sitemap, embed, API, etc.)
 Route::get('/sitemap/generate', [SitemapController::class, 'index'])->name('sitemap.generate');
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
+Route::get('/datasets/eu-vat-rates.csv', [VatDatasetDownloadController::class, 'csv'])->name('vat-dataset.csv');
+Route::get('/datasets/eu-vat-rates.json', [VatDatasetDownloadController::class, 'json'])->name('vat-dataset.json');
+Route::get('/sitemaps/{section}.xml', [SitemapController::class, 'section'])
+    ->where('section', 'core|countries|validators|changes|categories|editorial')
+    ->name('sitemap.section');
 
 // RFC 9727 — API Catalog
 Route::get('/.well-known/api-catalog', [WellKnownController::class, 'apiCatalog'])->name('api-catalog');
@@ -149,8 +190,17 @@ Route::middleware(\App\Http\Middleware\AllowEmbedding::class)->group(function ()
     Route::get('/embed/preview/{country?}', [EmbedController::class, 'preview'])->name('widget.preview');
 });
 
-// LLM-optimised full VAT rates table
+// LLM-optimised site map and full VAT rates table
+Route::get('/llms.txt', [LlmsController::class, 'index']);
 Route::get('/llms-full.txt', [LlmsController::class, 'fullTxt']);
+
+Route::get('/indexnow-key.txt', function () {
+    abort_unless(config('seo.indexnow.enabled') && config('seo.indexnow.key'), 404);
+
+    return response((string) config('seo.indexnow.key'))
+        ->header('Content-Type', 'text/plain; charset=UTF-8')
+        ->header('Cache-Control', 'public, max-age=86400');
+})->name('indexnow.key');
 
 // Bazaar-compatible x402 resource discovery (scanner probes this path)
 Route::get('/platform/v2/x402/discovery/resources', [\App\Http\Controllers\Api\X402Controller::class, 'discoveryResources']);

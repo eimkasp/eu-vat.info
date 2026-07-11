@@ -9,7 +9,35 @@ export default {
 		"./vendor/robsontenorio/mary/src/View/Components/**/*.php"
 	],
 	theme: {
-		extend: {},
+		extend: {
+			colors: {
+				brand: {
+					DEFAULT: '#003399',
+					deep: '#002B7A',
+					soft: '#E8EDFA',
+				},
+				action: {
+					DEFAULT: '#2563EB',
+					deep: '#1D4ED8',
+					soft: '#EFF4FF',
+				},
+				ink: {
+					DEFAULT: '#172033',
+					muted: '#536176',
+					quiet: '#65758B',
+				},
+				workspace: '#F4F7FB',
+				'surface-subtle': '#EEF3F8',
+				line: '#D8E0EA',
+			},
+			fontFamily: {
+				sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+			},
+			boxShadow: {
+				workflow: '0 4px 8px rgba(23, 32, 51, 0.10)',
+				floating: '0 8px 16px rgba(23, 32, 51, 0.14)',
+			},
+		},
 	},
 	plugins: [
 		require("daisyui")
@@ -19,14 +47,14 @@ export default {
 			{
 				mytheme: {
 					"primary": "#003399",
-					"secondary": "#0EA5E9",
+					"secondary": "#2563EB",
 					"accent": "#F59E0B",
-					"neutral": "#374151",
+					"neutral": "#172033",
 					"base-100": "#ffffff",
-					"info": "#3b82f6",
-					"success": "#10B981",
-					"warning": "#F59E0B",
-					"error": "#EF4444",
+					"info": "#2563EB",
+					"success": "#067647",
+					"warning": "#B54708",
+					"error": "#B42318",
 				},
 			},
 		],

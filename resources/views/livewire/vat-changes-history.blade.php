@@ -1,17 +1,23 @@
+@php
+    $historyCanonical = app(\App\Support\Seo\SeoPolicy::class)->canonicalHost().locale_path('/vat-changes');
+    $historyRobots = request()->query() ? 'noindex, follow' : null;
+@endphp
+
 @section('title', __('ui.history.meta_title'))
 @section('meta_description', __('ui.history.meta_desc'))
 @section('seo')
     <x-seo-meta 
         :title="__('ui.history.meta_title')"
         :description="__('ui.history.meta_desc')"
-        :url="url(locale_path('/vat-changes'))">
+        :url="$historyCanonical"
+        :robots="$historyRobots">
         <script type="application/ld+json">
         {
             "@context": "https://schema.org",
             "@type": "WebPage",
             "name": "{{ __('ui.history.meta_title') }}",
             "description": "{{ __('ui.history.meta_desc') }}",
-            "url": "{{ url(locale_path('/vat-changes')) }}",
+            "url": "{{ $historyCanonical }}",
             "inLanguage": "{{ app()->getLocale() }}",
             "isPartOf": {
                 "@type": "WebSite",
@@ -37,29 +43,23 @@
             }
         }
         </script>
-        <script type="application/ld+json">
-        {
-            "@context": "https://schema.org",
-            "@type": "Dataset",
-            "name": "EU VAT Rate Changes 2000–{{ now()->year }}",
-            "description": "{{ __('ui.history.meta_desc') }}",
-            "url": "{{ url(locale_path('/vat-changes')) }}",
-            "creator": {
-                "@type": "Organization",
-                "name": "{{ __('ui.site_name') }}",
-                "url": "{{ url('/') }}"
-            },
-            "dateModified": "{{ now()->toIso8601String() }}",
-            "license": "https://creativecommons.org/licenses/by/4.0/",
-            "keywords": ["VAT rate changes", "EU VAT history", "European VAT rates", "tax rate changes"],
-            "spatialCoverage": "European Union",
-            "temporalCoverage": "2000/{{ now()->year }}",
-            "variableMeasured": [
-                {"@type": "PropertyValue", "name": "Standard VAT Rate", "unitText": "percent"},
-                {"@type": "PropertyValue", "name": "Reduced VAT Rate", "unitText": "percent"}
-            ]
-        }
-        </script>
+        <script type="application/ld+json">{!! json_encode([
+            '@context' => 'https://schema.org',
+            '@type' => 'Dataset',
+            'name' => 'EU VAT Rate Changes 2000–'.now()->year,
+            'description' => __('ui.history.meta_desc'),
+            'url' => $historyCanonical,
+            'creator' => ['@type' => 'Organization', 'name' => __('ui.site_name'), 'url' => app(\App\Support\Seo\SeoPolicy::class)->canonicalHost()],
+            'dateModified' => $datasetModified?->toIso8601String(),
+            'license' => 'https://creativecommons.org/licenses/by/4.0/',
+            'keywords' => ['VAT rate changes', 'EU VAT history', 'European VAT rates', 'tax rate changes'],
+            'spatialCoverage' => 'European Union',
+            'temporalCoverage' => '2000/'.now()->year,
+            'variableMeasured' => [
+                ['@type' => 'PropertyValue', 'name' => 'Standard VAT Rate', 'unitText' => 'percent'],
+                ['@type' => 'PropertyValue', 'name' => 'Reduced VAT Rate', 'unitText' => 'percent'],
+            ],
+        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
     </x-seo-meta>
 @endsection
 

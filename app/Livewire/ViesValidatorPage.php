@@ -26,6 +26,8 @@ class ViesValidatorPage extends Component
 
     public $validationCount = 0;
 
+    public array $vatFormat = [];
+
     /**
      * EU country ISO code prefixes used in VAT numbers.
      * Greece uses 'EL' in VAT numbers instead of 'GR'.
@@ -47,10 +49,14 @@ class ViesValidatorPage extends Component
             }
         }
 
+        $this->loadVatFormat();
+
         // Auto-detect country from vat_number prefix
-        if (!$this->country_code && $this->vat_number) {
+        if (! $this->country_code && $this->vat_number) {
             $this->detectCountryFromVatNumber();
         }
+
+        $this->loadVatFormat();
 
         // Strip country prefix from vat_number if present
         $this->stripCountryPrefix();
@@ -64,7 +70,18 @@ class ViesValidatorPage extends Component
     public function updatedVatNumber()
     {
         $this->detectCountryFromVatNumber();
+        $this->loadVatFormat();
         $this->stripCountryPrefix();
+    }
+
+    public function updatedCountryCode(): void
+    {
+        $this->loadVatFormat();
+    }
+
+    private function loadVatFormat(): void
+    {
+        $this->vatFormat = config('vat-number-formats.'.strtoupper((string) $this->country_code), []);
     }
 
     private function detectCountryFromVatNumber(): void
@@ -112,6 +129,7 @@ class ViesValidatorPage extends Component
 
             if (isset($data['error'])) {
                 $this->error = $data['error'];
+
                 return;
             }
 
@@ -142,7 +160,7 @@ class ViesValidatorPage extends Component
                 ->count();
 
         } catch (\Exception $e) {
-            $this->error = 'Error connecting to VIES service: ' . $e->getMessage();
+            $this->error = 'Error connecting to VIES service: '.$e->getMessage();
         }
     }
 

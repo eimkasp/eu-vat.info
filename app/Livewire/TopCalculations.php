@@ -16,6 +16,7 @@ class TopCalculations extends Component
     {
         $this->countries = Cache::remember('top_calculations_countries', 3600, function () {
             return Country::orderBy('name')
+                ->where('is_eu_member', true)
                 ->get(['id', 'name', 'slug', 'iso_code', 'standard_rate', 'reduced_rate', 'currency_symbol', 'currency_code'])
                 ->toArray();
         });

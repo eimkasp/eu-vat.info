@@ -3,8 +3,16 @@
     'description' => 'Calculate VAT for all EU countries. Current rates, historical data, and VAT compliance tools. Free calculator with real-time rates.',
     'url' => url()->current(),
     'image' => url('/images/og-default.png'),
-    'type' => 'website'
+    'type' => 'website',
+    'robots' => null,
 ])
+
+@php
+    $seoPolicy = app(\App\Support\Seo\SeoPolicy::class);
+    $resolvedRobots = $robots ?? $seoPolicy->robotsForCurrentLocale();
+    $resolvedUrl = $seoPolicy->canonicalizeLocalUrl($url);
+    $resolvedImage = $seoPolicy->canonicalizeLocalUrl($image);
+@endphp
 
 <!-- Primary Meta Tags -->
 <title>{{ $title }}</title>
@@ -13,22 +21,22 @@
 
 <!-- Open Graph / Facebook -->
 <meta property="og:type" content="{{ $type }}">
-<meta property="og:url" content="{{ $url }}">
+<meta property="og:url" content="{{ $resolvedUrl }}">
 <meta property="og:title" content="{{ $title }}">
 <meta property="og:description" content="{{ $description }}">
-<meta property="og:image" content="{{ $image }}">
+<meta property="og:image" content="{{ $resolvedImage }}">
 <meta property="og:site_name" content="EU VAT Info">
 
 <!-- Twitter -->
 <meta property="twitter:card" content="summary_large_image">
-<meta property="twitter:url" content="{{ $url }}">
+<meta property="twitter:url" content="{{ $resolvedUrl }}">
 <meta property="twitter:title" content="{{ $title }}">
 <meta property="twitter:description" content="{{ $description }}">
-<meta property="twitter:image" content="{{ $image }}">
+<meta property="twitter:image" content="{{ $resolvedImage }}">
 
 <!-- Additional SEO -->
-<link rel="canonical" href="{{ $url }}">
-<meta name="robots" content="index, follow">
-<meta name="googlebot" content="index, follow">
+<link rel="canonical" href="{{ $resolvedUrl }}">
+<meta name="robots" content="{{ $resolvedRobots }}">
+<meta name="googlebot" content="{{ $resolvedRobots }}">
 
 {{ $slot }}

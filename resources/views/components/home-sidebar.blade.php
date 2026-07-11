@@ -1,5 +1,5 @@
 {{-- Sidebar: VAT changes, banners, links, recent countries, map --}}
-<div class="space-y-6">
+<aside class="space-y-5" aria-label="VAT updates and resources">
     <!-- VAT Rate Changes Widget -->
     <livewire:vat-rate-changes />
 
@@ -10,10 +10,10 @@
     <x-useful-vat-links />
 
     <!-- Recent Countries & Map -->
-    <div>
+    <div class="space-y-5">
         <livewire:recent-countries />
-        <div class="bg-white p-6 shadow-xl rounded-xl">
+        <div class="app-surface p-4 sm:p-5">
             <livewire:europe-map />
         </div>
     </div>
-</div>
+</aside>

@@ -1,0 +1,117 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-07-11T10:50:03Z",
+  "title": "Design System: EU VAT Info",
+  "extensions": {
+    "colorMeta": {
+      "institutional-blue": {
+        "role": "primary",
+        "displayName": "Institutional Blue",
+        "canonical": "#003399",
+        "tonalRamp": ["#00112F", "#001D52", "#002B7A", "#003399", "#1A4DB3", "#5577C8", "#9AACE2", "#E8EDFA"]
+      },
+      "action-blue": {
+        "role": "primary",
+        "displayName": "Action Blue",
+        "canonical": "#2563EB",
+        "tonalRamp": ["#10245A", "#15357E", "#1D4ED8", "#2563EB", "#4B7DF0", "#87A7F6", "#C4D3FB", "#EFF4FF"]
+      },
+      "reference-ink": {
+        "role": "neutral",
+        "displayName": "Reference Ink",
+        "canonical": "#172033",
+        "tonalRamp": ["#0C111C", "#172033", "#2E3A50", "#536176", "#7B8799", "#AAB3C0", "#D8DEE7", "#F4F6F9"]
+      },
+      "workspace": {
+        "role": "neutral",
+        "displayName": "Workspace",
+        "canonical": "#F4F7FB",
+        "tonalRamp": ["#172033", "#334155", "#536176", "#718096", "#A8B4C3", "#D8E0EA", "#EEF3F8", "#F4F7FB"]
+      }
+    },
+    "typographyMeta": {
+      "display": {"displayName": "Display", "purpose": "Homepage and major tool titles only."},
+      "body": {"displayName": "Body", "purpose": "Product guidance, labels, and multilingual content."},
+      "label": {"displayName": "Label", "purpose": "Compact control and data descriptors."}
+    },
+    "shadows": [
+      {"name": "focused-workflow", "value": "0 4px 8px rgba(23, 32, 51, 0.10)", "purpose": "Primary calculator surface only."},
+      {"name": "floating-menu", "value": "0 8px 16px rgba(23, 32, 51, 0.14)", "purpose": "Dropdowns and popovers."}
+    ],
+    "motion": [
+      {"name": "state-fast", "value": "150ms cubic-bezier(0.25, 1, 0.5, 1)", "purpose": "Hover, active, and selection feedback."},
+      {"name": "state-standard", "value": "220ms cubic-bezier(0.22, 1, 0.36, 1)", "purpose": "Menus and results state changes."}
+    ],
+    "breakpoints": [
+      {"name": "sm", "value": "640px"},
+      {"name": "md", "value": "768px"},
+      {"name": "lg", "value": "1024px"}
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The single strongest action in a task region.",
+      "html": "<button class=\"ds-btn-primary\">Calculate VAT</button>",
+      "css": ".ds-btn-primary{min-height:44px;background:#2563EB;color:#fff;border:0;border-radius:8px;padding:12px 20px;font:700 15px/1.2 Inter,system-ui,sans-serif;transition:background 150ms cubic-bezier(.25,1,.5,1),transform 150ms cubic-bezier(.25,1,.5,1)}.ds-btn-primary:hover{background:#1D4ED8}.ds-btn-primary:active{transform:translateY(1px)}.ds-btn-primary:focus-visible{outline:2px solid #2563EB;outline-offset:2px}"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "A bordered action that supports but does not compete with the primary action.",
+      "html": "<button class=\"ds-btn-secondary\">View details</button>",
+      "css": ".ds-btn-secondary{min-height:44px;background:#fff;color:#172033;border:1px solid #D8E0EA;border-radius:8px;padding:12px 20px;font:650 15px/1.2 Inter,system-ui,sans-serif;transition:background 150ms cubic-bezier(.25,1,.5,1),border-color 150ms cubic-bezier(.25,1,.5,1)}.ds-btn-secondary:hover{background:#EEF3F8;border-color:#A8B4C3}.ds-btn-secondary:focus-visible{outline:2px solid #2563EB;outline-offset:2px}"
+    },
+    {
+      "name": "Reference Field",
+      "kind": "input",
+      "refersTo": "field",
+      "description": "A legible field for amounts, search, and country selection.",
+      "html": "<label class=\"ds-label\">Amount excluding VAT<input class=\"ds-field\" value=\"100.00\"></label>",
+      "css": ".ds-label{display:grid;gap:6px;color:#536176;font:650 13px/1.35 Inter,system-ui,sans-serif}.ds-field{min-height:44px;background:#fff;color:#172033;border:1px solid #D8E0EA;border-radius:8px;padding:12px 14px;font:650 16px/1.2 Inter,system-ui,sans-serif}.ds-field:hover{border-color:#A8B4C3}.ds-field:focus-visible{outline:2px solid #2563EB;outline-offset:2px;border-color:#2563EB}"
+    },
+    {
+      "name": "Rate Chip",
+      "kind": "chip",
+      "description": "A compact rate selector with explicit selected state.",
+      "html": "<button class=\"ds-rate-chip\"><span>Standard</span><strong>19%</strong></button>",
+      "css": ".ds-rate-chip{min-height:44px;display:inline-flex;align-items:center;gap:6px;background:#EFF4FF;color:#1D4ED8;border:1px solid #87A7F6;border-radius:8px;padding:8px 12px;font:600 13px/1.2 Inter,system-ui,sans-serif}.ds-rate-chip strong{font-size:15px}.ds-rate-chip:hover{background:#E1EAFF}.ds-rate-chip:focus-visible{outline:2px solid #2563EB;outline-offset:2px}"
+    },
+    {
+      "name": "Data Surface",
+      "kind": "card",
+      "refersTo": "data-surface",
+      "description": "A flat, structured container for tables, results, and reference panels.",
+      "html": "<section class=\"ds-data-surface\"><h3>EU VAT rates</h3><p>Current standard and reduced rates.</p></section>",
+      "css": ".ds-data-surface{background:#fff;color:#172033;border:1px solid #D8E0EA;border-radius:12px;padding:24px;font-family:Inter,system-ui,sans-serif}.ds-data-surface h3{margin:0 0 8px;font-size:18px;line-height:1.35}.ds-data-surface p{margin:0;color:#536176;font-size:15px;line-height:1.6}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Reference Desk",
+    "overview": "EU VAT Info should feel like a well-organized professional desk: the current answer is immediately visible, supporting evidence is close at hand, and deeper material is available without crowding the primary task. The system is restrained, data-forward, and familiar.",
+    "keyCharacteristics": [
+      "Task-first composition with compact, predictable controls.",
+      "Strong alignment for monetary values, percentages, dates, and rankings.",
+      "Flat surfaces separated by tone and fine borders rather than diffuse decoration.",
+      "Mobile layouts preserve the calculation result and primary action without overlaying content."
+    ],
+    "rules": [
+      {"name": "The Action Ration Rule", "body": "Action blue is used for primary actions, current selection, links, and focus—not as ambient decoration.", "section": "colors"},
+      {"name": "The Working Scale Rule", "body": "Product typography uses fixed rem sizes and a compact ratio; fluid display type and oversized dashboard headings are prohibited.", "section": "typography"},
+      {"name": "The Flat-by-Default Rule", "body": "If a border and tonal surface can explain the hierarchy, no shadow is added.", "section": "elevation"}
+    ],
+    "dos": [
+      "Do preserve Institutional Blue for the global identity and Action Blue for user action.",
+      "Do align currency values and percentages with tabular numerals.",
+      "Do keep primary touch targets at least 44px tall."
+    ],
+    "donts": [
+      "Don't use generic SaaS styling: excessive gradients, oversized decorative cards, vanity metrics, glass effects, or flashy motion.",
+      "Don't pair a one-pixel border with a wide diffuse shadow on the same surface.",
+      "Don't place fixed mobile navigation over results without reserving content space."
+    ]
+  }
+}

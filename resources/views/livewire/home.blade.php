@@ -65,69 +65,48 @@
 
 @push('head')
     <link rel="amphtml" href="{{ url('/amp') }}">
-    <link rel="preload" as="image" type="image/webp" imagesrcset="/images/eu-vat-calculator-background-sm.webp 640w, /images/eu-vat-calculator-background-md.webp 1280w, /images/eu-vat-calculator-background-lg.webp 2000w" imagesizes="100vw" fetchpriority="high">
+    <link rel="preload" as="image" href="/images/eu-vat-calculator-background.jpg" fetchpriority="high">
 @endpush
 
-<div class="relative">
-    {{-- Full-screen Background Image with Parallax --}}
-    <div class="absolute inset-0 z-0 overflow-hidden">
-        <div class="absolute inset-0 will-change-transform" style="transform: translateZ(0)"
-             x-data="{ y: 0, motionOk: !window.matchMedia('(prefers-reduced-motion: reduce)').matches }"
-             x-init="if (motionOk) window.addEventListener('scroll', () => { y = window.scrollY }, { passive: true })"
-             :style="motionOk ? 'transform: translate3d(0, ' + (y * 0.4) + 'px, 0)' : ''"
+<div class="bg-workspace">
+    <section class="relative overflow-hidden bg-brand" aria-labelledby="home-heading">
+        <img
+            src="/images/eu-vat-calculator-background.jpg"
+            alt=""
+            aria-hidden="true"
+            class="absolute inset-0 h-full w-full object-cover object-center opacity-20"
+            loading="eager"
+            fetchpriority="high"
+            decoding="async"
+            width="2000"
+            height="1116"
         >
-            <picture>
-                <source
-                    type="image/webp"
-                    srcset="/images/eu-vat-calculator-background-sm.webp 640w,
-                            /images/eu-vat-calculator-background-md.webp 1280w,
-                            /images/eu-vat-calculator-background-lg.webp 2000w"
-                    sizes="100vw"
-                >
-                <img
-                    src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABsSFBcUERsXFhceHBsgKEIrKCUlKFE6PTBCYFVlZF9VXVtqeJmBanGQc1tdhbWGkJ6jq62rZ4C8ybqmx5moq6T/2wBDARweHigjKE4rK06kbl1upKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKT/wAARCAAWACgDAREAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAECAwX/xAAfEAACAQMFAQAAAAAAAAAAAAAAAgERExQDBBJBUTH/xAAXAQEBAQEAAAAAAAAAAAAAAAAAAQID/8QAFxEBAQEBAAAAAAAAAAAAAAAAABESAf/aAAwDAQACEQMRAD8A60qvp0rnENCFqRnxSey1ILKz2XSZKwo0ZTDNUw2T8pgDGYePlS1IqupTsimtwlXnHVx1M1qDHUUhY6eCkE7dRQLt1A//2Q=="
-                    srcset="/images/eu-vat-calculator-background-sm.jpg 640w,
-                            /images/eu-vat-calculator-background-md.jpg 1280w,
-                            /images/eu-vat-calculator-background-lg.jpg 2000w"
-                    sizes="100vw"
-                    alt="EU VAT Calculator"
-                    class="w-full h-[120vh] object-cover opacity-0 transition-opacity duration-700 ease-in"
-                    onload="this.classList.remove('opacity-0')"
-                    loading="eager"
-                    fetchpriority="high"
-                    decoding="async"
-                    width="2000"
-                    height="1116"
-                >
-            </picture>
-        </div>
-        <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/70 to-black/50"></div>
-    </div>
+        <div class="absolute inset-0 bg-[#102a43]/80"></div>
 
-    <div class="relative z-10 mx-auto max-w-7xl px-4 py-6 sm:py-12">
-        {{-- Hero Section: Headline + Calculator --}}
-        <div class="mb-12 sm:mb-16 py-6 sm:py-10">
-            <div class="text-center mb-6 sm:mb-8">
-                <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight mb-3">
-                    <span class="text-white [text-shadow:_0_2px_8px_rgba(0,0,0,0.4)]">{{ __('ui.home_page.heading') }}</span>
-                    <span class="text-blue-300 [text-shadow:_0_2px_8px_rgba(0,0,0,0.4)]">{{ __('ui.home_page.heading_accent') }}</span>
+        <div class="relative mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14 lg:py-16">
+            <div class="mx-auto mb-7 max-w-3xl text-center sm:mb-8">
+                <h1 id="home-heading" class="mb-3 text-3xl font-bold leading-tight tracking-[-0.03em] text-white sm:text-4xl">
+                    {{ __('ui.home_page.heading') }}
+                    <span class="text-blue-200">{{ __('ui.home_page.heading_accent') }}</span>
                 </h1>
-                <p class="text-base sm:text-lg text-white/90 max-w-2xl mx-auto leading-relaxed [text-shadow:_0_1px_4px_rgba(0,0,0,0.3)]">
+                <p class="mx-auto max-w-[68ch] text-base leading-7 text-blue-50 sm:text-lg">
                     {{ __('ui.home_page.subtitle') }}
                 </p>
             </div>
+
             <livewire:hero-calculator :show-header="false" />
         </div>
+    </section>
 
-        {{-- Country Table + Sidebar --}}
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-12">
-            <div class="md:col-span-7">
+    <section class="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14" aria-label="EU VAT reference data">
+        <div class="grid grid-cols-1 items-start gap-8 lg:grid-cols-12">
+            <div class="lg:col-span-8">
                 <x-country-rates-table :countries="$euCountries" :search="$search" />
             </div>
 
-            <div class="md:col-span-5">
+            <div class="lg:col-span-4">
                 <x-home-sidebar />
             </div>
         </div>
-    </div>
+    </section>
 </div>
