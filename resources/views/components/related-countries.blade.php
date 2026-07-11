@@ -11,7 +11,7 @@
 @endonce
 
 @php
-    $relatedCountries = app(\App\Services\Seo\InternalLinkService::class)->relatedCountries($country, 6);
+    $relatedCountries = app(\App\Services\Seo\InternalLinkService::class)->relatedCalculatorCountries($country, 6);
 @endphp
 
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">

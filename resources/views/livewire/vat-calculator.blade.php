@@ -44,7 +44,7 @@
                 'name' => __('ui.calculator.schema_app_name', ['country' => $selectedCountryObject->name]),
                 'applicationCategory' => 'FinanceApplication',
                 'operatingSystem' => 'All',
-                'offers' => ['@type' => 'Offer', 'price' => '0', 'priceCurrency' => 'EUR'],
+                'offers' => ['@type' => 'Offer', 'price' => '0', 'priceCurrency' => $selectedCountryObject->currency_code],
                 'featureList' => 'VAT calculation, Add VAT, Remove VAT, Multiple rate types',
                 'about' => [
                     '@type' => 'Country',
@@ -124,6 +124,11 @@
                         {{ __('ui.calculator.generic_subtitle') }}
                     @endisset
                 </p>
+                @isset($selectedCountryObject)
+                    <p class="mt-3 text-xs font-semibold uppercase tracking-[0.18em] text-blue-100">
+                        {{ $selectedCountryObject->is_eu_member ? __('ui.calculator.scope.eu') : __('ui.calculator.scope.other_europe') }}
+                    </p>
+                @endisset
             </div>
 
             {{-- Calculator Widget --}}
@@ -227,6 +232,7 @@
                         </div>
                     </section>
 
+                    @if($selectedCountryObject->vies_available)
                     {{-- Validate VAT Number CTA --}}
                     <a href="{{ locale_path('/vat-number-validator/' . $selectedCountryObject->slug) }}"
                        class="block bg-gradient-to-r from-indigo-50 to-blue-50 rounded-xl border border-indigo-200 p-5 hover:border-indigo-300 hover:shadow-sm transition-all group">
@@ -241,7 +247,9 @@
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-indigo-400 group-hover:translate-x-0.5 transition-transform shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" /></svg>
                         </div>
                     </a>
+                    @endif
 
+                    @if($selectedCountryObject->is_eu_member)
                     {{-- VAT Guide --}}
                     <section id="guide">
                         <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
@@ -339,8 +347,10 @@
                         </script>
                         @endpush
                     </section>
+                    @endif
 
                     {{-- Quick links --}}
+                    @if($selectedCountryObject->is_eu_member)
                     <section>
                         <div class="flex flex-wrap gap-3">
                             @if($selectedCountryObject->hasVatHistory())
@@ -385,12 +395,15 @@
                             </div>
                         @endif
                     </section>
+                    @endif
                 @endisset
 
                 {{-- Map --}}
+                @if(!isset($selectedCountryObject) || $selectedCountryObject->is_eu_member)
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                     <livewire:europe-map :activeCountry="$selectedCountryObject" />
                 </div>
+                @endif
 
                 @isset($selectedCountryObject)
                     {{-- Related Countries --}}
@@ -409,7 +422,9 @@
             {{-- ── Sidebar ── --}}
             <div class="lg:col-span-5 space-y-6">
                 @isset($selectedCountryObject)
+                    @if($selectedCountryObject->is_eu_member)
                     <x-country.sidebar :country="$selectedCountryObject" />
+                    @endif
                 @endisset
                 <x-saved-searches />
                 <x-country-calculator-list />

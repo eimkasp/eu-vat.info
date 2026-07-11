@@ -35,7 +35,7 @@ class AmpController extends Controller
 
     public function country(string $slug)
     {
-        $country = Country::where('slug', $slug)->firstOrFail();
+        $country = Country::calculatorAvailable()->where('slug', $slug)->firstOrFail();
         $vatRates = $country->vatRates()->orderBy('effective_from', 'desc')->get();
 
         return response()

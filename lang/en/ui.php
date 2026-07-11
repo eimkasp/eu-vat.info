@@ -125,6 +125,7 @@ return [
         'remove_vat_mode' => 'Remove VAT',
         'realtime_rates' => 'Real-time rates',
         'official_eu_data' => 'Official EU data',
+        'maintained_rate_data' => 'Maintained VAT rate data',
         'country_label' => 'Country',
         'amount_incl_vat' => 'Amount (incl. VAT)',
         'amount_excl_vat' => 'Amount (excl. VAT)',
@@ -134,6 +135,10 @@ return [
         'groups' => [
             'eu' => 'European Union',
             'other_europe' => 'Other European countries',
+        ],
+        'scope' => [
+            'eu' => 'EU member',
+            'other_europe' => 'Other European country',
         ],
         'calculate_btn' => 'Calculate',
         'rate_label' => 'Rate',

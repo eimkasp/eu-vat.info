@@ -153,8 +153,16 @@ class SitemapGenerator
 
     protected function countryRecords(string $prefix): Collection
     {
-        return Country::query()
-            ->where('is_eu_member', true)
+        $query = Country::query();
+
+        if ($prefix === '/vat-calculator') {
+            $query->calculatorAvailable();
+        } else {
+            $query->where('is_eu_member', true)
+                ->where('vies_available', true);
+        }
+
+        return $query
             ->orderBy('slug')
             ->get()
             ->map(fn (Country $country) => [
