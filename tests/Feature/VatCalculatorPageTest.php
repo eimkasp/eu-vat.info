@@ -176,15 +176,28 @@ it('displays schema.org json-ld on country page', function () {
 it('renders country calculators as a compact reference workspace', function () {
     $response = $this->get('/vat-calculator/germany')
         ->assertOk()
+        ->assertSee('data-country-atmosphere', false)
         ->assertSee('data-country-header', false)
+        ->assertSee('eu-vat-calculator-background-sm.webp', false)
+        ->assertSee('eu-vat-calculator-background-md.webp', false)
+        ->assertSee('eu-vat-calculator-background-lg.webp', false)
+        ->assertSee('data-atmosphere-media', false)
+        ->assertSee('data-calculator-surface="country-image"', false)
         ->assertSee('data-country-reference', false)
         ->assertSee('Germany VAT Guide')
-        ->assertDontSee('eu-vat-calculator-background')
         ->assertDontSee('Full Calculator');
 
     $html = $response->getContent();
 
-    expect(strpos($html, 'data-country-header'))
+    expect($html)
+        ->toContain('data-country-atmosphere class="relative isolate bg-[#0b2f4f]"')
+        ->toContain('data-atmosphere-media class="pointer-events-none absolute inset-0 -z-10 overflow-hidden"')
+        ->not->toContain('data-country-atmosphere class="relative isolate overflow-hidden')
+        ->not->toContain('imagesrcset=')
+        ->toContain('href="/images/eu-vat-calculator-background-sm.webp" media="(max-width: 639px)"')
+        ->toContain('href="/images/eu-vat-calculator-background-md.webp" media="(min-width: 640px) and (max-width: 1023px)"')
+        ->toContain('href="/images/eu-vat-calculator-background-lg.webp" media="(min-width: 1024px)"')
+        ->and(strpos($html, 'data-country-header'))
         ->toBeLessThan(strpos($html, 'id="hero-calculator"'))
         ->and(strpos($html, 'id="hero-calculator"'))
         ->toBeLessThan(strpos($html, 'data-country-reference'));
