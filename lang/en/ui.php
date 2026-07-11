@@ -132,6 +132,7 @@ return [
         'select_country' => 'Select country',
         'search_countries' => 'Search countries...',
         'no_countries_found' => 'No countries found',
+        'browse_all_country_calculators' => 'Browse all country calculators',
         'groups' => [
             'eu' => 'European Union',
             'other_europe' => 'Other European countries',

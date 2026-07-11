@@ -17,7 +17,7 @@
                     </span>
                 </div>
 
-                <h1 class="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">{{ $country->name }} VAT Calculator</h1>
+                <h1 class="mt-3 text-3xl font-bold tracking-tight text-white sm:text-4xl">{{ $country->name }} VAT Calculator</h1>
                 <p class="mt-2 max-w-2xl text-sm leading-6 text-blue-100 sm:text-base">
                     {{ __('ui.calculator.country_subtitle', ['country' => $country->name, 'rate' => $country->standard_rate]) }}
                 </p>

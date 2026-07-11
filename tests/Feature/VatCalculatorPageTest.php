@@ -189,3 +189,32 @@ it('renders country calculators as a compact reference workspace', function () {
         ->and(strpos($html, 'id="hero-calculator"'))
         ->toBeLessThan(strpos($html, 'data-country-reference'));
 });
+
+it('renders a grouped country directory without a horizontal carousel', function () {
+    config()->set('calculator.additional_country_slugs', ['norway']);
+    cache()->forget('calculator_country_directory_v2');
+
+    Country::factory()->create([
+        'name' => 'Norway',
+        'slug' => 'norway',
+        'iso_code' => 'NO',
+        'standard_rate' => 25,
+        'is_eu_member' => false,
+    ]);
+
+    $this->get('/vat-calculator/germany')
+        ->assertOk()
+        ->assertSee('data-country-directory', false)
+        ->assertSee('Browse all country calculators')
+        ->assertSee('European Union')
+        ->assertSee('Other European countries')
+        ->assertDontSee('snap-x')
+        ->assertDontSee('overflow-x-auto');
+});
+
+it('reserves mobile navigation clearance for calculator results', function () {
+    $this->get('/vat-calculator/germany')
+        ->assertOk()
+        ->assertSee('mobile-nav-safe', false)
+        ->assertSee('id="hero-calculator" class="scroll-mb-24', false);
+});

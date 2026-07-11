@@ -1,36 +1,39 @@
-<div class="relative">
-    <h3 class="mb-6 font-bold text-xl">VAT Calculators by Country</h3>
-    
-    <div class="flex overflow-x-auto pb-6 gap-4 snap-x scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0">
-        @foreach ($countries->flatten(1) as $country)
-            <a href="{{ route('vat-calculator.country', $country->slug) }}" 
-              
-               class="flex-none w-64 bg-white p-4 rounded-xl shadow-md border border-gray-100 hover:shadow-lg transition-all hover:-translate-y-1 snap-start group">
-               <div class="flex items-center gap-3 mb-3 pb-3 border-b border-gray-50">
-                   <img src="https://flagcdn.com/h40/{{ strtolower($country->iso_code) }}.jpg" 
-                        alt="{{ $country->name }}" 
-                        class="w-8 h-auto rounded shadow-sm">
-                   <h4 class="font-bold text-gray-900 group-hover:text-blue-600 transition-colors truncate">{{ $country->name }}</h4>
-               </div>
-               
-               <div class="space-y-2 text-sm text-gray-600">
-                   <div class="flex justify-between items-center">
-                       <span class="text-xs uppercase tracking-wide text-gray-400">Standard</span>
-                       <span class="font-bold text-gray-900 bg-blue-50 text-blue-700 px-2 py-0.5 rounded">{{ $country->standard_rate }}%</span>
-                   </div>
-                   
-                   @if($country->currency_code && $country->currency_code !== 'EUR')
-                   <div class="flex justify-between items-center">
-                       <span class="text-xs uppercase tracking-wide text-gray-400">Currency</span>
-                       <span class="font-medium">{{ $country->currency_code }}</span>
-                   </div>
-                   @endif
-               </div>
-               
-               <div class="mt-4 text-center">
-                   <span class="text-xs font-medium text-blue-600 group-hover:underline">Open Calculator →</span>
-               </div>
-            </a>
+@php
+    $groupLabels = [
+        'eu' => __('ui.calculator.groups.eu'),
+        'other_europe' => __('ui.calculator.groups.other_europe'),
+    ];
+    $countryCount = $countries->flatten(1)->count();
+@endphp
+
+<details data-country-directory class="group border border-line bg-white">
+    <summary class="flex min-h-14 cursor-pointer list-none items-center gap-3 px-5 py-3 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action [&::-webkit-details-marker]:hidden">
+        <span class="flex-1 font-bold text-ink">{{ __('ui.calculator.browse_all_country_calculators') }}</span>
+        <span class="text-xs font-semibold tabular-nums text-ink-muted">{{ $countryCount }}</span>
+        <svg class="h-4 w-4 shrink-0 text-ink-muted transition-transform duration-150 group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 9 6 6 6-6" />
+        </svg>
+    </summary>
+
+    <div class="border-t border-line px-4 py-5 sm:px-5">
+        @foreach($groupLabels as $group => $label)
+            @if(($countries[$group] ?? collect())->isNotEmpty())
+                <section class="{{ ! $loop->first ? 'mt-6 border-t border-line pt-5' : '' }}" aria-labelledby="calculator-group-{{ $group }}">
+                    <h3 id="calculator-group-{{ $group }}" class="text-xs font-semibold uppercase tracking-[0.14em] text-ink-muted">{{ $label }}</h3>
+                    <div class="mt-3 grid grid-cols-1 gap-1 sm:grid-cols-2 xl:grid-cols-1 2xl:grid-cols-2">
+                        @foreach($countries[$group] as $country)
+                            <a
+                                href="{{ route('vat-calculator.country', $country->slug) }}"
+                                class="group/link flex min-h-11 items-center gap-2.5 rounded-md px-2 py-2 text-sm transition-colors duration-150 hover:bg-surface-subtle focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-action"
+                            >
+                                <img src="https://flagcdn.com/h40/{{ strtolower($country->iso_code) }}.jpg" alt="" class="h-4 w-auto shrink-0 rounded-[2px] ring-1 ring-black/10" loading="lazy">
+                                <span class="min-w-0 flex-1 truncate font-semibold text-ink group-hover/link:text-action">{{ $country->name }}</span>
+                                <span class="shrink-0 tabular-nums text-ink-muted">{{ $country->standard_rate }}%</span>
+                            </a>
+                        @endforeach
+                    </div>
+                </section>
+            @endif
         @endforeach
     </div>
-</div>
+</details>

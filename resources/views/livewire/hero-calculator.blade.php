@@ -89,7 +89,7 @@
     </div>
 
     {{-- Calculator Bar --}}
-    <div id="hero-calculator" class="mx-auto max-w-4xl">
+    <div id="hero-calculator" class="scroll-mb-24 mx-auto max-w-4xl md:scroll-mb-0">
         <div class="relative rounded-b-xl border border-t-0 border-line bg-white shadow-workflow">
             {{-- Row 1: Country + Amount + Calculate --}}
             <div class="p-4 sm:p-5 pb-0 sm:pb-0">
@@ -237,7 +237,7 @@
                     {{-- Calculate Button --}}
                     <div class="shrink-0 flex items-end">
                         <button
-                            @click="compute(); hasResults = true; $wire.calculate(mode, selectedRate, useCustomRate, customRate, amount)"
+                            @click="compute(); hasResults = true; $wire.calculate(mode, selectedRate, useCustomRate, customRate, amount).then(() => $nextTick(() => $refs.resultPanel?.scrollIntoView({ behavior: 'smooth', block: 'center' })))"
                             class="app-button-primary h-12 w-full gap-2 whitespace-nowrap px-8 text-base sm:w-auto"
                         >
                             <svg wire:loading.remove wire:target="calculate" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -303,7 +303,7 @@
             </div>
 
             {{-- Results Panel --}}
-                <div x-show="hasResults && total > 0 && !errorMsg" x-cloak x-transition class="rounded-b-xl border-t border-line bg-white">
+                <div x-ref="resultPanel" data-calculator-result x-show="hasResults && total > 0 && !errorMsg" x-cloak x-transition class="scroll-mb-24 rounded-b-xl border-t border-line bg-white md:scroll-mb-0">
                     <div class="p-4 sm:p-5">
                         {{-- Context sentence with flag --}}
                         <div class="mb-4 flex items-center gap-2 text-sm text-ink-muted">

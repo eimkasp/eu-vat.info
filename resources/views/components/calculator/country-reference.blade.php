@@ -16,8 +16,8 @@
         <h2 id="country-reference-title" class="mt-1 text-xl font-bold text-ink">{{ __('ui.calculator.current_vat_rates') }} and formulas</h2>
     </div>
 
-    <div class="grid lg:grid-cols-2">
-        <div class="border-b border-line p-5 sm:p-6 lg:border-b-0 lg:border-r">
+    <div class="grid md:grid-cols-2">
+        <div class="border-b border-line p-5 sm:p-6 md:border-b-0 md:border-r">
             <h3 class="text-sm font-bold text-ink">Rate reference</h3>
             <dl class="mt-3 divide-y divide-line border-y border-line">
                 @foreach($rates as $rate)

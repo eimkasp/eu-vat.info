@@ -31,7 +31,7 @@ it('lists EU member states only on the homepage', function () {
         });
 });
 
-it('offers EU member states only in the homepage calculator', function () {
+it('groups supported non-EU countries separately in the homepage calculator', function () {
     Cache::clear();
 
     Country::factory()->create([
@@ -52,6 +52,8 @@ it('offers EU member states only in the homepage calculator', function () {
 
     Livewire::test(HeroCalculator::class)
         ->assertSet('countries', function ($countries) {
-            return collect($countries)->pluck('name')->all() === ['Germany'];
-        });
+            return collect($countries)->pluck('name')->all() === ['Germany', 'Switzerland'];
+        })
+        ->assertSet('countries.0.group', 'eu')
+        ->assertSet('countries.1.group', 'other_europe');
 });
