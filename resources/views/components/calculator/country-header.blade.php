@@ -1,6 +1,6 @@
 @props(['country'])
 
-<header data-country-header class="bg-[#0b2f4f] text-white">
+<header data-country-header class="text-white">
     <div class="container !py-5 sm:!py-7">
         <x-breadcrumbs variant="dark" :items="[__('ui.calculator.breadcrumb_label') => locale_path('/vat-calculator'), $country->name => '']" />
 

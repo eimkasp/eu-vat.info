@@ -1,4 +1,4 @@
-<div class="w-full" x-data="{
+<div class="w-full" data-calculator-surface="{{ $surface }}" x-data="{
     loadingIndex: null,
     mode: @js($mode),
     selectedRate: @js($selectedRate),
@@ -396,7 +396,7 @@
                                     </svg>
                                     {{ __('ui.calculator.share_details') }}
                                 </a>
-                                @if($surface !== 'workspace')
+                                @if(! in_array($surface, ['workspace', 'country-image'], true))
                                 <a :href="'{{ locale_path('/vat-calculator') }}/' + $wire.selectedCountrySlug"
                                    class="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-lg px-3 text-sm font-semibold text-ink-muted transition-colors duration-150 hover:bg-surface-subtle hover:text-action-deep sm:text-xs">
                                     {{ __('ui.calculator.full_calculator') }}
