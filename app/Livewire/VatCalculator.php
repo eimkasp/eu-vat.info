@@ -64,6 +64,8 @@ class VatCalculator extends Component
 
     public $selectedCountryObject = null;
 
+    public bool $isCountryPage = false;
+
     public $saved_searches = [];
 
     public $countries;
@@ -85,19 +87,20 @@ class VatCalculator extends Component
                 ->orderBy('name', 'ASC')
                 ->get()
                 ->map(function ($c) {
-                // Calculate flag emoji
-                $iso = strtoupper($c->iso_code);
-                $flag = '';
-                if (strlen($iso) === 2) {
-                    $flag = mb_chr(ord($iso[0]) + 127397).mb_chr(ord($iso[1]) + 127397);
-                }
-                $c->name_with_flag = $flag.' '.$c->name;
+                    // Calculate flag emoji
+                    $iso = strtoupper($c->iso_code);
+                    $flag = '';
+                    if (strlen($iso) === 2) {
+                        $flag = mb_chr(ord($iso[0]) + 127397).mb_chr(ord($iso[1]) + 127397);
+                    }
+                    $c->name_with_flag = $flag.' '.$c->name;
 
-                return $c;
-            });
+                    return $c;
+                });
         });
 
         if ($slug) {
+            $this->isCountryPage = true;
             $this->selectedCountryObject = Country::calculatorAvailable()
                 ->where('slug', $slug)
                 ->firstOrFail();
@@ -108,6 +111,7 @@ class VatCalculator extends Component
             // Track the view when mounting with a slug
             $this->trackCountryView($this->country, 'calculator-view');
         } elseif ($country instanceof Country) {
+            $this->isCountryPage = true;
             abort_unless($country->isCalculatorAvailable(), 404);
             $this->country = $country;
             $this->selectedCountryObject = $country;

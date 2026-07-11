@@ -389,6 +389,7 @@
                                     </svg>
                                     {{ __('ui.calculator.share_details') }}
                                 </a>
+                                @if($surface !== 'workspace')
                                 <a :href="'{{ locale_path('/vat-calculator') }}/' + $wire.selectedCountrySlug"
                                    class="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-lg px-3 text-sm font-semibold text-ink-muted transition-colors duration-150 hover:bg-surface-subtle hover:text-action-deep sm:text-xs">
                                     {{ __('ui.calculator.full_calculator') }}
@@ -396,6 +397,7 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
                                     </svg>
                                 </a>
+                                @endif
                             </div>
                         </div>
 
@@ -424,7 +426,7 @@
     </div>
 
     {{-- Source and freshness --}}
-    <div class="mx-auto mt-4 flex max-w-4xl flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm font-medium text-blue-50 sm:text-xs">
+    <div class="mx-auto mt-4 flex max-w-4xl flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm font-medium sm:text-xs {{ $surface === 'workspace' ? 'text-ink-muted' : 'text-blue-50' }}">
         <span class="flex items-center gap-1.5">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-emerald-300" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
@@ -443,7 +445,7 @@
     @if(count($history) > 0)
         <div class="max-w-4xl mx-auto mt-8" x-data="{ expanded: false }">
             <div class="flex items-center justify-between mb-3">
-                <h3 class="flex items-center gap-2 text-sm font-semibold text-white/90">
+                <h3 class="flex items-center gap-2 text-sm font-semibold {{ $surface === 'workspace' ? 'text-ink' : 'text-white/90' }}">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                     </svg>
@@ -452,7 +454,7 @@
                 </h3>
                 <button
                     wire:click="clearHistory"
-                    class="inline-flex min-h-11 items-center rounded-md px-2 text-xs text-blue-100 transition-colors hover:bg-white/10 hover:text-white"
+                    class="inline-flex min-h-11 items-center rounded-md px-2 text-xs transition-colors {{ $surface === 'workspace' ? 'text-action hover:bg-action-soft' : 'text-blue-100 hover:bg-white/10 hover:text-white' }}"
                 >
                     {{ __('ui.calculator.clear_all') }}
                 </button>

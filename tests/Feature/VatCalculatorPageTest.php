@@ -172,3 +172,20 @@ it('displays schema.org json-ld on country page', function () {
         ->toContain('FinanceApplication')
         ->toContain($country->name);
 });
+
+it('renders country calculators as a compact reference workspace', function () {
+    $response = $this->get('/vat-calculator/germany')
+        ->assertOk()
+        ->assertSee('data-country-header', false)
+        ->assertSee('data-country-reference', false)
+        ->assertSee('Germany VAT Guide')
+        ->assertDontSee('eu-vat-calculator-background')
+        ->assertDontSee('Full Calculator');
+
+    $html = $response->getContent();
+
+    expect(strpos($html, 'data-country-header'))
+        ->toBeLessThan(strpos($html, 'id="hero-calculator"'))
+        ->and(strpos($html, 'id="hero-calculator"'))
+        ->toBeLessThan(strpos($html, 'data-country-reference'));
+});

@@ -14,6 +14,8 @@ class HeroCalculator extends Component
 
     public $showHeader = true;
 
+    public $surface = 'dark';
+
     #[Url(as: 'country', history: true)]
     public $selectedCountrySlug = '';
 
@@ -43,8 +45,9 @@ class HeroCalculator extends Component
 
     public $showResults = false;
 
-    public function mount($initialCountry = null)
+    public function mount($initialCountry = null, $surface = 'dark')
     {
+        $this->surface = $surface;
         $this->countries = Cache::remember('hero_calc_countries_v3', 600, function () {
             return Country::calculatorAvailable()
                 ->orderByDesc('is_eu_member')
