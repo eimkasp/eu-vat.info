@@ -61,8 +61,18 @@
 @push('head')
     @if($isCountryPage)
         <link rel="amphtml" href="{{ url('/amp/vat-calculator/' . $selectedCountryObject->slug) }}">
+        <link
+            rel="preload"
+            as="image"
+            type="image/webp"
+            href="/images/eu-vat-calculator-background-lg.webp"
+            imagesrcset="/images/eu-vat-calculator-background-sm.webp 640w, /images/eu-vat-calculator-background-md.webp 1280w, /images/eu-vat-calculator-background-lg.webp 2000w"
+            imagesizes="100vw"
+            fetchpriority="high"
+        >
+    @else
+        <link rel="preload" as="image" type="image/webp" href="/images/eu-vat-calculator-background.webp" fetchpriority="high">
     @endif
-    <link rel="preload" as="image" type="image/webp" href="/images/eu-vat-calculator-background.webp" fetchpriority="high">
 @endpush
 
 @if($isCountryPage)

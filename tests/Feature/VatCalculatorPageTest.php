@@ -181,6 +181,7 @@ it('renders country calculators as a compact reference workspace', function () {
         ->assertSee('eu-vat-calculator-background-sm.webp', false)
         ->assertSee('eu-vat-calculator-background-md.webp', false)
         ->assertSee('eu-vat-calculator-background-lg.webp', false)
+        ->assertSee('imagesrcset="/images/eu-vat-calculator-background-sm.webp 640w, /images/eu-vat-calculator-background-md.webp 1280w, /images/eu-vat-calculator-background-lg.webp 2000w"', false)
         ->assertSee('data-calculator-surface="country-image"', false)
         ->assertSee('data-country-reference', false)
         ->assertSee('Germany VAT Guide')
