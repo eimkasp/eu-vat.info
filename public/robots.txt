@@ -28,4 +28,4 @@ Disallow: /
 User-agent: DotBot
 Disallow: /
 
-Sitemap: https://eu-vat.info/sitemap.xml
+Sitemap: https://vat.businesspress.io/sitemap.xml

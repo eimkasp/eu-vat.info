@@ -46,7 +46,7 @@ it('publishes a source-backed country VAT history', function () {
 
     $this->get('/vat-rates/germany/history')
         ->assertOk()
-        ->assertSee('<link rel="canonical" href="https://eu-vat.info/vat-rates/germany/history">', false)
+        ->assertSee('<link rel="canonical" href="https://vat.businesspress.io/vat-rates/germany/history">', false)
         ->assertSee('Germany VAT rate history')
         ->assertSee('18.00%')
         ->assertSee('19.00%')
@@ -73,7 +73,7 @@ it('publishes one canonical page for a stored VAT change event', function () {
 
     $this->get('/vat-changes/germany/standard/2026-01-01')
         ->assertOk()
-        ->assertSee('<link rel="canonical" href="https://eu-vat.info/vat-changes/germany/standard/2026-01-01">', false)
+        ->assertSee('<link rel="canonical" href="https://vat.businesspress.io/vat-changes/germany/standard/2026-01-01">', false)
         ->assertSee('"@type":"Article"', false)
         ->assertSee('Federal Ministry of Finance')
         ->assertSee('Approved national tax reform')

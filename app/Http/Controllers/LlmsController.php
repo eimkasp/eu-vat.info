@@ -11,7 +11,7 @@ class LlmsController extends Controller
 {
     public function index(VatCategorySeoService $vatCategories): Response
     {
-        $baseUrl = rtrim(config('seo.canonical_url', 'https://eu-vat.info'), '/');
+        $baseUrl = rtrim(config('seo.canonical_url', 'https://vat.businesspress.io'), '/');
         $countries = Country::query()
             ->where('is_eu_member', true)
             ->withExists(['vatRates', 'vatRateChanges'])
