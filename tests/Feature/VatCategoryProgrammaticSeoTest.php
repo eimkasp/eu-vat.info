@@ -42,8 +42,22 @@ it('limits current category rules to their effective date range', function () {
         'category_slug' => 'expired-books',
         'effective_to' => now()->subMonth()->toDateString(),
     ]);
+    categoryRule($country, [
+        'category_slug' => 'undated-books',
+        'effective_from' => null,
+    ]);
 
-    expect(VatRateRule::current()->pluck('id')->all())->toBe([$current->id]);
+    expect(VatRateRule::indexable()->current()->pluck('id')->all())->toBe([$current->id]);
+});
+
+it('rejects blank and unsafe category source URLs from publication', function () {
+    $country = categoryCountry('Germany', 'germany', 'DE');
+    $valid = categoryRule($country);
+    categoryRule($country, ['category_slug' => 'blank-source', 'source_url' => '']);
+    categoryRule($country, ['category_slug' => 'unsafe-source', 'source_url' => 'javascript:alert(1)']);
+    categoryRule($country, ['category_slug' => 'malformed-source', 'source_url' => 'example.gov/books']);
+
+    expect(VatRateRule::indexable()->current()->pluck('id')->all())->toBe([$valid->id]);
 });
 
 it('qualifies category hubs only after verified EU country coverage reaches the threshold', function () {

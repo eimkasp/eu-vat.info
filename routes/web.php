@@ -139,6 +139,7 @@ Route::get('/vat-change-alerts/unsubscribe/{subscription}', [VatChangeSubscripti
 Route::get('/sitemap/generate', [SitemapController::class, 'index'])->name('sitemap.generate');
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 Route::get('/datasets/eu-vat-rates.csv', [VatDatasetDownloadController::class, 'csv'])->name('vat-dataset.csv');
+Route::get('/datasets/eu-vat-rates.json', [VatDatasetDownloadController::class, 'json'])->name('vat-dataset.json');
 Route::get('/sitemaps/{section}.xml', [SitemapController::class, 'section'])
     ->where('section', 'core|countries|validators|changes|categories|editorial')
     ->name('sitemap.section');

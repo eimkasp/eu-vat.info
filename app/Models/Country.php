@@ -88,6 +88,11 @@ class Country extends Model implements Auditable, Sitemapable
 
     public function hasVatHistory(): bool
     {
+        if (array_key_exists('vat_rates_exists', $this->attributes)
+            && array_key_exists('vat_rate_changes_exists', $this->attributes)) {
+            return (bool) $this->vat_rates_exists || (bool) $this->vat_rate_changes_exists;
+        }
+
         return $this->vatRates()->exists() || $this->vatRateChanges()->exists();
     }
 

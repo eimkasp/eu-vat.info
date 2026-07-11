@@ -16,9 +16,16 @@ class VatChangesArchive extends Component
         $this->year = $year;
         $this->upcoming = $archiveType === 'upcoming';
 
+        $eligibleChanges = VatRateChange::query()
+            ->whereHas('country', fn ($countryQuery) => $countryQuery->where('is_eu_member', true));
+
         if ($this->year !== null) {
             abort_unless($this->year >= 2000 && $this->year <= 2100, 404);
-            abort_unless(VatRateChange::query()->whereYear('change_date', $this->year)->exists(), 404);
+            abort_unless((clone $eligibleChanges)->whereYear('change_date', $this->year)->exists(), 404);
+        }
+
+        if ($this->upcoming) {
+            abort_unless($eligibleChanges->whereDate('change_date', '>', today())->exists(), 404);
         }
     }
 

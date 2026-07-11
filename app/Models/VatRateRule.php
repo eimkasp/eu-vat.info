@@ -42,7 +42,11 @@ class VatRateRule extends Model
     public function scopeIndexable(Builder $query): Builder
     {
         return $query
-            ->whereNotNull('source_url')
+            ->where(function (Builder $source) {
+                $source
+                    ->where('source_url', 'like', 'https://%')
+                    ->orWhere('source_url', 'like', 'http://%');
+            })
             ->whereNotNull('verified_at')
             ->whereNotNull('published_at')
             ->where('published_at', '<=', now())
@@ -52,10 +56,9 @@ class VatRateRule extends Model
     public function scopeCurrent(Builder $query): Builder
     {
         return $query
+            ->whereNotNull('effective_from')
             ->where(function (Builder $effectiveFrom) {
-                $effectiveFrom
-                    ->whereNull('effective_from')
-                    ->orWhereDate('effective_from', '<=', today());
+                $effectiveFrom->whereDate('effective_from', '<=', today());
             })
             ->where(function (Builder $effectiveTo) {
                 $effectiveTo

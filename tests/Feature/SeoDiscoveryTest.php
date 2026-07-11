@@ -3,6 +3,10 @@
 use App\Models\Country;
 use Carbon\CarbonImmutable;
 
+afterEach(function () {
+    \Livewire\Features\SupportDisablingBackButtonCache\SupportDisablingBackButtonCache::$disableBackButtonCache = false;
+});
+
 it('publishes one canonical sitemap and no unsupported crawl delay directives', function () {
     $robots = file_get_contents(public_path('robots.txt'));
 
@@ -65,4 +69,14 @@ it('serves current LLM documentation from the canonical host', function () {
         ->assertSee('https://eu-vat.info/vat-number-validator/germany')
         ->assertDontSee('vat.businesspress.io')
         ->assertDontSee('/country/germany');
+});
+
+it('preserves public discovery caching after Livewire has booted', function () {
+    \Livewire\Features\SupportDisablingBackButtonCache\SupportDisablingBackButtonCache::$disableBackButtonCache = true;
+
+    $response = $this->get('/sitemap.xml')->assertOk();
+
+    expect($response->headers->get('Cache-Control'))
+        ->toContain('public')
+        ->toContain('max-age=3600');
 });

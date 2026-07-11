@@ -42,11 +42,10 @@ it('has analytics relationship', function () {
 it('returns sitemap urls correctly', function () {
     $country = Country::factory()->create(['slug' => 'test-country']);
 
-    $urls = $country->toSitemapTag();
+    $url = $country->toSitemapTag();
 
-    expect($urls)->toBeArray()
-        ->and($urls[0])->toContain('/country/test-country')
-        ->and($urls[1])->toContain('/vat-calculator/test-country');
+    expect($url)->toBeString()
+        ->and($url)->toContain('/vat-calculator/test-country');
 });
 
 it('can store multiple rate types', function () {

@@ -99,6 +99,15 @@ class SitemapGenerator
             base_path('routes/web.php'),
         ]);
 
+        $euCountries = Country::query()
+            ->where('is_eu_member', true)
+            ->get(['slug', 'updated_at'])
+            ->keyBy('slug');
+        $latestCountryUpdate = $euCountries->max('updated_at');
+        $datasetLastmod = $latestCountryUpdate
+            ? CarbonImmutable::parse($latestCountryUpdate)->toAtomString()
+            : $lastmod;
+
         $records = collect([
             ['path' => '/', 'lastmod' => $lastmod],
             ['path' => '/vat-calculator', 'lastmod' => $lastmod],
@@ -107,20 +116,24 @@ class SitemapGenerator
             ['path' => '/vat-map', 'lastmod' => $lastmod],
             ['path' => '/tools', 'lastmod' => $lastmod],
             ['path' => '/top-vat-calculations', 'lastmod' => $lastmod],
-            ['path' => '/datasets/eu-vat-rates', 'lastmod' => $lastmod],
+            ['path' => '/datasets/eu-vat-rates', 'lastmod' => $datasetLastmod],
             ['path' => '/sitemap', 'lastmod' => $lastmod],
         ]);
 
-        $existingSlugs = Country::query()
-            ->where('is_eu_member', true)
-            ->pluck('slug')
-            ->all();
+        $existingSlugs = $euCountries->keys()->all();
 
         foreach (config('seo.comparisons', []) as $pair) {
             if (count(array_intersect($pair, $existingSlugs)) === 2) {
+                $comparisonLastmod = collect($pair)
+                    ->map(fn (string $slug) => $euCountries->get($slug)?->updated_at)
+                    ->filter()
+                    ->max();
+
                 $records->push([
                     'path' => '/compare/'.implode('-vs-', $pair).'-vat',
-                    'lastmod' => $lastmod,
+                    'lastmod' => $comparisonLastmod
+                        ? CarbonImmutable::parse($comparisonLastmod)->toAtomString()
+                        : $lastmod,
                 ]);
             }
         }
@@ -152,7 +165,9 @@ class SitemapGenerator
 
     protected function changeRecords(): Collection
     {
-        $latest = VatRateChange::query()->max('updated_at');
+        $latest = VatRateChange::query()
+            ->whereHas('country', fn ($query) => $query->where('is_eu_member', true))
+            ->max('updated_at');
         $lastmod = $latest
             ? CarbonImmutable::parse($latest)->toAtomString()
             : $this->filesLastModified([resource_path('views/livewire/vat-changes-history.blade.php')]);
@@ -163,14 +178,25 @@ class SitemapGenerator
 
         Country::query()
             ->where('is_eu_member', true)
+            ->withMax('vatRates', 'updated_at')
+            ->withMax('vatRateChanges', 'updated_at')
             ->where(function ($query) {
                 $query->whereHas('vatRates')->orWhereHas('vatRateChanges');
             })
             ->get()
             ->each(function (Country $country) use ($records) {
+                $lastModified = collect([
+                    $country->updated_at,
+                    $country->vat_rates_max_updated_at,
+                    $country->vat_rate_changes_max_updated_at,
+                ])->filter()
+                    ->map(fn ($timestamp) => CarbonImmutable::parse($timestamp))
+                    ->sortDesc()
+                    ->first();
+
                 $records->push([
                     'path' => '/vat-rates/'.$country->slug.'/history',
-                    'lastmod' => ($country->updated_at ?? now())->toAtomString(),
+                    'lastmod' => ($lastModified ?? now()->startOfDay()->toImmutable())->toAtomString(),
                 ]);
             });
 

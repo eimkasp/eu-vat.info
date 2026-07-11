@@ -2,6 +2,10 @@
 
 use Illuminate\Support\Facades\Storage;
 
+afterEach(function () {
+    \Livewire\Features\SupportDisablingBackButtonCache\SupportDisablingBackButtonCache::$disableBackButtonCache = false;
+});
+
 // ── Web Bot Auth: /.well-known/http-message-signatures-directory ────────────
 
 it('serves the http-message-signatures-directory endpoint', function () {
@@ -92,7 +96,7 @@ it('includes jwks_uri in protected resource metadata', function () {
     $response = $this->getJson('/.well-known/oauth-protected-resource');
 
     $baseUrl = config('app.url');
-    expect($response->json('jwks_uri'))->toBe($baseUrl . '/.well-known/jwks.json');
+    expect($response->json('jwks_uri'))->toBe($baseUrl.'/.well-known/jwks.json');
 });
 
 it('includes MCP server info in protected resource metadata', function () {
@@ -182,6 +186,8 @@ it('includes x402 in oauth-protected-resource metadata', function () {
 // ── ACP Discovery Document ──────────────────────────────────────────────────
 
 it('serves ACP discovery document at /.well-known/acp.json', function () {
+    \Livewire\Features\SupportDisablingBackButtonCache\SupportDisablingBackButtonCache::$disableBackButtonCache = true;
+
     $response = $this->getJson('/.well-known/acp.json');
 
     $response->assertSuccessful()

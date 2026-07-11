@@ -105,3 +105,43 @@ it('publishes an upcoming VAT changes archive from future records', function () 
         ->assertSee('Upcoming EU VAT changes')
         ->assertSee($country->name);
 });
+
+it('does not publish year or upcoming archives backed only by non-EU changes', function () {
+    $country = seoCountry([
+        'name' => 'Switzerland',
+        'slug' => 'switzerland',
+        'iso_code' => 'CH',
+        'is_eu_member' => false,
+    ]);
+    seoChange($country, ['change_date' => '2028-01-01']);
+
+    $this->get('/vat-changes/year/2028')->assertNotFound();
+    $this->get('/vat-changes/upcoming')->assertNotFound();
+});
+
+it('keeps non-EU changes out of the canonical changes page and freshness data', function () {
+    $germany = seoCountry();
+    $euChange = seoChange($germany, ['description' => 'EU change visible']);
+    $euChange->timestamps = false;
+    $euChange->forceFill(['updated_at' => \Carbon\CarbonImmutable::parse('2026-04-01T10:00:00+00:00')])->saveQuietly();
+
+    $switzerland = seoCountry([
+        'name' => 'Switzerland',
+        'slug' => 'switzerland',
+        'iso_code' => 'CH',
+        'is_eu_member' => false,
+    ]);
+    $nonEuChange = seoChange($switzerland, [
+        'change_date' => '2026-02-01',
+        'description' => 'Non-EU change hidden',
+    ]);
+    $nonEuChange->timestamps = false;
+    $nonEuChange->forceFill(['updated_at' => \Carbon\CarbonImmutable::parse('2026-06-01T10:00:00+00:00')])->saveQuietly();
+
+    $this->get('/vat-changes')
+        ->assertOk()
+        ->assertSee('EU change visible')
+        ->assertDontSee('Non-EU change hidden')
+        ->assertSee('"dateModified":"2026-04-01T', false)
+        ->assertDontSee('"dateModified":"2026-06-01T', false);
+});

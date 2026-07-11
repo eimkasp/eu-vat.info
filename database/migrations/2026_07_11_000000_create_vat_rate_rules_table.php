@@ -25,6 +25,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->index(['country_id', 'category_slug', 'published_at'], 'vat_rules_country_category_publish');
+            $table->index(['category_slug', 'published_at', 'effective_from', 'effective_to'], 'vat_rules_category_eligibility');
         });
     }
 

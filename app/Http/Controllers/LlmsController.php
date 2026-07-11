@@ -14,6 +14,7 @@ class LlmsController extends Controller
         $baseUrl = rtrim(config('seo.canonical_url', 'https://eu-vat.info'), '/');
         $countries = Country::query()
             ->where('is_eu_member', true)
+            ->withExists(['vatRates', 'vatRateChanges'])
             ->orderBy('name')
             ->get();
 

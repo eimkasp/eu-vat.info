@@ -359,8 +359,7 @@
                         @php
                             $comparisonPairs = app(\App\Services\Seo\InternalLinkService::class)->approvedPairsFor($selectedCountryObject);
                             $categoryRules = app(\App\Services\Seo\VatCategorySeoService::class)
-                                ->currentRules()
-                                ->where('country_id', $selectedCountryObject->id);
+                                ->rulesForCountry($selectedCountryObject->slug);
                         @endphp
                         @if($comparisonPairs->isNotEmpty())
                             <div class="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-sm">

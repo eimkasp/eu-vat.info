@@ -96,6 +96,7 @@ class VatChangesHistory extends Component
     public function render()
     {
         $query = VatRateChange::with('country')
+            ->whereHas('country', fn ($countryQuery) => $countryQuery->where('is_eu_member', true))
             ->orderBy('change_date', 'desc');
 
         if ($this->selectedCountry) {
@@ -116,7 +117,9 @@ class VatChangesHistory extends Component
             return Country::where('is_eu_member', true)->orderBy('name')->get();
         });
 
-        $datasetModified = VatRateChange::query()->max('updated_at');
+        $datasetModified = VatRateChange::query()
+            ->whereHas('country', fn ($countryQuery) => $countryQuery->where('is_eu_member', true))
+            ->max('updated_at');
 
         return view('livewire.vat-changes-history', [
             'changes' => $changes,

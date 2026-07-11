@@ -22,8 +22,30 @@ it('publishes a canonical source-backed EU VAT dataset landing page', function (
         ->assertSee('"isBasedOn"', false)
         ->assertSee('creativecommons.org/licenses/by/4.0')
         ->assertSee('https://eu-vat.info/datasets/eu-vat-rates.csv')
-        ->assertSee('https://eu-vat.info/api/countries')
+        ->assertSee('https://eu-vat.info/datasets/eu-vat-rates.json')
         ->assertSee('https://eu-vat.info/llms-full.txt');
+});
+
+it('serves an EU-only JSON dataset distribution with ISO codes', function () {
+    Country::factory()->create([
+        'name' => 'Germany',
+        'slug' => 'germany',
+        'iso_code' => 'DE',
+        'is_eu_member' => true,
+    ]);
+    Country::factory()->create([
+        'name' => 'Switzerland',
+        'slug' => 'switzerland',
+        'iso_code' => 'CH',
+        'is_eu_member' => false,
+    ]);
+
+    $this->getJson('/datasets/eu-vat-rates.json')
+        ->assertOk()
+        ->assertJsonCount(1, 'data')
+        ->assertJsonPath('data.0.name', 'Germany')
+        ->assertJsonPath('data.0.iso_code', 'DE')
+        ->assertJsonMissing(['name' => 'Switzerland']);
 });
 
 it('streams an EU-only CSV distribution', function () {

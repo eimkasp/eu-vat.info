@@ -41,7 +41,7 @@
                 ],
                 'distribution' => [
                     ['@type' => 'DataDownload', 'encodingFormat' => 'text/csv', 'contentUrl' => $baseUrl.'/datasets/eu-vat-rates.csv'],
-                    ['@type' => 'DataDownload', 'encodingFormat' => 'application/json', 'contentUrl' => $baseUrl.'/api/countries'],
+                    ['@type' => 'DataDownload', 'encodingFormat' => 'application/json', 'contentUrl' => $baseUrl.'/datasets/eu-vat-rates.json'],
                     ['@type' => 'DataDownload', 'encodingFormat' => 'text/markdown', 'contentUrl' => $baseUrl.'/llms-full.txt'],
                 ],
             ],
@@ -78,7 +78,7 @@
                     <span><strong class="block">CSV</strong><span class="text-sm text-ink-muted">Spreadsheet and analysis workflows</span></span>
                     <span aria-hidden="true">Download →</span>
                 </a>
-                <a href="/api/countries" class="flex min-h-16 items-center justify-between gap-4 py-4 text-ink hover:text-action">
+                <a href="/datasets/eu-vat-rates.json" class="flex min-h-16 items-center justify-between gap-4 py-4 text-ink hover:text-action">
                     <span><strong class="block">JSON API</strong><span class="text-sm text-ink-muted">Applications and data pipelines</span></span>
                     <span aria-hidden="true">Open →</span>
                 </a>
