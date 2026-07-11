@@ -61,15 +61,9 @@
 @push('head')
     @if($isCountryPage)
         <link rel="amphtml" href="{{ url('/amp/vat-calculator/' . $selectedCountryObject->slug) }}">
-        <link
-            rel="preload"
-            as="image"
-            type="image/webp"
-            href="/images/eu-vat-calculator-background-lg.webp"
-            imagesrcset="/images/eu-vat-calculator-background-sm.webp 640w, /images/eu-vat-calculator-background-md.webp 1280w, /images/eu-vat-calculator-background-lg.webp 2000w"
-            imagesizes="100vw"
-            fetchpriority="high"
-        >
+        <link rel="preload" as="image" type="image/webp" href="/images/eu-vat-calculator-background-sm.webp" media="(max-width: 639px)" fetchpriority="high">
+        <link rel="preload" as="image" type="image/webp" href="/images/eu-vat-calculator-background-md.webp" media="(min-width: 640px) and (max-width: 1023px)" fetchpriority="high">
+        <link rel="preload" as="image" type="image/webp" href="/images/eu-vat-calculator-background-lg.webp" media="(min-width: 1024px)" fetchpriority="high">
     @else
         <link rel="preload" as="image" type="image/webp" href="/images/eu-vat-calculator-background.webp" fetchpriority="high">
     @endif
@@ -77,14 +71,16 @@
 
 @if($isCountryPage)
     <div class="min-h-screen bg-surface-subtle">
-        <section data-country-atmosphere class="relative isolate overflow-hidden bg-[#0b2f4f]">
-            <picture class="absolute inset-0 -z-20 block h-full w-full" aria-hidden="true">
-                <source media="(min-width: 1024px)" type="image/webp" srcset="/images/eu-vat-calculator-background-lg.webp">
-                <source media="(min-width: 640px)" type="image/webp" srcset="/images/eu-vat-calculator-background-md.webp">
-                <source type="image/webp" srcset="/images/eu-vat-calculator-background-sm.webp">
-                <img src="/images/eu-vat-calculator-background.jpg" alt="" class="h-full w-full object-cover object-center" loading="eager" fetchpriority="high">
-            </picture>
-            <div class="absolute inset-0 -z-10 bg-[#071f35]/80" aria-hidden="true"></div>
+        <section data-country-atmosphere class="relative isolate bg-[#0b2f4f]">
+            <div data-atmosphere-media class="pointer-events-none absolute inset-0 -z-10 overflow-hidden" aria-hidden="true">
+                <picture class="absolute inset-0 block h-full w-full">
+                    <source media="(min-width: 1024px)" type="image/webp" srcset="/images/eu-vat-calculator-background-lg.webp">
+                    <source media="(min-width: 640px)" type="image/webp" srcset="/images/eu-vat-calculator-background-md.webp">
+                    <source type="image/webp" srcset="/images/eu-vat-calculator-background-sm.webp">
+                    <img src="/images/eu-vat-calculator-background.jpg" alt="" class="h-full w-full object-cover object-center" loading="eager" fetchpriority="high">
+                </picture>
+                <div class="absolute inset-0 bg-[#071f35]/80"></div>
+            </div>
 
             <x-calculator.country-header :country="$selectedCountryObject" />
 
