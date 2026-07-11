@@ -79,8 +79,12 @@ class VatCalculator extends Component
 
     public function mount($country = null, $slug = null)
     {
-        $this->countries = Cache::remember('all_countries_with_flags', 600, function () {
-            return Country::orderBy('name', 'ASC')->get()->map(function ($c) {
+        $this->countries = Cache::remember('calculator_countries_v2', 600, function () {
+            return Country::calculatorAvailable()
+                ->orderByDesc('is_eu_member')
+                ->orderBy('name', 'ASC')
+                ->get()
+                ->map(function ($c) {
                 // Calculate flag emoji
                 $iso = strtoupper($c->iso_code);
                 $flag = '';
@@ -94,7 +98,9 @@ class VatCalculator extends Component
         });
 
         if ($slug) {
-            $this->selectedCountryObject = Country::where('slug', $slug)->firstOrFail();
+            $this->selectedCountryObject = Country::calculatorAvailable()
+                ->where('slug', $slug)
+                ->firstOrFail();
             $this->country = $this->selectedCountryObject;
             $this->selectedCountry1 = $this->selectedCountryObject->slug;
             $this->slug = $this->selectedCountryObject->slug;
@@ -102,13 +108,15 @@ class VatCalculator extends Component
             // Track the view when mounting with a slug
             $this->trackCountryView($this->country, 'calculator-view');
         } elseif ($country instanceof Country) {
+            abort_unless($country->isCalculatorAvailable(), 404);
             $this->country = $country;
             $this->selectedCountryObject = $country;
             $this->selectedCountry1 = $country->slug;
             $this->slug = $country->slug;
         } else {
             // Fallback to Lithuania or first available
-            $default = Country::where('name', 'Lithuania')->first() ?? Country::first();
+            $default = Country::calculatorAvailable()->where('name', 'Lithuania')->first()
+                ?? Country::calculatorAvailable()->first();
             if ($default) {
                 $this->country = $default;
                 $this->selectedCountry1 = $default->slug;

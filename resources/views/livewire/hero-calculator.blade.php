@@ -99,10 +99,21 @@
                          x-data="{
                             open: false,
                             search: '',
+                            groupOrder: ['eu', 'other_europe'],
+                            groupLabels: @js([
+                                'eu' => __('ui.calculator.groups.eu'),
+                                'other_europe' => __('ui.calculator.groups.other_europe'),
+                            ]),
                             get filtered() {
                                 if (!this.search) return $wire.countries;
                                 const q = this.search.toLowerCase();
                                 return $wire.countries.filter(c => c.name.toLowerCase().includes(q));
+                            },
+                            get filteredGroups() {
+                                return {
+                                    eu: this.filtered.filter(c => c.group === 'eu'),
+                                    other_europe: this.filtered.filter(c => c.group === 'other_europe'),
+                                };
                             },
                             select(slug) {
                                 $wire.set('selectedCountrySlug', slug).then(() => {
@@ -174,22 +185,27 @@
                                 </div>
                                 {{-- Options --}}
                                 <div class="max-h-[240px] overflow-y-auto overscroll-contain" role="listbox" aria-labelledby="country-selector-label">
-                                    <template x-for="c in filtered" :key="c.slug">
-                                        <button
-                                            type="button"
-                                            role="option"
-                                            :aria-selected="(c.slug === $wire.selectedCountrySlug).toString()"
-                                            @click="select(c.slug)"
-                                            class="w-full flex items-center gap-2.5 px-3 py-2.5 text-sm text-left transition-colors"
-                                            :class="c.slug === $wire.selectedCountrySlug ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-gray-700 hover:bg-gray-50'"
-                                        >
-                                            <img :src="'https://flagcdn.com/h40/' + c.iso + '.jpg'" :alt="c.name" class="h-4 w-auto rounded-[2px] shadow-sm shrink-0" loading="lazy">
-                                            <span x-text="c.name" class="truncate"></span>
-                                            <span class="ml-auto shrink-0 text-sm tabular-nums text-ink-muted sm:text-xs" x-text="c.standard_rate + '%'"></span>
-                                            <svg x-show="c.slug === $wire.selectedCountrySlug" class="w-4 h-4 text-blue-500 shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                                            </svg>
-                                        </button>
+                                    <template x-for="group in groupOrder" :key="group">
+                                        <div x-show="filteredGroups[group].length > 0" role="group" :aria-label="groupLabels[group]">
+                                            <div class="sticky top-0 border-y border-line bg-surface-subtle px-3 py-1.5 text-xs font-semibold text-ink-muted" x-text="groupLabels[group]"></div>
+                                            <template x-for="c in filteredGroups[group]" :key="c.slug">
+                                                <button
+                                                    type="button"
+                                                    role="option"
+                                                    :aria-selected="(c.slug === $wire.selectedCountrySlug).toString()"
+                                                    @click="select(c.slug)"
+                                                    class="flex min-h-11 w-full items-center gap-2.5 px-3 py-2.5 text-left text-sm transition-colors"
+                                                    :class="c.slug === $wire.selectedCountrySlug ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-gray-700 hover:bg-gray-50'"
+                                                >
+                                                    <img :src="'https://flagcdn.com/h40/' + c.iso + '.jpg'" :alt="c.name" class="h-4 w-auto shrink-0 rounded-[2px] shadow-sm" loading="lazy">
+                                                    <span x-text="c.name" class="truncate"></span>
+                                                    <span class="ml-auto shrink-0 text-sm tabular-nums text-ink-muted sm:text-xs" x-text="c.standard_rate + '%'"></span>
+                                                    <svg x-show="c.slug === $wire.selectedCountrySlug" class="h-4 w-4 shrink-0 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                                                    </svg>
+                                                </button>
+                                            </template>
+                                        </div>
                                     </template>
                                     <div x-show="filtered.length === 0" class="px-3 py-4 text-center text-sm text-gray-400">
                                         {{ __('ui.calculator.no_countries_found') }}

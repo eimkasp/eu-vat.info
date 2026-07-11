@@ -2,7 +2,7 @@
     <h3 class="mb-6 font-bold text-xl">VAT Calculators by Country</h3>
     
     <div class="flex overflow-x-auto pb-6 gap-4 snap-x scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0">
-        @foreach ($countries as $country)
+        @foreach ($countries->flatten(1) as $country)
             <a href="{{ route('vat-calculator.country', $country->slug) }}" 
               
                class="flex-none w-64 bg-white p-4 rounded-xl shadow-md border border-gray-100 hover:shadow-lg transition-all hover:-translate-y-1 snap-start group">

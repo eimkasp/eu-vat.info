@@ -45,8 +45,9 @@ class HeroCalculator extends Component
 
     public function mount($initialCountry = null)
     {
-        $this->countries = Cache::remember('hero_calc_eu_countries_v2', 600, function () {
-            return Country::where('is_eu_member', true)
+        $this->countries = Cache::remember('hero_calc_countries_v3', 600, function () {
+            return Country::calculatorAvailable()
+                ->orderByDesc('is_eu_member')
                 ->orderBy('name', 'ASC')
                 ->get()
                 ->map(function ($c) {
@@ -59,6 +60,7 @@ class HeroCalculator extends Component
                     return [
                         'slug' => $c->slug,
                         'name' => $c->name,
+                        'group' => $c->calculatorGroup(),
                         'flag' => $flag,
                         'iso' => strtolower($c->iso_code),
                         'standard_rate' => $c->standard_rate,

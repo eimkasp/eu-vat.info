@@ -131,6 +131,10 @@ return [
         'select_country' => 'Select country',
         'search_countries' => 'Search countries...',
         'no_countries_found' => 'No countries found',
+        'groups' => [
+            'eu' => 'European Union',
+            'other_europe' => 'Other European countries',
+        ],
         'calculate_btn' => 'Calculate',
         'rate_label' => 'Rate',
         'custom_label' => 'Custom',

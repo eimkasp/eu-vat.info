@@ -65,6 +65,30 @@ it('returns 404 for invalid country slug', function () {
         ->assertStatus(404);
 });
 
+it('loads configured non-EU calculator pages and rejects unsupported countries', function () {
+    config()->set('calculator.additional_country_slugs', ['norway']);
+    cache()->forget('all_countries_with_flags');
+    cache()->forget('calculator_countries_v2');
+
+    Country::factory()->create([
+        'name' => 'Norway',
+        'slug' => 'norway',
+        'iso_code' => 'NO',
+        'standard_rate' => 25,
+        'is_eu_member' => false,
+    ]);
+    Country::factory()->create([
+        'name' => 'Canada',
+        'slug' => 'canada',
+        'iso_code' => 'CA',
+        'standard_rate' => 5,
+        'is_eu_member' => false,
+    ]);
+
+    $this->get('/vat-calculator/norway')->assertOk();
+    $this->get('/vat-calculator/canada')->assertNotFound();
+});
+
 it('displays breadcrumbs on main calculator page', function () {
     $this->get('/vat-calculator')
         ->assertStatus(200)
