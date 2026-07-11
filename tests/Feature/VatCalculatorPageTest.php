@@ -127,13 +127,13 @@ it('renders country specific seo and heading for calculator slug pages', functio
 
     $this->get('/vat-calculator/luxembourg')
         ->assertStatus(200)
-        ->assertSee('<title>Luxembourg VAT Calculator 2026', false)
-        ->assertSee('<meta name="title" content="Luxembourg VAT Calculator 2026', false)
-        ->assertSee('<link rel="canonical" href="'.url('/vat-calculator/'.$luxembourg->slug).'">', false)
+        ->assertSee('<title>Luxembourg VAT Calculator — 17% Standard Rate', false)
+        ->assertSee('<meta name="title" content="Luxembourg VAT Calculator — 17% Standard Rate', false)
+        ->assertSee('<link rel="canonical" href="https://eu-vat.info/vat-calculator/'.$luxembourg->slug.'">', false)
         ->assertSee('Luxembourg')
         ->assertSee('VAT Calculator')
         ->assertSee('Current standard rate is 17%')
-        ->assertDontSee('<title>Germany VAT Calculator 2026', false);
+        ->assertDontSee('<title>Germany VAT Calculator', false);
 });
 
 it('displays schema.org json-ld on country page', function () {

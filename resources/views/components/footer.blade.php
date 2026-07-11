@@ -1,9 +1,9 @@
-<footer class="bg-gray-900 text-gray-400 py-12 border-t border-gray-800">
+<footer class="border-t border-slate-700 bg-ink py-12 text-slate-300">
     <div class="container">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-8">
             <div class="col-span-1 lg:col-span-2">
                 <div class="text-white text-xl font-bold mb-4">{{ __('ui.site_name') }}</div>
-                <p class="mb-4 text-sm">
+                <p class="mb-4 max-w-md text-sm leading-6 text-slate-300">
                     {{ __('ui.footer.description') }}
                 </p>
                 <div class="flex space-x-4">
@@ -53,7 +53,7 @@
             </div>
         </div>
         
-        <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-sm">
+        <div class="flex flex-col items-center justify-between border-t border-slate-700 pt-8 text-sm md:flex-row">
             <div class="mb-4 md:mb-0">
                 &copy; {{ date('Y') }} {{ __('ui.site_name') }}. {{ __('ui.all_rights_reserved') }}
             </div>
@@ -61,7 +61,7 @@
                 <a href="{{ locale_path('/sitemap') }}" class="hover:text-white transition-colors">{{ __('ui.footer.sitemap') }}</a>
                 <a href="/llms.txt" class="hover:text-white transition-colors">llms.txt</a>
                 <a href="https://pdf.businesspress.io/" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors">PDF Tools</a>
-                <span class="text-gray-600">{{ __('ui.data_updated_daily') }}</span>
+                <span class="text-slate-400">{{ __('ui.data_updated_daily') }}</span>
             </div>
         </div>
     </div>

@@ -31,8 +31,10 @@ class Home extends Component
 
     public function render()
     {
-        $countries = Cache::remember('all_eu_countries', 3600, function () {
-            return Country::orderBy('standard_rate', 'ASC')->get();
+        $countries = Cache::remember('all_eu_member_countries_v2', 3600, function () {
+            return Country::where('is_eu_member', true)
+                ->orderBy('standard_rate', 'ASC')
+                ->get();
         });
 
         if ($this->search) {

@@ -141,9 +141,8 @@ it('calculator page renders with compact layout', function () {
     $this->get('/vat-calculator')
         ->assertStatus(200)
         ->assertSee('VAT Calculator')
-        ->assertSee('Calculation Mode')
-        ->assertSee('Includes VAT')
-        ->assertSee('Excludes VAT');
+        ->assertSee('Add VAT')
+        ->assertSee('Remove VAT');
 });
 
 it('html sitemap page includes vat history link', function () {
@@ -169,7 +168,8 @@ it('robots txt does not reference vat-changes', function () {
 });
 
 it('llms txt references vat-changes history page', function () {
-    $content = file_get_contents(public_path('llms.txt'));
-    expect($content)->toContain('vat-changes');
-    expect($content)->toContain('VAT Rate History');
+    $this->get('/llms.txt')
+        ->assertOk()
+        ->assertSee('/vat-changes')
+        ->assertSee('VAT rate changes');
 });

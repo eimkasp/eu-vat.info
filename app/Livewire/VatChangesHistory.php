@@ -56,6 +56,7 @@ class VatChangesHistory extends Component
     {
         $this->countryStats = Cache::remember('vat_change_stats', 3600, function () {
             return Country::withCount(['vatRateChanges'])
+                ->where('is_eu_member', true)
                 ->get()
                 ->map(function ($country) {
                     return [
@@ -112,13 +113,16 @@ class VatChangesHistory extends Component
         $changes = $query->paginate(20);
 
         $countries = Cache::remember('countries_list_ordered', 3600, function () {
-            return Country::orderBy('name')->get();
+            return Country::where('is_eu_member', true)->orderBy('name')->get();
         });
+
+        $datasetModified = VatRateChange::query()->max('updated_at');
 
         return view('livewire.vat-changes-history', [
             'changes' => $changes,
             'countries' => $countries,
             'hasFilters' => $this->hasActiveFilters(),
+            'datasetModified' => $datasetModified ? \Carbon\CarbonImmutable::parse($datasetModified) : null,
         ]);
     }
 }

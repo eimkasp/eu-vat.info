@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="manifest" href="/manifest.json">
-    <meta name="theme-color" content="#3b82f6">
+    <meta name="theme-color" content="#003399">
     @vite('resources/css/app.css')
 
     <!-- SEO Meta Tags -->
@@ -15,10 +15,11 @@
         <x-seo-meta />
     @endif
 
-    <!-- hreflang tags for all supported locales -->
+    <!-- hreflang tags for editorially approved locales -->
     @php
         $currentPath = request()->path();
-        $supportedLocales = array_keys(config('translation.supported_languages', []));
+        $seoPolicy = app(\App\Support\Seo\SeoPolicy::class);
+        $supportedLocales = $seoPolicy->indexableLocales();
         $defaultLocale = config('translation.default_language', 'en');
         // Strip existing locale prefix
         $cleanPath = preg_replace('#^(' . implode('|', $supportedLocales) . ')(/|$)#', '/', $currentPath);
@@ -29,14 +30,12 @@
             $cleanPath = '/' . $cleanPath;
         }
     @endphp
-    <link rel="alternate" hreflang="x-default" href="{{ url($cleanPath === '/' ? '/' : $cleanPath) }}">
-    @foreach($supportedLocales as $hrefLocale)
-        @if($hrefLocale === $defaultLocale)
-            <link rel="alternate" hreflang="{{ $hrefLocale }}" href="{{ url($cleanPath === '/' ? '/' : $cleanPath) }}">
-        @else
-            <link rel="alternate" hreflang="{{ $hrefLocale }}" href="{{ url('/' . $hrefLocale . ($cleanPath === '/' ? '' : $cleanPath)) }}">
-        @endif
-    @endforeach
+    @if($seoPolicy->shouldEmitHreflang())
+        <link rel="alternate" hreflang="x-default" href="{{ $seoPolicy->localizedUrl($cleanPath, $defaultLocale) }}">
+        @foreach($supportedLocales as $hrefLocale)
+            <link rel="alternate" hreflang="{{ $hrefLocale }}" href="{{ $seoPolicy->localizedUrl($cleanPath, $hrefLocale) }}">
+        @endforeach
+    @endif
 
     @stack('head')
     
@@ -59,16 +58,14 @@
 
 </head>
 
-<body class="bg-gradient-to-br from-gray-50 to-gray-100">
+<body class="app-workspace antialiased">
     {{-- SVG sprite sheet — rendered once, referenced by all components --}}
     @stack('svg-sprites')
     <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 focus:bg-blue-600 focus:text-white focus:p-3 focus:z-50 focus:rounded-br-lg">{{ __('ui.skip_to_content') }}</a>
     <x-global-header></x-global-header>
 
-    <main id="main-content" class="bg-gray-100">
-    <div class="absolute top-0 left-0 w-full h-[100px] opacity-20 z-0">
-    </div>
-    <div class="relative z-[2]">
+    <main id="main-content" class="mobile-nav-safe min-h-screen bg-workspace">
+    <div>
         @isset($slot)
             {{ $slot }}
         @else

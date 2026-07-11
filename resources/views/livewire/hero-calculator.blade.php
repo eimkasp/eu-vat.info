@@ -43,18 +43,15 @@
     @endif
 
     {{-- Mode Tabs --}}
-    <div class="max-w-4xl mx-auto mb-0">
-        <div class="flex items-center bg-white rounded-t-2xl border border-b-0 border-gray-200 px-1 pt-1 overflow-x-auto">
-            <div class="relative flex p-1 gap-0 bg-gray-100 rounded-xl">
-                {{-- Sliding background indicator --}}
-                <div class="absolute top-1 bottom-1 rounded-lg bg-gray-800 shadow-md transition-all duration-300 ease-out"
-                     :style="'width: calc(50% - 4px); ' + (mode === 'include' ? 'left: calc(50% + 2px)' : 'left: 2px')"></div>
-
+    <div class="mx-auto mb-0 max-w-4xl">
+        <div class="flex items-center gap-3 rounded-t-xl border border-b-0 border-line bg-white p-2">
+            <div class="flex gap-1 rounded-lg bg-surface-subtle p-1">
                 <button
                     type="button"
                     @click="mode = 'exclude'; compute()"
-                    class="relative z-10 flex items-center gap-2 px-6 py-3 rounded-lg text-sm font-bold transition-colors duration-300 whitespace-nowrap"
-                    :class="{ 'text-white': mode === 'exclude', 'text-gray-500': mode !== 'exclude', 'hover:text-gray-700': mode !== 'exclude' }"
+                    class="flex min-h-11 items-center gap-2 whitespace-nowrap rounded-md px-4 text-sm font-semibold transition-colors duration-150 sm:px-5"
+                    :class="mode === 'exclude' ? 'bg-ink text-white' : 'text-ink-muted hover:bg-white hover:text-ink'"
+                    :aria-pressed="(mode === 'exclude').toString()"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -64,8 +61,9 @@
                 <button
                     type="button"
                     @click="mode = 'include'; compute()"
-                    class="relative z-10 flex items-center gap-2 px-6 py-3 rounded-lg text-sm font-bold transition-colors duration-300 whitespace-nowrap"
-                    :class="{ 'text-white': mode === 'include', 'text-gray-500': mode !== 'include', 'hover:text-gray-700': mode !== 'include' }"
+                    class="flex min-h-11 items-center gap-2 whitespace-nowrap rounded-md px-4 text-sm font-semibold transition-colors duration-150 sm:px-5"
+                    :class="mode === 'include' ? 'bg-ink text-white' : 'text-ink-muted hover:bg-white hover:text-ink'"
+                    :aria-pressed="(mode === 'include').toString()"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14" />
@@ -73,7 +71,7 @@
                     {{ __('ui.calculator.remove_vat_mode') }}
                 </button>
             </div>
-            <div class="ml-auto hidden sm:flex items-center gap-3 pr-3 text-xs text-gray-600">
+            <div class="ml-auto hidden items-center gap-3 pr-2 text-xs font-medium text-ink-muted sm:flex">
                 <span class="flex items-center gap-1">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
@@ -91,8 +89,8 @@
     </div>
 
     {{-- Calculator Bar --}}
-    <div id="hero-calculator" class="max-w-4xl mx-auto">
-        <div class="bg-white rounded-b-2xl shadow-xl border border-t-0 border-gray-200 overflow-hidden">
+    <div id="hero-calculator" class="mx-auto max-w-4xl">
+        <div class="relative rounded-b-xl border border-t-0 border-line bg-white shadow-workflow">
             {{-- Row 1: Country + Amount + Calculate --}}
             <div class="p-4 sm:p-5 pb-0 sm:pb-0">
                 <div class="flex flex-col sm:flex-row gap-3">
@@ -125,13 +123,13 @@
                          @click.outside="open = false"
                          @keydown.escape.window="open = false"
                     >
-                        <label id="country-selector-label" class="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1.5 pl-1">{{ __('ui.calculator.country_label') }}</label>
+                        <label id="country-selector-label" class="mb-1.5 block pl-0.5 text-sm font-semibold text-ink-muted sm:text-xs">{{ __('ui.calculator.country_label') }}</label>
                         <div class="relative">
                             {{-- Trigger button --}}
                             <button
                                 type="button"
                                 @click="open = !open; $nextTick(() => open && $refs.searchInput.focus())"
-                                class="w-full flex items-center gap-2.5 bg-gray-50 border border-gray-200 rounded-xl pl-3 pr-10 py-3.5 text-sm font-medium text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-gray-300 transition-all cursor-pointer text-left h-[50px]"
+                                class="app-field flex h-12 w-full cursor-pointer items-center gap-2.5 py-3 pl-3 pr-10 text-left text-sm font-medium"
                                 aria-haspopup="listbox"
                                 :aria-expanded="open.toString()"
                                 aria-labelledby="country-selector-label"
@@ -155,7 +153,7 @@
                                  x-transition:leave="transition ease-in duration-100"
                                  x-transition:leave-start="opacity-100 translate-y-0"
                                  x-transition:leave-end="opacity-0 -translate-y-1"
-                                 class="absolute z-50 mt-1.5 w-full bg-white rounded-xl border border-gray-200 shadow-2xl overflow-hidden"
+                                 class="absolute z-50 mt-1.5 w-full overflow-hidden rounded-lg border border-line bg-white shadow-floating"
                                  style="display: none;"
                             >
                                 {{-- Search --}}
@@ -169,7 +167,7 @@
                                             x-model="search"
                                             type="text"
                                             placeholder="{{ __('ui.calculator.search_countries') }}"
-                                            class="w-full pl-8 pr-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-50"
+                                            class="app-field w-full py-2 pl-8 pr-3 text-sm"
                                             @keydown.enter.prevent="if(filtered.length === 1) select(filtered[0].slug)"
                                         >
                                     </div>
@@ -187,7 +185,7 @@
                                         >
                                             <img :src="'https://flagcdn.com/h40/' + c.iso + '.jpg'" :alt="c.name" class="h-4 w-auto rounded-[2px] shadow-sm shrink-0" loading="lazy">
                                             <span x-text="c.name" class="truncate"></span>
-                                            <span class="ml-auto text-xs text-gray-400 tabular-nums shrink-0" x-text="c.standard_rate + '%'"></span>
+                                            <span class="ml-auto shrink-0 text-sm tabular-nums text-ink-muted sm:text-xs" x-text="c.standard_rate + '%'"></span>
                                             <svg x-show="c.slug === $wire.selectedCountrySlug" class="w-4 h-4 text-blue-500 shrink-0" fill="currentColor" viewBox="0 0 20 20">
                                                 <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
                                             </svg>
@@ -203,7 +201,7 @@
 
                     {{-- Amount Input --}}
                     <div class="flex-1 min-w-0">
-                        <label class="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1.5 pl-1">
+                        <label class="mb-1.5 block pl-0.5 text-sm font-semibold text-ink-muted sm:text-xs">
                             <span x-text="mode === 'include' ? '{{ __('ui.calculator.amount_incl_vat') }}' : '{{ __('ui.calculator.amount_excl_vat') }}'"></span>
                         </label>
                         <div class="relative">
@@ -215,7 +213,7 @@
                                 type="text"
                                 inputmode="decimal"
                                 placeholder="0.00"
-                                class="w-full bg-gray-50 border border-gray-200 rounded-xl pl-10 pr-4 py-3.5 text-base font-bold text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-gray-300 transition-all tabular-nums tracking-tight h-[50px]"
+                                class="app-field h-12 w-full py-3 pl-10 pr-4 text-base font-bold tabular-nums tracking-tight"
                             >
                         </div>
                     </div>
@@ -224,7 +222,7 @@
                     <div class="shrink-0 flex items-end">
                         <button
                             @click="compute(); hasResults = true; $wire.calculate(mode, selectedRate, useCustomRate, customRate, amount)"
-                            class="w-full sm:w-auto px-10 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold rounded-xl shadow-lg shadow-blue-600/25 hover:shadow-xl hover:shadow-blue-600/30 active:scale-[0.98] transition-all duration-150 flex items-center justify-center gap-2 text-base whitespace-nowrap h-[50px]"
+                            class="app-button-primary h-12 w-full gap-2 whitespace-nowrap px-8 text-base sm:w-auto"
                         >
                             <svg wire:loading.remove wire:target="calculate" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 15.75V18m-7.5-6.75h.008v.008H8.25v-.008Zm0 2.25h.008v.008H8.25V13.5Zm0 2.25h.008v.008H8.25v-.008Zm0 2.25h.008v.008H8.25V18Zm2.498-6.75h.007v.008h-.007v-.008Zm0 2.25h.007v.008h-.007V13.5Zm0 2.25h.007v.008h-.007v-.008Zm0 2.25h.007v.008h-.007V18Zm2.504-6.75h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V13.5Zm0 2.25h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V18Zm2.498-6.75h.008v.008H15.75v-.008Zm0 2.25h.008v.008H15.75V13.5ZM8.25 6h7.5v2.25h-7.5V6ZM12 2.25c-1.892 0-3.758.11-5.593.322C5.307 2.7 4.5 3.65 4.5 4.757V19.5a2.25 2.25 0 0 0 2.25 2.25h10.5a2.25 2.25 0 0 0 2.25-2.25V4.757c0-1.108-.806-2.057-1.907-2.185A48.507 48.507 0 0 0 12 2.25Z" />
@@ -240,26 +238,27 @@
             </div>
 
             {{-- Row 2: Rate pills --}}
-            <div class="px-4 sm:px-5 py-3 border-t border-gray-100 bg-gray-50/50">
+            <div class="border-t border-line bg-surface-subtle px-4 py-3 sm:px-5">
                 <div class="flex flex-wrap items-center gap-2">
-                    <span class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mr-1">{{ __('ui.calculator.rate_label') }}</span>
+                    <span class="mr-1 text-sm font-semibold text-ink-muted sm:text-xs">{{ __('ui.calculator.rate_label') }}</span>
                     @foreach($rates as $rate)
                         <button
                             type="button"
                             @click="useCustomRate = false; customRate = ''; selectedRate = {{ $rate['value'] }}; compute()"
-                            class="relative px-3.5 py-2 rounded-lg text-sm font-semibold border transition-all duration-200"
+                            class="relative min-h-11 rounded-lg border px-3.5 py-2 text-sm font-semibold transition-colors duration-150"
                             :class="!useCustomRate && selectedRate == {{ $rate['value'] }}
-                                ? 'bg-blue-50 border-blue-300 text-blue-700 ring-1 ring-blue-200'
-                                : 'bg-white border-gray-200 text-gray-600 hover:border-gray-300 hover:text-gray-800'"
+                                ? 'bg-action-soft border-blue-300 text-action-deep'
+                                : 'bg-white border-line text-ink-muted hover:border-slate-400 hover:text-ink'"
+                            :aria-pressed="(!useCustomRate && selectedRate == {{ $rate['value'] }}).toString()"
                         >
-                            <span class="text-[10px] font-medium" :class="!useCustomRate && selectedRate == {{ $rate['value'] }} ? 'text-blue-400' : 'text-gray-400'">{{ $rate['name'] }}</span>
+                            <span class="text-sm font-medium sm:text-xs" :class="!useCustomRate && selectedRate == {{ $rate['value'] }} ? 'text-action' : 'text-ink-quiet'">{{ $rate['name'] }}</span>
                             {{ $rate['value'] }}%
                         </button>
                     @endforeach
 
                     {{-- Custom Rate (active state) --}}
-                    <div x-show="useCustomRate" x-cloak x-transition:enter="transition ease-out duration-150" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" class="flex items-center gap-1 px-3 py-1.5 rounded-lg border-2 border-amber-400 bg-amber-50 text-amber-700">
-                        <span class="text-[10px] font-medium text-amber-500">{{ __('ui.calculator.custom_label') }}</span>
+                    <div x-show="useCustomRate" x-cloak x-transition:enter="transition ease-out duration-150" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" class="flex min-h-11 items-center gap-1 rounded-lg border border-amber-400 bg-amber-50 px-3 py-1.5 text-amber-800">
+                        <span class="text-sm font-medium text-amber-700 sm:text-xs">{{ __('ui.calculator.custom_label') }}</span>
                         <input
                             x-ref="customRateInput"
                             type="number"
@@ -270,9 +269,9 @@
                             max="100"
                             placeholder="0"
                             @click.stop
-                            class="w-14 px-1.5 py-0.5 text-sm font-semibold border border-amber-300 rounded bg-white focus:ring-1 focus:ring-amber-500 text-center"
+                            class="w-14 rounded-md border border-amber-300 bg-white px-1.5 py-1 text-center text-sm font-semibold focus:border-amber-600 focus:ring-2 focus:ring-amber-200"
                         >
-                        <span class="text-xs font-semibold">%</span>
+                        <span class="text-sm font-semibold">%</span>
                     </div>
 
                     {{-- Custom Rate (toggle button) --}}
@@ -280,7 +279,7 @@
                         x-show="!useCustomRate"
                         type="button"
                         @click="useCustomRate = true; $nextTick(() => $refs.customRateInput.focus())"
-                        class="px-3.5 py-2 rounded-lg text-sm font-semibold border border-dashed border-gray-300 text-gray-400 hover:border-amber-300 hover:text-amber-600 hover:bg-amber-50 transition-all duration-200"
+                        class="min-h-11 rounded-lg border border-dashed border-slate-400 bg-white px-3.5 py-2 text-sm font-semibold text-ink-muted transition-colors duration-150 hover:border-amber-500 hover:bg-amber-50 hover:text-amber-800"
                     >
                         {{ __('ui.calculator.custom_percent') }}
                     </button>
@@ -288,32 +287,32 @@
             </div>
 
             {{-- Results Panel --}}
-                <div x-show="hasResults && total > 0 && !errorMsg" x-cloak x-transition class="border-t border-gray-100 bg-gradient-to-r from-gray-50 to-blue-50/30">
+                <div x-show="hasResults && total > 0 && !errorMsg" x-cloak x-transition class="rounded-b-xl border-t border-line bg-white">
                     <div class="p-4 sm:p-5">
                         {{-- Context sentence with flag --}}
-                        <div class="flex items-center gap-2 mb-4 text-sm text-gray-500">
+                        <div class="mb-4 flex items-center gap-2 text-sm text-ink-muted">
                             <img src="https://flagcdn.com/h40/{{ strtolower($selectedCountryObject?->iso_code ?? 'de') }}.jpg"
                                  alt="{{ $selectedCountryObject?->name ?? '' }}"
-                                 class="h-4 w-auto rounded-[2px] shadow-sm">
+                                 class="h-4 w-6 rounded-sm object-cover">
                             <template x-if="mode === 'exclude'">
-                                <span x-text="currency + fmt(amount) + ' + ' + selectedRate + '% VAT in '"><span class="text-gray-700 font-bold">{{ $selectedCountryObject?->name ?? '' }}</span></span>
+                                <span x-text="currency + fmt(amount) + ' + ' + selectedRate + '% VAT in '"></span>
                             </template>
                             <template x-if="mode === 'exclude'">
-                                <strong class="text-gray-700">{{ $selectedCountryObject?->name ?? '' }}</strong>
+                                <strong class="text-ink">{{ $selectedCountryObject?->name ?? '' }}</strong>
                             </template>
                             <template x-if="mode === 'include'">
                                 <span x-text="currency + fmt(amount) + ' including ' + selectedRate + '% VAT in '"></span>
                             </template>
                             <template x-if="mode === 'include'">
-                                <strong class="text-gray-700">{{ $selectedCountryObject?->name ?? '' }}</strong>
+                                <strong class="text-ink">{{ $selectedCountryObject?->name ?? '' }}</strong>
                             </template>
                         </div>
 
-                        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+                        <div class="grid grid-cols-3 items-center gap-3 sm:flex sm:items-center sm:gap-4">
                             {{-- Net Amount --}}
                             <div class="flex-1 text-center sm:text-left">
-                                <div class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1">{{ __('ui.calculator.net_amount') }}</div>
-                                <div class="text-2xl sm:text-3xl font-bold text-gray-900 tabular-nums" x-text="currency + fmt(net)">
+                                <div class="mb-1 text-sm font-semibold text-ink-muted sm:text-xs">{{ __('ui.calculator.net_amount') }}</div>
+                                <div class="text-lg font-bold tabular-nums text-ink sm:text-2xl" x-text="currency + fmt(net)">
                                 </div>
                             </div>
 
@@ -335,8 +334,8 @@
 
                             {{-- VAT Amount --}}
                             <div class="flex-1 text-center">
-                                <div class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1" x-text="'VAT (' + selectedRate + '%)'"></div>
-                                <div :class="mode === 'exclude' ? 'text-blue-600' : 'text-red-600'" class="text-2xl sm:text-3xl font-bold tabular-nums">
+                                <div class="mb-1 text-sm font-semibold text-ink-muted sm:text-xs" x-text="'VAT (' + selectedRate + '%)'"></div>
+                                <div :class="mode === 'exclude' ? 'text-action-deep' : 'text-red-700'" class="text-lg font-bold tabular-nums sm:text-2xl">
                                     <template x-if="mode === 'exclude'">
                                         <span x-text="'+' + currency + fmt(vat)"></span>
                                     </template>
@@ -353,7 +352,7 @@
 
                             {{-- Total --}}
                             <div class="flex-1 text-center sm:text-right">
-                                <div class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1">
+                                <div class="mb-1 text-sm font-semibold text-ink-muted sm:text-xs">
                                     <template x-if="mode === 'exclude'">
                                         <span>{{ __('ui.calculator.total_incl_vat') }}</span>
                                     </template>
@@ -361,21 +360,21 @@
                                         <span>{{ __('ui.calculator.you_entered_incl_vat') }}</span>
                                     </template>
                                 </div>
-                                <div class="text-2xl sm:text-3xl font-extrabold text-gray-900 tabular-nums" x-text="currency + fmt(total)">
+                                <div class="text-lg font-extrabold tabular-nums text-ink sm:text-2xl" x-text="currency + fmt(total)">
                                 </div>
                             </div>
 
                             {{-- CTA --}}
-                            <div class="flex flex-col gap-2 sm:pl-4 sm:border-l border-gray-200">
+                            <div class="col-span-3 grid grid-cols-2 gap-2 border-t border-line pt-3 sm:flex sm:flex-col sm:border-l sm:border-t-0 sm:pl-4 sm:pt-0">
                                 <a :href="'{{ locale_path('/vat-calculation') }}/' + $wire.selectedCountrySlug + '/' + (amount || 0) + '/' + selectedRate + '/' + mode"
-                                   class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 bg-gray-800 hover:bg-gray-900 text-white rounded-lg text-xs font-semibold shadow-sm transition-all duration-200">
+                                   class="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-lg bg-ink px-3 text-sm font-semibold text-white transition-colors duration-150 hover:bg-slate-900 sm:text-xs">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z" />
                                     </svg>
                                     {{ __('ui.calculator.share_details') }}
                                 </a>
                                 <a :href="'{{ locale_path('/vat-calculator') }}/' + $wire.selectedCountrySlug"
-                                   class="inline-flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-medium text-gray-500 hover:text-blue-600 transition-colors duration-200">
+                                   class="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-lg px-3 text-sm font-semibold text-ink-muted transition-colors duration-150 hover:bg-surface-subtle hover:text-action-deep sm:text-xs">
                                     {{ __('ui.calculator.full_calculator') }}
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
@@ -385,7 +384,7 @@
                         </div>
 
                         {{-- Mobile-only divider with formula --}}
-                        <div class="sm:hidden mt-3 pt-3 border-t border-gray-200 text-center text-xs text-gray-400">
+                        <div class="mt-3 border-t border-line pt-3 text-center text-sm text-ink-muted sm:hidden">
                             <template x-if="mode === 'exclude'">
                                 <span x-text="currency + fmt(net) + ' + ' + selectedRate + '% VAT = ' + currency + fmt(total)"></span>
                             </template>
@@ -408,31 +407,19 @@
         </div>
     </div>
 
-    {{-- Quick Stats --}}
-    <div class="max-w-4xl mx-auto mt-4 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs font-medium text-white/85">
+    {{-- Source and freshness --}}
+    <div class="mx-auto mt-4 flex max-w-4xl flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm font-medium text-blue-50 sm:text-xs">
         <span class="flex items-center gap-1.5">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-green-500" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-emerald-300" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
             </svg>
             {{ __('ui.trust.official_ec_data') }}
         </span>
         <span class="flex items-center gap-1.5">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0 1 21 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0 1 12 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 0 1 3 12c0-1.605.42-3.113 1.157-4.418" />
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-200" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
             </svg>
-            {{ __('ui.calculator.eu_countries_count') }}
-        </span>
-        <span class="flex items-center gap-1.5">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-green-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-            </svg>
-            {{ __('ui.calculator.free_label') }}
-        </span>
-        <span class="flex items-center gap-1.5">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-amber-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
-            </svg>
-            {{ __('ui.calculator.no_signup') }}
+            {{ __('ui.data_updated_daily') }}
         </span>
     </div>
 
@@ -449,7 +436,7 @@
                 </h3>
                 <button
                     wire:click="clearHistory"
-                    class="text-xs text-white/60 hover:text-red-300 transition-colors"
+                    class="inline-flex min-h-11 items-center rounded-md px-2 text-xs text-blue-100 transition-colors hover:bg-white/10 hover:text-white"
                 >
                     {{ __('ui.calculator.clear_all') }}
                 </button>
@@ -477,8 +464,8 @@
                         class="{{ $index >= 3 ? 'hidden' : '' }}"
                         :class="{ '!hidden': {{ $index }} >= 3 && !expanded, '!block': {{ $index }} >= 3 && expanded }"
                     >
-                        <div class="bg-white rounded-xl border border-gray-200 p-3.5 hover:border-blue-300 hover:shadow-md transition-all duration-300 cursor-pointer group text-left h-full"
-                             :class="loadingIndex === {{ $index }} ? 'border-blue-400 shadow-lg shadow-blue-100 scale-[0.97] ring-2 ring-blue-200' : ''">
+                        <div class="group h-full cursor-pointer rounded-xl border border-line bg-white p-3.5 text-left transition-colors duration-150 hover:border-blue-300 hover:bg-action-soft"
+                             :class="loadingIndex === {{ $index }} ? 'border-action bg-action-soft ring-2 ring-blue-200' : ''">
                             <div class="flex items-center gap-2.5 mb-2.5">
                                 <img src="https://flagcdn.com/h40/{{ $entry['flag_iso'] }}.jpg"
                                     alt="{{ $entry['country'] }} flag" class="h-5 w-auto rounded-sm shadow-sm shrink-0" loading="lazy">

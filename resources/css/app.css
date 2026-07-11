@@ -3,92 +3,125 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Prevent Alpine.js x-cloak elements from flashing before JS initialises */
-[x-cloak] { display: none !important; }
+:root {
+    --color-brand: #003399;
+    --color-brand-deep: #002b7a;
+    --color-action: #2563eb;
+    --color-action-deep: #1d4ed8;
+    --color-ink: #172033;
+    --color-ink-muted: #536176;
+    --color-ink-quiet: #65758b;
+    --color-workspace: #f4f7fb;
+    --color-surface: #ffffff;
+    --color-surface-subtle: #eef3f8;
+    --color-line: #d8e0ea;
+    --radius-control: 0.5rem;
+    --radius-panel: 0.75rem;
+    --radius-workflow: 1rem;
+    --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+}
 
-/* Accessible focus indicators */
+[x-cloak] {
+    display: none !important;
+}
+
+html {
+    background: var(--color-workspace);
+    color: var(--color-ink);
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    text-rendering: optimizeLegibility;
+}
+
+body {
+    min-height: 100vh;
+    background: var(--color-workspace);
+    color: var(--color-ink);
+}
+
 *:focus-visible {
-    outline: 2px solid #4F46E5;
+    outline: 2px solid var(--color-action);
     outline-offset: 2px;
 }
 
 .container {
     @apply max-w-6xl;
-    /* max-width: 1140px; */
     margin: 0 auto;
     padding: 0 20px;
 }
 
-h1 {
-    font-weight: 700;
-}
-
+h1,
 h2,
 h3,
 h4,
 h5,
 h6 {
-    font-weight: 600 !important;
-    line-height: 1.1;
-    margin-bottom: 15px;
+    color: var(--color-ink);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
 }
 
 h2 {
-    font-size: 2.2rem;
+    font-size: 1.75rem;
 }
 
 h3 {
-    font-size: 1.8rem;
-}
-
-h4 {
-    font-size: 1.5rem;
-}
-
-h5 {
     font-size: 1.25rem;
 }
 
-h6 {
+h4 {
+    font-size: 1.125rem;
+}
+
+h5 {
     font-size: 1rem;
 }
 
-@media(max-width: 768px) {
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-        line-height: 1.2;
-        margin-bottom: 20px;
-    }
+h6 {
+    font-size: 0.875rem;
+}
 
+@media (max-width: 768px) {
     h2 {
-        font-size: 1.8rem;
-    }
-
-    h3 {
         font-size: 1.5rem;
     }
 
-    h4 {
+    h3 {
         font-size: 1.25rem;
-    }
-
-    h5 {
-        font-size: 1rem;
-    }
-
-    h6 {
-        font-size: 1rem;
     }
 }
 
 p {
     font-size: 1rem;
-    line-height: 1.4;
-    margin-bottom: 20px;
+    line-height: 1.6;
+    text-wrap: pretty;
+}
+
+@layer components {
+    .app-workspace {
+        @apply bg-workspace text-ink;
+    }
+
+    .app-surface {
+        @apply rounded-xl border border-line bg-white;
+    }
+
+    .app-field {
+        @apply min-h-11 rounded-lg border border-line bg-white px-3.5 text-ink placeholder:text-ink-quiet hover:border-slate-400 focus:border-action focus:ring-2 focus:ring-action/20;
+    }
+
+    .app-button-primary {
+        @apply inline-flex min-h-11 items-center justify-center rounded-lg bg-action px-5 font-semibold text-white transition-colors duration-150 hover:bg-action-deep active:bg-blue-800 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-slate-600;
+    }
+
+    .app-button-secondary {
+        @apply inline-flex min-h-11 items-center justify-center rounded-lg border border-line bg-white px-5 font-semibold text-ink transition-colors duration-150 hover:border-slate-400 hover:bg-surface-subtle active:bg-slate-200;
+    }
+
+    .mobile-nav-safe {
+        padding-bottom: calc(4.5rem + env(safe-area-inset-bottom));
+    }
 }
 
 .country-content a {
@@ -177,8 +210,26 @@ p {
 }
 
 .blog-content blockquote {
-    border-left: 4px solid #2563eb;
+    border: 1px solid #bfdbfe;
+    border-radius: 0.5rem;
     background: #eff6ff;
     padding: 1rem;
     color: #1f2937;
+}
+
+@media (min-width: 768px) {
+    .mobile-nav-safe {
+        padding-bottom: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+    }
 }

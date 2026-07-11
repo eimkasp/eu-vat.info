@@ -2,7 +2,7 @@
 @php
     $calcMetaTitle = __('ui.calculator.meta_title_country', ['country' => $selectedCountryObject->name, 'rate' => $selectedCountryObject->standard_rate]);
     $calcMetaDesc = __('ui.calculator.meta_desc_country', ['country' => $selectedCountryObject->name, 'rate' => $selectedCountryObject->standard_rate]);
-    $calcCanonical = url(locale_path('/vat-calculator/' . $selectedCountryObject->slug));
+    $calcCanonical = app(\App\Support\Seo\SeoPolicy::class)->localizedUrl('/vat-calculator/' . $selectedCountryObject->slug, app()->getLocale());
 @endphp
 @section('title', $calcMetaTitle)
 @section('meta_description', $calcMetaDesc)
@@ -10,9 +10,6 @@
     <x-seo-meta :title="$calcMetaTitle"
         :description="$calcMetaDesc"
         :url="$calcCanonical">
-        <link rel="canonical" href="{{ $calcCanonical }}">
-        <meta property="og:url" content="{{ $calcCanonical }}">
-        <meta property="og:type" content="website">
         <meta property="og:locale" content="{{ str_replace('-', '_', app()->getLocale()) }}">
         <meta property="article:modified_time" content="{{ $selectedCountryObject->updated_at->toIso8601String() }}">
         <script type="application/ld+json">
@@ -346,17 +343,48 @@
                     {{-- Quick links --}}
                     <section>
                         <div class="flex flex-wrap gap-3">
-                            <a href="{{ locale_path('/vat-changes') }}"
+                            @if($selectedCountryObject->hasVatHistory())
+                            <a href="{{ locale_path('/vat-rates/'.$selectedCountryObject->slug.'/history') }}"
                                class="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm font-medium">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                 {{ __('ui.country_page.rate_history_link') }}
                             </a>
+                            @endif
                             <a href="{{ locale_path('/vat-map') }}"
                                class="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm font-medium">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
                                 {{ __('ui.country_page.vat_map_link') }}
                             </a>
                         </div>
+                        @php
+                            $comparisonPairs = app(\App\Services\Seo\InternalLinkService::class)->approvedPairsFor($selectedCountryObject);
+                            $categoryRules = app(\App\Services\Seo\VatCategorySeoService::class)
+                                ->currentRules()
+                                ->where('country_id', $selectedCountryObject->id);
+                        @endphp
+                        @if($comparisonPairs->isNotEmpty())
+                            <div class="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-sm">
+                                @foreach($comparisonPairs as $comparisonPair)
+                                    @php
+                                        $otherSlug = $comparisonPair[0] === $selectedCountryObject->slug ? $comparisonPair[1] : $comparisonPair[0];
+                                        $otherCountry = \App\Models\Country::where('slug', $otherSlug)->where('is_eu_member', true)->first();
+                                    @endphp
+                                    @if($otherCountry)
+                                        <a class="font-semibold text-action hover:underline" href="{{ locale_path('/compare/'.implode('-vs-', $comparisonPair).'-vat') }}">Compare with {{ $otherCountry->name }} →</a>
+                                    @endif
+                                @endforeach
+                            </div>
+                        @endif
+                        @if($categoryRules->isNotEmpty())
+                            <div class="mt-6 border-t border-line pt-5">
+                                <h3 class="text-base font-bold text-ink">Verified category rates</h3>
+                                <div class="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-sm">
+                                    @foreach($categoryRules as $categoryRule)
+                                        <a class="font-semibold text-action hover:underline" href="{{ locale_path('/vat-rates/'.$selectedCountryObject->slug.'/categories/'.$categoryRule->category_slug) }}">{{ $categoryRule->category_name }} VAT rate →</a>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
                     </section>
                 @endisset
 

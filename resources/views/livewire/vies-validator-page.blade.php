@@ -361,6 +361,19 @@
                 </div>
             </div>
 
+            @if($countryObject && $vatFormat)
+                <section class="app-surface p-6" aria-labelledby="vat-number-format">
+                    <h2 id="vat-number-format" class="text-lg font-bold text-ink">{{ $countryObject->name }} VAT number format</h2>
+                    <dl class="mt-4 divide-y divide-line border-y border-line text-sm">
+                        <div class="flex items-center justify-between gap-4 py-3"><dt class="text-ink-muted">Expected prefix</dt><dd class="font-mono font-bold text-ink">{{ $vatFormat['prefix'] }}</dd></div>
+                        <div class="flex items-center justify-between gap-4 py-3"><dt class="text-ink-muted">Format guidance</dt><dd class="font-semibold text-ink">{{ $vatFormat['guidance'] }}</dd></div>
+                    </dl>
+                    <p class="mt-4 text-sm text-ink-muted">{{ $vatFormat['note'] }}</p>
+                    <p class="mt-3 text-sm text-ink-muted">Only national tax administrations can issue VAT identification numbers. VIES checks registration status but does not replace tax or legal advice.</p>
+                    <a class="mt-4 inline-flex text-sm font-semibold text-action hover:underline" href="{{ $vatFormat['source_url'] }}" rel="noopener noreferrer">European Commission VAT identification guidance →</a>
+                </section>
+            @endif
+
             {{-- What is VIES --}}
             <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
                 <div class="px-6 py-4 border-b border-gray-100">

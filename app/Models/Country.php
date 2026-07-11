@@ -86,6 +86,16 @@ class Country extends Model implements Auditable, Sitemapable
         return $this->hasMany(VatRateChange::class);
     }
 
+    public function hasVatHistory(): bool
+    {
+        return $this->vatRates()->exists() || $this->vatRateChanges()->exists();
+    }
+
+    public function vatRateRules()
+    {
+        return $this->hasMany(VatRateRule::class);
+    }
+
     /**
      * Get the currency symbol for this country.
      * Falls back to a lookup by ISO code when the DB field is empty.

@@ -45,23 +45,26 @@ class HeroCalculator extends Component
 
     public function mount($initialCountry = null)
     {
-        $this->countries = Cache::remember('hero_calc_countries', 600, function () {
-            return Country::orderBy('name', 'ASC')->get()->map(function ($c) {
-                $iso = strtoupper($c->iso_code);
-                $flag = '';
-                if (strlen($iso) === 2) {
-                    $flag = mb_chr(ord($iso[0]) + 127397) . mb_chr(ord($iso[1]) + 127397);
-                }
+        $this->countries = Cache::remember('hero_calc_eu_countries_v2', 600, function () {
+            return Country::where('is_eu_member', true)
+                ->orderBy('name', 'ASC')
+                ->get()
+                ->map(function ($c) {
+                    $iso = strtoupper($c->iso_code);
+                    $flag = '';
+                    if (strlen($iso) === 2) {
+                        $flag = mb_chr(ord($iso[0]) + 127397).mb_chr(ord($iso[1]) + 127397);
+                    }
 
-                return [
-                    'slug' => $c->slug,
-                    'name' => $c->name,
-                    'flag' => $flag,
-                    'iso' => strtolower($c->iso_code),
-                    'standard_rate' => $c->standard_rate,
-                    'currency_display' => $c->currency_display,
-                ];
-            })->toArray();
+                    return [
+                        'slug' => $c->slug,
+                        'name' => $c->name,
+                        'flag' => $flag,
+                        'iso' => strtolower($c->iso_code),
+                        'standard_rate' => $c->standard_rate,
+                        'currency_display' => $c->currency_display,
+                    ];
+                })->toArray();
         });
 
         // Priority: initialCountry prop > URL param > cookie > default (Germany)
@@ -92,7 +95,7 @@ class HeroCalculator extends Component
         $this->selectedCountryObject = Country::where('slug', $this->selectedCountrySlug)->first();
         $this->loadRates();
 
-        if (!$this->useCustomRate && count($this->rates) > 0) {
+        if (! $this->useCustomRate && count($this->rates) > 0) {
             $this->selectedRate = $this->rates[0]['value'];
         }
 
@@ -172,9 +175,9 @@ class HeroCalculator extends Component
         $this->showResults = true;
 
         // Save to history (deduplicated by country+rate+amount+mode)
-        if ($this->total > 0 && !$this->error_message) {
+        if ($this->total > 0 && ! $this->error_message) {
             $countryData = collect($this->countries)->firstWhere('slug', $this->selectedCountrySlug);
-            $key = $this->selectedCountrySlug . '|' . $this->selectedRate . '|' . $this->amount . '|' . $this->mode;
+            $key = $this->selectedCountrySlug.'|'.$this->selectedRate.'|'.$this->amount.'|'.$this->mode;
             $entry = [
                 'key' => $key,
                 'slug' => $this->selectedCountrySlug,
@@ -236,7 +239,7 @@ class HeroCalculator extends Component
                 $amount = round(floatval($cleaned), 2);
             }
 
-            if (!is_numeric($amount) || $amount < 0) {
+            if (! is_numeric($amount) || $amount < 0) {
                 throw new \InvalidArgumentException('Please enter a valid positive number');
             }
 
@@ -265,7 +268,7 @@ class HeroCalculator extends Component
     {
         $this->rates = [];
 
-        if (!$this->selectedCountryObject) {
+        if (! $this->selectedCountryObject) {
             return;
         }
 
@@ -283,7 +286,7 @@ class HeroCalculator extends Component
         if ($historicalRates->isNotEmpty()) {
             foreach ($historicalRates as $rate) {
                 $type = strtolower($rate->type);
-                if (!in_array($type, $addedTypes)) {
+                if (! in_array($type, $addedTypes)) {
                     $this->rates[] = [
                         'name' => ucfirst(str_replace('_', ' ', $rate->type)),
                         'value' => (float) $rate->rate,
@@ -295,8 +298,8 @@ class HeroCalculator extends Component
         }
 
         // Fallback to country model rates
-        if (empty($this->rates) || !in_array('standard', $addedTypes)) {
-            if ($this->selectedCountryObject->standard_rate && !in_array('standard', $addedTypes)) {
+        if (empty($this->rates) || ! in_array('standard', $addedTypes)) {
+            if ($this->selectedCountryObject->standard_rate && ! in_array('standard', $addedTypes)) {
                 array_unshift($this->rates, [
                     'name' => 'Standard',
                     'value' => (float) $this->selectedCountryObject->standard_rate,
@@ -305,7 +308,7 @@ class HeroCalculator extends Component
             }
         }
 
-        if ($this->selectedCountryObject->reduced_rate && !in_array('reduced', $addedTypes)) {
+        if ($this->selectedCountryObject->reduced_rate && ! in_array('reduced', $addedTypes)) {
             $this->rates[] = [
                 'name' => 'Reduced',
                 'value' => (float) $this->selectedCountryObject->reduced_rate,
@@ -313,7 +316,7 @@ class HeroCalculator extends Component
             ];
         }
 
-        if ($this->selectedCountryObject->super_reduced_rate && !in_array('super_reduced', $addedTypes)) {
+        if ($this->selectedCountryObject->super_reduced_rate && ! in_array('super_reduced', $addedTypes)) {
             $this->rates[] = [
                 'name' => 'Super reduced',
                 'value' => (float) $this->selectedCountryObject->super_reduced_rate,
@@ -321,7 +324,7 @@ class HeroCalculator extends Component
             ];
         }
 
-        if ($this->selectedCountryObject->parking_rate && !in_array('parking', $addedTypes)) {
+        if ($this->selectedCountryObject->parking_rate && ! in_array('parking', $addedTypes)) {
             $this->rates[] = [
                 'name' => 'Parking',
                 'value' => (float) $this->selectedCountryObject->parking_rate,

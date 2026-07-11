@@ -1,19 +1,19 @@
 <div>
-@if(count($recentCountries) > 0)
-<div class="bg-white rounded-lg shadow-lg p-6 mb-6">
-    <h2 class="text-xl font-bold mb-4">Recently Viewed Countries</h2>
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
-        @foreach($recentCountries as $country)
-        <a href="{{ locale_path('/vat-calculator/' . $country->slug) }}" 
-           class="flex flex-col items-center p-3 rounded-lg hover:bg-gray-50 transition-colors">
-            <img src="https://flagcdn.com/h40/{{ strtolower($country->iso_code) }}.jpg" 
-                 alt="{{ $country->name }} flag" 
-                 class="w-10 h-6 object-cover rounded shadow-sm mb-2">
-            <span class="text-sm text-center font-medium">{{ $country->name }}</span>
-            <span class="text-xs text-gray-500">{{ $country->standard_rate }}%</span>
-        </a>
-        @endforeach
+    @if(count($recentCountries) > 0)
+    <div class="app-surface p-4 sm:p-5">
+        <h2 class="mb-4 text-lg font-bold text-ink">Recently Viewed Countries</h2>
+        <div class="grid grid-cols-2 gap-2">
+            @foreach($recentCountries as $country)
+            <a href="{{ locale_path('/vat-calculator/' . $country->slug) }}"
+               class="flex min-h-11 items-center gap-2 rounded-lg p-2.5 transition-colors hover:bg-surface-subtle">
+                <img src="https://flagcdn.com/h40/{{ strtolower($country->iso_code) }}.jpg"
+                     alt="{{ $country->name }} flag"
+                     class="h-5 w-7 shrink-0 rounded-sm object-cover">
+                <span class="min-w-0 flex-1 truncate text-sm font-medium text-ink">{{ $country->name }}</span>
+                <span class="text-sm font-semibold tabular-nums text-ink-muted sm:text-xs">{{ $country->standard_rate }}%</span>
+            </a>
+            @endforeach
+        </div>
     </div>
-</div>
-@endif
+    @endif
 </div>

@@ -36,6 +36,7 @@ class CountryFactory extends Factory
             'zero_rate' => 0,
             'super_reduced_rate' => 0,
             'parking_rate' => 0,
+            'is_eu_member' => true,
         ];
     }
 

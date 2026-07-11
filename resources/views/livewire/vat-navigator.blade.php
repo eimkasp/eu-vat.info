@@ -113,4 +113,13 @@
         </div>
     </div>
 </div>
+
+<section class="mt-8 border-t border-line pt-6">
+    <h2 class="text-xl font-bold text-ink">Read the underlying VAT rules</h2>
+    <div class="mt-4 flex flex-wrap gap-x-5 gap-y-3 text-sm font-semibold">
+        @foreach(config('vat-scenarios') as $scenarioSlug => $scenarioGuide)
+            <a class="text-action hover:underline" href="{{ locale_path('/vat-guides/'.$scenarioSlug) }}">{{ $scenarioGuide['title'] }} →</a>
+        @endforeach
+    </div>
+</section>
 </div>
