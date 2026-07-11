@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\HasAnalytics;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
@@ -63,6 +64,30 @@ class Country extends Model implements Auditable, Sitemapable
     {
         // Find the rank of the country based on the standard rate
         return Country::where('standard_rate', '<', $this->standard_rate)->count() + 1;
+    }
+
+    public function scopeCalculatorAvailable(Builder $query): Builder
+    {
+        return $query
+            ->whereNotNull('slug')
+            ->whereRaw('LENGTH(iso_code) = 2')
+            ->where('standard_rate', '>', 0)
+            ->where(fn (Builder $scope) => $scope
+                ->where('is_eu_member', true)
+                ->orWhereIn('slug', config('calculator.additional_country_slugs', [])));
+    }
+
+    public function isCalculatorAvailable(): bool
+    {
+        return filled($this->slug)
+            && strlen((string) $this->iso_code) === 2
+            && (float) $this->standard_rate > 0
+            && ($this->is_eu_member || in_array($this->slug, config('calculator.additional_country_slugs', []), true));
+    }
+
+    public function calculatorGroup(): string
+    {
+        return $this->is_eu_member ? 'eu' : 'other_europe';
     }
 
     public function toSitemapTag(): Url|string|array
