@@ -30,7 +30,7 @@
         </div>
 
         <div class="relative p-6 sm:p-10">
-            <h1 class="text-2xl sm:text-3xl font-extrabold mb-2">
+            <h1 class="text-2xl sm:text-3xl font-extrabold mb-2 text-white">
                 @if($countryObject)
                     {{ __('ui.vies_page.country_h1', ['country' => $countryObject->name]) }}
                 @else
