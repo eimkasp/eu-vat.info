@@ -23,7 +23,7 @@
         <div class="absolute -bottom-16 -left-16 w-64 h-64 rounded-full bg-white/5 pointer-events-none"></div>
 
         <div class="relative container py-14 sm:py-20 px-4">
-            <x-breadcrumbs :items="['Donate' => '']" variant="dark" />
+            <x-site-breadcrumbs :items="['Donate' => '']" variant="dark" />
             <div class="max-w-3xl">
                 <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-4 leading-tight">
                     Support EU VAT Info

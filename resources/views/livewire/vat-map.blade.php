@@ -9,7 +9,7 @@
 <div>
     <div class="bg-white p-6 shadow-xl rounded-xl">
         <div class="container">
-            <x-breadcrumbs :items="[__('ui.breadcrumbs.vat_map') => '']" />
+            <x-site-breadcrumbs :items="[__('ui.breadcrumbs.vat_map') => '']" />
             
             <div class="max-w-3xl mx-auto mb-6">
                 <h1 class="text-3xl font-bold mb-3">{{ __('ui.map.title') }}</h1>

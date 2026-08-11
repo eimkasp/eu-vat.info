@@ -5,7 +5,7 @@
         url="{{ url(locale_path('/sitemap')) }}">
         <script type="application/ld+json">
         {
-            "@context": "https://schema.org",
+            "@@context": "https://schema.org",
             "@type": "CollectionPage",
             "name": "{{ __('ui.sitemap.schema_name') }}",
             "description": "{{ __('ui.sitemap.schema_desc') }}",
@@ -21,7 +21,7 @@
 @endsection
 
 <div class="container py-12 mt-12 pb-24">
-    <x-breadcrumbs :items="[__('ui.breadcrumbs.sitemap') => '']" />
+    <x-site-breadcrumbs :items="[__('ui.breadcrumbs.sitemap') => '']" />
 
     <div class="mb-10 mt-6">
         <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-900 tracking-tight mb-4">

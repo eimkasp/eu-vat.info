@@ -16,7 +16,7 @@
         <div class="absolute -bottom-16 -left-16 w-64 h-64 rounded-full bg-white/5 pointer-events-none"></div>
 
         <div class="relative container py-14 sm:py-20 px-4">
-            <x-breadcrumbs :items="[__('ui.breadcrumbs.tools') => '']" variant="dark" />
+            <x-site-breadcrumbs :items="[__('ui.breadcrumbs.tools') => '']" variant="dark" />
             <div class="max-w-3xl">
                 <div class="inline-flex items-center gap-2 bg-white/10 rounded-full px-3 py-1 text-xs font-semibold text-blue-100 mb-4">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>

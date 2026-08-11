@@ -22,7 +22,7 @@
 @endsection
 
 <article class="container pb-14 pt-8 sm:pt-12">
-    <x-breadcrumbs :items="['VAT changes' => locale_path('/vat-changes'), $country->name => locale_path('/vat-rates/'.$country->slug.'/history'), $change->change_date->format('M j, Y') => '']" />
+    <x-site-breadcrumbs :items="['VAT changes' => locale_path('/vat-changes'), $country->name => locale_path('/vat-rates/'.$country->slug.'/history'), $change->change_date->format('M j, Y') => '']" />
 
     <header class="max-w-4xl border-b border-line pb-8">
         <p class="text-sm font-semibold text-action">Effective {{ $change->change_date->format('F j, Y') }}</p>

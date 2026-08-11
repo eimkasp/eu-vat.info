@@ -9,7 +9,7 @@
 <div class="mx-auto max-w-6xl px-4 py-8 sm:py-12">
 
     {{-- Breadcrumbs --}}
-    <x-breadcrumbs :items="[__('ui.top_calc.breadcrumb') => '']" />
+    <x-site-breadcrumbs :items="[__('ui.top_calc.breadcrumb') => '']" />
 
     {{-- Hero --}}
     <div class="text-center mb-10">

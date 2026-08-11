@@ -11,7 +11,7 @@
 
 @section('content')
 <div class="container py-12 mt-12 pb-24">
-    <x-breadcrumbs :items="[__('ui.error_404.title') => '']" />
+    <x-site-breadcrumbs :items="[__('ui.error_404.title') => '']" />
 
     {{-- Hero Section --}}
     <div class="text-center mb-12 mt-6">

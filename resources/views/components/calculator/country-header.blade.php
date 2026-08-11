@@ -2,7 +2,7 @@
 
 <header data-country-header class="text-white">
     <div class="container !py-5 sm:!py-7">
-        <x-breadcrumbs variant="dark" :items="[__('ui.calculator.breadcrumb_label') => locale_path('/vat-calculator'), $country->name => '']" />
+        <x-site-breadcrumbs variant="dark" :items="[__('ui.calculator.breadcrumb_label') => locale_path('/vat-calculator'), $country->name => '']" />
 
         <div class="mt-4 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
             <div class="min-w-0">

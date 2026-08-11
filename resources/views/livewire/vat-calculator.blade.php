@@ -174,7 +174,7 @@
             </div>
 
             <div class="container relative">
-                <x-breadcrumbs variant="dark" :items="[__('ui.calculator.breadcrumb_label') => '']" />
+                <x-site-breadcrumbs variant="dark" :items="[__('ui.calculator.breadcrumb_label') => '']" />
                 <div class="mb-6 mt-3 text-center">
                     <h1 class="text-3xl font-extrabold tracking-tight text-white sm:text-4xl lg:text-5xl">{{ __('ui.calculator.european_heading') }}</h1>
                     <p class="mx-auto mt-3 max-w-2xl text-base leading-relaxed text-white/90 sm:text-lg">{{ __('ui.calculator.generic_subtitle') }}</p>

@@ -25,7 +25,7 @@
 @endsection
 
 <div class="container pb-14 pt-8 sm:pt-12">
-    <x-breadcrumbs :items="['EU VAT rates' => locale_path('/'), $title => '']" />
+    <x-site-breadcrumbs :items="['EU VAT rates' => locale_path('/'), $title => '']" />
     <header class="max-w-4xl border-b border-line pb-8">
         <p class="text-sm font-semibold text-action">Country comparison</p>
         <h1 class="mt-3 text-3xl font-bold tracking-tight text-ink sm:text-4xl">{{ $title }}</h1>

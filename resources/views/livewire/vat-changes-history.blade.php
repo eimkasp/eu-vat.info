@@ -13,7 +13,7 @@
         :robots="$historyRobots">
         <script type="application/ld+json">
         {
-            "@context": "https://schema.org",
+            "@@context": "https://schema.org",
             "@type": "WebPage",
             "name": "{{ __('ui.history.meta_title') }}",
             "description": "{{ __('ui.history.meta_desc') }}",
@@ -64,7 +64,7 @@
 @endsection
 
 <div class="container pb-12">
-    <x-breadcrumbs :items="[__('ui.breadcrumbs.vat_changelog') => '']" />
+    <x-site-breadcrumbs :items="[__('ui.breadcrumbs.vat_changelog') => '']" />
 
     <!-- Header -->
     <div class="mb-6">

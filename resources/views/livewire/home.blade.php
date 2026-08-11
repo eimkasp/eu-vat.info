@@ -4,7 +4,7 @@
         type="website">
         <script type="application/ld+json">
         {
-            "@context": "https://schema.org",
+            "@@context": "https://schema.org",
             "@type": "WebSite",
             "name": "EU VAT Info",
             "url": "{{ url('/') }}",
@@ -21,7 +21,7 @@
         </script>
         <script type="application/ld+json">
         {
-            "@context": "https://schema.org",
+            "@@context": "https://schema.org",
             "@type": "Organization",
             "name": "EU VAT Info",
             "url": "{{ url('/') }}",
@@ -30,7 +30,7 @@
         </script>
         <script type="application/ld+json">
         {
-            "@context": "https://schema.org",
+            "@@context": "https://schema.org",
             "@type": "Dataset",
             "name": "EU VAT Rates {{ date('Y') }}",
             "description": "Current Value Added Tax (VAT) rates for all 27 EU member states, including standard, reduced, super-reduced, and parking rates.",

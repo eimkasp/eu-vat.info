@@ -12,7 +12,7 @@
     <noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
     <script type="application/ld+json">
     {
-        "@context": "https://schema.org",
+        "@@context": "https://schema.org",
         "@type": "WebPage",
         "name": "EU VAT Rates {{ date('Y') }}",
         "description": "Current VAT rates for all 27 EU member states",

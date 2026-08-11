@@ -46,7 +46,7 @@
 @endsection
 
 <div class="container pb-14 pt-8 sm:pt-12">
-    <x-breadcrumbs :items="['VAT rate categories' => locale_path('/vat-rates/categories'), $summary['name'] => '']" />
+    <x-site-breadcrumbs :items="['VAT rate categories' => locale_path('/vat-rates/categories'), $summary['name'] => '']" />
 
     <header class="max-w-4xl border-b border-line pb-8">
         <p class="mb-3 text-sm font-semibold text-action">Category comparison</p>

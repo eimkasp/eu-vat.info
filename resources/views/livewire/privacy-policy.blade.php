@@ -7,7 +7,7 @@
 @endsection
 
 <div class="container py-12 mt-12 pb-24">
-    <x-breadcrumbs :items="['Privacy Policy' => '']" />
+    <x-site-breadcrumbs :items="['Privacy Policy' => '']" />
 
     <div class="max-w-4xl mx-auto mt-6">
         <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-900 tracking-tight mb-4">

@@ -22,7 +22,7 @@
 <div class="mx-auto max-w-6xl px-4 py-8 sm:py-12">
 
     {{-- Breadcrumbs --}}
-    <x-breadcrumbs :items="[
+    <x-site-breadcrumbs :items="[
         __('ui.top_calc.breadcrumb') => locale_path('/top-vat-calculations'),
         __('ui.top_calc.vat_on_amount', ['amount' => number_format($amount)]) => '',
     ]" />

@@ -68,7 +68,7 @@
             <svg width="100%" height="100%"><defs><pattern id="api-grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" stroke-width="0.5"/></pattern></defs><rect width="100%" height="100%" fill="url(#api-grid)"/></svg>
         </div>
         <div class="relative container py-14 sm:py-20 px-4 max-w-5xl mx-auto">
-            <x-breadcrumbs :items="[__('ui.vies_page.nav_title') => locale_path('/vat-number-validator'), 'API Documentation' => '']" variant="dark" />
+            <x-site-breadcrumbs :items="[__('ui.vies_page.nav_title') => locale_path('/vat-number-validator'), 'API Documentation' => '']" variant="dark" />
             <div class="max-w-3xl mt-4">
                 <div class="inline-flex items-center gap-2 bg-white/10 rounded-full px-3 py-1 text-xs font-semibold text-blue-100 mb-4">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>

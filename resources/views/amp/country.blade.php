@@ -11,7 +11,7 @@
     <noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
     <script type="application/ld+json">
     {
-        "@context": "https://schema.org",
+        "@@context": "https://schema.org",
         "@type": "WebPage",
         "name": "{{ $country->name }} VAT Rate {{ date('Y') }}",
         "description": "Current VAT rates for {{ $country->name }}: standard {{ $country->standard_rate }}%{{ $country->reduced_rate ? ', reduced '.$country->reduced_rate.'%' : '' }}",
@@ -29,7 +29,7 @@
     </script>
     <script type="application/ld+json">
     {
-        "@context": "https://schema.org",
+        "@@context": "https://schema.org",
         "@type": "BreadcrumbList",
         "itemListElement": [
             { "@type": "ListItem", "position": 1, "name": "Home", "item": "{{ url('/') }}" },

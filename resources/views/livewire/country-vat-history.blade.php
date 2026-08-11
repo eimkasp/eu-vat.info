@@ -23,7 +23,7 @@
 @endsection
 
 <div class="container pb-14 pt-8 sm:pt-12">
-    <x-breadcrumbs :items="['VAT calculator' => locale_path('/vat-calculator'), $country->name => locale_path('/vat-calculator/'.$country->slug), 'Rate history' => '']" />
+    <x-site-breadcrumbs :items="['VAT calculator' => locale_path('/vat-calculator'), $country->name => locale_path('/vat-calculator/'.$country->slug), 'Rate history' => '']" />
 
     <header class="max-w-3xl border-b border-line pb-7">
         <div class="flex items-center gap-3">

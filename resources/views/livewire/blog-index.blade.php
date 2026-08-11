@@ -5,7 +5,7 @@
         :url="url(locale_path('/blog'))">
         <script type="application/ld+json">
         {
-            "@context": "https://schema.org",
+            "@@context": "https://schema.org",
             "@type": "Blog",
             "name": "EU VAT Updates and Guides",
             "description": "Research-backed VAT updates and European VAT compliance guides.",
@@ -21,7 +21,7 @@
 @endsection
 
 <div class="container pb-12">
-    <x-breadcrumbs :items="['VAT updates' => '']" />
+    <x-site-breadcrumbs :items="['VAT updates' => '']" />
 
     <section class="mb-8">
         <p class="text-sm font-semibold uppercase tracking-wide text-blue-700 mb-2">EU VAT updates</p>

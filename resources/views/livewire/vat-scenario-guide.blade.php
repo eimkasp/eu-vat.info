@@ -20,7 +20,7 @@
 @endsection
 
 <article class="container pb-14 pt-8 sm:pt-12">
-    <x-breadcrumbs :items="['VAT tools' => locale_path('/tools'), $guide['title'] => '']" />
+    <x-site-breadcrumbs :items="['VAT tools' => locale_path('/tools'), $guide['title'] => '']" />
 
     <header class="max-w-4xl border-b border-line pb-8">
         <p class="text-sm font-semibold text-action">EU VAT scenario guide</p>

@@ -29,7 +29,7 @@
 @endsection
 
 <div class="container pb-12">
-    <x-breadcrumbs :items="['VAT updates' => locale_path('/blog'), $post['title'] => '']" />
+    <x-site-breadcrumbs :items="['VAT updates' => locale_path('/blog'), $post['title'] => '']" />
 
     <div class="grid lg:grid-cols-[minmax(0,1fr)_360px] gap-6 items-start">
         <article class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm overflow-hidden">

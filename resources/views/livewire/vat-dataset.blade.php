@@ -59,7 +59,7 @@
 @endsection
 
 <div class="container pb-14 pt-8 sm:pt-12">
-    <x-breadcrumbs :items="['EU VAT rates dataset' => '']" />
+    <x-site-breadcrumbs :items="['EU VAT rates dataset' => '']" />
 
     <header class="max-w-3xl border-b border-line pb-8">
         <p class="mb-3 text-sm font-semibold text-action">Open VAT data</p>

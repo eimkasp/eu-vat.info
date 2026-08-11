@@ -47,7 +47,7 @@
 @endsection
 
 <div class="container pb-14 pt-8 sm:pt-12">
-    <x-breadcrumbs :items="[$country->name.' VAT calculator' => locale_path('/vat-calculator/'.$country->slug), $rule->category_name => '']" />
+    <x-site-breadcrumbs :items="[$country->name.' VAT calculator' => locale_path('/vat-calculator/'.$country->slug), $rule->category_name => '']" />
 
     <header class="max-w-4xl border-b border-line pb-8">
         <div class="flex items-center gap-3">

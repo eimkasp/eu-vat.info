@@ -34,7 +34,7 @@
         </div>
 
         <div class="container relative">
-            <x-breadcrumbs variant="dark" :items="[__('ui.breadcrumbs.countries') => locale_path('/'), $country->name => '']" />
+            <x-site-breadcrumbs variant="dark" :items="[__('ui.breadcrumbs.countries') => locale_path('/'), $country->name => '']" />
 
             {{-- Country heading --}}
             <div class="text-center mt-3 mb-6">

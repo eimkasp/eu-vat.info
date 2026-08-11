@@ -28,7 +28,7 @@
 @endsection
 
 <div class="container pb-14 pt-8 sm:pt-12">
-    <x-breadcrumbs :items="['VAT rate categories' => '']" />
+    <x-site-breadcrumbs :items="['VAT rate categories' => '']" />
 
     <header class="max-w-3xl border-b border-line pb-8">
         <p class="mb-3 text-sm font-semibold text-action">Verified category rules</p>

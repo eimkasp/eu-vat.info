@@ -33,7 +33,7 @@
 <div class="max-w-2xl mx-auto px-4 py-10 sm:py-14">
 
     {{-- Breadcrumbs --}}
-    <x-breadcrumbs :items="[__('ui.changelog.nav_label') => '']" />
+    <x-site-breadcrumbs :items="[__('ui.changelog.nav_label') => '']" />
 
     {{-- Header --}}
     <div class="mb-12">
