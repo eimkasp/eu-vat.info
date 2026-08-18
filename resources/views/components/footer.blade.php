@@ -46,7 +46,7 @@
             <div>
                 <h3 class="text-white font-semibold mb-4">{{ __('ui.footer.partner_tools') }}</h3>
                 <ul class="space-y-2 text-sm">
-                    <li><a href="https://pdf.businesspress.io/" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors">{{ __('ui.footer.pdf_tools') }}</a></li>
+                    <li><a href="https://pdfcheck.online/" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors">{{ __('ui.footer.pdf_tools') }}</a></li>
                     <li><a href="https://ec.europa.eu/taxation_customs/vies/" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors">{{ __('ui.footer.eu_vies') }}</a></li>
                     <li><a href="https://europa.eu/youreurope/business/taxation/vat/" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors">{{ __('ui.footer.eu_vat_guide') }}</a></li>
                 </ul>
@@ -60,7 +60,7 @@
             <div class="flex space-x-6 items-center">
                 <a href="{{ locale_path('/sitemap') }}" class="hover:text-white transition-colors">{{ __('ui.footer.sitemap') }}</a>
                 <a href="/llms.txt" class="hover:text-white transition-colors">llms.txt</a>
-                <a href="https://pdf.businesspress.io/" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors">PDF Tools</a>
+                <a href="https://pdfcheck.online/" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors">PDF Tools</a>
                 <span class="text-slate-400">{{ __('ui.data_updated_daily') }}</span>
             </div>
         </div>
