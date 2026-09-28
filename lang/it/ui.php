@@ -815,4 +815,11 @@ return array (
     'sources' => 'Fonti ufficiali',
     'english_only' => 'Questo articolo è disponibile solo in inglese.',
   ),
+  'pagination' =>
+  array (
+    'label' => 'Paginazione',
+    'previous' => 'Pagina precedente',
+    'next' => 'Pagina successiva',
+    'page' => 'Pagina :page',
+  ),
 );

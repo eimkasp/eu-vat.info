@@ -815,4 +815,11 @@ return array (
     'sources' => 'Oficialūs šaltiniai',
     'english_only' => 'Šis straipsnis pateikiamas anglų kalba.',
   ),
+  'pagination' =>
+  array (
+    'label' => 'Puslapiavimas',
+    'previous' => 'Ankstesnis puslapis',
+    'next' => 'Kitas puslapis',
+    'page' => ':page puslapis',
+  ),
 );

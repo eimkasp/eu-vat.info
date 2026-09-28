@@ -815,4 +815,11 @@ return array (
     'sources' => 'Officielle kilder',
     'english_only' => 'Denne artikel er tilgængelig på engelsk.',
   ),
+  'pagination' =>
+  array (
+    'label' => 'Sideinddeling',
+    'previous' => 'Forrige side',
+    'next' => 'Næste side',
+    'page' => 'Side :page',
+  ),
 );

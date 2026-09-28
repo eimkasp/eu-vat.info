@@ -815,4 +815,11 @@ return array (
     'sources' => 'Oficiālie avoti',
     'english_only' => 'Šis raksts ir pieejams angļu valodā.',
   ),
+  'pagination' =>
+  array (
+    'label' => 'Lapošana',
+    'previous' => 'Iepriekšējā lapa',
+    'next' => 'Nākamā lapa',
+    'page' => ':page. lapa',
+  ),
 );

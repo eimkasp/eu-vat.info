@@ -815,4 +815,11 @@ return array (
     'sources' => 'Ametlikud allikad',
     'english_only' => 'See artikkel on saadaval inglise keeles.',
   ),
+  'pagination' =>
+  array (
+    'label' => 'Lehekülgede navigeerimine',
+    'previous' => 'Eelmine lehekülg',
+    'next' => 'Järgmine lehekülg',
+    'page' => 'Lehekülg :page',
+  ),
 );

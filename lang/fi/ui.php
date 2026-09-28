@@ -815,4 +815,11 @@ return array (
     'sources' => 'Viralliset lähteet',
     'english_only' => 'Tämä artikkeli on saatavilla englanniksi.',
   ),
+  'pagination' =>
+  array (
+    'label' => 'Sivutus',
+    'previous' => 'Edellinen sivu',
+    'next' => 'Seuraava sivu',
+    'page' => 'Sivu :page',
+  ),
 );

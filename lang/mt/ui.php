@@ -815,4 +815,11 @@ return array (
     'sources' => 'Sorsi uffiċjali',
     'english_only' => 'Dan l-artiklu huwa disponibbli bl-Ingliż.',
   ),
+  'pagination' =>
+  array (
+    'label' => 'Paġnar',
+    'previous' => 'Il-paġna ta\' qabel',
+    'next' => 'Il-paġna li jmiss',
+    'page' => 'Paġna :page',
+  ),
 );

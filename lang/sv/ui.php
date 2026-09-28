@@ -815,4 +815,11 @@ return array (
     'sources' => 'Officiella källor',
     'english_only' => 'Den här artikeln finns på engelska.',
   ),
+  'pagination' =>
+  array (
+    'label' => 'Sidnumrering',
+    'previous' => 'Föregående sida',
+    'next' => 'Nästa sida',
+    'page' => 'Sida :page',
+  ),
 );

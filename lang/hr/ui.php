@@ -815,4 +815,11 @@ return array (
     'sources' => 'Službeni izvori',
     'english_only' => 'Ovaj je članak dostupan na engleskom jeziku.',
   ),
+  'pagination' =>
+  array (
+    'label' => 'Paginacija',
+    'previous' => 'Prethodna stranica',
+    'next' => 'Sljedeća stranica',
+    'page' => 'Stranica :page',
+  ),
 );

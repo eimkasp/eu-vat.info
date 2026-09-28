@@ -815,4 +815,11 @@ return array (
     'sources' => 'Oficiální zdroje',
     'english_only' => 'Tento článek je k dispozici v angličtině.',
   ),
+  'pagination' =>
+  array (
+    'label' => 'Stránkování',
+    'previous' => 'Předchozí stránka',
+    'next' => 'Další stránka',
+    'page' => 'Stránka :page',
+  ),
 );

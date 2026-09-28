@@ -815,4 +815,11 @@ return array (
     'sources' => 'Foinsí oifigiúla',
     'english_only' => 'Tá an t-alt seo ar fáil i mBéarla.',
   ),
+  'pagination' =>
+  array (
+    'label' => 'Uimhriú leathanach',
+    'previous' => 'An leathanach roimhe seo',
+    'next' => 'An chéad leathanach eile',
+    'page' => 'Leathanach :page',
+  ),
 );

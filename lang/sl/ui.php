@@ -815,4 +815,11 @@ return array (
     'sources' => 'Uradni viri',
     'english_only' => 'Ta članek je na voljo v angleščini.',
   ),
+  'pagination' =>
+  array (
+    'label' => 'Številčenje strani',
+    'previous' => 'Prejšnja stran',
+    'next' => 'Naslednja stran',
+    'page' => 'Stran :page',
+  ),
 );

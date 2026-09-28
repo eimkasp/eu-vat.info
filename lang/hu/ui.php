@@ -815,4 +815,11 @@ return array (
     'sources' => 'Hivatalos források',
     'english_only' => 'Ez a cikk angol nyelven érhető el.',
   ),
+  'pagination' =>
+  array (
+    'label' => 'Lapozás',
+    'previous' => 'Előző oldal',
+    'next' => 'Következő oldal',
+    'page' => ':page. oldal',
+  ),
 );

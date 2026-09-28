@@ -111,6 +111,11 @@ class VatChangesHistory extends Component
         return $this->selectedCountry !== '' || $this->selectedType !== '' || $this->selectedDirection !== '';
     }
 
+    public function paginationView(): string
+    {
+        return 'pagination.livewire';
+    }
+
     public function render()
     {
         $changes = VatRateChange::query()

@@ -849,4 +849,10 @@ return [
         'sources' => 'Official sources',
         'english_only' => 'This article is available in English.',
     ],
+    'pagination' => [
+        'label' => 'Pagination',
+        'previous' => 'Previous page',
+        'next' => 'Next page',
+        'page' => 'Page :page',
+    ],
 ];

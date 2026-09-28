@@ -815,4 +815,11 @@ return array (
     'sources' => 'Officiële bronnen',
     'english_only' => 'Dit artikel is beschikbaar in het Engels.',
   ),
+  'pagination' =>
+  array (
+    'label' => 'Paginering',
+    'previous' => 'Vorige pagina',
+    'next' => 'Volgende pagina',
+    'page' => 'Pagina :page',
+  ),
 );
