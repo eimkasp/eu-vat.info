@@ -23,7 +23,7 @@ class VatDatasetDownloadController extends Controller
                 'reduced_rates' => $country->reducedRates(),
                 'super_reduced_rate' => $country->super_reduced_rate,
                 'parking_rate' => $country->parking_rate,
-                'currency_code' => $country->currency_code,
+                'currency_code' => $country->currencyCode(),
                 'last_updated' => $country->updated_at?->toIso8601String(),
             ]);
 
@@ -58,7 +58,7 @@ class VatDatasetDownloadController extends Controller
                         $country->primaryReducedRate(),
                         $country->super_reduced_rate,
                         $country->parking_rate,
-                        $country->currency_code,
+                        $country->currencyCode(),
                         $country->updated_at?->toIso8601String(),
                         implode(';', array_map(fn (float $rate) => Country::formatRate($rate), $country->reducedRates())),
                     ]);

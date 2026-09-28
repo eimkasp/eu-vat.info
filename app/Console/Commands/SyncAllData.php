@@ -203,14 +203,9 @@ class SyncAllData extends Command
                         continue;
                     }
 
-                    // When API returns multiple currencies (e.g. EUR + HUF for Hungary),
-                    // prefer the canonical currency from our fallback list.
-                    $currencies = array_keys($item['currencies']);
-                    if (count($currencies) > 1 && isset($fallback[$cca2])) {
-                        $currencyCode = $fallback[$cca2]['currency_code'];
-                    } else {
-                        $currencyCode = $currencies[0];
-                    }
+                    // The curated list decides the currency: the API lists several for some countries
+                    // and lags behind changeovers such as Bulgaria adopting the euro.
+                    $currencyCode = $fallback[$cca2]['currency_code'] ?? array_key_first($item['currencies']);
 
                     // Use API data for name/symbol if available, otherwise fallback
                     if (isset($item['currencies'][$currencyCode])) {
@@ -263,7 +258,7 @@ class SyncAllData extends Command
         return [
             'AT' => ['currency_code' => 'EUR', 'currency_name' => 'Euro', 'currency_symbol' => '€'],
             'BE' => ['currency_code' => 'EUR', 'currency_name' => 'Euro', 'currency_symbol' => '€'],
-            'BG' => ['currency_code' => 'BGN', 'currency_name' => 'Bulgarian lev', 'currency_symbol' => 'лв'],
+            'BG' => ['currency_code' => 'EUR', 'currency_name' => 'Euro', 'currency_symbol' => '€'],
             'HR' => ['currency_code' => 'EUR', 'currency_name' => 'Euro', 'currency_symbol' => '€'],
             'CY' => ['currency_code' => 'EUR', 'currency_name' => 'Euro', 'currency_symbol' => '€'],
             'CZ' => ['currency_code' => 'CZK', 'currency_name' => 'Czech koruna', 'currency_symbol' => 'Kč'],
