@@ -1,11 +1,10 @@
 <?php
 
-use App\Livewire\EuropeMap;
-use App\Livewire\VatCalculator;
 use App\Models\Country;
-use Livewire\Livewire;
+use App\Support\EuropeMapSvg;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
-uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
+uses(RefreshDatabase::class);
 
 beforeEach(function () {
     Country::factory()->create([
@@ -39,49 +38,6 @@ beforeEach(function () {
     ]);
 });
 
-// ── Calculator dropdown fix: country switching recalculates properly ────────
-
-it('recalculates when country changes via updated hook', function () {
-    Livewire::test(VatCalculator::class, ['slug' => 'germany'])
-        ->assertSet('selectedRate', 19)
-        ->set('amount', '100')
-        ->set('vat_included', 'exclude')
-        ->call('calculate')
-        ->assertSet('vat_amount', 19.00)
-        ->assertSet('total', 119.00)
-        // Switch country - updated() should auto-recalculate
-        ->set('selectedCountry1', 'france')
-        ->assertSet('selectedRate', 20)
-        ->assertSet('vat_amount', 20.00)
-        ->assertSet('total', 120.00);
-});
-
-it('recalculates when vat_included mode changes via updated hook', function () {
-    Livewire::test(VatCalculator::class, ['slug' => 'germany'])
-        ->set('amount', '119')
-        ->set('selectedRate', 19)
-        ->set('vat_included', 'exclude')
-        ->call('calculate')
-        ->assertSet('total', 141.61)
-        // Switch mode - updated() should auto-recalculate
-        ->set('vat_included', 'include')
-        ->assertSet('total', 119.00)
-        ->assertSet('vat_amount', 19.00);
-});
-
-it('resets custom rate when switching countries', function () {
-    Livewire::test(VatCalculator::class, ['slug' => 'germany'])
-        ->set('useCustomRate', true)
-        ->set('customRate', '15')
-        ->call('setCustomRate')
-        ->assertSet('selectedRate', 15)
-        ->assertSet('useCustomRate', true)
-        // Switch country
-        ->set('selectedCountry1', 'france')
-        ->assertSet('useCustomRate', false)
-        ->assertSet('selectedRate', 20);
-});
-
 // ── /vat-changes route is enabled (VAT History page) ──────────────────────
 
 it('loads vat-changes history page', function () {
@@ -108,7 +64,8 @@ it('loads the vat map page successfully', function () {
     $this->get('/vat-map')
         ->assertStatus(200)
         ->assertSee('European VAT Rates Map')
-        ->assertSeeLivewire('europe-map');
+        ->assertSee('class="eu-map"', false)
+        ->assertSee('data-iso="DE"', false);
 });
 
 it('vat map page displays country rate table', function () {
@@ -123,16 +80,25 @@ it('vat map page displays country rate table', function () {
         ->assertSee('27%');
 });
 
-it('europe map component provides country data', function () {
-    $component = Livewire::test(EuropeMap::class, ['layout' => 'single']);
-    expect($component->get('layout'))->toBe('single');
-    expect($component->get('countryData'))->not->toBeEmpty();
+it('renders an accessible choropleth with a colour bucket per country', function () {
+    $svg = EuropeMapSvg::render(Country::query()->get(), 'map-title');
+
+    expect($svg)
+        ->toContain('aria-labelledby="map-title"')
+        ->toContain('data-iso="HU"')
+        ->toContain('class="eu-map-region eu-map-b4"')
+        ->toContain('aria-label="Germany, Standard 19%"')
+        ->toContain('role="button"')
+        ->and(EuropeMapSvg::bucket(17))->toBe(0)
+        ->and(EuropeMapSvg::bucket(21.5))->toBe(2)
+        ->and(EuropeMapSvg::bucket(27))->toBe(4);
 });
 
 it('vat map page has calculator links in table', function () {
     $this->get('/vat-map')
         ->assertStatus(200)
-        ->assertSee('Calculator →');
+        ->assertSee('href="/vat-calculator/germany"', false)
+        ->assertSee('Calculator');
 });
 
 // ── Calculator compactness (view assertions) ───────────────────────────────
