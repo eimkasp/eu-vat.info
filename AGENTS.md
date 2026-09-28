@@ -2,21 +2,21 @@
 
 ## Project Overview
 
-EU VAT Info (`eu-vat.info`) is a Laravel 11 web application providing comprehensive EU VAT rate information, calculators, validators, and country-specific guides. It serves developers, businesses, and tax professionals with real-time data sourced from the European Commission.
+EU VAT Info (`eu-vat.info`) is a Laravel 13 web application providing comprehensive EU VAT rate information, calculators, validators, and country-specific guides. It serves developers, businesses, and tax professionals with real-time data sourced from the European Commission.
 
 ## Tech Stack
 
 | Layer | Technology |
 |-------|-----------|
-| Backend | PHP 8.2+, Laravel 11 |
-| Frontend | Livewire 3, Volt, Blade, Tailwind CSS 3, DaisyUI 4, MaryUI |
-| Admin | Filament 3 |
-| Testing | Pest 2 / PHPUnit 10 |
+| Backend | PHP 8.3+, Laravel 13 |
+| Frontend | Livewire 4, Alpine.js, Blade components, Tailwind CSS 4 (semantic tokens, see DESIGN.md) |
+| Admin | Filament 5 |
+| Testing | Pest 4 / PHPUnit 12 |
 | Database | MySQL (production), SQLite (testing) |
 | API | Laravel Sanctum, REST JSON endpoints |
 | i18n | 24 EU languages, DeepL API integration |
 | SEO | Spatie Sitemap, hreflang, `llms.txt`, structured data |
-| Deploy | Laravel Forge, Vite 5 |
+| Deploy | Laravel Forge, Vite 8 |
 | Monitoring | Laravel Pulse |
 
 ## Architecture
@@ -26,7 +26,7 @@ EU VAT Info (`eu-vat.info`) is a Laravel 11 web application providing comprehens
 ```
 app/
 ├── Console/Commands/          # Artisan commands
-├── Filament/                  # Admin panel (Filament 3)
+├── Filament/                  # Admin panel (Filament 5)
 │   ├── Pages/                 # Dashboard
 │   ├── Resources/             # Country, Analytics, Banner resources
 │   └── Widgets/               # Admin dashboard widgets
@@ -38,7 +38,8 @@ app/
 ├── Livewire/                  # 18 reactive components (core UI)
 ├── Models/                    # 10 Eloquent models
 ├── Providers/                 # Service providers
-├── Services/                  # 4 business logic services
+├── Services/                  # Business logic services
+├── Support/                   # VAT maths (Support/Vat), SiteNavigation, EuropeMapSvg
 ├── Traits/                    # HasAnalytics, TracksCountryViews
 ├── View/                      # View composers
 └── helpers.php                # 4 global helper functions
@@ -76,16 +77,16 @@ routes/
 
 | Component | Route | Purpose |
 |-----------|-------|---------|
-| `Home` | `/` | Landing page with country grid |
-| `CountryPage` | `/country/{slug}/{tab?}` | Country detail with tabs (overview, calculator, validator, history, guide) |
-| `VatCalculator` | `/vat-calculator/{slug?}` | Full VAT calculator with URL params |
-| `VatValidator` | — | VIES VAT number validation |
-| `VatMap` | `/vat-map` | Interactive Europe map |
-| `VatChangesHistory` | `/vat-changes` | Timeline of VAT rate changes |
+| `Home` | `/` | Landing page: hero calculator, rates table, map card |
+| `HeroCalculator` | embedded | The calculator (country page, generic page, home, embed widget) |
+| `VatCalculator` | `/vat-calculator/{slug?}` | Calculator pages; `?amount=&rate=&mode=` prefills |
+| `ViesValidatorPage` | `/vat-number-validator/{slug?}` | VIES VAT number validation |
+| `VatMap` | `/vat-map` | Accessible Europe choropleth and ranked table |
+| `VatChangesHistory` | `/vat-changes` | Filterable timeline of VAT rate changes |
+| `SharedCalculation` | `/vat-calculation/{country}/{amount}/{rate}/{mode}` | Shareable result pages (noindex) |
+| `TopCalculations` | `/top-vat-calculations/{amount?}` | Common amounts for every EU country |
+| `VatComparison` | `/compare/{a}-vs-{b}-vat` | Approved country comparisons |
 | `HtmlSitemap` | `/sitemap` | HTML sitemap for SEO |
-| `EuropeMap` | embedded | SVG interactive map component |
-| `VatRateHistoryChart` | embedded | Chart.js rate history |
-| `VatCalculatorSimple` | embedded | Simplified calculator widget |
 
 ### Services
 
@@ -108,6 +109,8 @@ routes/
 ### API Endpoints
 
 ```
+GET  /api/v1/countries           # All countries with every rate type
+GET  /api/v1/calculate           # VAT calculation (amount, country, rate_type, mode)
 GET  /api/countries              # All countries (cached 600s)
 GET  /api/countries/{slug}       # Single country
 POST /api/vat/validate           # Validate VAT number
@@ -132,20 +135,21 @@ GET  /api/health                 # Health check
 - Languages without DeepL: `ga` (Irish), `hr` (Croatian), `mt` (Maltese)
 
 ### Frontend
-- All interactive UI uses **Livewire 3 components** — no SPA framework
-- Styling: **Tailwind CSS 3** + **DaisyUI 4** (custom theme `mytheme`) + **MaryUI** components
-- Dark mode: class-based (`darkMode: 'class'`)
-- Icons: Blade Feather Icons
-- Charts: Chart.js (via Livewire)
+- Interactive UI uses **Livewire 4** components with **Alpine.js** (`resources/js/app.js`) for instant client-side feedback — no SPA framework
+- Styling: **Tailwind CSS 4** with semantic OKLCH tokens and `app-*` component classes in `resources/css/app.css` (see DESIGN.md); no component library
+- Dark mode: class-based (`.dark` on `<html>`), driven by the tokens — do not add `dark:` variants
+- Icons: `<x-ui.icon name="…">` (inline Lucide paths); flags: `<x-ui.flag :iso="…">` (local SVGs)
+- VAT maths: `App\Support\Vat` (PHP) mirrored by `resources/js/vat.js`; keep both in sync
+- Structured data: `<x-json-ld :data="[…]">` (never write `@context` in Blade)
 
 ### Testing
-- Framework: **Pest 2** (preferred) with PHPUnit 10 underneath
+- Framework: **Pest 4** (preferred) with PHPUnit 12 underneath
 - Test location: `tests/Feature/` and `tests/Unit/`
 - Run tests: `php artisan test` or `./vendor/bin/pest`
 - Lint: `./vendor/bin/pint` (Laravel Pint)
 
 ### Admin Panel
-- **Filament 3** at `/admin`
+- **Filament 5** at `/admin`
 - Resources: Country, CountryAnalytic, Banner
 - Widgets: Dashboard stats, charts
 - Auditing: `owen-it/laravel-auditing` on Country model
@@ -157,8 +161,8 @@ GET  /api/health                 # Health check
 ```bash
 # Development
 php artisan serve                    # Start dev server
-npm run dev                          # Vite HMR
-npm run build                        # Production build
+yarn dev                             # Vite HMR
+yarn build                           # Production build
 
 # Testing
 php artisan test                     # Run all tests

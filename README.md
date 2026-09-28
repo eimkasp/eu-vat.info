@@ -2,7 +2,7 @@
 
 # EU VAT Info
 
-The most comprehensive, daily-updated source for VAT rates, calculators, validators, and historical data for all 27 EU member states. Built with Laravel 11, Livewire 3, and Tailwind CSS.
+The most comprehensive, daily-updated source for VAT rates, calculators, validators, and historical data for all 27 EU member states. Built with Laravel 13, Livewire 4, Filament 5 and Tailwind CSS 4.
 
 **Live site:** [vat.businesspress.io](https://vat.businesspress.io)
 
@@ -10,10 +10,12 @@ The most comprehensive, daily-updated source for VAT rates, calculators, validat
 
 - **VAT Calculator** — Add or remove VAT for any EU country with real-time rates. Shareable calculation URLs.
 - **VAT Number Validator** — Verify EU VAT numbers against the official VIES system with multi-layer caching (Redis → Database → VIES API).
-- **Interactive VAT Map** — SVG heatmap of Europe showing standard VAT rates at a glance.
+- **Interactive VAT Map** — Accessible, keyboard-navigable choropleth of Europe coloured by standard rate, rendered on the server.
 - **VAT Rate History** — Timeline of all VAT rate changes across EU member states with direction indicators.
 - **Country Pages** — Dedicated pages for each of the 27 EU countries with rates, calculator, validator, and compliance guides.
-- **Embeddable Widget** — Drop-in VAT calculator widget for third-party websites.
+- **Embeddable Widget** — Drop-in VAT calculator (vertical or horizontal) for third-party websites, with a live builder at `/embed`.
+- **Command palette** — Press <kbd>⌘K</kbd> / <kbd>Ctrl K</kbd> or <kbd>/</kbd> anywhere to jump to a country or tool.
+- **Light and dark themes** — System-aware theme with a manual override, built on semantic design tokens.
 - **24 EU Languages** — Full i18n support with automated DeepL translations.
 - **REST API** — JSON endpoints for countries, VAT rates, and VAT number validation.
 - **AI/LLM Integration** — `llms.txt`, MCP server endpoint, and LLM-optimized JSON for AI agent consumption.
@@ -23,15 +25,15 @@ The most comprehensive, daily-updated source for VAT rates, calculators, validat
 
 | Layer | Technology |
 |---|---|
-| Backend | PHP 8.2+, Laravel 11 |
-| Frontend | Livewire 3, Volt, Blade, Tailwind CSS 3, DaisyUI 4, MaryUI |
-| Admin | Filament 3 |
-| Testing | Pest 2 / PHPUnit 10 |
+| Backend | PHP 8.3+, Laravel 13 |
+| Frontend | Livewire 4, Alpine.js, Blade components, Tailwind CSS 4 (CSS-first tokens) |
+| Admin | Filament 5 |
+| Testing | Pest 4 / PHPUnit 12 |
 | Database | MySQL (production), SQLite (testing) |
 | API | Laravel Sanctum, REST JSON |
 | i18n | 24 EU languages, DeepL API |
 | SEO | Spatie Sitemap, hreflang, `llms.txt`, JSON-LD |
-| Deploy | Laravel Forge, Vite 5 |
+| Deploy | Laravel Forge, Vite 8 |
 | Monitoring | Laravel Pulse |
 
 ## Supported Languages
@@ -58,9 +60,9 @@ English is the default language and uses unprefixed URLs (`/vat-calculator/franc
 
 ### Requirements
 
-- PHP 8.2+
+- PHP 8.3+ with the `intl` extension
 - Composer 2
-- Node.js 18+ & npm
+- Node.js 20.19+ and Yarn
 - MySQL 8+ (or SQLite for local development)
 
 ### Installation
@@ -74,7 +76,7 @@ cd eu-vat.info
 composer install
 
 # Install Node dependencies
-npm install
+yarn install
 
 # Configure environment
 cp .env.example .env
@@ -85,7 +87,7 @@ php artisan migrate
 php artisan db:seed
 
 # Build frontend assets
-npm run build
+yarn build
 
 # Start the development server
 php artisan serve
@@ -95,9 +97,9 @@ php artisan serve
 
 ```bash
 # Start Vite dev server with HMR
-npm run dev
+yarn dev
 
-# Run tests
+# Run tests (add --parallel for a faster run)
 php artisan test
 
 # Code style (Laravel Pint)
@@ -120,7 +122,7 @@ php artisan cache:clear && php artisan config:clear && php artisan view:clear
 ```
 app/
 ├── Console/Commands/        # Artisan commands
-├── Filament/                # Admin panel (Filament 3)
+├── Filament/                # Admin panel (Filament 5)
 ├── Http/
 │   ├── Controllers/         # Web + API controllers
 │   ├── Middleware/           # SetLocale middleware
@@ -129,12 +131,16 @@ app/
 ├── Livewire/                # 24 reactive components (core UI)
 ├── Models/                  # 10 Eloquent models
 ├── Services/                # Business logic (analytics, VIES, translations, sitemap)
+├── Support/                 # VAT maths (Support/Vat), navigation and map rendering
 ├── Traits/                  # HasAnalytics, TracksCountryViews
 └── helpers.php              # Global helpers (locale_path, etc.)
-resources/views/
-├── livewire/                # Livewire Blade templates
-├── components/              # Reusable Blade components
-└── layouts/                 # App layout
+resources/
+├── css/app.css              # Tailwind 4 theme: semantic light/dark tokens and components
+├── js/app.js, js/vat.js     # Alpine components and the client-side VAT maths
+└── views/
+    ├── livewire/            # Livewire Blade templates
+    ├── components/          # Reusable Blade components (ui/, calculator/, …)
+    └── layouts/             # App and embed layouts
 lang/                        # 24 language directories
 routes/
 ├── web.php                  # Localised routes
@@ -182,6 +188,10 @@ All API responses use JSON. No authentication required for read endpoints.
 
 | Method | Endpoint | Description |
 |---|---|---|
+| `GET` | `/api/v1/countries` | All countries with every rate type, including multiple reduced rates |
+| `GET` | `/api/v1/countries/{slug}` | Single country by slug or ISO code |
+| `GET` | `/api/v1/calculate` | Calculate VAT (`amount`, `country`, `rate_type`, `mode=add\|remove`) |
+| `GET` | `/api/v1/openapi.json` | OpenAPI 3.1 specification |
 | `GET` | `/api/countries` | All countries with VAT rates (cached) |
 | `GET` | `/api/countries/{slug}` | Single country details |
 | `POST` | `/api/vat/validation/validate` | Validate a VAT number via VIES |
@@ -273,13 +283,13 @@ The site is optimized for AI agent discovery and consumption:
 
 ## Embeddable Widget
 
-Add a VAT calculator to any website:
+Configure the widget, preview it live and copy the snippet at `/embed/{country?}`. The snippet embeds:
 
-```
-https://vat.businesspress.io/embed/{country?}
+```html
+<iframe src="https://vat.businesspress.io/public/embed/germany" title="EU VAT calculator" width="100%" height="760" style="border:0;background:transparent" loading="lazy"></iframe>
 ```
 
-Preview and get embed code at `/embed/preview/{country}`.
+Append `?style=horizontal` for the wide layout (recommended height 500px). Unknown countries fall back to the default country so embeds never break.
 
 ## Data Sources
 
@@ -287,7 +297,7 @@ VAT rate data is sourced from the [European Commission](https://ec.europa.eu/tax
 
 ## Admin Panel
 
-The Filament 3 admin panel at `/admin` provides:
+The Filament 5 admin panel at `/admin` provides:
 
 - Country and VAT rate management
 - Analytics dashboard with usage statistics

@@ -221,3 +221,36 @@ The calculator is the signature task surface. Mode, country, amount, rate, and r
 - **Don't** use tiny uppercase tracked labels as the page's repeated visual scaffold.
 - **Don't** place fixed mobile navigation over results without reserving content space.
 - **Don't** use color alone to communicate validation, rate direction, or selection.
+
+## Implementation
+
+The system is implemented with Tailwind CSS 4 in `resources/css/app.css`. There is no component library: every surface is built from the tokens and component classes below, so light and dark themes stay consistent.
+
+### Semantic tokens
+
+Colors are OKLCH custom properties (`--ui-*`) exposed to Tailwind through `@theme inline`, which yields utilities such as `bg-surface`, `text-ink-muted`, `border-line` and `bg-action-soft`. The `.dark` class (set before first paint from the visitor's system preference or saved choice) swaps every token, so templates never need `dark:` variants.
+
+| Token | Use |
+|---|---|
+| `workspace`, `surface`, `surface-subtle`, `surface-muted` | Page canvas, panels, grouped rows, quiet fills |
+| `line`, `line-strong` | Structural borders and field outlines |
+| `ink`, `ink-muted`, `ink-quiet` | Primary, supporting and tertiary text |
+| `brand`, `brand-deep` | Institutional blue identity surfaces (header, heroes) |
+| `action`, `action-deep`, `action-soft`, `button`, `button-hover` | Links, selection, focus and primary buttons |
+| `success`, `warning`, `danger` (+ `-soft`) | Verified state only, always paired with an icon and text |
+| `code`, `code-raised`, `code-muted` | Code samples, dark in both themes |
+
+### Component classes
+
+`app-surface`, `app-surface-raised`, `app-field`, `app-select`, `app-button-primary`, `app-button-secondary`, `app-button-ghost`, `app-chip` / `app-chip-active`, `app-table`, `app-code`, `app-prose`, `app-kbd`, `app-flag`, `hero-canvas` and the `app-container` utility. Shared Blade components live in `resources/views/components`: `x-page-header`, `x-hero-backdrop`, `x-ui.icon`, `x-ui.flag`, `x-json-ld`, `x-europe-map`.
+
+### Data visualisation
+
+The VAT map uses a five-step single-hue sequential ramp (`--map-0` … `--map-4`), stepped separately for light and dark mode and validated for colour-vision deficiencies. Every region is also exposed as text: an accessible name on the map and a ranked table beside it. Bars and meters use the action fill on a track of the same hue.
+
+### Rules for new templates
+
+- Use semantic tokens; the legacy gray/blue palette remap in `app.css` only keeps un-migrated templates legible in dark mode.
+- Write schema.org data with `<x-json-ld :data="…">`. Blade treats `@context` as a directive, so the component adds it.
+- Use local flags through `<x-ui.flag>`; no third-party image hosts.
+- Put new UI copy in `lang/en/ui.php` and translate it for all 24 locales.
