@@ -19,7 +19,7 @@
                 @forelse($posts as $post)
                     <article class="group app-surface relative p-5 transition-[border-color,box-shadow] hover:border-action/40 hover:shadow-workflow sm:p-6">
                         <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-ink-muted">
-                            <span class="rounded-full bg-action-soft px-2.5 py-0.5 font-semibold text-action-deep">{{ $post['category'] }}</span>
+                            <span class="app-badge bg-action-soft text-action-deep">{{ $post['category'] }}</span>
                             <time datetime="{{ $post['published_at']->toDateString() }}">{{ $post['published_at']->translatedFormat('j M Y') }}</time>
                             <span aria-hidden="true">·</span>
                             <span>{{ __('ui.blog.reading_time', ['count' => $post['reading_time']]) }}</span>
@@ -31,7 +31,7 @@
                         @if($post['tags'])
                             <ul class="mt-4 flex flex-wrap gap-1.5" aria-label="Tags">
                                 @foreach($post['tags'] as $tag)
-                                    <li class="rounded-md bg-surface-muted px-2 py-0.5 text-xs font-medium text-ink-muted">{{ $tag }}</li>
+                                    <li class="rounded-control bg-surface-muted px-2 py-0.5 text-xs font-medium text-ink-muted">{{ $tag }}</li>
                                 @endforeach
                             </ul>
                         @endif

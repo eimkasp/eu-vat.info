@@ -31,23 +31,21 @@
     ];
 @endphp
 
-<footer class="border-t border-line bg-surface">
+<footer class="on-brand bg-brand-deep text-white">
     <div class="app-container py-12 lg:py-16">
         <div class="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,3fr)]">
             <div class="max-w-sm">
-                <a href="{{ locale_path('/') }}" class="inline-flex items-center gap-2.5 rounded-lg text-lg font-bold tracking-[-0.02em] text-ink">
-                    <span class="flex size-9 items-center justify-center rounded-[0.7rem] bg-brand">
-                        <x-ui.logo class="size-7" />
-                    </span>
+                <a href="{{ locale_path('/') }}" class="inline-flex items-center gap-2.5 rounded-control text-lg font-bold tracking-[-0.02em] text-white">
+                    <x-ui.logo />
                     {{ __('ui.site_name') }}
                 </a>
-                <p class="mt-4 text-sm leading-6 text-ink-muted">{{ __('ui.footer.description') }}</p>
+                <p class="mt-4 text-sm leading-6 text-white/70">{{ __('ui.footer.description') }}</p>
                 <div class="mt-5 flex flex-wrap items-center gap-2">
-                    <a href="https://github.com/eimkasp/eu-vat.info" target="_blank" rel="noopener noreferrer" class="app-button-secondary h-10 min-h-10 px-3" aria-label="{{ __('ui.nav.github') }}">
+                    <a href="https://github.com/eimkasp/eu-vat.info" target="_blank" rel="noopener noreferrer" class="app-button-on-brand h-10 min-h-10 px-3" aria-label="{{ __('ui.nav.github') }}">
                         <x-ui.icon name="github" class="size-4" />
                         GitHub
                     </a>
-                    <a href="https://chromewebstore.google.com/detail/eu-vat-calculator/fifmbbpgopnifnoginhmjjedjnabdkka" target="_blank" rel="noopener noreferrer" class="app-button-secondary h-10 min-h-10 px-3">
+                    <a href="https://chromewebstore.google.com/detail/eu-vat-calculator/fifmbbpgopnifnoginhmjjedjnabdkka" target="_blank" rel="noopener noreferrer" class="app-button-on-brand h-10 min-h-10 px-3">
                         <x-ui.icon name="puzzle" class="size-4" />
                         {{ __('ui.footer.chrome_extension') }}
                     </a>
@@ -57,12 +55,12 @@
             <div class="grid grid-cols-2 gap-8 sm:grid-cols-4">
                 @foreach($columns as $heading => $links)
                     <div>
-                        <h2 class="text-sm font-semibold text-ink">{{ $heading }}</h2>
-                        <ul class="mt-4 space-y-2.5 text-sm">
+                        <h2 class="text-xs font-semibold tracking-[0.08em] text-white uppercase">{{ $heading }}</h2>
+                        <ul class="mt-4 space-y-2.5 text-sm hyphens-auto wrap-anywhere">
                             @foreach($links as [$label, $url])
                                 @php($external = str_starts_with($url, 'http') && ! str_starts_with($url, url('/')))
                                 <li>
-                                    <a href="{{ $url }}" @if($external) target="_blank" rel="noopener noreferrer" @endif class="text-ink-muted transition-colors hover:text-action">@if($external){{ Str::beforeLast($label, ' ') === $label ? '' : Str::beforeLast($label, ' ').' ' }}<span class="whitespace-nowrap">{{ Str::afterLast($label, ' ') }}<x-ui.icon name="arrow-up-right" class="ml-1 inline size-3 align-[-1px] text-ink-quiet" /></span>@else{{ $label }}@endif</a>
+                                    <a href="{{ $url }}" @if($external) target="_blank" rel="noopener noreferrer" @endif class="text-white/70 transition-colors hover:text-white">@if($external){{ Str::beforeLast($label, ' ') === $label ? '' : Str::beforeLast($label, ' ').' ' }}<span class="whitespace-nowrap">{{ Str::afterLast($label, ' ') }}<x-ui.icon name="arrow-up-right" class="ml-1 inline size-3 align-[-1px] text-white/45" /></span>@else{{ $label }}@endif</a>
                                 </li>
                             @endforeach
                         </ul>
@@ -71,14 +69,14 @@
             </div>
         </div>
 
-        <div class="mt-12 flex flex-col gap-4 border-t border-line pt-6 text-sm text-ink-muted md:flex-row md:items-center md:justify-between">
+        <div class="mt-12 flex flex-col gap-4 border-t border-white/10 pt-6 text-sm text-white/60 md:flex-row md:items-center md:justify-between">
             <p>
                 &copy; {{ date('Y') }} {{ __('ui.site_name') }}. {{ __('ui.all_rights_reserved') }}
-                <span class="mx-1.5 text-ink-quiet" aria-hidden="true">·</span>
-                <a href="https://pdfcheck.online/" target="_blank" rel="noopener noreferrer" class="transition-colors hover:text-action">{{ __('ui.footer.pdf_tools') }}</a>
+                <span class="mx-1.5 text-white/40" aria-hidden="true">·</span>
+                <a href="https://pdfcheck.online/" target="_blank" rel="noopener noreferrer" class="transition-colors hover:text-white">{{ __('ui.footer.pdf_tools') }}</a>
             </p>
             <p class="inline-flex items-center gap-2">
-                <x-ui.icon name="shield-check" class="size-4 text-success" />
+                <x-ui.icon name="shield-check" class="size-4 text-gold" />
                 {{ __('ui.footer.data_source_note') }}
             </p>
         </div>

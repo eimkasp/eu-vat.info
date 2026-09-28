@@ -31,14 +31,15 @@
         </div>
     @else
         <div id="hero-calculator" @class([
-            'scroll-mb-24 app-surface-raised overflow-hidden text-ink md:scroll-mb-6',
+            'scroll-mb-24 app-surface-raised text-ink md:scroll-mb-6',
             'mx-auto max-w-5xl' => ! $compact,
             'grid md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]' => ! $compact,
         ])>
             {{-- Inputs --}}
             <div @class(['flex flex-col gap-5 p-5', 'sm:p-7' => ! $compact])>
                 <div class="flex flex-wrap items-center justify-between gap-3">
-                    <div role="radiogroup" aria-label="{{ __('ui.calculator.mode_label') }}" class="inline-flex rounded-xl bg-surface-muted p-1">
+                    <div role="radiogroup" aria-label="{{ __('ui.calculator.mode_label') }}" class="app-segmented" data-value="{{ $mode }}" :data-value="mode">
+                        <span class="app-segmented-thumb" aria-hidden="true"></span>
                         @foreach(['exclude' => ['plus', __('ui.calculator.add_vat_mode')], 'include' => ['minus', __('ui.calculator.remove_vat_mode')]] as $value => [$icon, $label])
                             <button
                                 type="button"
@@ -46,8 +47,7 @@
                                 @click="setMode(@js($value))"
                                 :aria-checked="(mode === @js($value)).toString()"
                                 aria-checked="{{ $mode === $value ? 'true' : 'false' }}"
-                                class="inline-flex h-9 items-center gap-1.5 rounded-[0.55rem] px-3.5 text-sm font-semibold transition-colors duration-150"
-                                :class="mode === @js($value) ? 'bg-surface text-ink shadow-[0_1px_2px_oklch(0.2_0.03_264/0.12)]' : 'text-ink-muted hover:text-ink'"
+                                class="app-segment"
                             >
                                 <x-ui.icon :name="$icon" class="size-3.5" />
                                 {{ $label }}
@@ -81,7 +81,7 @@
                             <span class="block size-4 animate-spin rounded-full border-2 border-action/30 border-t-action"></span>
                         </span>
 
-                        <div x-cloak x-show="countryOpen" x-transition.opacity.duration.120ms class="absolute inset-x-0 z-30 mt-1.5 overflow-hidden rounded-xl border border-line bg-surface shadow-floating">
+                        <div x-cloak x-show="countryOpen" x-transition:enter="transition duration-150 ease-out-quint" x-transition:enter-start="-translate-y-1 opacity-0" x-transition:leave="transition duration-100 ease-out" x-transition:leave-end="opacity-0" class="app-popover absolute inset-x-0 z-30 mt-1.5 overflow-hidden">
                             <div class="border-b border-line p-2">
                                 <label for="country-search-{{ $id }}" class="sr-only">{{ __('ui.calculator.search_countries') }}</label>
                                 <input
@@ -176,14 +176,14 @@
                         </button>
                         <div x-cloak x-show="useCustomRate" class="app-chip app-chip-active min-h-10 gap-1 pr-2">
                             <label for="custom-rate-{{ $id }}">{{ __('ui.calculator.custom_label') }}</label>
-                            <input id="custom-rate-{{ $id }}" x-ref="customRate" x-model="customRate" @input="persist()" type="text" inputmode="decimal" maxlength="6" placeholder="0" class="tabular w-14 rounded-md border border-action/30 bg-surface px-1.5 py-1 text-center text-sm font-semibold text-ink outline-none focus:border-action">
+                            <input id="custom-rate-{{ $id }}" x-ref="customRate" x-model="customRate" @input="persist()" type="text" inputmode="decimal" maxlength="6" placeholder="0" class="tabular w-14 rounded-xs border border-action/40 bg-surface px-1.5 py-1 text-center text-sm font-semibold text-ink outline-none focus:border-action">
                             <span>%</span>
                         </div>
                     </div>
                 </fieldset>
 
                 @unless($compact)
-                    <p class="mt-auto flex gap-2.5 rounded-xl bg-surface-subtle px-3.5 py-3 text-sm leading-6 text-ink-muted">
+                    <p class="app-note mt-auto">
                         <x-ui.icon name="info" class="mt-1 size-4 text-action" />
                         <span x-text="rateDescription()">{{ __('ui.rate_type_desc.'.($rates[0]['type'] ?? 'standard')) }}</span>
                     </p>
@@ -191,12 +191,12 @@
             </div>
 
             {{-- Result --}}
-            <div @class(['flex flex-col border-line bg-surface-subtle p-5', 'border-t md:border-t-0 md:border-l sm:p-7' => ! $compact, 'border-t' => $compact])>
+            <div @class(['flex flex-col rounded-b-card border-line bg-surface-subtle p-5', 'border-t sm:p-7 md:rounded-bl-none md:rounded-tr-card md:border-t-0 md:border-l' => ! $compact, 'border-t' => $compact])>
                 <p class="text-[0.8125rem] font-semibold text-ink-muted">
                     <span x-text="mode === 'include' ? @js(__('ui.calculator.net_amount')) : @js(__('ui.calculator.total_incl_vat'))">{{ $mode === 'include' ? __('ui.calculator.net_amount') : __('ui.calculator.total_incl_vat') }}</span>
                 </p>
                 <div class="mt-1 flex items-end justify-between gap-3">
-                    <p data-calculator-result class="text-4xl font-bold tracking-[-0.03em] text-ink sm:text-[2.75rem]" x-text="money(mode === 'include' ? result.net : result.gross)">{{ $money($mode === 'include' ? $calculation->net : $calculation->gross) }}</p>
+                    <p data-calculator-result class="tabular text-4xl font-bold tracking-[-0.035em] text-ink sm:text-5xl" x-text="money(mode === 'include' ? result.net : result.gross)">{{ $money($mode === 'include' ? $calculation->net : $calculation->gross) }}</p>
                     <button type="button" @click="$copy(summaryText(), @js(__('ui.calculator.copied')))" class="app-button-secondary h-9 min-h-9 px-3 text-xs" aria-label="{{ __('ui.calculator.copy_result') }}">
                         <x-ui.icon name="copy" class="size-3.5" />
                         {{ __('ui.calculator.copy') }}
@@ -204,7 +204,7 @@
                 </div>
                 <p class="mt-2 text-sm text-ink-muted" x-text="summaryText()">{{ strtr($mode === 'include' ? __('ui.calculator.summary_remove') : __('ui.calculator.summary_add'), [':amount' => $money($calculation->input()), ':rate' => \App\Models\Country::formatRate($selectedRate).'%', ':country' => $country->name]) }}</p>
 
-                <dl class="mt-5 divide-y divide-line rounded-xl border border-line bg-surface">
+                <dl class="mt-5 divide-y divide-line rounded-control border border-line bg-surface">
                     <div class="flex items-center justify-between px-4 py-3">
                         <dt class="text-sm text-ink-muted">{{ __('ui.calculator.net_amount') }}</dt>
                         <dd class="tabular text-sm font-semibold text-ink" x-text="money(result.net)">{{ $money($calculation->net) }}</dd>
@@ -223,8 +223,8 @@
 
                 @unless($compact)
                     <div class="mt-4" aria-hidden="true">
-                        <div class="flex h-2 overflow-hidden rounded-full bg-action/20">
-                            <div class="h-full rounded-full bg-action transition-[width] duration-300 ease-out" :style="'width:' + netShare + '%'" style="width: {{ $calculation->gross > 0 ? round($calculation->net / $calculation->gross * 100, 1) : 100 }}%"></div>
+                        <div class="flex h-1.5 overflow-hidden rounded-xs bg-action/15">
+                            <div class="h-full bg-action transition-[width] duration-300 ease-out-quint" :style="'width:' + netShare + '%'" style="width: {{ $calculation->gross > 0 ? round($calculation->net / $calculation->gross * 100, 1) : 100 }}%"></div>
                         </div>
                         <div class="mt-1.5 flex justify-between text-xs text-ink-muted">
                             <span x-text="@js(__('ui.calculator.net_short')) + ' ' + netShare + '%'"></span>
@@ -234,12 +234,12 @@
                 @endunless
 
                 <div class="mt-auto flex flex-wrap gap-2 pt-5">
-                    <a :href="shareUrl(@js(url(locale_path('/vat-calculation'))), $wire.selectedCountrySlug)" href="{{ url(locale_path('/vat-calculation/'.$country->slug.'/'.number_format($calculation->input(), 2, '.', '').'/'.\App\Models\Country::formatRate($customRate ?? $selectedRate).'/'.$mode)) }}" @if($embedded) target="_blank" rel="noopener" @endif class="app-button-primary h-10 min-h-10 flex-1 px-4">
+                    <a :href="shareUrl(@js(url(locale_path('/vat-calculation'))), $wire.selectedCountrySlug)" href="{{ url(locale_path('/vat-calculation/'.$country->slug.'/'.number_format($calculation->input(), 2, '.', '').'/'.\App\Models\Country::formatRate($customRate ?? $selectedRate).'/'.$mode)) }}" @if($embedded) target="_blank" rel="noopener" @endif class="app-button-primary h-10 min-h-10 flex-1 whitespace-nowrap px-4">
                         <x-ui.icon name="share" class="size-4" />
                         {{ __('ui.calculator.share_details') }}
                     </a>
                     @unless(in_array($surface, ['workspace', 'country-image', 'embed'], true) || $compact)
-                        <a href="{{ locale_path('/vat-calculator/'.$country->slug) }}" x-bind:href="@js(locale_path('/vat-calculator')) + '/' + $wire.selectedCountrySlug" class="app-button-secondary h-10 min-h-10 flex-1 px-4">
+                        <a href="{{ locale_path('/vat-calculator/'.$country->slug) }}" x-bind:href="@js(locale_path('/vat-calculator')) + '/' + $wire.selectedCountrySlug" class="app-button-secondary h-10 min-h-10 flex-1 whitespace-nowrap px-4">
                             {{ __('ui.calculator.full_calculator') }}
                             <x-ui.icon name="arrow-right" class="size-4" />
                         </a>
@@ -271,11 +271,11 @@
                         <x-ui.icon name="history" class="size-4" />
                         {{ __('ui.calculator.recent_calculations') }}
                     </h2>
-                    <button type="button" wire:click="clearHistory" @class(['rounded-md px-2 py-1 text-xs font-semibold', 'text-white/75 hover:bg-white/10 hover:text-white' => $onDark, 'text-action hover:bg-action-soft' => ! $onDark])>{{ __('ui.calculator.clear_all') }}</button>
+                    <button type="button" wire:click="clearHistory" @class(['rounded-xs px-2 py-1 text-xs font-semibold', 'text-white/75 hover:bg-white/10 hover:text-white' => $onDark, 'text-action hover:bg-action-soft' => ! $onDark])>{{ __('ui.calculator.clear_all') }}</button>
                 </div>
                 <div class="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
                     <template x-for="entry in $wire.history" :key="entry.key">
-                        <button type="button" @click="restore(entry)" class="group flex items-center gap-3 rounded-xl border border-line bg-surface p-3 text-left transition-colors hover:border-action/40">
+                        <button type="button" @click="restore(entry)" class="app-surface pressable group flex items-center gap-3 p-3 text-left hover:border-action/50">
                             <img :src="'{{ asset('images/flags') }}/' + entry.iso + '.svg'" alt="" width="28" height="21" class="app-flag h-[1.3125rem] w-7" loading="lazy">
                             <span class="min-w-0 flex-1">
                                 <span class="block truncate text-sm font-semibold text-ink" x-text="entry.country"></span>

@@ -42,23 +42,23 @@
                 <h1 class="text-3xl font-bold tracking-[-0.03em] text-white sm:text-4xl sm:leading-[1.1]">{{ $headline }}</h1>
             </div>
 
-            <div class="app-surface-raised mx-auto grid grid-cols-1 max-w-4xl overflow-hidden text-ink md:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
+            <div class="app-surface-raised mx-auto grid max-w-4xl grid-cols-1 overflow-hidden text-ink md:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
                 <div class="flex flex-col gap-4 p-5 sm:p-7">
                     <div class="flex flex-wrap items-center gap-2">
-                        <span class="inline-flex items-center gap-1.5 rounded-full bg-action-soft px-2.5 py-1 text-xs font-semibold text-action-deep">
+                        <span class="app-badge bg-action-soft text-action-deep">
                             <x-ui.icon :name="$adding ? 'plus' : 'minus'" class="size-3.5" />
                             {{ $adding ? __('ui.shared_calc.vat_added') : __('ui.shared_calc.vat_extracted') }}
                         </span>
-                        <span class="inline-flex items-center rounded-full bg-surface-muted px-2.5 py-1 text-xs font-semibold text-ink-muted">{{ $this->rateType['label'] }} · {{ $rateText }}</span>
-                        <span class="inline-flex items-center rounded-full bg-surface-muted px-2.5 py-1 text-xs font-semibold text-ink-muted">{{ $currency }}</span>
+                        <span class="app-badge bg-surface-muted text-ink-muted">{{ $this->rateType['label'] }} · {{ $rateText }}</span>
+                        <span class="app-badge bg-surface-muted text-ink-muted">{{ $currency }}</span>
                     </div>
 
                     <div>
                         <p class="text-sm font-semibold text-ink-muted">{{ $adding ? __('ui.shared_calc.total_incl_vat') : __('ui.shared_calc.net_excl_vat') }}</p>
-                        <p class="mt-1 text-4xl font-bold tracking-[-0.03em] text-ink sm:text-5xl">{{ $money($adding ? $calculation->gross : $calculation->net) }}</p>
+                        <p class="tabular mt-1 text-4xl font-bold tracking-[-0.035em] text-ink sm:text-5xl">{{ $money($adding ? $calculation->gross : $calculation->net) }}</p>
                     </div>
 
-                    <p class="flex gap-2.5 rounded-xl bg-surface-subtle px-3.5 py-3 text-sm leading-6 text-ink-muted">
+                    <p class="app-note">
                         <x-ui.icon name="info" class="mt-1 size-4 text-action" />
                         {{ __('ui.rate_type_desc.'.$this->rateType['type']) }}
                     </p>
@@ -78,7 +78,7 @@
                 </div>
 
                 <div class="border-t border-line bg-surface-subtle p-5 sm:p-7 md:border-l md:border-t-0">
-                    <dl class="divide-y divide-line overflow-hidden rounded-xl border border-line bg-surface text-sm">
+                    <dl class="divide-y divide-line overflow-hidden rounded-control border border-line bg-surface text-sm">
                         <div class="flex items-center justify-between gap-4 px-4 py-3">
                             <dt class="text-ink-muted">{{ __('ui.shared_calc.net_excl_label') }}</dt>
                             <dd class="tabular font-semibold text-ink">{{ $money($calculation->net) }}</dd>
@@ -94,9 +94,9 @@
                     </dl>
 
                     <div class="mt-4" aria-hidden="true">
-                        <div class="flex h-2 gap-0.5 overflow-hidden rounded-full">
-                            <span class="rounded-l-full bg-action" style="width: {{ $netShare }}%"></span>
-                            <span class="flex-1 rounded-r-full bg-action/30"></span>
+                        <div class="flex h-1.5 gap-0.5 overflow-hidden rounded-xs">
+                            <span class="bg-action" style="width: {{ $netShare }}%"></span>
+                            <span class="flex-1 bg-action/25"></span>
                         </div>
                         <div class="mt-1.5 flex justify-between text-xs text-ink-muted">
                             <span>{{ __('ui.calculator.net_short') }} {{ Money::percent($netShare) }}</span>
@@ -104,7 +104,7 @@
                         </div>
                     </div>
 
-                    <div class="mt-5 rounded-xl border border-line bg-surface p-4">
+                    <div class="mt-5 rounded-control border border-line bg-surface p-4">
                         <h2 class="text-sm font-semibold text-ink">{{ __('ui.shared_calc.formula_heading') }}</h2>
                         <div class="mt-2 space-y-1.5 font-mono text-xs leading-5 text-ink-muted">
                             @if($adding)
@@ -207,7 +207,7 @@
                             @foreach($this->rateOptions as $option)
                                 @php($current = abs($option['rate'] - $rate) < 0.001)
                                 <li>
-                                    <a href="{{ SharedCalculation::calculationUrl($country, $amount, $option['rate'], $mode) }}" @if($current) aria-current="page" @endif @class(['flex min-h-11 items-center justify-between rounded-xl border px-3.5 text-sm font-semibold transition-colors', 'border-action/40 bg-action-soft text-action-deep' => $current, 'border-line text-ink hover:border-line-strong hover:bg-surface-subtle' => ! $current])>
+                                    <a href="{{ SharedCalculation::calculationUrl($country, $amount, $option['rate'], $mode) }}" @if($current) aria-current="page" @endif @class(['flex min-h-11 items-center justify-between rounded-card border px-3.5 text-sm font-semibold transition-colors', 'border-action/40 bg-action-soft text-action-deep' => $current, 'border-line text-ink hover:border-line-strong hover:bg-surface-subtle' => ! $current])>
                                         <span>{{ $option['label'] }}</span>
                                         <span class="tabular">{{ Country::formatRate($option['rate']) }}%</span>
                                     </a>
@@ -223,7 +223,7 @@
                         @foreach(['exclude' => ['plus', __('ui.shared_calc.add_vat_to_amount')], 'include' => ['minus', __('ui.shared_calc.remove_vat_from_amount')]] as $value => [$icon, $label])
                             @php($current = $mode === $value)
                             <li>
-                                <a href="{{ SharedCalculation::calculationUrl($country, $amount, $rate, $value) }}" @if($current) aria-current="page" @endif @class(['flex min-h-11 items-center gap-2.5 rounded-xl border px-3.5 text-sm font-semibold transition-colors', 'border-action/40 bg-action-soft text-action-deep' => $current, 'border-line text-ink hover:border-line-strong hover:bg-surface-subtle' => ! $current])>
+                                <a href="{{ SharedCalculation::calculationUrl($country, $amount, $rate, $value) }}" @if($current) aria-current="page" @endif @class(['flex min-h-11 items-center gap-2.5 rounded-card border px-3.5 text-sm font-semibold transition-colors', 'border-action/40 bg-action-soft text-action-deep' => $current, 'border-line text-ink hover:border-line-strong hover:bg-surface-subtle' => ! $current])>
                                     <x-ui.icon :name="$icon" class="size-4" />
                                     {{ $label }}
                                 </a>
@@ -233,7 +233,7 @@
                 </nav>
 
                 <a href="{{ locale_path('/top-vat-calculations') }}" class="group app-surface flex items-start gap-3 p-5 transition-colors hover:border-action/40">
-                    <span class="flex size-9 shrink-0 items-center justify-center rounded-lg bg-action-soft text-action" aria-hidden="true"><x-ui.icon name="trending-up" class="size-4" /></span>
+                    <span class="flex size-9 shrink-0 items-center justify-center rounded-control bg-action-soft text-action" aria-hidden="true"><x-ui.icon name="trending-up" class="size-4" /></span>
                     <span class="min-w-0">
                         <span class="flex items-center gap-1.5 text-sm font-semibold text-ink group-hover:text-action">
                             {{ __('ui.shared_calc.popular_calculations') }}

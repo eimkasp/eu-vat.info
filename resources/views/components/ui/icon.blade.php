@@ -12,6 +12,7 @@
         'check' => '<path d="M20 6 9 17l-5-5"/>',
         'check-circle' => '<circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>',
         'chevron-down' => '<path d="m6 9 6 6 6-6"/>',
+        'chevron-left' => '<path d="m15 18-6-6 6-6"/>',
         'chevron-right' => '<path d="m9 18 6-6-6-6"/>',
         'clock' => '<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>',
         'code' => '<path d="m16 18 6-6-6-6"/><path d="m8 6-6 6 6 6"/>',
@@ -58,7 +59,7 @@
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
-    stroke-width="1.9"
+    stroke-width="1.75"
     stroke-linecap="round"
     stroke-linejoin="round"
     @if($label) role="img" aria-label="{{ $label }}" @else aria-hidden="true" focusable="false" @endif

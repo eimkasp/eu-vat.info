@@ -55,7 +55,7 @@
 <div>
     @if($isCountryPage)
         <section data-country-atmosphere class="hero-canvas">
-            <x-hero-backdrop opacity="opacity-35" />
+            <x-hero-backdrop opacity="opacity-30" />
             <div class="app-container relative pb-10 pt-6 sm:pb-14 sm:pt-8">
                 <x-calculator.country-header :country="$country" />
 

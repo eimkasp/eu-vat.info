@@ -31,7 +31,7 @@
                 @endforeach
             </dl>
 
-            <dl class="mt-5 grid grid-cols-2 gap-x-5 gap-y-4 rounded-xl bg-surface-subtle p-4 text-sm">
+            <dl class="mt-5 grid grid-cols-2 gap-x-5 gap-y-4 rounded-card bg-surface-subtle p-4 text-sm">
                 <div>
                     <dt class="text-xs font-medium text-ink-muted">{{ __('ui.country_page.currency') }}</dt>
                     <dd class="mt-1 font-semibold text-ink">{{ $currency }} · {{ $country->currency_display }}</dd>
@@ -56,12 +56,12 @@
         <div class="p-5 sm:p-6">
             <h3 class="text-sm font-semibold text-ink">{{ __('ui.calculator.calculation_reference') }}</h3>
             <div class="mt-3 space-y-3">
-                <div class="rounded-xl border border-line p-4">
+                <div class="rounded-card border border-line p-4">
                     <p class="text-sm font-semibold text-ink">{{ __('ui.country_page.adding_vat', ['rate' => Country::formatRate($standard)]) }}</p>
                     <code class="mt-2 block font-mono text-sm font-semibold text-action-deep">{{ __('ui.calculator.formula_add', ['multiplier' => $multiplier]) }}</code>
                     <p class="mt-2 text-sm text-ink-muted">{{ Money::format($add->net, $currency) }} → <strong class="text-ink">{{ Money::format($add->gross, $currency) }}</strong></p>
                 </div>
-                <div class="rounded-xl border border-line p-4">
+                <div class="rounded-card border border-line p-4">
                     <p class="text-sm font-semibold text-ink">{{ __('ui.country_page.removing_vat', ['rate' => Country::formatRate($standard)]) }}</p>
                     <code class="mt-2 block font-mono text-sm font-semibold text-action-deep">{{ __('ui.calculator.formula_remove', ['multiplier' => $multiplier]) }}</code>
                     <p class="mt-2 text-sm text-ink-muted">{{ Money::format($remove->gross, $currency) }} → <strong class="text-ink">{{ Money::format($remove->net, $currency) }}</strong></p>

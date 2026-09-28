@@ -3,7 +3,7 @@
 <section @class(['app-surface relative overflow-hidden p-5', 'sm:p-6' => ! $compact]) aria-labelledby="{{ $inputId }}-title">
     <div @class(['flex flex-col gap-5', 'lg:flex-row lg:items-center lg:justify-between lg:gap-8' => ! $compact])>
         <div class="flex gap-4">
-            <span class="hidden size-11 shrink-0 items-center justify-center rounded-xl bg-action-soft text-action sm:flex" aria-hidden="true">
+            <span class="hidden size-11 shrink-0 items-center justify-center rounded-card bg-action-soft text-action sm:flex" aria-hidden="true">
                 <x-ui.icon name="news" class="size-5" />
             </span>
             <div>

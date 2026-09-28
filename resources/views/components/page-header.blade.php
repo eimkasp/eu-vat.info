@@ -1,6 +1,6 @@
 @props(['title', 'description' => null, 'eyebrow' => null, 'breadcrumbs' => []])
 
-<header {{ $attributes->merge(['class' => 'border-b border-line bg-surface']) }}>
+<header {{ $attributes->merge(['class' => 'app-page-header']) }}>
     <div class="app-container pb-8 pt-6 sm:pb-10">
         @if($breadcrumbs)
             <x-site-breadcrumbs :items="$breadcrumbs" />
@@ -10,7 +10,7 @@
                 @if($eyebrow)
                     <p class="app-eyebrow">{{ $eyebrow }}</p>
                 @endif
-                <h1 @class(['text-3xl font-bold tracking-[-0.03em] text-ink sm:text-4xl', 'mt-1' => $eyebrow])>{{ $title }}</h1>
+                <h1 @class(['text-3xl font-bold tracking-[-0.035em] text-ink sm:text-[2.5rem] sm:leading-[1.1]', 'mt-1.5' => $eyebrow])>{{ $title }}</h1>
                 @if($description)
                     <p class="mt-3 max-w-[68ch] text-base leading-7 text-ink-muted">{{ $description }}</p>
                 @endif

@@ -52,7 +52,7 @@
     <x-page-header :title="__('ui.history.title')" :description="__('ui.history.subtitle')" :eyebrow="__('ui.nav.vat_tools')" :breadcrumbs="[__('ui.breadcrumbs.vat_changelog') => '']">
         @if($summary['latest'])
             <x-slot:actions>
-                <span class="inline-flex items-center gap-2 rounded-full border border-line bg-surface-subtle px-3 py-1.5 text-sm text-ink-muted">
+                <span class="inline-flex items-center gap-2 rounded-control border border-line bg-surface-subtle px-3 py-1.5 text-sm text-ink-muted">
                     <x-ui.icon name="clock" class="size-4" />
                     {{ __('ui.history.latest_change', ['date' => \Illuminate\Support\Carbon::parse($summary['latest'])->translatedFormat('j M Y')]) }}
                 </span>
@@ -61,7 +61,7 @@
     </x-page-header>
 
     <div class="app-container space-y-8 py-8 sm:py-10">
-        <dl class="grid grid-cols-2 gap-3 lg:grid-cols-4">
+        <div class="grid grid-cols-2 gap-3 lg:grid-cols-4">
             @foreach([
                 ['history', __('ui.history.stat_total'), $summary['total'], 'text-action'],
                 ['trending-up', __('ui.history.stat_increases'), $summary['increases'], 'text-danger'],
@@ -69,19 +69,19 @@
                 ['clock', __('ui.history.stat_upcoming'), $summary['upcoming'], 'text-warning'],
             ] as [$icon, $label, $value, $tone])
                 <div class="app-surface flex items-start gap-3 p-4">
-                    <span class="flex size-9 shrink-0 items-center justify-center rounded-lg bg-surface-muted {{ $tone }}" aria-hidden="true">
+                    <span class="flex size-9 shrink-0 items-center justify-center rounded-control bg-surface-muted {{ $tone }}" aria-hidden="true">
                         <x-ui.icon :name="$icon" class="size-4" />
                     </span>
-                    <div>
+                    <dl>
                         <dt class="text-xs font-semibold text-ink-muted">{{ $label }}</dt>
                         <dd class="tabular mt-0.5 text-2xl font-bold text-ink">{{ number_format($value) }}</dd>
-                    </div>
+                    </dl>
                 </div>
             @endforeach
-        </dl>
+        </div>
 
         <div class="grid grid-cols-1 items-start gap-8 xl:grid-cols-[minmax(0,1fr)_22rem]">
-            <section class="app-surface min-w-0 overflow-hidden" aria-labelledby="changes-heading">
+            <section class="app-surface min-w-0 overflow-clip" aria-labelledby="changes-heading">
                 <div class="border-b border-line p-4 sm:px-6">
                     <div class="flex flex-wrap items-center justify-between gap-3">
                         <h2 id="changes-heading" class="text-lg font-bold text-ink">{{ __('ui.history.all_changes') }}</h2>
@@ -129,7 +129,7 @@
 
                 <div wire:loading.class="opacity-60" class="transition-opacity">
                     @forelse($changes->groupBy(fn ($change) => $change->change_date?->year) as $year => $yearChanges)
-                        <h3 class="sticky top-16 z-10 border-b border-line bg-surface-subtle/95 px-4 py-2 text-xs font-bold text-ink-muted backdrop-blur sm:px-6">{{ $year }}</h3>
+                        <h3 class="app-sticky-bar tabular px-4 py-2 text-xs font-bold tracking-[0.08em] text-ink-muted sm:px-6">{{ $year }}</h3>
                         <ol class="divide-y divide-line">
                             @foreach($yearChanges as $change)
                                 @php
@@ -145,9 +145,9 @@
                                         <div class="min-w-0">
                                             <p class="flex flex-wrap items-center gap-2">
                                                 <span class="truncate font-semibold text-ink">{{ $change->country?->name }}</span>
-                                                <span class="rounded-md bg-surface-muted px-1.5 py-0.5 text-[0.6875rem] font-semibold text-ink-muted">{{ __('ui.rate_type.'.$change->rate_type) }}</span>
+                                                <span class="rounded-control bg-surface-muted px-1.5 py-0.5 text-[0.6875rem] font-semibold text-ink-muted">{{ __('ui.rate_type.'.$change->rate_type) }}</span>
                                                 @if($upcoming)
-                                                    <span class="inline-flex items-center gap-1 rounded-md bg-warning-soft px-1.5 py-0.5 text-[0.6875rem] font-semibold text-warning">
+                                                    <span class="inline-flex items-center gap-1 rounded-control bg-warning-soft px-1.5 py-0.5 text-[0.6875rem] font-semibold text-warning">
                                                         <x-ui.icon name="clock" class="size-3" />
                                                         {{ __('ui.history.upcoming_badge') }}
                                                     </span>
@@ -214,11 +214,11 @@
                     <ol class="mt-1 max-h-[34rem] space-y-0.5 overflow-y-auto overscroll-contain">
                         @foreach($stability as $row)
                             <li>
-                                <a href="{{ locale_path($row['history'] ? '/vat-rates/'.$row['slug'].'/history' : '/vat-calculator/'.$row['slug']) }}" class="group -mx-2 grid grid-cols-[1.125rem_minmax(0,7.5rem)_minmax(0,1fr)_1.75rem] items-center gap-2.5 rounded-lg px-2 py-1.5 transition-colors hover:bg-surface-subtle" title="{{ __('ui.history.col_stability') }}: {{ __('ui.history.'.$row['stability']) }}">
+                                <a href="{{ locale_path($row['history'] ? '/vat-rates/'.$row['slug'].'/history' : '/vat-calculator/'.$row['slug']) }}" class="group -mx-2 grid grid-cols-[1.125rem_minmax(0,7.5rem)_minmax(0,1fr)_1.75rem] items-center gap-2.5 rounded-control px-2 py-1.5 transition-colors hover:bg-surface-subtle" title="{{ __('ui.history.col_stability') }}: {{ __('ui.history.'.$row['stability']) }}">
                                     <x-ui.flag :iso="$row['iso']" size="sm" />
                                     <span class="truncate text-[0.8125rem] font-medium text-ink group-hover:text-action">{{ $row['name'] }}</span>
-                                    <span class="h-2 overflow-hidden rounded-full bg-action-soft" aria-hidden="true">
-                                        <span class="block h-full rounded-full bg-action" style="width: {{ max(4, round($row['changes'] / $maxChanges * 100)) }}%"></span>
+                                    <span class="h-1.5 overflow-hidden rounded-xs bg-action-soft" aria-hidden="true">
+                                        <span class="block h-full bg-action" style="width: {{ max(4, round($row['changes'] / $maxChanges * 100)) }}%"></span>
                                     </span>
                                     <span class="tabular text-right text-[0.8125rem] font-semibold text-ink">{{ $row['changes'] }}</span>
                                 </a>

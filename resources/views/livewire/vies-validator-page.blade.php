@@ -201,7 +201,7 @@
                                 <div class="border-b border-line py-3">
                                     <dt class="text-xs font-semibold text-ink-muted">{{ __('ui.vies_page.field_status') }}</dt>
                                     <dd class="mt-1">
-                                        <span @class(['inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-bold', 'bg-success-soft text-success' => $result['valid'], 'bg-danger-soft text-danger' => ! $result['valid']])>
+                                        <span @class(['app-badge', 'bg-success-soft text-success' => $result['valid'], 'bg-danger-soft text-danger' => ! $result['valid']])>
                                             <x-ui.icon :name="$result['valid'] ? 'check' : 'x'" class="size-3.5" />
                                             {{ $result['valid'] ? __('ui.vies_page.status_active') : __('ui.vies_page.status_inactive') }}
                                         </span>
@@ -258,11 +258,11 @@
                         <p class="app-eyebrow">{{ __('ui.country_page.eu_guidance') }}</p>
                         <h2 id="vat-number-format" class="mt-1 text-xl font-bold text-ink">{{ __('ui.vies_page.format_heading', ['country' => $pageCountry->name]) }}</h2>
                         <dl class="mt-4 grid gap-4 sm:grid-cols-2">
-                            <div class="rounded-xl bg-surface-subtle p-4">
+                            <div class="rounded-card bg-surface-subtle p-4">
                                 <dt class="text-xs font-semibold text-ink-muted">{{ __('ui.vies_page.format_prefix') }}</dt>
                                 <dd class="mt-1 font-mono text-2xl font-bold text-ink">{{ $format['prefix'] }}</dd>
                             </div>
-                            <div class="rounded-xl bg-surface-subtle p-4">
+                            <div class="rounded-card bg-surface-subtle p-4">
                                 <dt class="text-xs font-semibold text-ink-muted">{{ __('ui.vies_page.format_structure') }}</dt>
                                 <dd class="mt-1 font-semibold text-ink">{{ __('ui.vies_page.format_structure_value', ['prefix' => $format['prefix']]) }}</dd>
                             </div>
@@ -312,10 +312,10 @@
                     </div>
 
                     <div class="space-y-5 p-5 sm:p-6">
-                        <div class="rounded-xl border border-line bg-surface-subtle p-4">
+                        <div class="rounded-card border border-line bg-surface-subtle p-4">
                             <p class="text-xs font-semibold text-ink-muted">{{ __('ui.vies_page.api_endpoint') }}</p>
                             <div class="mt-2 flex flex-wrap items-center gap-2">
-                                <span class="rounded-md bg-action-soft px-2 py-0.5 font-mono text-xs font-bold text-action-deep">POST</span>
+                                <span class="rounded-control bg-action-soft px-2 py-0.5 font-mono text-xs font-bold text-action-deep">POST</span>
                                 <code class="min-w-0 flex-1 break-all font-mono text-sm text-ink">{{ $endpoint }}</code>
                                 <button type="button" x-on:click="$copy(@js($endpoint), @js(__('ui.calculator.copied')))" class="app-button-ghost size-9 min-h-9 p-0" aria-label="{{ __('ui.calculator.copy') }}">
                                     <x-ui.icon name="copy" class="size-4" />
@@ -339,26 +339,26 @@
 
                             <div class="app-code mt-3">
                                 <div class="flex items-center justify-between gap-3 border-b border-white/10 px-4 py-2">
-                                    <p class="truncate font-mono text-xs text-slate-400"><span class="font-semibold text-emerald-400">POST</span> /api/vat/validation/validate</p>
-                                    <button type="button" x-on:click="send()" :disabled="loading" class="inline-flex h-8 shrink-0 items-center gap-1.5 rounded-lg bg-action px-3 text-xs font-semibold text-white transition-colors hover:bg-action-deep disabled:cursor-not-allowed disabled:opacity-60">
+                                    <p class="truncate font-mono text-xs text-syntax-comment"><span class="font-semibold text-syntax-ok">POST</span> /api/vat/validation/validate</p>
+                                    <button type="button" x-on:click="send()" :disabled="loading" class="pressable inline-flex h-8 shrink-0 items-center gap-1.5 rounded-control bg-button px-3.5 text-xs font-semibold text-white hover:bg-button-hover disabled:cursor-not-allowed disabled:opacity-60">
                                         <x-ui.icon name="play" class="size-3.5" x-show="!loading" />
                                         <span x-cloak x-show="loading" class="size-3.5 animate-spin rounded-full border-2 border-white/40 border-t-white" aria-hidden="true"></span>
                                         <span x-text="loading ? @js(__('ui.vies_page.api_sending')) : @js(__('ui.vies_page.api_send'))">{{ __('ui.vies_page.api_send') }}</span>
                                     </button>
                                 </div>
-                                <pre class="overflow-x-auto p-4 font-mono text-xs leading-5 text-amber-300" x-text="body"></pre>
+                                <pre tabindex="0" class="overflow-x-auto p-4 font-mono text-xs leading-5 text-syntax-literal" x-text="body"></pre>
                                 <div class="border-t border-white/10" aria-live="polite">
                                     <div x-show="status !== null" x-cloak class="flex items-center justify-between px-4 pt-3 font-mono text-xs">
-                                        <span :class="ok ? 'text-emerald-400' : 'text-rose-400'" x-text="status === 0 ? 'Network error' : 'HTTP ' + status"></span>
-                                        <span class="text-slate-500" x-text="elapsed !== null ? elapsed + ' ms' : ''"></span>
+                                        <span :class="ok ? 'text-syntax-ok' : 'text-syntax-error'" x-text="status === 0 ? 'Network error' : 'HTTP ' + status"></span>
+                                        <span class="text-syntax-comment" x-text="elapsed !== null ? elapsed + ' ms' : ''"></span>
                                     </div>
-                                    <pre x-show="response" x-cloak class="max-h-80 overflow-auto p-4 font-mono text-xs leading-5" :class="ok ? 'text-emerald-300' : 'text-rose-300'" x-text="response"></pre>
-                                    <p x-show="!response && !loading" class="p-4 font-mono text-xs text-slate-500">{{ __('ui.vies_page.api_response_placeholder') }}</p>
+                                    <pre tabindex="0" x-show="response" x-cloak class="max-h-80 overflow-auto p-4 font-mono text-xs leading-5" :class="ok ? 'text-syntax-string' : 'text-syntax-error'" x-text="response"></pre>
+                                    <p x-show="!response && !loading" class="p-4 font-mono text-xs text-syntax-comment">{{ __('ui.vies_page.api_response_placeholder') }}</p>
                                 </div>
                             </div>
                         </div>
 
-                        <a href="{{ locale_path('/vat-validation-api') }}" class="group flex items-center justify-between gap-4 rounded-xl border border-line p-4 transition-colors hover:border-action/40 hover:bg-action-soft">
+                        <a href="{{ locale_path('/vat-validation-api') }}" class="group flex items-center justify-between gap-4 rounded-card border border-line p-4 transition-colors hover:border-action/40 hover:bg-action-soft">
                             <span>
                                 <span class="block text-sm font-semibold text-ink">{{ __('ui.vies_page.api_docs_link') }}</span>
                                 <span class="block text-sm text-ink-muted">{{ __('ui.vies_page.api_docs_desc') }}</span>
@@ -397,12 +397,12 @@
                 >
                     <div class="flex items-center justify-between gap-2">
                         <h2 id="recent-lookups" class="text-base font-bold text-ink">{{ __('ui.vies_page.recent_heading') }}</h2>
-                        <button type="button" x-on:click="clear()" class="rounded-md px-2 py-1 text-xs font-semibold text-ink-muted hover:bg-surface-muted hover:text-ink">{{ __('ui.calculator.clear_all') }}</button>
+                        <button type="button" x-on:click="clear()" class="rounded-control px-2 py-1 text-xs font-semibold text-ink-muted hover:bg-surface-muted hover:text-ink">{{ __('ui.calculator.clear_all') }}</button>
                     </div>
                     <ul class="mt-3 space-y-1.5">
                         <template x-for="item in items" :key="item.cc + item.vn">
                             <li>
-                                <button type="button" x-on:click="open(item)" class="flex w-full items-center gap-3 rounded-lg border border-line px-3 py-2 text-left transition-colors hover:border-action/40 hover:bg-action-soft">
+                                <button type="button" x-on:click="open(item)" class="flex w-full items-center gap-3 rounded-control border border-line px-3 py-2 text-left transition-colors hover:border-action/40 hover:bg-action-soft">
                                     <span class="min-w-0 flex-1">
                                         <span class="block truncate font-mono text-sm font-semibold text-ink" x-text="(item.prefix || item.cc) + item.vn"></span>
                                         <span class="block truncate text-xs text-ink-muted" x-show="item.name" x-text="item.name"></span>
@@ -430,7 +430,7 @@
                                 <a
                                     href="{{ locale_path('/vat-number-validator/'.$option['slug']) }}"
                                     @if($current) aria-current="page" @endif
-                                    @class(['flex min-h-10 items-center gap-2.5 rounded-lg px-2 text-[0.8125rem] transition-colors', 'bg-action-soft font-semibold text-action-deep' => $current, 'text-ink-muted hover:bg-surface-subtle hover:text-ink' => ! $current])
+                                    @class(['flex min-h-10 items-center gap-2.5 rounded-control px-2 text-[0.8125rem] transition-colors', 'bg-action-soft font-semibold text-action-deep' => $current, 'text-ink-muted hover:bg-surface-subtle hover:text-ink' => ! $current])
                                 >
                                     <x-ui.flag :iso="$option['iso']" size="xs" />
                                     <span class="min-w-0 flex-1 truncate">{{ __('ui.vies_page.country_h1', ['country' => $option['name']]) }}</span>
@@ -445,8 +445,8 @@
                     <h2 id="related-tools" class="text-base font-bold text-ink">{{ __('ui.vies_page.related_tools') }}</h2>
                     <ul class="mt-3 space-y-1">
                         <li>
-                            <a href="{{ locale_path('/vat-calculator') }}" class="-mx-2 flex items-start gap-3 rounded-lg p-2 transition-colors hover:bg-surface-subtle">
-                                <span class="flex size-8 shrink-0 items-center justify-center rounded-lg bg-action-soft text-action"><x-ui.icon name="calculator" class="size-4" /></span>
+                            <a href="{{ locale_path('/vat-calculator') }}" class="-mx-2 flex items-start gap-3 rounded-control p-2 transition-colors hover:bg-surface-subtle">
+                                <span class="flex size-8 shrink-0 items-center justify-center rounded-control bg-action-soft text-action"><x-ui.icon name="calculator" class="size-4" /></span>
                                 <span class="min-w-0">
                                     <span class="block text-sm font-semibold text-ink">{{ __('ui.nav.vat_calculator') }}</span>
                                     <span class="block text-xs leading-5 text-ink-muted">{{ __('ui.calculator.generic_subtitle') }}</span>
@@ -455,8 +455,8 @@
                         </li>
                         @foreach($relatedTools as $tool)
                             <li>
-                                <a href="{{ $tool['url'] }}" class="-mx-2 flex items-start gap-3 rounded-lg p-2 transition-colors hover:bg-surface-subtle">
-                                    <span class="flex size-8 shrink-0 items-center justify-center rounded-lg bg-action-soft text-action"><x-ui.icon :name="$tool['icon']" class="size-4" /></span>
+                                <a href="{{ $tool['url'] }}" class="-mx-2 flex items-start gap-3 rounded-control p-2 transition-colors hover:bg-surface-subtle">
+                                    <span class="flex size-8 shrink-0 items-center justify-center rounded-control bg-action-soft text-action"><x-ui.icon :name="$tool['icon']" class="size-4" /></span>
                                     <span class="min-w-0">
                                         <span class="block text-sm font-semibold text-ink">{{ $tool['label'] }}</span>
                                         <span class="block text-xs leading-5 text-ink-muted">{{ $tool['description'] }}</span>

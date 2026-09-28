@@ -24,7 +24,7 @@
             <x-site-breadcrumbs :items="[__('ui.nav.updates') => locale_path('/blog'), $post['title'] => '']" />
             <div class="mt-6 max-w-3xl">
                 <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-ink-muted">
-                    <span class="rounded-full bg-action-soft px-2.5 py-0.5 font-semibold text-action-deep">{{ $post['category'] }}</span>
+                    <span class="app-badge bg-action-soft text-action-deep">{{ $post['category'] }}</span>
                     <time datetime="{{ $post['published_at']->toDateString() }}">{{ __('ui.blog.published', ['date' => $post['published_at']->translatedFormat('j M Y')]) }}</time>
                     <span aria-hidden="true">·</span>
                     <time datetime="{{ $post['updated_at']->toDateString() }}">{{ __('ui.blog.updated', ['date' => $post['updated_at']->translatedFormat('j M Y')]) }}</time>
@@ -36,7 +36,7 @@
                 @if($post['tags'])
                     <ul class="mt-5 flex flex-wrap gap-1.5" aria-label="Tags">
                         @foreach($post['tags'] as $tag)
-                            <li class="rounded-md bg-surface-muted px-2 py-0.5 text-xs font-medium text-ink-muted">{{ $tag }}</li>
+                            <li class="rounded-control bg-surface-muted px-2 py-0.5 text-xs font-medium text-ink-muted">{{ $tag }}</li>
                         @endforeach
                     </ul>
                 @endif

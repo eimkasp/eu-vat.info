@@ -10,7 +10,7 @@
 
     <div class="app-container space-y-8 py-8 sm:py-10">
         @if($countries->isEmpty())
-            <div class="flex items-start gap-3 rounded-2xl border border-warning/30 bg-warning-soft p-4" role="status">
+            <div class="flex items-start gap-3 rounded-card border border-warning/30 bg-warning-soft p-4" role="status">
                 <x-ui.icon name="info" class="mt-0.5 size-5 text-warning" />
                 <div>
                     <p class="font-semibold text-ink">{{ __('ui.errors.data_load_failed_title') }}</p>

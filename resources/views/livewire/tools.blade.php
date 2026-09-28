@@ -57,12 +57,12 @@
                 @foreach($featured as $tool)
                     <a href="{{ $tool['url'] }}" class="group app-surface flex flex-col p-6 transition-[border-color,box-shadow] duration-200 hover:border-action/40 hover:shadow-workflow sm:p-7">
                         <div class="flex items-start gap-4">
-                            <span class="flex size-12 shrink-0 items-center justify-center rounded-xl bg-action-soft text-action" aria-hidden="true">
+                            <span class="flex size-12 shrink-0 items-center justify-center rounded-card bg-action-soft text-action" aria-hidden="true">
                                 <x-ui.icon :name="$tool['icon']" class="size-6" />
                             </span>
                             <div class="min-w-0">
                                 <h3 class="text-xl font-bold text-ink group-hover:text-action">{{ $tool['title'] }}</h3>
-                                <span class="mt-1 inline-flex rounded-full bg-surface-muted px-2.5 py-0.5 text-xs font-semibold text-ink-muted">{{ $tool['badge'] }}</span>
+                                <span class="app-badge mt-1 bg-surface-muted text-ink-muted">{{ $tool['badge'] }}</span>
                             </div>
                         </div>
                         <p class="mt-4 text-sm leading-6 text-ink-muted">{{ $tool['description'] }}</p>
@@ -85,7 +85,7 @@
             <div class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 @foreach($more as $tool)
                     <a href="{{ $tool['url'] }}" class="group app-surface flex gap-4 p-5 transition-[border-color,box-shadow] duration-200 hover:border-action/40 hover:shadow-workflow">
-                        <span class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-surface-muted text-ink-muted transition-colors group-hover:bg-action-soft group-hover:text-action" aria-hidden="true">
+                        <span class="flex size-10 shrink-0 items-center justify-center rounded-card bg-surface-muted text-ink-muted transition-colors group-hover:bg-action-soft group-hover:text-action" aria-hidden="true">
                             <x-ui.icon :name="$tool['icon']" class="size-5" />
                         </span>
                         <span class="min-w-0">
@@ -100,7 +100,7 @@
             </div>
         </section>
 
-        <section class="hero-canvas rounded-2xl" aria-labelledby="api-cta">
+        <section class="hero-canvas rounded-panel" aria-labelledby="api-cta">
             <div class="relative flex flex-col gap-5 p-6 sm:p-8 md:flex-row md:items-center md:justify-between">
                 <div>
                     <h2 id="api-cta" class="text-xl font-bold text-white">{{ __('ui.tools.cta_title') }}</h2>
@@ -111,7 +111,7 @@
                         <x-ui.icon name="code" class="size-4" />
                         {{ __('ui.tools.cta_api') }}
                     </a>
-                    <a href="{{ locale_path('/vat-number-validator') }}" class="inline-flex min-h-11 items-center gap-2 rounded-[0.625rem] border border-white/25 bg-white/10 px-5 text-sm font-semibold text-white transition-colors hover:bg-white/20">
+                    <a href="{{ locale_path('/vat-number-validator') }}" class="inline-flex min-h-11 items-center gap-2 rounded-control border border-white/25 bg-white/10 px-5 text-sm font-semibold text-white transition-colors hover:bg-white/20">
                         <x-ui.icon name="shield-check" class="size-4" />
                         {{ __('ui.nav.vat_number_validator') }}
                     </a>

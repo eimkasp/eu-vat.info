@@ -29,7 +29,7 @@
 
     <div
         x-ref="canvas"
-        class="relative mt-4 overflow-hidden rounded-xl border border-line bg-surface"
+        class="relative mt-4 overflow-hidden rounded-card border border-line bg-surface"
         @mouseover="hoverRegion($event)"
         @mousemove="track($event)"
         @mouseleave="hover(null)"
@@ -44,7 +44,7 @@
         <div
             x-cloak
             x-show="hovered"
-            class="pointer-events-none absolute z-10 flex items-center gap-2 rounded-lg border border-line bg-surface px-3 py-2 text-sm shadow-floating"
+            class="pointer-events-none absolute z-10 flex items-center gap-2 rounded-control border border-line bg-surface px-3 py-2 text-sm shadow-floating"
             :style="`left:${Math.min(Math.max(x + 14, 8), $refs.canvas.clientWidth - 220)}px; top:${Math.max(y - 48, 8)}px`"
         >
             <template x-if="hovered">
@@ -59,10 +59,10 @@
 
     <p class="mt-2 text-xs text-ink-muted">{{ __('ui.map.interaction_hint') }}</p>
 
-    <div x-cloak x-show="selected" x-transition.opacity.duration.150ms class="mt-4 rounded-2xl border border-line bg-surface p-4 sm:p-5" aria-live="polite">
+    <div x-cloak x-show="selected" x-transition.opacity.duration.150ms class="mt-4 rounded-card border border-line bg-surface p-4 sm:p-5" aria-live="polite">
         <template x-if="selected">
             <div class="flex flex-wrap items-center gap-4">
-                <img :src="'{{ asset('images/flags') }}/' + selected.iso + '.svg'" alt="" width="48" height="36" class="app-flag h-9 w-12 rounded-md">
+                <img :src="'{{ asset('images/flags') }}/' + selected.iso + '.svg'" alt="" width="48" height="36" class="app-flag h-9 w-12 rounded-control">
                 <div class="min-w-0 flex-1">
                     <p class="text-lg font-bold text-ink" x-text="selected.name"></p>
                     <p class="text-sm text-ink-muted">

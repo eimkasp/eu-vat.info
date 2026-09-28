@@ -12,8 +12,8 @@
         @foreach($links as $link)
             @php($external = str_starts_with($link['url'], 'http'))
             <li>
-                <a href="{{ $link['url'] }}" @if($external) target="_blank" rel="noopener noreferrer" @endif class="group flex items-center gap-3 rounded-xl px-2 py-2 transition-colors hover:bg-surface-subtle">
-                    <span class="flex size-9 shrink-0 items-center justify-center rounded-lg bg-action-soft text-action">
+                <a href="{{ $link['url'] }}" @if($external) target="_blank" rel="noopener noreferrer" @endif class="group flex items-center gap-3 rounded-control px-2 py-2 transition-colors hover:bg-surface-subtle">
+                    <span class="flex size-9 shrink-0 items-center justify-center rounded-control bg-action-soft text-action">
                         <x-ui.icon :name="$link['icon']" class="size-4" />
                     </span>
                     <span class="min-w-0 flex-1">

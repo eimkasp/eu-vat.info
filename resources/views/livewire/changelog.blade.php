@@ -70,7 +70,7 @@
                                     @foreach($release['groups'] as $group)
                                         @php($key = strtolower($group['name']))
                                         <section>
-                                            <h3 class="inline-flex rounded-md px-2 py-0.5 text-xs font-semibold {{ $groupStyles[$key] ?? 'bg-surface-muted text-ink' }}">
+                                            <h3 class="inline-flex rounded-control px-2 py-0.5 text-xs font-semibold {{ $groupStyles[$key] ?? 'bg-surface-muted text-ink' }}">
                                                 {{ \Illuminate\Support\Facades\Lang::has('ui.changelog.group_'.$key) ? __('ui.changelog.group_'.$key) : $group['name'] }}
                                             </h3>
                                             @if(! empty($group['items']))

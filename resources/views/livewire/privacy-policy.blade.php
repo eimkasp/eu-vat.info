@@ -9,12 +9,12 @@
     <x-site-breadcrumbs :items="['Privacy Policy' => '']" />
 
     <div class="max-w-4xl mx-auto mt-6">
-        <h1 class="text-4xl sm:text-5xl font-extrabold text-ink tracking-tight mb-4">
+        <h1 class="mb-4 text-4xl font-bold tracking-[-0.03em] text-ink sm:text-5xl">
             Privacy <span class="text-action">Policy</span>
         </h1>
         <p class="text-sm text-ink-muted mb-10">Last updated: April 10, 2025</p>
 
-        <div class="prose prose-lg prose-gray max-w-none">
+        <div class="app-prose max-w-none">
 
             {{-- 1. Introduction --}}
             <h2>1. Introduction</h2>

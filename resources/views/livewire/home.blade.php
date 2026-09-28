@@ -53,13 +53,10 @@
         <x-hero-backdrop />
         <div class="app-container relative pb-12 pt-10 sm:pb-16 sm:pt-14">
             <div class="mx-auto mb-8 max-w-3xl text-center sm:mb-10">
-                <p class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-semibold text-white/85">
-                    <span class="size-1.5 rounded-full bg-gold" aria-hidden="true"></span>
-                    {{ __('ui.home_page.hero_badge', ['year' => date('Y'), 'count' => $stats['count'] ?? 27]) }}
-                </p>
-                <h1 id="home-heading" class="mt-5 text-4xl font-bold tracking-[-0.035em] text-white sm:text-5xl sm:leading-[1.08]">
+                <p class="app-kicker">{{ __('ui.home_page.hero_badge', ['year' => date('Y'), 'count' => $stats['count'] ?? 27]) }}</p>
+                <h1 id="home-heading" class="mt-4 text-4xl font-bold tracking-[-0.03em] text-white sm:text-5xl sm:leading-[1.08]">
                     {{ __('ui.home_page.heading') }}
-                    <span class="text-sky-200">{{ __('ui.home_page.heading_accent') }}</span>
+                    {{ __('ui.home_page.heading_accent') }}
                 </h1>
                 <p class="mx-auto mt-4 max-w-[62ch] text-base leading-7 text-white/80 sm:text-lg">
                     {{ __('ui.home_page.subtitle') }}

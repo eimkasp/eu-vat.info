@@ -13,7 +13,7 @@
                 @foreach($changes as $change)
                     @php($up = (float) $change->new_rate > (float) $change->old_rate)
                     <li>
-                        <a href="{{ locale_path('/vat-calculator/'.$change->country?->slug) }}" class="flex items-center gap-3 rounded-xl px-2 py-2 transition-colors hover:bg-surface-subtle">
+                        <a href="{{ locale_path('/vat-calculator/'.$change->country?->slug) }}" class="flex items-center gap-3 rounded-control px-2 py-2 transition-colors hover:bg-surface-subtle">
                             <x-ui.flag :iso="$change->country?->iso_code" size="lg" class="h-5 w-[1.625rem]" />
                             <span class="min-w-0 flex-1">
                                 <span class="block truncate text-sm font-semibold text-ink">{{ $change->country?->name }}</span>
@@ -35,6 +35,6 @@
     @endforeach
 
     @if($upcoming->isEmpty() && $recent->isEmpty())
-        <p class="mt-4 rounded-xl bg-surface-subtle px-4 py-6 text-center text-sm text-ink-muted">{{ __('ui.rate_changes.no_changes') }}</p>
+        <p class="mt-4 rounded-card bg-surface-subtle px-4 py-6 text-center text-sm text-ink-muted">{{ __('ui.rate_changes.no_changes') }}</p>
     @endif
 </section>

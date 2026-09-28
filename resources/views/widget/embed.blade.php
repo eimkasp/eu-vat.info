@@ -43,7 +43,7 @@
                         <legend class="mb-1.5 text-[0.8125rem] font-semibold text-ink-muted">Layout</legend>
                         <div class="grid grid-cols-2 gap-3">
                             @foreach(['vertical' => ['Vertical', 'Stacked, for sidebars and narrow columns'], 'horizontal' => ['Horizontal', 'Side by side, for full-width sections']] as $value => [$label, $hint])
-                                <label class="relative flex cursor-pointer flex-col gap-1 rounded-xl border p-4 transition-colors" :class="style === @js($value) ? 'border-action bg-action-soft' : 'border-line hover:border-line-strong'">
+                                <label class="relative flex cursor-pointer flex-col gap-1 rounded-card border p-4 transition-colors" :class="style === @js($value) ? 'border-action bg-action-soft' : 'border-line hover:border-line-strong'">
                                     <input type="radio" name="widget-style" value="{{ $value }}" x-model="style" class="sr-only">
                                     <span class="flex items-center justify-between text-sm font-semibold text-ink">
                                         {{ $label }}
@@ -60,7 +60,7 @@
                             <p class="text-[0.8125rem] font-semibold text-ink-muted">Embed code</p>
                             <span class="text-xs text-ink-muted">Free forever</span>
                         </div>
-                        <pre class="app-code whitespace-pre-wrap break-all p-4 font-mono text-xs leading-5 text-emerald-300" x-text="code"></pre>
+                        <pre class="app-code whitespace-pre-wrap break-all p-4 font-mono text-xs leading-5 text-syntax-string" x-text="code"></pre>
                         <button type="button" x-on:click="$copy(code, 'Embed code copied')" class="app-button-primary mt-3 w-full plausible-event-name=CopyCode">
                             <x-ui.icon name="copy" class="size-4" />
                             Copy embed code
@@ -77,7 +77,7 @@
                         </a>
                     </div>
                     <div class="bg-[repeating-conic-gradient(var(--ui-surface-subtle)_0_25%,var(--ui-surface)_0_50%)] bg-[length:24px_24px] p-4 sm:p-6">
-                        <iframe :src="src" :style="'height:' + height + 'px'" class="mx-auto block w-full rounded-xl border-0 bg-transparent transition-[max-width] duration-200" :class="style === 'vertical' ? 'max-w-md' : 'max-w-none'" title="EU VAT calculator widget preview" loading="lazy"></iframe>
+                        <iframe :src="src" :style="'height:' + height + 'px'" class="mx-auto block w-full rounded-card border-0 bg-transparent transition-[max-width] duration-200" :class="style === 'vertical' ? 'max-w-md' : 'max-w-none'" title="EU VAT calculator widget preview" loading="lazy"></iframe>
                     </div>
                 </section>
             </div>
@@ -106,7 +106,7 @@
                     <h2 class="text-lg font-bold text-ink">Works on every platform</h2>
                     <div class="mt-4 grid gap-3 sm:grid-cols-2">
                         @foreach($platforms as [$platform, $tip])
-                            <div class="rounded-xl bg-surface-subtle p-4">
+                            <div class="rounded-card bg-surface-subtle p-4">
                                 <p class="text-sm font-semibold text-ink">{{ $platform }}</p>
                                 <p class="mt-1 text-sm leading-6 text-ink-muted">{{ $tip }}</p>
                             </div>

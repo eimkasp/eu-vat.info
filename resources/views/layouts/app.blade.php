@@ -50,7 +50,7 @@
 
 <body class="app-workspace min-h-dvh font-sans antialiased">
     @stack('svg-sprites')
-    <a href="#main-content" class="sr-only z-[60] rounded-br-xl bg-button px-4 py-3 text-sm font-semibold text-white focus:not-sr-only focus:fixed focus:left-0 focus:top-0">{{ __('ui.skip_to_content') }}</a>
+    <a href="#main-content" class="sr-only z-[60] rounded-br-card bg-button px-4 py-3 text-sm font-semibold text-white focus:not-sr-only focus:fixed focus:left-0 focus:top-0">{{ __('ui.skip_to_content') }}</a>
 
     <x-global-header />
 

@@ -12,9 +12,9 @@
     aria-modal="true"
     aria-labelledby="palette-title"
 >
-    <div class="absolute inset-0 bg-ink/40 backdrop-blur-[2px]" @click="$store.palette.hide()" x-show="$store.palette.open" x-transition.opacity.duration.150ms></div>
+    <div class="scrim absolute inset-0" @click="$store.palette.hide()" x-show="$store.palette.open" x-transition.opacity.duration.150ms></div>
 
-    <div class="relative w-full max-w-xl overflow-hidden rounded-2xl border border-line bg-surface shadow-floating" x-show="$store.palette.open" x-transition:enter="transition duration-150 ease-out" x-transition:enter-start="translate-y-1 scale-[0.985] opacity-0" x-transition:enter-end="translate-y-0 scale-100 opacity-100">
+    <div class="app-popover relative w-full max-w-xl overflow-hidden rounded-panel" x-show="$store.palette.open" x-transition:enter="transition duration-150 ease-out-quint" x-transition:enter-start="translate-y-1 opacity-0" x-transition:enter-end="translate-y-0 opacity-100">
         <h2 id="palette-title" class="sr-only">{{ __('ui.palette.title') }}</h2>
         <div class="flex items-center gap-3 border-b border-line px-4">
             <x-ui.icon name="search" class="size-5 text-ink-quiet" />
@@ -47,14 +47,14 @@
                     :aria-selected="(index === active).toString()"
                     @mousemove="active = index"
                     @click="go(item)"
-                    class="flex min-h-12 cursor-pointer items-center gap-3 rounded-xl px-3 py-2"
+                    class="flex min-h-12 cursor-pointer items-center gap-3 rounded-control px-3 py-2"
                     :class="index === active ? 'bg-action-soft' : ''"
                 >
                     <template x-if="item.flag">
                         <img :src="@js($flagBase) + '/' + item.flag + '.svg'" alt="" width="24" height="18" class="app-flag h-[1.125rem] w-6">
                     </template>
                     <template x-if="!item.flag">
-                        <span class="flex size-6 items-center justify-center rounded-md bg-surface-muted text-ink-muted">
+                        <span class="flex size-6 items-center justify-center rounded-xs bg-surface-muted text-ink-muted">
                             <x-ui.icon name="arrow-right" class="size-3.5" />
                         </span>
                     </template>

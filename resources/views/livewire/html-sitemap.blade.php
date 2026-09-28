@@ -14,7 +14,7 @@
     <x-site-breadcrumbs :items="[__('ui.breadcrumbs.sitemap') => '']" />
 
     <div class="mb-10 mt-6">
-        <h1 class="text-4xl sm:text-5xl font-extrabold text-ink tracking-tight mb-4">
+        <h1 class="mb-4 text-4xl font-bold tracking-[-0.03em] text-ink sm:text-5xl">
             {{ __('ui.sitemap.heading') }} <span class="text-action">{{ __('ui.sitemap.heading_accent') }}</span>
         </h1>
         <p class="text-lg text-ink-muted leading-relaxed max-w-3xl">
@@ -24,7 +24,7 @@
 
     {{-- Main Pages --}}
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-        <div class="bg-surface rounded-xl shadow-xs border border-line p-6">
+        <div class="app-surface p-6">
             <h2 class="text-xl font-bold text-ink mb-4 flex items-center gap-2">
                 <svg class="w-6 h-6 text-action" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
@@ -91,7 +91,7 @@
             </ul>
         </div>
 
-        <div class="bg-surface rounded-xl shadow-xs border border-line p-6">
+        <div class="app-surface p-6">
             <h2 class="text-xl font-bold text-ink mb-4 flex items-center gap-2">
                 <svg class="w-6 h-6 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -139,7 +139,7 @@
             </ul>
         </div>
 
-        <div class="bg-surface rounded-xl shadow-xs border border-line p-6">
+        <div class="app-surface p-6">
             <h2 class="text-xl font-bold text-ink mb-4 flex items-center gap-2">
                 <svg class="w-6 h-6 text-action" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
@@ -194,10 +194,10 @@
                     $flag = mb_chr(ord($iso[0]) + 127397) . mb_chr(ord($iso[1]) + 127397);
                 }
             @endphp
-            <div class="bg-surface rounded-xl shadow-xs border border-line p-5 hover:shadow-md transition-shadow">
+            <div class="app-surface p-5 transition-shadow hover:shadow-workflow">
                 <div class="flex items-center gap-3 mb-4 pb-3 border-b border-line">
                     <x-ui.flag :iso="$country->iso_code" />name }} flag" 
-                         class="w-8 h-auto rounded-sm shadow-xs"
+                         class="app-flag h-auto w-8"
                          loading="lazy">
                     <div>
                         <h3 class="font-bold text-ink">{{ $country->name }}</h3>
@@ -229,9 +229,9 @@
     </div>
 
     {{-- Internal Linking SEO Section --}}
-    <div class="mt-16 bg-action-soft rounded-xl p-8 border border-action/25">
+    <div class="mt-16 bg-action-soft rounded-card p-8 border border-action/25">
         <h2 class="text-2xl font-bold text-ink mb-4">{{ __('ui.sitemap.about_title') }}</h2>
-        <div class="prose prose-blue max-w-none text-ink-muted">
+        <div class="app-prose max-w-none">
             <p>
                 {!! __('ui.sitemap.about_p1', [
                     'calculator_link' => '<a href="' . locale_path('/vat-calculator') . '" class="text-action hover:underline font-medium">' . e(__('ui.sitemap.calculator')) . '</a>',

@@ -31,11 +31,11 @@
             <h1 class="mt-4 text-3xl font-bold tracking-[-0.03em] text-white sm:text-4xl">{{ __('ui.error_404.heading') }}</h1>
             <p class="mx-auto mt-4 max-w-2xl text-base leading-7 text-white/80 sm:text-lg">{{ __('ui.error_404.message') }}</p>
             <div class="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-                <a href="{{ locale_path('/') }}" class="app-button-secondary border-transparent">
+                <a href="{{ locale_path('/') }}" class="app-button-inverse">
                     <x-ui.icon name="home" class="size-4" />
                     {{ __('ui.error_404.back') }}
                 </a>
-                <button type="button" x-data x-on:click="$store.palette.show()" class="inline-flex min-h-11 items-center justify-center gap-2 rounded-[0.625rem] border border-white/25 bg-white/10 px-5 text-sm font-semibold text-white transition-colors hover:bg-white/20">
+                <button type="button" x-data x-on:click="$store.palette.show()" class="app-button-on-brand">
                     <x-ui.icon name="search" class="size-4" />
                     {{ __('ui.nav.search_placeholder') }}
                 </button>
@@ -49,7 +49,7 @@
             <div class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 @foreach($tools as [$icon, $label, $description, $url])
                     <a href="{{ $url }}" class="group app-surface flex flex-col gap-3 p-5 transition-[border-color,box-shadow] hover:border-action/40 hover:shadow-workflow">
-                        <span class="flex size-10 items-center justify-center rounded-xl bg-action-soft text-action" aria-hidden="true"><x-ui.icon :name="$icon" class="size-5" /></span>
+                        <span class="flex size-10 items-center justify-center rounded-card bg-action-soft text-action" aria-hidden="true"><x-ui.icon :name="$icon" class="size-5" /></span>
                         <span class="font-semibold text-ink group-hover:text-action">{{ $label }}</span>
                         <span class="text-sm leading-6 text-ink-muted">{{ $description }}</span>
                     </a>
@@ -86,7 +86,7 @@
                 @foreach($resources as [$icon, $label, $description, $url])
                     @php($external = str_starts_with($url, 'http'))
                     <a href="{{ $url }}" @if($external) target="_blank" rel="noopener noreferrer" @endif class="group app-surface flex items-start gap-3 p-4 transition-colors hover:border-action/40">
-                        <span class="flex size-9 shrink-0 items-center justify-center rounded-lg bg-surface-muted text-ink-muted group-hover:text-action" aria-hidden="true"><x-ui.icon :name="$icon" class="size-4" /></span>
+                        <span class="flex size-9 shrink-0 items-center justify-center rounded-control bg-surface-muted text-ink-muted group-hover:text-action" aria-hidden="true"><x-ui.icon :name="$icon" class="size-4" /></span>
                         <span class="min-w-0">
                             <span class="block text-sm font-semibold text-ink group-hover:text-action">{{ $label }}</span>
                             <span class="mt-0.5 block text-xs leading-5 text-ink-muted">{{ $description }}</span>

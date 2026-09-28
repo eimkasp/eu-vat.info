@@ -21,11 +21,11 @@
                 <h2 id="rates-heading" class="text-xl font-bold text-ink">{{ __('ui.home_page.rates_heading') }}</h2>
                 <p class="mt-1 text-sm text-ink-muted">{{ __('ui.home_page.rates_intro') }}</p>
             </div>
-            <span class="rounded-full bg-action-soft px-2.5 py-1 text-xs font-semibold text-action-deep">{{ __('ui.home_page.rates_year', ['year' => date('Y')]) }}</span>
+            <span class="app-badge bg-action-soft text-action-deep">{{ __('ui.home_page.rates_year', ['year' => date('Y')]) }}</span>
         </div>
 
         @if($stats)
-            <dl class="mt-5 grid grid-cols-3 divide-x divide-line rounded-xl border border-line bg-surface-subtle">
+            <dl class="mt-5 grid grid-cols-3 divide-x divide-line rounded-card border border-line bg-surface-subtle">
                 <div class="px-3 py-3 sm:px-4">
                     <dt class="text-xs font-medium text-ink-muted">{{ __('ui.home_page.stat_lowest') }}</dt>
                     <dd class="mt-1 flex items-center gap-1.5 text-lg font-bold text-ink">
@@ -86,25 +86,25 @@
                         <td>
                             <div class="flex items-center gap-3">
                                 <span class="tabular w-12 text-base font-bold text-ink">{{ Country::formatRate($country->standard_rate) }}%</span>
-                                <span class="hidden h-1.5 w-20 overflow-hidden rounded-full bg-action/15 sm:block" aria-hidden="true">
-                                    <span class="block h-full rounded-full bg-action" style="width: {{ round((float) $country->standard_rate / $maxRate * 100, 1) }}%"></span>
+                                <span class="hidden h-1.5 w-20 overflow-hidden rounded-xs bg-action/15 sm:block" aria-hidden="true">
+                                    <span class="block h-full bg-action" style="width: {{ round((float) $country->standard_rate / $maxRate * 100, 1) }}%"></span>
                                 </span>
                             </div>
                         </td>
                         <td>
                             <div class="flex flex-wrap items-center gap-1.5">
                                 @forelse($country->reducedRates() as $rate)
-                                    <span class="tabular rounded-md bg-surface-muted px-2 py-0.5 text-xs font-semibold text-ink-muted">{{ Country::formatRate($rate) }}%</span>
+                                    <span class="tabular rounded-control bg-surface-muted px-2 py-0.5 text-xs font-semibold text-ink-muted">{{ Country::formatRate($rate) }}%</span>
                                 @empty
                                     <span class="text-ink-quiet">—</span>
                                 @endforelse
                                 @if((float) $country->super_reduced_rate > 0)
-                                    <span class="tabular rounded-md border border-dashed border-line-strong px-2 py-0.5 text-xs font-medium text-ink-quiet" title="{{ __('ui.rate_type.super_reduced') }}">{{ Country::formatRate($country->super_reduced_rate) }}%</span>
+                                    <span class="tabular rounded-control border border-dashed border-line-strong px-2 py-0.5 text-xs font-medium text-ink-quiet" title="{{ __('ui.rate_type.super_reduced') }}">{{ Country::formatRate($country->super_reduced_rate) }}%</span>
                                 @endif
                             </div>
                         </td>
                         <td class="pr-5 text-right sm:pr-6">
-                            <a href="{{ locale_path('/vat-calculator/'.$country->slug) }}" class="inline-flex size-9 items-center justify-center rounded-lg text-ink-quiet transition-colors hover:bg-action-soft hover:text-action" aria-label="{{ __('ui.home_page.calculate_for', ['country' => $country->name]) }}">
+                            <a href="{{ locale_path('/vat-calculator/'.$country->slug) }}" class="inline-flex size-9 items-center justify-center rounded-control text-ink-quiet transition-colors hover:bg-action-soft hover:text-action" aria-label="{{ __('ui.home_page.calculate_for', ['country' => $country->name]) }}">
                                 <x-ui.icon name="arrow-right" class="size-4" />
                             </a>
                         </td>
@@ -120,7 +120,7 @@
 
     <div class="flex flex-wrap items-center justify-between gap-2 border-t border-line bg-surface-subtle px-5 py-3 text-xs text-ink-muted sm:px-6">
         <span class="inline-flex items-center gap-1.5">
-            <span class="inline-block h-1.5 w-4 rounded-full bg-action" aria-hidden="true"></span>
+            <span class="inline-block h-1.5 w-4 rounded-xs bg-action" aria-hidden="true"></span>
             {{ __('ui.home_page.meter_legend', ['max' => Country::formatRate($maxRate)]) }}
         </span>
         <span class="inline-flex items-center gap-1.5">

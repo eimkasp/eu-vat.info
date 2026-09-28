@@ -1,4 +1,4 @@
-@props(['opacity' => 'opacity-25'])
+@props(['opacity' => 'opacity-20'])
 
 @once
     @push('head')
@@ -13,7 +13,7 @@
         <source media="(min-width: 1024px)" type="image/webp" srcset="{{ asset('images/hero-texture-lg.webp') }}">
         <source media="(min-width: 640px)" type="image/webp" srcset="{{ asset('images/hero-texture-md.webp') }}">
         <source type="image/webp" srcset="{{ asset('images/hero-texture-sm.webp') }}">
-        <img src="{{ asset('images/eu-vat-calculator-background-sm.jpg') }}" alt="" width="1600" height="893" fetchpriority="high" decoding="async" class="size-full object-cover object-center mix-blend-luminosity {{ $opacity }}">
+        <img src="{{ asset('images/eu-vat-calculator-background-sm.jpg') }}" alt="" width="1600" height="893" fetchpriority="high" decoding="async" class="hero-photo {{ $opacity }}">
     </picture>
-    <div class="absolute inset-0 bg-linear-to-b from-brand-deep/30 via-brand-deep/75 to-brand-deep"></div>
+    <div class="hero-scrim"></div>
 </div>

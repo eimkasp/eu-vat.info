@@ -66,7 +66,7 @@
                                 <td class="tabular text-right font-semibold text-ink">{{ Country::formatRate($country['standard_rate']) }}%</td>
                                 <td class="tabular border-l border-line text-right text-ink-muted">{{ Money::format($add->vat, 'EUR') }}</td>
                                 <td class="w-24" aria-hidden="true">
-                                    <span class="block h-1.5 overflow-hidden rounded-full bg-action-soft"><span class="block h-full rounded-full bg-action" style="width: {{ round($add->vat / $maxVat * 100) }}%"></span></span>
+                                    <span class="block h-1.5 overflow-hidden rounded-xs bg-action-soft"><span class="block h-full bg-action" style="width: {{ round($add->vat / $maxVat * 100) }}%"></span></span>
                                 </td>
                                 <td class="tabular text-right">
                                     <a href="{{ SharedCalculation::calculationUrl($country['slug'], $amount, $country['standard_rate'], 'exclude') }}" class="font-semibold text-ink hover:text-action hover:underline">{{ Money::format($add->gross, 'EUR') }}</a>
