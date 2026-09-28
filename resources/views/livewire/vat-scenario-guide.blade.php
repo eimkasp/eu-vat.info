@@ -6,7 +6,7 @@
 @section('seo')
     <x-seo-meta :title="$guide['title'].' | EU VAT Info'" :description="$guide['summary']" :url="$canonical" type="article">
         <script type="application/ld+json">{!! json_encode([
-            '@context' => 'https://schema.org',
+            '@@context' => 'https://schema.org',
             '@graph' => [
                 ['@type' => 'BreadcrumbList', '@id' => $canonical.'#breadcrumbs', 'itemListElement' => [
                     ['@type' => 'ListItem', 'position' => 1, 'name' => 'EU VAT Info', 'item' => $baseUrl.'/'],
@@ -15,11 +15,11 @@
                 ]],
                 ['@type' => 'Article', '@id' => $canonical.'#article', 'headline' => $guide['title'], 'description' => $guide['summary'], 'mainEntityOfPage' => $canonical, 'author' => ['@type' => 'Organization', 'name' => 'EU VAT Info'], 'citation' => $guide['sources']],
             ],
-        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
+        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) !!}</script>
     </x-seo-meta>
 @endsection
 
-<article class="container pb-14 pt-8 sm:pt-12">
+<article class="app-container pb-14 pt-8 sm:pt-12">
     <x-site-breadcrumbs :items="['VAT tools' => locale_path('/tools'), $guide['title'] => '']" />
 
     <header class="max-w-4xl border-b border-line pb-8">
@@ -28,7 +28,7 @@
         <p class="mt-4 max-w-3xl text-lg text-ink-muted">{{ $guide['summary'] }}</p>
     </header>
 
-    <div class="mt-8 grid gap-10 lg:grid-cols-[minmax(0,1fr)_320px]">
+    <div class="mt-8 grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_320px]">
         <div class="max-w-3xl">
             <section><h2 class="text-2xl font-bold text-ink">General rule</h2><p class="mt-3 text-ink-muted">{{ $guide['rule'] }}</p></section>
             <section class="mt-8"><h2 class="text-2xl font-bold text-ink">Important exceptions</h2><p class="mt-3 text-ink-muted">{{ $guide['exceptions'] }}</p></section>

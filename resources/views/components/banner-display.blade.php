@@ -1,20 +1,16 @@
 @props(['position'])
 
 @php
-    $banners = \App\Models\Banner::active()
-        ->where('position', $position)
-        ->get();
+    $banners = \App\Models\Banner::active()->where('position', $position)->get();
 @endphp
 
 @foreach($banners as $banner)
-    <div class="banner-container my-4">
-        <a href="{{ $banner->link_url }}" target="_blank" rel="noopener noreferrer" class="block hover:opacity-90 transition-opacity">
+    <div @class(['app-container py-2' => $position === 'header_top', 'my-4' => $position !== 'header_top'])>
+        <a href="{{ $banner->link_url }}" target="_blank" rel="noopener noreferrer sponsored" class="block overflow-hidden rounded-2xl border border-line bg-surface transition-colors hover:border-line-strong">
             @if($banner->image)
-                <img src="{{ Storage::url($banner->image) }}" alt="{{ $banner->title }}" class="w-full rounded-lg shadow-md">
+                <img src="{{ Storage::disk('public')->url($banner->image) }}" alt="{{ $banner->title }}" class="w-full" loading="lazy">
             @elseif($banner->content)
-                <div class="bg-white rounded-lg shadow-md p-4">
-                    {!! $banner->content !!}
-                </div>
+                <div class="p-4 text-sm text-ink">{!! $banner->content !!}</div>
             @endif
         </a>
     </div>

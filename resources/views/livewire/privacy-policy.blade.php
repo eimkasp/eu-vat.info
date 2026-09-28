@@ -2,18 +2,17 @@
     <x-seo-meta
         title="Privacy Policy — EU VAT Info"
         description="Privacy policy for EU VAT Info website and mobile apps. Learn how we collect, use, and protect your data."
-        type="website"
-    />
+        type="website" />
 @endsection
 
-<div class="container py-12 mt-12 pb-24">
+<div class="app-container py-12 pb-24">
     <x-site-breadcrumbs :items="['Privacy Policy' => '']" />
 
     <div class="max-w-4xl mx-auto mt-6">
-        <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-900 tracking-tight mb-4">
-            Privacy <span class="text-blue-600">Policy</span>
+        <h1 class="text-4xl sm:text-5xl font-extrabold text-ink tracking-tight mb-4">
+            Privacy <span class="text-action">Policy</span>
         </h1>
-        <p class="text-sm text-gray-500 mb-10">Last updated: April 10, 2025</p>
+        <p class="text-sm text-ink-muted mb-10">Last updated: April 10, 2025</p>
 
         <div class="prose prose-lg prose-gray max-w-none">
 

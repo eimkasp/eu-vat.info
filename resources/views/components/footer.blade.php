@@ -1,68 +1,86 @@
-<footer class="border-t border-slate-700 bg-ink py-12 text-slate-300">
-    <div class="container">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-8">
-            <div class="col-span-1 lg:col-span-2">
-                <div class="text-white text-xl font-bold mb-4">{{ __('ui.site_name') }}</div>
-                <p class="mb-4 max-w-md text-sm leading-6 text-slate-300">
-                    {{ __('ui.footer.description') }}
-                </p>
-                <div class="flex space-x-4">
-                    <a href="https://github.com/eimkasp/eu-vat.info" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors" title="{{ __('ui.site_name') }} on GitHub">
-                        @svg('feathericon-github', 'w-6 h-6')
+@php
+    $columns = [
+        __('ui.footer.vat_tools') => [
+            [__('ui.footer.vat_calculator'), locale_path('/vat-calculator')],
+            [__('ui.nav.vat_number_validator'), locale_path('/vat-number-validator')],
+            [__('ui.footer.interactive_map'), locale_path('/vat-map')],
+            [__('ui.footer.vat_rate_history'), locale_path('/vat-changes')],
+            [__('ui.footer.embed_widget'), route('widget.embed')],
+            [__('ui.footer.chrome_extension'), locale_path('/chrome-extension')],
+        ],
+        __('ui.footer.resources') => [
+            [__('ui.nav.updates'), locale_path('/blog')],
+            [__('ui.changelog.nav_label'), locale_path('/changelog')],
+            [__('ui.footer.sitemap'), locale_path('/sitemap')],
+            [__('ui.footer.donate'), locale_path('/donate')],
+            [__('ui.footer.privacy'), locale_path('/privacy')],
+        ],
+        __('ui.footer.developers') => [
+            [__('ui.nav.api'), locale_path('/vat-validation-api')],
+            [__('ui.footer.vat_rates_api'), '/api/v1/countries'],
+            [__('ui.nav.dataset'), locale_path('/datasets/eu-vat-rates')],
+            [__('ui.footer.mcp_server'), locale_path('/mcp-server')],
+            [__('ui.footer.llms_data'), '/llms.txt'],
+            [__('ui.footer.xml_sitemap'), '/sitemap.xml'],
+        ],
+        __('ui.footer.partner_tools') => [
+            [__('ui.footer.pdf_tools'), 'https://pdfcheck.online/'],
+            [__('ui.footer.eu_vies'), 'https://ec.europa.eu/taxation_customs/vies/'],
+            [__('ui.footer.eu_vat_guide'), 'https://europa.eu/youreurope/business/taxation/vat/'],
+        ],
+    ];
+@endphp
+
+<footer class="border-t border-line bg-surface">
+    <div class="app-container py-12 lg:py-16">
+        <div class="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,3fr)]">
+            <div class="max-w-sm">
+                <a href="{{ locale_path('/') }}" class="inline-flex items-center gap-2.5 rounded-lg text-lg font-bold tracking-[-0.02em] text-ink">
+                    <span class="flex size-9 items-center justify-center rounded-[0.7rem] bg-brand">
+                        <x-ui.logo class="size-7" />
+                    </span>
+                    {{ __('ui.site_name') }}
+                </a>
+                <p class="mt-4 text-sm leading-6 text-ink-muted">{{ __('ui.footer.description') }}</p>
+                <div class="mt-5 flex flex-wrap items-center gap-2">
+                    <a href="https://github.com/eimkasp/eu-vat.info" target="_blank" rel="noopener noreferrer" class="app-button-secondary h-10 min-h-10 px-3" aria-label="{{ __('ui.nav.github') }}">
+                        <x-ui.icon name="github" class="size-4" />
+                        GitHub
+                    </a>
+                    <a href="https://chromewebstore.google.com/detail/eu-vat-calculator/fifmbbpgopnifnoginhmjjedjnabdkka" target="_blank" rel="noopener noreferrer" class="app-button-secondary h-10 min-h-10 px-3">
+                        <x-ui.icon name="puzzle" class="size-4" />
+                        {{ __('ui.footer.chrome_extension') }}
                     </a>
                 </div>
-                <div class="mt-4">
-                    <a href="https://chromewebstore.google.com/detail/eu-vat-calculator/fifmbbpgopnifnoginhmjjedjnabdkka" target="_blank" rel="noopener noreferrer" class="inline-block hover:opacity-80 transition-opacity">
-                        <img src="/images/chrome-web-store-badge.png" alt="Available in the Chrome Web Store" class="h-10" loading="lazy">
-                    </a>
-                </div>
-            </div>
-            
-            <div>
-                <h3 class="text-white font-semibold mb-4">{{ __('ui.footer.vat_tools') }}</h3>
-                <ul class="space-y-2 text-sm">
-                    <li><a href="{{ locale_path('/vat-calculator') }}" class="hover:text-white transition-colors">{{ __('ui.footer.vat_calculator') }}</a></li>
-                    <li><a href="{{ locale_path('/vat-map') }}" class="hover:text-white transition-colors">{{ __('ui.footer.interactive_map') }}</a></li>
-                    <li><a href="{{ locale_path('/vat-changes') }}" class="hover:text-white transition-colors">{{ __('ui.footer.vat_rate_history') }}</a></li>
-                    <li><a href="{{ route('widget.embed') }}" class="hover:text-white transition-colors">{{ __('ui.footer.embed_widget') }}</a></li>
-                    <li><a href="{{ locale_path('/chrome-extension') }}" class="hover:text-white transition-colors">{{ __('ui.footer.chrome_extension') }}</a></li>
-                </ul>
             </div>
 
-            <div>
-                <h3 class="text-white font-semibold mb-4">{{ __('ui.footer.resources') }}</h3>
-                <ul class="space-y-2 text-sm">
-                    <li><a href="{{ locale_path('/donate') }}" class="hover:text-white transition-colors">Donate</a></li>
-                    <li><a href="{{ locale_path('/blog') }}" class="hover:text-white transition-colors">VAT updates</a></li>
-                    <li><a href="{{ locale_path('/sitemap') }}" class="hover:text-white transition-colors">{{ __('ui.footer.sitemap') }}</a></li>
-                    <li><a href="{{ locale_path('/changelog') }}" class="hover:text-white transition-colors">{{ __('ui.changelog.nav_label') }}</a></li>
-                    <li><a href="/llms.txt" class="hover:text-white transition-colors">{{ __('ui.footer.llms_data') }}</a></li>
-                    <li><a href="/api/llm/vat-rates" class="hover:text-white transition-colors">{{ __('ui.footer.vat_rates_api') }}</a></li>
-                    <li><a href="{{ locale_path('/mcp-server') }}" class="hover:text-white transition-colors">MCP Server</a></li>
-                    <li><a href="/sitemap.xml" class="hover:text-white transition-colors">{{ __('ui.footer.xml_sitemap') }}</a></li>
-                </ul>
-            </div>
-
-            <div>
-                <h3 class="text-white font-semibold mb-4">{{ __('ui.footer.partner_tools') }}</h3>
-                <ul class="space-y-2 text-sm">
-                    <li><a href="https://pdfcheck.online/" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors">{{ __('ui.footer.pdf_tools') }}</a></li>
-                    <li><a href="https://ec.europa.eu/taxation_customs/vies/" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors">{{ __('ui.footer.eu_vies') }}</a></li>
-                    <li><a href="https://europa.eu/youreurope/business/taxation/vat/" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors">{{ __('ui.footer.eu_vat_guide') }}</a></li>
-                </ul>
+            <div class="grid grid-cols-2 gap-8 sm:grid-cols-4">
+                @foreach($columns as $heading => $links)
+                    <div>
+                        <h2 class="text-sm font-semibold text-ink">{{ $heading }}</h2>
+                        <ul class="mt-4 space-y-2.5 text-sm">
+                            @foreach($links as [$label, $url])
+                                @php($external = str_starts_with($url, 'http') && ! str_starts_with($url, url('/')))
+                                <li>
+                                    <a href="{{ $url }}" @if($external) target="_blank" rel="noopener noreferrer" @endif class="text-ink-muted transition-colors hover:text-action">@if($external){{ Str::beforeLast($label, ' ') === $label ? '' : Str::beforeLast($label, ' ').' ' }}<span class="whitespace-nowrap">{{ Str::afterLast($label, ' ') }}<x-ui.icon name="arrow-up-right" class="ml-1 inline size-3 align-[-1px] text-ink-quiet" /></span>@else{{ $label }}@endif</a>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endforeach
             </div>
         </div>
-        
-        <div class="flex flex-col items-center justify-between border-t border-slate-700 pt-8 text-sm md:flex-row">
-            <div class="mb-4 md:mb-0">
+
+        <div class="mt-12 flex flex-col gap-4 border-t border-line pt-6 text-sm text-ink-muted md:flex-row md:items-center md:justify-between">
+            <p>
                 &copy; {{ date('Y') }} {{ __('ui.site_name') }}. {{ __('ui.all_rights_reserved') }}
-            </div>
-            <div class="flex space-x-6 items-center">
-                <a href="{{ locale_path('/sitemap') }}" class="hover:text-white transition-colors">{{ __('ui.footer.sitemap') }}</a>
-                <a href="/llms.txt" class="hover:text-white transition-colors">llms.txt</a>
-                <a href="https://pdfcheck.online/" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors">PDF Tools</a>
-                <span class="text-slate-400">{{ __('ui.data_updated_daily') }}</span>
-            </div>
+                <span class="mx-1.5 text-ink-quiet" aria-hidden="true">·</span>
+                <a href="https://pdfcheck.online/" target="_blank" rel="noopener noreferrer" class="transition-colors hover:text-action">{{ __('ui.footer.pdf_tools') }}</a>
+            </p>
+            <p class="inline-flex items-center gap-2">
+                <x-ui.icon name="shield-check" class="size-4 text-success" />
+                {{ __('ui.footer.data_source_note') }}
+            </p>
         </div>
     </div>
 </footer>

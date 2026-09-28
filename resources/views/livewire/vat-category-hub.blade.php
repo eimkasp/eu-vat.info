@@ -12,7 +12,7 @@
         :description="'Compare verified '.$summary['name'].' VAT rates across '.$summary['country_count'].' EU countries, with effective dates and source links.'"
         :url="$canonical">
         <script type="application/ld+json">{!! json_encode([
-            '@context' => 'https://schema.org',
+            '@@context' => 'https://schema.org',
             '@graph' => [
                 [
                     '@type' => 'BreadcrumbList',
@@ -41,11 +41,11 @@
                     ],
                 ],
             ],
-        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
+        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) !!}</script>
     </x-seo-meta>
 @endsection
 
-<div class="container pb-14 pt-8 sm:pt-12">
+<div class="app-container pb-14 pt-8 sm:pt-12">
     <x-site-breadcrumbs :items="['VAT rate categories' => locale_path('/vat-rates/categories'), $summary['name'] => '']" />
 
     <header class="max-w-4xl border-b border-line pb-8">
@@ -55,7 +55,7 @@
         <p class="mt-3 text-sm text-ink-muted">Last verified {{ $dateModified->format('F j, Y') }}.</p>
     </header>
 
-    <div class="mt-8 overflow-x-auto border-y border-line">
+    <div class="relative mt-8 overflow-x-auto border-y border-line">
         <table class="w-full min-w-[760px] text-left">
             <thead class="bg-surface-subtle">
                 <tr>
@@ -71,7 +71,7 @@
                     <tr>
                         <td class="px-4 py-4">
                             <a class="flex items-center gap-3 font-semibold text-ink hover:text-action" href="{{ locale_path('/vat-rates/'.$rule->country->slug.'/categories/'.$rule->category_slug) }}">
-                                <img src="https://flagcdn.com/h40/{{ strtolower($rule->country->iso_code) }}.jpg" alt="" class="h-5 w-7 rounded-sm object-cover">
+                                <x-ui.flag :iso="$rule->country->iso_code" size="lg" class="h-5 w-7" />
                                 {{ $rule->country->name }}
                             </a>
                         </td>

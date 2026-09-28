@@ -1,70 +1,53 @@
 @section('seo')
-    <x-seo-meta
-        title="EU VAT Updates and Guides"
-        description="Research-backed VAT updates, EU VAT changes, and practical compliance guides for businesses tracking European VAT rates."
-        :url="url(locale_path('/blog'))">
-        <script type="application/ld+json">
-        {
-            "@@context": "https://schema.org",
-            "@type": "Blog",
-            "name": "EU VAT Updates and Guides",
-            "description": "Research-backed VAT updates and European VAT compliance guides.",
-            "url": "{{ url(locale_path('/blog')) }}",
-            "publisher": {
-                "@type": "Organization",
-                "name": "{{ __('ui.site_name') }}",
-                "url": "{{ url(locale_path('/')) }}"
-            }
-        }
-        </script>
+    <x-seo-meta :title="__('ui.blog.meta_title')" :description="__('ui.blog.meta_description')" :url="url(locale_path('/blog'))">
+        <x-json-ld :data="[
+            '@type' => 'Blog',
+            'name' => __('ui.blog.meta_title'),
+            'description' => __('ui.blog.meta_description'),
+            'url' => url(locale_path('/blog')),
+            'publisher' => ['@type' => 'Organization', 'name' => __('ui.site_name'), 'url' => url(locale_path('/'))],
+        ]" />
     </x-seo-meta>
 @endsection
 
-<div class="container pb-12">
-    <x-site-breadcrumbs :items="['VAT updates' => '']" />
+<div>
+    <x-page-header :title="__('ui.blog.title')" :description="__('ui.blog.description')" :eyebrow="__('ui.blog.eyebrow')" :breadcrumbs="[__('ui.nav.updates') => '']" />
 
-    <section class="mb-8">
-        <p class="text-sm font-semibold uppercase tracking-wide text-blue-700 mb-2">EU VAT updates</p>
-        <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-3">Research-backed VAT changes and guides</h1>
-        <p class="max-w-3xl text-gray-600 dark:text-gray-300">
-            Track confirmed VAT rate changes, EU VAT reforms, and practical compliance updates from official sources.
-        </p>
-    </section>
+    <div class="app-container py-8 sm:py-10">
+        <div class="grid grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(0,1fr)_22rem]">
+            <section class="space-y-4" aria-label="{{ __('ui.blog.eyebrow') }}">
+                @forelse($posts as $post)
+                    <article class="group app-surface relative p-5 transition-[border-color,box-shadow] hover:border-action/40 hover:shadow-workflow sm:p-6">
+                        <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-ink-muted">
+                            <span class="rounded-full bg-action-soft px-2.5 py-0.5 font-semibold text-action-deep">{{ $post['category'] }}</span>
+                            <time datetime="{{ $post['published_at']->toDateString() }}">{{ $post['published_at']->translatedFormat('j M Y') }}</time>
+                            <span aria-hidden="true">·</span>
+                            <span>{{ __('ui.blog.reading_time', ['count' => $post['reading_time']]) }}</span>
+                        </div>
+                        <h2 class="mt-3 text-xl font-bold text-ink sm:text-2xl">
+                            <a href="{{ locale_path('/blog/'.$post['slug']) }}" class="after:absolute after:inset-0 group-hover:text-action">{{ $post['title'] }}</a>
+                        </h2>
+                        <p class="mt-2 max-w-[72ch] text-sm leading-6 text-ink-muted sm:text-base sm:leading-7">{{ $post['description'] }}</p>
+                        @if($post['tags'])
+                            <ul class="mt-4 flex flex-wrap gap-1.5" aria-label="Tags">
+                                @foreach($post['tags'] as $tag)
+                                    <li class="rounded-md bg-surface-muted px-2 py-0.5 text-xs font-medium text-ink-muted">{{ $tag }}</li>
+                                @endforeach
+                            </ul>
+                        @endif
+                        <span class="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-action">
+                            {{ __('ui.blog.read_guide') }}
+                            <x-ui.icon name="arrow-right" class="size-4 transition-transform group-hover:translate-x-0.5" />
+                        </span>
+                    </article>
+                @empty
+                    <p class="app-surface p-10 text-center text-sm text-ink-muted">{{ __('ui.blog.empty') }}</p>
+                @endforelse
+            </section>
 
-    <div class="grid lg:grid-cols-[1fr_360px] gap-6 items-start">
-        <section class="space-y-4">
-            @forelse($posts as $post)
-                <article class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm p-5">
-                    <div class="flex flex-wrap items-center gap-2 text-xs text-gray-500 dark:text-gray-400 mb-3">
-                        <span class="inline-flex rounded-full bg-blue-50 px-2.5 py-1 font-semibold text-blue-700 dark:bg-blue-900/30 dark:text-blue-200">{{ $post['category'] }}</span>
-                        <span>{{ $post['published_at']->format('M d, Y') }}</span>
-                        <span>{{ $post['reading_time'] }} min read</span>
-                    </div>
-                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-                        <a href="{{ locale_path('/blog/'.$post['slug']) }}" class="hover:text-blue-700 dark:hover:text-blue-300">
-                            {{ $post['title'] }}
-                        </a>
-                    </h2>
-                    <p class="text-gray-600 dark:text-gray-300 mb-4">{{ $post['description'] }}</p>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                        @foreach($post['tags'] as $tag)
-                            <span class="rounded-full bg-gray-100 dark:bg-gray-700 px-2.5 py-1 text-xs font-medium text-gray-600 dark:text-gray-300">{{ $tag }}</span>
-                        @endforeach
-                    </div>
-                    <a href="{{ locale_path('/blog/'.$post['slug']) }}" class="inline-flex items-center text-sm font-semibold text-blue-700 dark:text-blue-300 hover:underline">
-                        Read guide
-                        <span aria-hidden="true" class="ml-1">-></span>
-                    </a>
-                </article>
-            @empty
-                <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-8 text-center text-gray-500 dark:text-gray-400">
-                    No VAT updates have been published yet.
-                </div>
-            @endforelse
-        </section>
-
-        <aside class="lg:sticky lg:top-24">
-            @livewire('vat-change-signup', ['source' => 'blog-index', 'compact' => true])
-        </aside>
+            <aside class="lg:sticky lg:top-24">
+                @livewire('vat-change-signup', ['source' => 'blog-index', 'compact' => true])
+            </aside>
+        </div>
     </div>
 </div>

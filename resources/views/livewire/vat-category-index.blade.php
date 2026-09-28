@@ -9,7 +9,7 @@
         description="Browse verified VAT category rules across EU countries, including rates, effective dates, coverage and source links."
         :url="$canonical">
         <script type="application/ld+json">{!! json_encode([
-            '@context' => 'https://schema.org',
+            '@@context' => 'https://schema.org',
             '@type' => 'CollectionPage',
             '@id' => $canonical.'#webpage',
             'name' => 'EU VAT rates by category',
@@ -23,11 +23,11 @@
                     'url' => $baseUrl.'/vat-rates/categories/'.$category['slug'],
                 ])->all(),
             ],
-        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
+        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) !!}</script>
     </x-seo-meta>
 @endsection
 
-<div class="container pb-14 pt-8 sm:pt-12">
+<div class="app-container pb-14 pt-8 sm:pt-12">
     <x-site-breadcrumbs :items="['VAT rate categories' => '']" />
 
     <header class="max-w-3xl border-b border-line pb-8">

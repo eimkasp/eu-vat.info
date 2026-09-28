@@ -1,96 +1,131 @@
-@props(['countries' => [], 'search' => ''])
+@props(['countries' => [], 'search' => '', 'stats' => null])
 
-<div class="app-surface overflow-hidden">
-    <div class="border-b border-line bg-white p-4 sm:p-5">
-        <div class="mb-4 flex items-start justify-between gap-4">
-            <h2 class="text-lg font-bold text-ink">{{ __('ui.home_page.rates_heading') }}</h2>
-            <span class="shrink-0 rounded-full bg-surface-subtle px-2.5 py-1 text-sm font-semibold text-ink-muted sm:text-xs">{{ __('ui.home_page.rates_year', ['year' => date('Y')]) }}</span>
+@use('App\Models\Country')
+
+@php
+    $maxRate = max(27.0, (float) collect($countries)->max('standard_rate'));
+@endphp
+
+<section
+    class="app-surface overflow-hidden"
+    x-data="{
+        query: @js($search),
+        get needle() { return this.query.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim(); },
+        get noMatches() { const needle = this.needle; return needle !== '' && ![...this.$root.querySelectorAll('tbody tr')].some((row) => row.dataset.search.includes(needle)); },
+    }"
+    x-init="$watch('query', (value) => { const url = new URL(window.location); value ? url.searchParams.set('search', value) : url.searchParams.delete('search'); history.replaceState(history.state, '', url); })"
+    aria-labelledby="rates-heading">
+    <div class="border-b border-line p-5 sm:p-6">
+        <div class="flex flex-wrap items-start justify-between gap-3">
+            <div>
+                <h2 id="rates-heading" class="text-xl font-bold text-ink">{{ __('ui.home_page.rates_heading') }}</h2>
+                <p class="mt-1 text-sm text-ink-muted">{{ __('ui.home_page.rates_intro') }}</p>
+            </div>
+            <span class="rounded-full bg-action-soft px-2.5 py-1 text-xs font-semibold text-action-deep">{{ __('ui.home_page.rates_year', ['year' => date('Y')]) }}</span>
         </div>
-        <div class="relative">
+
+        @if($stats)
+            <dl class="mt-5 grid grid-cols-3 divide-x divide-line rounded-xl border border-line bg-surface-subtle">
+                <div class="px-3 py-3 sm:px-4">
+                    <dt class="text-xs font-medium text-ink-muted">{{ __('ui.home_page.stat_lowest') }}</dt>
+                    <dd class="mt-1 flex items-center gap-1.5 text-lg font-bold text-ink">
+                        {{ Country::formatRate($stats['lowest']->standard_rate) }}%
+                        <x-ui.flag :iso="$stats['lowest']->iso_code" size="xs" :alt="$stats['lowest']->name" />
+                    </dd>
+                </div>
+                <div class="px-3 py-3 sm:px-4">
+                    <dt class="text-xs font-medium text-ink-muted">{{ __('ui.home_page.stat_average') }}</dt>
+                    <dd class="mt-1 text-lg font-bold text-ink">{{ Country::formatRate($stats['average']) }}%</dd>
+                </div>
+                <div class="px-3 py-3 sm:px-4">
+                    <dt class="text-xs font-medium text-ink-muted">{{ __('ui.home_page.stat_highest') }}</dt>
+                    <dd class="mt-1 flex items-center gap-1.5 text-lg font-bold text-ink">
+                        {{ Country::formatRate($stats['highest']->standard_rate) }}%
+                        <x-ui.flag :iso="$stats['highest']->iso_code" size="xs" :alt="$stats['highest']->name" />
+                    </dd>
+                </div>
+            </dl>
+        @endif
+
+        <div class="relative mt-4">
             <label for="country-rate-search" class="sr-only">{{ __('ui.home_page.search_placeholder') }}</label>
-            <input wire:model.live="search"
-                id="country-rate-search"
-                class="app-field w-full pl-10 pr-10"
-                placeholder="{{ __('ui.home_page.search_placeholder') }}" type="search">
-            <div class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ink-quiet">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                    stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                        d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-                </svg>
-            </div>
-            <div wire:loading wire:target="search" class="absolute right-3 top-1/2 -translate-y-1/2 text-action">
-                <svg class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none"
-                    viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10"
-                        stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                    </path>
-                </svg>
-            </div>
+            <x-ui.icon name="search" class="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-ink-quiet" />
+            <input x-model.debounce.120ms="query" id="country-rate-search" type="search" autocomplete="off" placeholder="{{ __('ui.home_page.search_placeholder') }}" class="app-field pl-10">
         </div>
     </div>
 
-    <div wire:loading.class="opacity-50" wire:target="search">
-        <table class="w-full table-fixed text-left text-sm text-ink-muted">
-            <thead class="bg-surface-subtle text-sm font-semibold text-ink-muted sm:text-xs">
+    <div class="relative overflow-x-auto">
+        <table class="app-table min-w-[34rem]">
+            <thead>
                 <tr>
-                    <th class="w-[48%] px-3 py-3 sm:w-auto sm:px-5">{{ __('ui.home_page.th_country') }}</th>
-                    <th class="w-[27%] px-2 py-3 sm:w-auto sm:px-4">{{ __('ui.home_page.th_standard') }}</th>
-                    <th class="hidden px-4 py-3 sm:table-cell">{{ __('ui.home_page.th_reduced') }}</th>
-                    <th class="w-[25%] px-3 py-3 text-right sm:w-auto sm:px-5">{{ __('ui.home_page.th_actions') }}</th>
+                    <th scope="col" class="pl-5 sm:pl-6">{{ __('ui.home_page.th_country') }}</th>
+                    <th scope="col">{{ __('ui.home_page.th_standard') }}</th>
+                    <th scope="col">{{ __('ui.home_page.th_reduced') }}</th>
+                    <th scope="col" class="pr-5 text-right sm:pr-6"><span class="sr-only">{{ __('ui.home_page.th_actions') }}</span></th>
                 </tr>
             </thead>
-            <tbody class="divide-y divide-line bg-white">
-                @forelse ($countries as $country)
-                    <tr class="group transition-colors hover:bg-action-soft/60">
-                        <td class="px-3 py-2 sm:px-5 sm:py-3">
-                            <a href="{{ locale_path('/vat-calculator/' . $country->slug) }}"
-                                class="flex min-h-11 items-center gap-2.5 text-ink transition-colors group-hover:text-action-deep sm:gap-3">
-                                <img src="https://flagcdn.com/h40/{{ strtolower($country->iso_code) }}.jpg"
-                                    alt="{{ $country->name }} flag"
-                                    width="40" height="27"
-                                    loading="lazy"
-                                    class="h-5 w-7 shrink-0 rounded-sm object-cover">
-                                <span class="truncate font-semibold text-ink group-hover:text-action-deep">{{ $country->name }}</span>
+            <tbody>
+                @foreach($countries as $country)
+                    @php
+                        $haystack = \Illuminate\Support\Str::lower(\Illuminate\Support\Str::ascii($country->name.' '.$country->native_name.' '.$country->iso_code));
+                        $matchesInitial = $search === '' || str_contains($haystack, \Illuminate\Support\Str::lower(\Illuminate\Support\Str::ascii($search)));
+                    @endphp
+                    <tr
+                        wire:key="rate-row-{{ $country->id }}"
+                        data-search="{{ $haystack }}"
+                        x-show="!needle || $el.dataset.search.includes(needle)"
+                        @unless($matchesInitial) style="display: none" @endunless
+                        class="group transition-colors hover:bg-surface-subtle"
+                    >
+                        <td class="pl-5 sm:pl-6">
+                            <a href="{{ locale_path('/vat-calculator/'.$country->slug) }}" class="flex min-h-10 items-center gap-3 font-semibold text-ink group-hover:text-action">
+                                <x-ui.flag :iso="$country->iso_code" size="md" />
+                                <span class="truncate">{{ $country->name }}</span>
                             </a>
                         </td>
-                        <td class="px-2 py-2 sm:px-4 sm:py-3">
-                            <span class="inline-flex items-center rounded-md bg-action-soft px-2 py-1 text-sm font-bold tabular-nums text-action-deep">
-                                {{ $country->standard_rate }}%
-                            </span>
+                        <td>
+                            <div class="flex items-center gap-3">
+                                <span class="tabular w-12 text-base font-bold text-ink">{{ Country::formatRate($country->standard_rate) }}%</span>
+                                <span class="hidden h-1.5 w-20 overflow-hidden rounded-full bg-action/15 sm:block" aria-hidden="true">
+                                    <span class="block h-full rounded-full bg-action" style="width: {{ round((float) $country->standard_rate / $maxRate * 100, 1) }}%"></span>
+                                </span>
+                            </div>
                         </td>
-                        <td class="hidden px-4 py-3 tabular-nums sm:table-cell">
-                            @if ($country->reduced_rate)
-                                <span class="text-ink-muted">{{ $country->reduced_rate }}%</span>
-                                @if ($country->super_reduced_rate)
-                                    <span class="ml-1 text-sm text-ink-quiet sm:text-xs">({{ $country->super_reduced_rate }}%)</span>
+                        <td>
+                            <div class="flex flex-wrap items-center gap-1.5">
+                                @forelse($country->reducedRates() as $rate)
+                                    <span class="tabular rounded-md bg-surface-muted px-2 py-0.5 text-xs font-semibold text-ink-muted">{{ Country::formatRate($rate) }}%</span>
+                                @empty
+                                    <span class="text-ink-quiet">—</span>
+                                @endforelse
+                                @if((float) $country->super_reduced_rate > 0)
+                                    <span class="tabular rounded-md border border-dashed border-line-strong px-2 py-0.5 text-xs font-medium text-ink-quiet" title="{{ __('ui.rate_type.super_reduced') }}">{{ Country::formatRate($country->super_reduced_rate) }}%</span>
                                 @endif
-                            @else
-                                <span class="text-ink-quiet">—</span>
-                            @endif
+                            </div>
                         </td>
-                        <td class="px-3 py-2 text-right sm:px-5 sm:py-3">
-                            <a href="{{ locale_path('/vat-calculator/' . $country->slug) }}"
-                                aria-label="{{ __('ui.details') }}: {{ $country->name }}"
-                                class="inline-flex min-h-11 items-center justify-end gap-1 rounded-md text-sm font-semibold text-action transition-colors hover:text-action-deep sm:text-xs">
-                                <span class="hidden sm:inline">{{ __('ui.details') }}</span>
-                                <span aria-hidden="true">→</span>
+                        <td class="pr-5 text-right sm:pr-6">
+                            <a href="{{ locale_path('/vat-calculator/'.$country->slug) }}" class="inline-flex size-9 items-center justify-center rounded-lg text-ink-quiet transition-colors hover:bg-action-soft hover:text-action" aria-label="{{ __('ui.home_page.calculate_for', ['country' => $country->name]) }}">
+                                <x-ui.icon name="arrow-right" class="size-4" />
                             </a>
                         </td>
                     </tr>
-                @empty
-                    <tr>
-                        <td colspan="4" class="px-6 py-10 text-center text-ink-muted">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto mb-3 h-8 w-8 text-ink-quiet" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                            </svg>
-                            {{ __('ui.home_page.no_results') ?? 'No countries found matching your search.' }}
-                        </td>
-                    </tr>
-                @endforelse
+                @endforeach
             </tbody>
         </table>
     </div>
-</div>
+
+    <p x-cloak x-show="noMatches" class="px-6 py-10 text-center text-sm text-ink-muted">
+        {{ __('ui.no_results') }}
+    </p>
+
+    <div class="flex flex-wrap items-center justify-between gap-2 border-t border-line bg-surface-subtle px-5 py-3 text-xs text-ink-muted sm:px-6">
+        <span class="inline-flex items-center gap-1.5">
+            <span class="inline-block h-1.5 w-4 rounded-full bg-action" aria-hidden="true"></span>
+            {{ __('ui.home_page.meter_legend', ['max' => Country::formatRate($maxRate)]) }}
+        </span>
+        <span class="inline-flex items-center gap-1.5">
+            <span class="inline-block rounded border border-dashed border-line-strong px-1" aria-hidden="true">%</span>
+            {{ __('ui.rate_type.super_reduced') }}
+        </span>
+    </div>
+</section>

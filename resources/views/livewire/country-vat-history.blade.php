@@ -9,7 +9,7 @@
         :description="'Review '.$country->name.' VAT rate history, including effective dates, previous rates, current rates and source-backed tax changes.'"
         :url="$canonical">
         <script type="application/ld+json">{!! json_encode([
-            '@context' => 'https://schema.org',
+            '@@context' => 'https://schema.org',
             '@type' => 'Dataset',
             '@id' => $canonical.'#dataset',
             'name' => $country->name.' VAT rate history',
@@ -18,24 +18,24 @@
             'dateModified' => optional($changes->max('updated_at') ?? $rates->max('updated_at') ?? $country->updated_at)->toIso8601String(),
             'license' => 'https://creativecommons.org/licenses/by/4.0/',
             'isBasedOn' => $changes->pluck('source_url')->filter()->unique()->values()->all(),
-        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
+        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) !!}</script>
     </x-seo-meta>
 @endsection
 
-<div class="container pb-14 pt-8 sm:pt-12">
+<div class="app-container pb-14 pt-8 sm:pt-12">
     <x-site-breadcrumbs :items="['VAT calculator' => locale_path('/vat-calculator'), $country->name => locale_path('/vat-calculator/'.$country->slug), 'Rate history' => '']" />
 
     <header class="max-w-3xl border-b border-line pb-7">
         <div class="flex items-center gap-3">
-            <img src="https://flagcdn.com/h40/{{ strtolower($country->iso_code) }}.jpg" alt="{{ $country->name }} flag" class="h-6 w-9 rounded-sm object-cover">
+            <x-ui.flag :iso="$country->iso_code" size="xl" :lazy="false" class="h-6 w-9" />
             <p class="text-sm font-semibold text-action">Historical VAT data</p>
         </div>
         <h1 class="mt-3 text-3xl font-bold tracking-tight text-ink sm:text-4xl">{{ $country->name }} VAT rate history</h1>
         <p class="mt-4 text-lg text-ink-muted">Current standard rate: <strong class="text-ink">{{ number_format((float) $country->standard_rate, 2) }}%</strong>. Review recorded rates, effective periods and source-backed changes.</p>
     </header>
 
-    <div class="mt-8 grid gap-10 lg:grid-cols-[minmax(0,1fr)_320px]">
-        <main>
+    <div class="mt-8 grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_320px]">
+        <div>
             <section aria-labelledby="recorded-changes">
                 <h2 id="recorded-changes" class="text-2xl font-bold text-ink">Recorded changes</h2>
                 @if($changes->isEmpty())
@@ -61,7 +61,7 @@
 
             <section class="mt-10" aria-labelledby="rate-periods">
                 <h2 id="rate-periods" class="text-2xl font-bold text-ink">Rate periods</h2>
-                <div class="mt-4 overflow-x-auto border-y border-line">
+                <div class="relative mt-4 overflow-x-auto border-y border-line">
                     <table class="w-full min-w-[560px] text-left text-sm">
                         <thead class="bg-surface-subtle text-ink-muted"><tr><th class="px-4 py-3">Rate type</th><th class="px-4 py-3 text-right">Rate</th><th class="px-4 py-3">Effective from</th><th class="px-4 py-3">Effective to</th></tr></thead>
                         <tbody class="divide-y divide-line">
@@ -74,7 +74,7 @@
                     </table>
                 </div>
             </section>
-        </main>
+        </div>
 
         <aside class="space-y-4">
             <a class="app-button-primary w-full" href="{{ locale_path('/vat-calculator/'.$country->slug) }}">Calculate {{ $country->name }} VAT</a>

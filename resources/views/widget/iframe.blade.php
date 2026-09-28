@@ -1,13 +1,10 @@
-@extends('components.layouts.app-embed')
+@extends('layouts.embed')
+
 @section('content')
-    <div class="p-6">
-        @if(request()->query('style') === 'horizontal')
-            <livewire:hero-calculator :key="'hero-calc-widget-' . $country" :initial-country="$country" :show-header="false" />
-        @else
-            <livewire:vat-calculator-form />
-        @endif
-        <div class="mt-3 text-right">
-            Powered by <a href="https://businesspress.io" target="_blank" class="text-blue-500">BusinessPress</a>
-        </div>
+    <div class="p-2 sm:p-3">
+        <livewire:hero-calculator :key="'widget-'.$country.'-'.$style" :initial-country="$country" surface="embed" :variant="$style === 'horizontal' ? 'full' : 'compact'" />
+        <p class="mt-2 text-right text-xs text-ink-muted">
+            Powered by <a href="https://businesspress.io" target="_blank" rel="noopener" class="font-semibold text-action hover:underline">BusinessPress</a>
+        </p>
     </div>
 @endsection

@@ -1,14 +1,18 @@
 <?php
 
 use App\Http\Controllers\AmpController;
+use App\Http\Controllers\Api\X402Controller;
 use App\Http\Controllers\EmbedController;
 use App\Http\Controllers\LangController;
 use App\Http\Controllers\LlmsController;
 use App\Http\Controllers\RedirectController;
+use App\Http\Controllers\SearchIndexController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\VatChangeSubscriptionController;
 use App\Http\Controllers\VatDatasetDownloadController;
 use App\Http\Controllers\WellKnownController;
+use App\Http\Middleware\AllowEmbedding;
+use App\Http\Middleware\CanonicalizeVatComparison;
 use App\Livewire\BlogIndex;
 use App\Livewire\BlogShow;
 use App\Livewire\Changelog;
@@ -22,11 +26,14 @@ use App\Livewire\McpServer;
 use App\Livewire\PrivacyPolicy;
 use App\Livewire\SharedCalculation;
 use App\Livewire\Tools;
+use App\Livewire\TopCalculations;
+use App\Livewire\TopCalculationsAmount;
 use App\Livewire\VatCalculator;
 use App\Livewire\VatCategoryHub;
 use App\Livewire\VatCategoryIndex;
 use App\Livewire\VatChangeEvent;
 use App\Livewire\VatChangesArchive;
+use App\Livewire\VatChangesHistory;
 use App\Livewire\VatComparison;
 use App\Livewire\VatDataset;
 use App\Livewire\VatMap;
@@ -73,11 +80,11 @@ $registerRoutes = function () {
     Route::get('/vat-calculation/{country}/{amount}/{rate}/{mode}', SharedCalculation::class)
         ->where(['amount' => '[0-9]+(\.[0-9]{1,2})?', 'rate' => '[0-9]+(\.[0-9]{1,2})?', 'mode' => 'exclude|include'])
         ->name('shared-calculation');
-    Route::get('/top-vat-calculations', \App\Livewire\TopCalculations::class)->name('top-calculations');
-    Route::get('/top-vat-calculations/{amount}', \App\Livewire\TopCalculationsAmount::class)
+    Route::get('/top-vat-calculations', TopCalculations::class)->name('top-calculations');
+    Route::get('/top-vat-calculations/{amount}', TopCalculationsAmount::class)
         ->where('amount', '100|200|500|1000|2500|5000|10000')
         ->name('top-calculations.amount');
-    Route::get('/vat-changes', \App\Livewire\VatChangesHistory::class)->name('vat-changes');
+    Route::get('/vat-changes', VatChangesHistory::class)->name('vat-changes');
     Route::get('/vat-changes/upcoming', VatChangesArchive::class)
         ->defaults('archiveType', 'upcoming')
         ->name('vat-changes.upcoming');
@@ -98,7 +105,7 @@ $registerRoutes = function () {
         ->name('vat-rates.country-category');
     Route::get('/compare/{pair}-vat', VatComparison::class)
         ->where('pair', '[a-z0-9-]+-vs-[a-z0-9-]+')
-        ->middleware(\App\Http\Middleware\CanonicalizeVatComparison::class)
+        ->middleware(CanonicalizeVatComparison::class)
         ->name('vat-comparison');
     Route::get('/vat-guides/{scenario}', VatScenarioGuide::class)
         ->where('scenario', '[a-z0-9-]+')
@@ -184,11 +191,12 @@ Route::prefix('amp')->name('amp.')->group(function () {
         ->name('country');
 });
 
-Route::middleware(\App\Http\Middleware\AllowEmbedding::class)->group(function () {
-    Route::get('/embed/{country?}', [EmbedController::class, 'index'])->name('widget.embed');
-    Route::get('/public/embed/{country?}', [EmbedController::class, 'iframe'])->name('widget.iframe');
-    Route::get('/embed/preview/{country?}', [EmbedController::class, 'preview'])->name('widget.preview');
+Route::middleware(AllowEmbedding::class)->group(function () {
+    Route::get('/embed/{country?}', [EmbedController::class, 'index'])->where('country', '[a-z0-9\-]+')->name('widget.embed');
+    Route::get('/public/embed/{country?}', [EmbedController::class, 'iframe'])->where('country', '[a-z0-9\-]+')->name('widget.iframe');
 });
+
+Route::get('/search-index.json', SearchIndexController::class)->name('search-index');
 
 // LLM-optimised site map and full VAT rates table
 Route::get('/llms.txt', [LlmsController::class, 'index']);
@@ -203,4 +211,4 @@ Route::get('/indexnow-key.txt', function () {
 })->name('indexnow.key');
 
 // Bazaar-compatible x402 resource discovery (scanner probes this path)
-Route::get('/platform/v2/x402/discovery/resources', [\App\Http\Controllers\Api\X402Controller::class, 'discoveryResources']);
+Route::get('/platform/v2/x402/discovery/resources', [X402Controller::class, 'discoveryResources']);

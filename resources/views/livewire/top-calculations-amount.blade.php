@@ -1,124 +1,87 @@
+@use('App\Livewire\SharedCalculation')
+@use('App\Models\Country')
+@use('App\Support\Vat\Money')
+@use('App\Support\Vat\VatCalculation')
+
 @php
-    $countryCount = count($countries);
-    $minimumRate = collect($countries)->min('standard_rate');
-    $maximumRate = collect($countries)->max('standard_rate');
-    $amountDescription = __('ui.top_calc.amount_page_desc', [
+    $countries = $this->countries;
+    $rates = array_column($countries, 'standard_rate');
+    $heading = __('ui.top_calc.vat_on_amount', ['amount' => number_format($amount)]);
+    $description = __('ui.top_calc.amount_page_desc', [
         'amount' => number_format($amount),
-        'count' => $countryCount,
-        'member_label' => $countryCount === 1 ? 'member state' : 'member states',
-        'min' => $minimumRate,
-        'max' => $maximumRate,
+        'count' => count($countries),
+        'member_label' => __('ui.top_calc.member_states'),
+        'min' => Country::formatRate($rates ? min($rates) : 0),
+        'max' => Country::formatRate($rates ? max($rates) : 0),
     ]);
+    $maxVat = max([0.01, ...array_map(fn (float $rate) => VatCalculation::addVat($amount, $rate)->vat, $rates)]);
 @endphp
 
 @section('seo')
-    <x-seo-meta
-        :title="__('ui.top_calc.vat_on_amount', ['amount' => number_format($amount)]) . ' — ' . __('ui.top_calc.page_title')"
-        :description="$amountDescription"
-        type="website"
-    />
+    <x-seo-meta :title="$heading.' — '.__('ui.top_calc.page_title')" :description="$description" type="website" />
 @endsection
 
-<div class="mx-auto max-w-6xl px-4 py-8 sm:py-12">
+<div>
+    <x-page-header :title="$heading" :description="$description" :eyebrow="__('ui.top_calc.heading')" :breadcrumbs="[__('ui.top_calc.breadcrumb') => locale_path('/top-vat-calculations'), $heading => '']" />
 
-    {{-- Breadcrumbs --}}
-    <x-site-breadcrumbs :items="[
-        __('ui.top_calc.breadcrumb') => locale_path('/top-vat-calculations'),
-        __('ui.top_calc.vat_on_amount', ['amount' => number_format($amount)]) => '',
-    ]" />
+    <div class="app-container space-y-8 py-8 sm:py-10">
+        <nav aria-label="{{ __('ui.top_calc.amounts_label') }}" class="flex flex-wrap gap-2">
+            @foreach($amounts as $option)
+                <a href="{{ locale_path('/top-vat-calculations/'.$option) }}" @if($option === $amount) aria-current="page" @endif @class(['app-chip tabular', 'app-chip-active' => $option === $amount])>{{ Money::format($option, 'EUR', decimals: 0) }}</a>
+            @endforeach
+        </nav>
 
-    {{-- Back link --}}
-    <div class="mb-6">
-        <a href="{{ locale_path('/top-vat-calculations') }}" class="inline-flex items-center gap-1.5 text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors">
-            {{ __('ui.top_calc.back_to_all') }}
-        </a>
-    </div>
-
-    {{-- Hero --}}
-    <div class="text-center mb-10">
-        <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight mb-3">
-            {{ __('ui.top_calc.vat_on_amount', ['amount' => number_format($amount)]) }}
-        </h1>
-        <p class="text-gray-500 max-w-2xl mx-auto">
-            {{ __('ui.top_calc.calculations_count', ['count' => count($countries) * 2]) }}
-        </p>
-    </div>
-
-    {{-- Quick amount navigation --}}
-    <div class="flex flex-wrap justify-center gap-2 mb-10">
-        @foreach($allAmounts as $amt)
-            <a href="{{ locale_path('/top-vat-calculations/' . $amt) }}"
-               class="px-4 py-2 rounded-full border text-sm font-semibold shadow-sm transition-all
-                   {{ $amt === $amount
-                       ? 'border-blue-400 bg-blue-600 text-white'
-                       : 'border-gray-200 bg-white text-gray-700 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700' }}">
-                €{{ number_format($amt) }}
-            </a>
-        @endforeach
-    </div>
-
-    {{-- Table --}}
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden mb-12">
-        <div class="overflow-x-auto">
-            <table class="w-full text-sm">
-                <thead>
-                    <tr class="bg-gray-50 border-b border-gray-200">
-                        <th class="px-5 py-3 text-left font-semibold text-gray-600">{{ __('ui.top_calc.country') }}</th>
-                        <th class="px-5 py-3 text-center font-semibold text-gray-600">{{ __('ui.top_calc.rate') }}</th>
-                        <th class="px-5 py-3 text-right font-semibold text-gray-600">{{ __('ui.top_calc.vat_amount') }}</th>
-                        <th class="px-5 py-3 text-right font-semibold text-gray-600">{{ __('ui.top_calc.total_incl_vat') }}</th>
-                        <th class="px-5 py-3 text-center font-semibold text-gray-600">{{ __('ui.top_calc.actions') }}</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-100">
-                    @foreach($countries as $country)
-                        @php
-                            $rate = $country['standard_rate'];
-                            $vatAmount = round($amount * ($rate / 100), 2);
-                            $total = round($amount + $vatAmount, 2);
-                        @endphp
-                        <tr class="hover:bg-gray-50/50 transition-colors">
-                            <td class="px-5 py-3">
-                                <a href="{{ locale_path('/vat-calculator/' . $country['slug']) }}" class="inline-flex items-center gap-2.5 font-semibold text-gray-900 hover:text-blue-600 transition-colors">
-                                    <img src="https://flagcdn.com/h40/{{ strtolower($country['iso_code']) }}.jpg"
-                                         alt="{{ $country['name'] }} flag" class="h-4 w-auto rounded-sm" loading="lazy">
-                                    {{ $country['name'] }}
-                                </a>
-                            </td>
-                            <td class="px-5 py-3 text-center">
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-50 text-blue-700">
-                                    {{ $rate }}%
-                                </span>
-                            </td>
-                            <td class="px-5 py-3 text-right font-semibold text-emerald-600 tabular-nums">
-                                +€{{ number_format($vatAmount, 2) }}
-                            </td>
-                            <td class="px-5 py-3 text-right font-bold text-gray-900 tabular-nums">
-                                €{{ number_format($total, 2) }}
-                            </td>
-                            <td class="px-5 py-3 text-center">
-                                <div class="inline-flex items-center gap-1.5">
-                                    <a href="{{ locale_path('/vat-calculation/' . $country['slug'] . '/' . $amount . '/' . $rate . '/exclude') }}"
-                                       class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition-colors"
-                                       title="{{ __('ui.top_calc.add_vat') }}">
-                                        {{ __('ui.top_calc.add_vat') }}
-                                    </a>
-                                    <a href="{{ locale_path('/vat-calculation/' . $country['slug'] . '/' . $amount . '/' . $rate . '/include') }}"
-                                       class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-amber-50 text-amber-700 hover:bg-amber-100 transition-colors"
-                                       title="{{ __('ui.top_calc.remove_vat') }}">
-                                        {{ __('ui.top_calc.remove_vat') }}
-                                    </a>
-                                </div>
-                            </td>
+        <section class="app-surface overflow-hidden" aria-labelledby="amount-table">
+            <h2 id="amount-table" class="sr-only">{{ $heading }}</h2>
+            <div class="relative overflow-x-auto">
+                <table class="app-table min-w-[52rem]">
+                    <thead>
+                        <tr>
+                            <th scope="col" rowspan="2" class="pl-5 align-bottom sm:pl-6">{{ __('ui.top_calc.country') }}</th>
+                            <th scope="col" rowspan="2" class="text-right align-bottom">{{ __('ui.top_calc.rate') }}</th>
+                            <th scope="colgroup" colspan="3" class="border-l border-line pb-1 text-center">{{ __('ui.top_calc.adding', ['amount' => number_format($amount)]) }}</th>
+                            <th scope="colgroup" colspan="2" class="border-l border-line pb-1 pr-5 text-center sm:pr-6">{{ __('ui.top_calc.removing', ['amount' => number_format($amount)]) }}</th>
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-    </div>
+                        <tr>
+                            <th scope="col" class="border-l border-line pt-1 text-right">{{ __('ui.top_calc.vat_amount') }}</th>
+                            <td class="border-t-0 bg-surface-subtle pt-1" aria-hidden="true"></td>
+                            <th scope="col" class="pt-1 text-right">{{ __('ui.top_calc.total_incl_vat') }}</th>
+                            <th scope="col" class="border-l border-line pt-1 text-right">{{ __('ui.top_calc.net') }}</th>
+                            <th scope="col" class="pt-1 pr-5 text-right sm:pr-6">{{ __('ui.top_calc.vat_amount') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($countries as $country)
+                            @php
+                                $add = VatCalculation::addVat($amount, $country['standard_rate']);
+                                $remove = VatCalculation::removeVat($amount, $country['standard_rate']);
+                            @endphp
+                            <tr class="transition-colors hover:bg-surface-subtle">
+                                <td class="pl-5 sm:pl-6">
+                                    <a href="{{ locale_path('/vat-calculator/'.$country['slug']) }}" class="flex items-center gap-2.5 font-semibold whitespace-nowrap text-ink hover:text-action">
+                                        <x-ui.flag :iso="$country['iso_code']" />
+                                        {{ $country['name'] }}
+                                    </a>
+                                </td>
+                                <td class="tabular text-right font-semibold text-ink">{{ Country::formatRate($country['standard_rate']) }}%</td>
+                                <td class="tabular border-l border-line text-right text-ink-muted">{{ Money::format($add->vat, 'EUR') }}</td>
+                                <td class="w-24" aria-hidden="true">
+                                    <span class="block h-1.5 overflow-hidden rounded-full bg-action-soft"><span class="block h-full rounded-full bg-action" style="width: {{ round($add->vat / $maxVat * 100) }}%"></span></span>
+                                </td>
+                                <td class="tabular text-right">
+                                    <a href="{{ SharedCalculation::calculationUrl($country['slug'], $amount, $country['standard_rate'], 'exclude') }}" class="font-semibold text-ink hover:text-action hover:underline">{{ Money::format($add->gross, 'EUR') }}</a>
+                                </td>
+                                <td class="tabular border-l border-line text-right">
+                                    <a href="{{ SharedCalculation::calculationUrl($country['slug'], $amount, $country['standard_rate'], 'include') }}" class="font-semibold text-ink hover:text-action hover:underline">{{ Money::format($remove->net, 'EUR') }}</a>
+                                </td>
+                                <td class="tabular pr-5 text-right text-ink-muted sm:pr-6">{{ Money::format($remove->vat, 'EUR') }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </section>
 
-    {{-- Disclaimer --}}
-    <div class="text-center text-xs text-gray-400 max-w-2xl mx-auto">
-        <p>{{ __('ui.top_calc.disclaimer') }}</p>
+        <p class="max-w-[72ch] text-xs leading-5 text-ink-muted">{{ __('ui.top_calc.disclaimer') }}</p>
     </div>
 </div>

@@ -3,49 +3,35 @@
 namespace App\Livewire;
 
 use App\Models\Country;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 
 class Home extends Component
 {
-    public $euCountries = [];
-
-    public $search = '';
-
-    public $selectedCountryIso = null;
-
-    public $selectedCountry = null;
-
-    public function mount()
-    {
-        // Set default country (Lithuania or fallback to first)
-        $this->selectedCountry = Country::where('name', 'Lithuania')->first()
-            ?? Country::where('name', 'United Kingdom')->first()
-            ?? Country::first();
-    }
-
-    public function selectCountry($slug)
-    {
-        $this->selectedCountry = Country::where('slug', $slug)->first();
-    }
+    #[Url(except: '')]
+    public string $search = '';
 
     public function render()
     {
-        $countries = Cache::remember('all_eu_member_countries_v2', 3600, function () {
-            return Country::where('is_eu_member', true)
-                ->orderBy('standard_rate', 'ASC')
-                ->get();
-        });
+        /** @var Collection<int, Country> $countries */
+        $countries = Cache::remember('home_eu_countries_v3', 3600, fn () => Country::query()
+            ->where('is_eu_member', true)
+            ->orderBy('standard_rate')
+            ->orderBy('name')
+            ->get());
 
-        if ($this->search) {
-            $search = strtolower($this->search);
-            $countries = $countries->filter(function ($country) use ($search) {
-                return str_contains(strtolower($country->name), $search);
-            });
-        }
+        $rates = $countries->map(fn (Country $country) => (float) $country->standard_rate);
 
-        $this->euCountries = $countries->values();
-
-        return view('livewire.home');
+        return view('livewire.home', [
+            'countries' => $countries,
+            'stats' => $countries->isEmpty() ? null : [
+                'lowest' => $countries->first(),
+                'highest' => $countries->sortByDesc(fn (Country $country) => (float) $country->standard_rate)->first(),
+                'average' => round($rates->avg(), 1),
+                'count' => $countries->count(),
+            ],
+        ]);
     }
 }

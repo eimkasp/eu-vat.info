@@ -7,49 +7,36 @@
 @endphp
 
 @if($mobile)
-    {{-- Mobile: simple select --}}
-    <div class="px-4 py-2">
-        <label class="block text-xs font-medium text-blue-200 mb-1">{{ __('ui.language_switcher.label') }}</label>
-        <select onchange="window.location.href='/lang/' + this.value"
-                class="w-full rounded-md border-gray-300 text-sm focus:ring-blue-500 focus:border-blue-500">
+    <div {{ $attributes->merge(['class' => 'flex items-center gap-2']) }}>
+        <label for="mobile-language" class="sr-only">{{ __('ui.language_switcher.label') }}</label>
+        <x-ui.icon name="languages" class="size-4 text-white/70" />
+        <select id="mobile-language" onchange="window.location.href = '/lang/' + this.value" class="h-10 rounded-lg border border-white/20 bg-white/10 px-2.5 text-sm font-medium text-white [&>option]:text-ink">
             @foreach($locales as $code => $config)
-                <option value="{{ $code }}" {{ $code === $current ? 'selected' : '' }}>
-                    {{ $config['native'] }}
-                </option>
+                <option value="{{ $code }}" @selected($code === $current)>{{ $config['native'] }}</option>
             @endforeach
         </select>
     </div>
 @else
-    {{-- Desktop: dropdown --}}
-    <div x-data="{ open: false }" @click.outside="open = false" class="relative">
-        <button @click="open = !open" type="button"
-                class="flex items-center gap-1.5 text-sm text-white hover:text-blue-200 transition-colors px-2 py-1 rounded-md hover:bg-white/10"
-                aria-label="{{ __('ui.language_switcher.current', ['name' => $currentConfig['native'] ?? 'English']) }}">
-            <img src="https://flagcdn.com/h20/{{ $currentConfig['flag'] ?? 'gb' }}.jpg"
-                 alt="{{ $currentConfig['native'] ?? 'English' }}" class="h-3.5 rounded-sm border border-white/30" width="21" height="14">
-            <span class="uppercase font-medium">{{ $current }}</span>
-            <svg class="w-3 h-3 transition-transform" :class="{ 'rotate-180': open }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-            </svg>
+    <div x-data="{ open: false }" @click.outside="open = false" @keydown.escape="open = false" {{ $attributes->merge(['class' => 'relative']) }}>
+        <button
+            type="button"
+            @click="open = !open"
+            :aria-expanded="open.toString()"
+            aria-haspopup="true"
+            aria-controls="language-menu"
+            aria-label="{{ __('ui.language_switcher.current', ['name' => $currentConfig['native'] ?? 'English']) }}"
+            class="inline-flex h-10 items-center gap-1.5 rounded-lg px-2.5 text-sm font-semibold uppercase text-white/85 transition-colors hover:bg-white/10 hover:text-white"
+        >
+            <x-ui.flag :iso="$currentConfig['flag'] ?? 'gb'" size="sm" :lazy="false" class="shadow-none ring-1 ring-white/25" />
+            {{ $current }}
+            <x-ui.icon name="chevron-down" class="size-3.5 transition-transform duration-150" x-bind:class="open && 'rotate-180'" />
         </button>
 
-        <div x-show="open" x-transition:enter="transition ease-out duration-100"
-             x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
-             x-transition:leave="transition ease-in duration-75"
-             x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95"
-             class="absolute right-0 mt-2 w-48 max-h-80 overflow-y-auto bg-white rounded-lg shadow-lg border border-gray-200 z-50 py-1"
-             x-cloak>
+        <div id="language-menu" x-cloak x-show="open" x-transition.opacity.duration.150ms class="absolute right-0 top-full z-50 mt-2 grid max-h-[70vh] w-72 grid-cols-2 gap-0.5 overflow-y-auto rounded-2xl border border-line bg-surface p-1.5 text-ink shadow-floating">
             @foreach($locales as $code => $config)
-                <a href="/lang/{{ $code }}"
-                   class="flex items-center gap-2 px-3 py-1.5 text-sm hover:bg-blue-50 transition-colors {{ $code === $current ? 'bg-blue-50 text-blue-700 font-medium' : 'text-gray-700' }}">
-                    <img src="https://flagcdn.com/h20/{{ $config['flag'] }}.jpg"
-                         alt="{{ $config['native'] }}" class="h-3.5 rounded-sm border border-gray-200" width="21" height="14" loading="lazy">
-                    <span>{{ $config['native'] }}</span>
-                    @if($code === $current)
-                        <svg class="w-3.5 h-3.5 ml-auto text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                        </svg>
-                    @endif
+                <a href="/lang/{{ $code }}" lang="{{ $code }}" @class(['flex items-center gap-2 rounded-lg px-2.5 py-2 text-sm transition-colors', 'bg-action-soft font-semibold text-action-deep' => $code === $current, 'text-ink-muted hover:bg-surface-subtle hover:text-ink' => $code !== $current]) @if($code === $current) aria-current="true" @endif>
+                    <x-ui.flag :iso="$config['flag']" size="sm" />
+                    <span class="truncate">{{ $config['native'] }}</span>
                 </a>
             @endforeach
         </div>

@@ -1,80 +1,78 @@
+@php
+    $postUrl = url(locale_path('/blog/'.$post['slug']));
+@endphp
+
 @section('seo')
-    <x-seo-meta
-        :title="$post['title'].' | EU VAT Info'"
-        :description="$post['description']"
-        :url="url(locale_path('/blog/'.$post['slug']))"
-        type="article">
-        <script type="application/ld+json">
-        {!! json_encode([
-            '@context' => 'https://schema.org',
+    <x-seo-meta :title="$post['title'].' | '.__('ui.site_name')" :description="$post['description']" :url="$postUrl" type="article">
+        <x-json-ld :data="[
             '@type' => 'BlogPosting',
             'headline' => $post['title'],
             'description' => $post['description'],
             'datePublished' => $post['published_at']->toIso8601String(),
             'dateModified' => $post['updated_at']->toIso8601String(),
-            'author' => [
-                '@type' => 'Organization',
-                'name' => $post['author'],
-            ],
-            'publisher' => [
-                '@type' => 'Organization',
-                'name' => __('ui.site_name'),
-                'url' => url(locale_path('/')),
-            ],
-            'mainEntityOfPage' => url(locale_path('/blog/'.$post['slug'])),
+            'author' => ['@type' => 'Organization', 'name' => $post['author']],
+            'publisher' => ['@type' => 'Organization', 'name' => __('ui.site_name'), 'url' => url(locale_path('/'))],
+            'mainEntityOfPage' => $postUrl,
             'citation' => collect($post['sources'])->pluck('url')->values()->all(),
-        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
-        </script>
+        ]" />
     </x-seo-meta>
 @endsection
 
-<div class="container pb-12">
-    <x-site-breadcrumbs :items="['VAT updates' => locale_path('/blog'), $post['title'] => '']" />
-
-    <div class="grid lg:grid-cols-[minmax(0,1fr)_360px] gap-6 items-start">
-        <article class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm overflow-hidden">
-            <header class="p-6 sm:p-8 border-b border-gray-100 dark:border-gray-700 bg-gradient-to-br from-blue-50 to-white dark:from-gray-900 dark:to-gray-800">
-                <div class="flex flex-wrap items-center gap-2 text-xs text-gray-600 dark:text-gray-300 mb-4">
-                    <span class="inline-flex rounded-full bg-blue-600 px-2.5 py-1 font-semibold text-white">{{ $post['category'] }}</span>
-                    <span>Published {{ $post['published_at']->format('M d, Y') }}</span>
-                    <span>Updated {{ $post['updated_at']->format('M d, Y') }}</span>
-                    <span>{{ $post['reading_time'] }} min read</span>
+<div>
+    <header class="border-b border-line bg-surface">
+        <div class="app-container pb-8 pt-6 sm:pb-10">
+            <x-site-breadcrumbs :items="[__('ui.nav.updates') => locale_path('/blog'), $post['title'] => '']" />
+            <div class="mt-6 max-w-3xl">
+                <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-ink-muted">
+                    <span class="rounded-full bg-action-soft px-2.5 py-0.5 font-semibold text-action-deep">{{ $post['category'] }}</span>
+                    <time datetime="{{ $post['published_at']->toDateString() }}">{{ __('ui.blog.published', ['date' => $post['published_at']->translatedFormat('j M Y')]) }}</time>
+                    <span aria-hidden="true">·</span>
+                    <time datetime="{{ $post['updated_at']->toDateString() }}">{{ __('ui.blog.updated', ['date' => $post['updated_at']->translatedFormat('j M Y')]) }}</time>
+                    <span aria-hidden="true">·</span>
+                    <span>{{ __('ui.blog.reading_time', ['count' => $post['reading_time']]) }}</span>
                 </div>
-                <h1 class="text-3xl sm:text-5xl font-bold tracking-normal text-gray-950 dark:text-white mb-4">{{ $post['title'] }}</h1>
-                <p class="text-lg text-gray-700 dark:text-gray-200 max-w-3xl">{{ $post['description'] }}</p>
-                <div class="flex flex-wrap gap-2 mt-5">
-                    @foreach($post['tags'] as $tag)
-                        <span class="rounded-full bg-white/80 dark:bg-gray-700 px-2.5 py-1 text-xs font-medium text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-600">{{ $tag }}</span>
-                    @endforeach
-                </div>
-            </header>
+                <h1 class="mt-4 text-3xl font-bold tracking-[-0.03em] text-ink sm:text-[2.75rem] sm:leading-[1.1]">{{ $post['title'] }}</h1>
+                <p class="mt-4 text-lg leading-8 text-ink-muted">{{ $post['description'] }}</p>
+                @if($post['tags'])
+                    <ul class="mt-5 flex flex-wrap gap-1.5" aria-label="Tags">
+                        @foreach($post['tags'] as $tag)
+                            <li class="rounded-md bg-surface-muted px-2 py-0.5 text-xs font-medium text-ink-muted">{{ $tag }}</li>
+                        @endforeach
+                    </ul>
+                @endif
+                @if(app()->getLocale() !== 'en')
+                    <p class="mt-5 inline-flex items-center gap-2 text-sm text-ink-muted"><x-ui.icon name="languages" class="size-4" />{{ __('ui.blog.english_only') }}</p>
+                @endif
+            </div>
+        </div>
+    </header>
 
-            <div class="p-6 sm:p-8">
-                <div class="mb-8">
-                    @livewire('vat-change-signup', ['source' => 'blog-'.$post['slug']])
-                </div>
-
-                <div class="blog-content">
+    <div class="app-container py-8 sm:py-10">
+        <div class="grid grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(0,1fr)_22rem]">
+            <article class="app-surface min-w-0 p-5 sm:p-8" lang="en">
+                <div class="app-prose max-w-[72ch]">
                     {!! $html !!}
                 </div>
-            </div>
-        </article>
+            </article>
 
-        <aside class="space-y-4 lg:sticky lg:top-24">
-            @livewire('vat-change-signup', ['source' => 'blog-sidebar', 'compact' => true])
+            <aside class="space-y-6 lg:sticky lg:top-24">
+                @livewire('vat-change-signup', ['source' => 'blog-'.$post['slug'], 'compact' => true])
 
-            <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm p-5">
-                <h2 class="text-base font-bold text-gray-900 dark:text-white mb-3">Official sources</h2>
-                <ul class="space-y-3 text-sm">
-                    @foreach($post['sources'] as $source)
-                        <li>
-                            <a href="{{ $source['url'] }}" target="_blank" rel="noopener noreferrer" class="text-blue-700 dark:text-blue-300 hover:underline">
-                                {{ $source['title'] }}
-                            </a>
-                        </li>
-                    @endforeach
-                </ul>
-            </div>
-        </aside>
+                @if($post['sources'])
+                    <section class="app-surface p-5" aria-labelledby="post-sources">
+                        <h2 id="post-sources" class="text-base font-bold text-ink">{{ __('ui.blog.sources') }}</h2>
+                        <ul class="mt-3 space-y-2.5 text-sm">
+                            @foreach($post['sources'] as $source)
+                                <li>
+                                    <a href="{{ $source['url'] }}" target="_blank" rel="noopener noreferrer" class="app-link inline font-medium">
+                                        {{ $source['title'] }}<x-ui.icon name="arrow-up-right" class="ml-1 inline size-3 align-[-1px]" />
+                                    </a>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </section>
+                @endif
+            </aside>
+        </div>
     </div>
 </div>
