@@ -2,8 +2,9 @@
 
 use App\Models\Country;
 use App\Models\VatRateChange;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
-uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
+uses(RefreshDatabase::class);
 
 // ── GET /api/x402/info (free, no payment required) ──────────────────────────
 

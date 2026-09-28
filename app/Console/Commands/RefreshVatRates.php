@@ -43,7 +43,7 @@ class RefreshVatRates extends Command
         // Step 1: Download & seed
         if (! $this->option('skip-download')) {
             $this->info('Step 1/3: Downloading latest VAT rates from GitHub...');
-            $job = new UpdateVatRates();
+            $job = new UpdateVatRates;
             $job->handle();
             $this->info('  ✓ Downloaded and seeded VAT rates.');
         } else {
@@ -52,14 +52,14 @@ class RefreshVatRates extends Command
 
         // Step 2: Verify integrity
         $this->info('Step 2/3: Verifying data integrity...');
-        $verifyJob = new VerifyVatRatesIntegrity();
+        $verifyJob = new VerifyVatRatesIntegrity;
         $verifyJob->handle();
         $this->info('  ✓ Integrity check complete.');
 
         // Step 3: Generate change records
         if (! $this->option('no-changes')) {
             $this->info('Step 3/3: Generating VAT rate change records...');
-            $changesJob = new GenerateVatRateChanges();
+            $changesJob = new GenerateVatRateChanges;
             $changesJob->handle();
             $this->info('  ✓ Change records generated.');
         } else {

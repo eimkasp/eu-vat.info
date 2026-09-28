@@ -1,8 +1,9 @@
 <?php
 
 use App\Models\Country;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
-uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
+uses(RefreshDatabase::class);
 
 // ── GET /api/countries ────────────────────────────────────────────────────────
 
@@ -70,7 +71,7 @@ it('returns validation error when country_code is not exactly 2 characters', fun
         'country_code' => 'DEU',
         'vat_number' => 'DE123456789',
     ])->assertUnprocessable()
-      ->assertJsonValidationErrors(['country_code']);
+        ->assertJsonValidationErrors(['country_code']);
 });
 
 // ── GET /api/llm/vat-rates ───────────────────────────────────────────────────

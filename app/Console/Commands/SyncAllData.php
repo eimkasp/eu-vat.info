@@ -113,7 +113,7 @@ class SyncAllData extends Command
     private function syncCountryMetadata(bool $dryRun): void
     {
         $countries = Country::all();
-        $this->info("  Fetching currency data from REST Countries API...");
+        $this->info('  Fetching currency data from REST Countries API...');
         $apiData = $this->fetchCurrencyData($countries);
 
         $issueCount = 0;
@@ -126,14 +126,14 @@ class SyncAllData extends Command
             // EU membership
             $shouldBeEu = in_array($iso, self::EU_MEMBERS, true);
             if ((bool) $country->is_eu_member !== $shouldBeEu) {
-                $this->line("  <comment>{$country->name}:</comment> EU Member " . ($shouldBeEu ? 'No → Yes' : 'Yes → No'));
+                $this->line("  <comment>{$country->name}:</comment> EU Member ".($shouldBeEu ? 'No → Yes' : 'Yes → No'));
                 $countryFixes['is_eu_member'] = $shouldBeEu;
                 $issueCount++;
             }
 
             // VIES (same as EU membership)
             if ((bool) $country->vies_available !== $shouldBeEu) {
-                $this->line("  <comment>{$country->name}:</comment> VIES " . ($shouldBeEu ? 'No → Yes' : 'Yes → No'));
+                $this->line("  <comment>{$country->name}:</comment> VIES ".($shouldBeEu ? 'No → Yes' : 'Yes → No'));
                 $countryFixes['vies_available'] = $shouldBeEu;
                 $issueCount++;
             }
@@ -171,7 +171,7 @@ class SyncAllData extends Command
             return;
         }
 
-        $this->warn("  Found {$issueCount} issues across " . count($fixes) . ' countries.');
+        $this->warn("  Found {$issueCount} issues across ".count($fixes).' countries.');
 
         if ($dryRun) {
             return;
@@ -181,7 +181,7 @@ class SyncAllData extends Command
             Country::where('id', $countryId)->update($data);
         }
 
-        $this->info('  ✓ Fixed ' . count($fixes) . ' countries.');
+        $this->info('  ✓ Fixed '.count($fixes).' countries.');
     }
 
     private function fetchCurrencyData($countries): array
@@ -217,6 +217,7 @@ class SyncAllData extends Command
                         $info = $item['currencies'][$currencyCode];
                     } elseif (isset($fallback[$cca2])) {
                         $data[$cca2] = $fallback[$cca2];
+
                         continue;
                     } else {
                         continue;

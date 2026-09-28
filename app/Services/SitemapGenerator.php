@@ -17,8 +17,7 @@ class SitemapGenerator
         protected SeoPolicy $seoPolicy,
         protected BlogPostRepository $blogPosts,
         protected Seo\VatCategorySeoService $vatCategories,
-    ) {
-    }
+    ) {}
 
     public function generate(): string
     {

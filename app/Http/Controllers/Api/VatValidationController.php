@@ -11,8 +11,7 @@ class VatValidationController extends Controller
 {
     public function __construct(
         private ViesValidationService $viesService
-    ) {
-    }
+    ) {}
 
     /**
      * Validate VAT number via API

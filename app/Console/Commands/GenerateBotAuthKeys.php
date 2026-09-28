@@ -41,7 +41,7 @@ class GenerateBotAuthKeys extends Command
             'crv' => 'P-256',
             'x' => rtrim(strtr(base64_encode($details['ec']['x']), '+/', '-_'), '='),
             'y' => rtrim(strtr(base64_encode($details['ec']['y']), '+/', '-_'), '='),
-            'kid' => 'eu-vat-info-bot-' . date('Y'),
+            'kid' => 'eu-vat-info-bot-'.date('Y'),
             'use' => 'sig',
             'alg' => 'ES256',
         ];
@@ -64,8 +64,8 @@ class GenerateBotAuthKeys extends Command
         );
 
         $this->info('Bot auth keys generated successfully.');
-        $this->line("  Public JWKS: storage/app/bot-auth/public-key.json");
-        $this->line("  Private key: storage/app/bot-auth/private-key.pem");
+        $this->line('  Public JWKS: storage/app/bot-auth/public-key.json');
+        $this->line('  Private key: storage/app/bot-auth/private-key.pem');
         $this->line("  Kid: {$jwk['kid']}");
 
         return self::SUCCESS;

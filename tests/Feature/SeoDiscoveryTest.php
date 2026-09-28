@@ -2,9 +2,10 @@
 
 use App\Models\Country;
 use Carbon\CarbonImmutable;
+use Livewire\Features\SupportDisablingBackButtonCache\SupportDisablingBackButtonCache;
 
 afterEach(function () {
-    \Livewire\Features\SupportDisablingBackButtonCache\SupportDisablingBackButtonCache::$disableBackButtonCache = false;
+    SupportDisablingBackButtonCache::$disableBackButtonCache = false;
 });
 
 it('publishes one canonical sitemap and no unsupported crawl delay directives', function () {
@@ -72,7 +73,7 @@ it('serves current LLM documentation from the canonical host', function () {
 });
 
 it('preserves public discovery caching after Livewire has booted', function () {
-    \Livewire\Features\SupportDisablingBackButtonCache\SupportDisablingBackButtonCache::$disableBackButtonCache = true;
+    SupportDisablingBackButtonCache::$disableBackButtonCache = true;
 
     $response = $this->get('/sitemap.xml')->assertOk();
 

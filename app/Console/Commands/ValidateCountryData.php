@@ -144,7 +144,7 @@ class ValidateCountryData extends Command
             return self::SUCCESS;
         }
 
-        $this->warn(count($issues) . ' countries have data issues.');
+        $this->warn(count($issues).' countries have data issues.');
         $this->newLine();
 
         if ($dryRun) {
@@ -181,7 +181,7 @@ class ValidateCountryData extends Command
 
         try {
             $response = Http::timeout(15)
-                ->get("https://restcountries.com/v3.1/alpha", [
+                ->get('https://restcountries.com/v3.1/alpha', [
                     'codes' => $codes,
                     'fields' => 'cca2,currencies',
                 ]);
@@ -212,7 +212,7 @@ class ValidateCountryData extends Command
                     ];
                 }
 
-                $this->info("  Fetched data for " . count($data) . " countries from API.");
+                $this->info('  Fetched data for '.count($data).' countries from API.');
             } else {
                 $this->error("  API request failed with status {$response->status()}. Using fallback data.");
                 $data = $this->getFallbackCurrencyData();

@@ -17,8 +17,7 @@ class VatRateChangePublished extends Notification
     public function __construct(
         public VatRateChange $change,
         public VatChangeSubscription $subscription,
-    ) {
-    }
+    ) {}
 
     public function via(object $notifiable): array
     {

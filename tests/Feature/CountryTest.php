@@ -1,8 +1,10 @@
 <?php
 
 use App\Models\Country;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
-uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
+uses(RefreshDatabase::class);
 
 it('calculates country rank correctly', function () {
     Country::factory()->create(['standard_rate' => 25, 'slug' => 'country-high']);
@@ -30,13 +32,13 @@ it('generates slug from name automatically', function () {
 it('has vat rates relationship', function () {
     $country = Country::factory()->create();
 
-    expect($country->vatRates())->toBeInstanceOf(\Illuminate\Database\Eloquent\Relations\HasMany::class);
+    expect($country->vatRates())->toBeInstanceOf(HasMany::class);
 });
 
 it('has analytics relationship', function () {
     $country = Country::factory()->create();
 
-    expect($country->analytics())->toBeInstanceOf(\Illuminate\Database\Eloquent\Relations\HasMany::class);
+    expect($country->analytics())->toBeInstanceOf(HasMany::class);
 });
 
 it('returns sitemap urls correctly', function () {

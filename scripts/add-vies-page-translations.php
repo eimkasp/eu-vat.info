@@ -4,8 +4,7 @@
  * Add vies_page translations and country_page validator CTA keys to all language files.
  * Run: php scripts/add-vies-page-translations.php
  */
-
-$basePath = __DIR__ . '/../lang';
+$basePath = __DIR__.'/../lang';
 
 // English is already done, skip it
 $translations = [
@@ -120,8 +119,9 @@ $locales = ['bg', 'cs', 'da', 'de', 'el', 'es', 'et', 'fi', 'fr', 'ga', 'hr', 'h
 
 foreach ($locales as $locale) {
     $filePath = "$basePath/$locale/ui.php";
-    if (!file_exists($filePath)) {
+    if (! file_exists($filePath)) {
         echo "SKIP: $locale (file not found)\n";
+
         continue;
     }
 
@@ -130,6 +130,7 @@ foreach ($locales as $locale) {
     // Check if vies_page already added
     if (str_contains($content, "'vies_page'")) {
         echo "SKIP: $locale (vies_page already exists)\n";
+
         continue;
     }
 
@@ -146,36 +147,36 @@ foreach ($locales as $locale) {
 
     // Insert before the validator section
     $needle = "'validator' =>";
-    $needleAlt = "    // ── Validator ─";
-    
+    $needleAlt = '    // ── Validator ─';
+
     if (str_contains($content, $needleAlt)) {
-        $content = str_replace($needleAlt, $viesPageCode . "\n" . $needleAlt, $content);
+        $content = str_replace($needleAlt, $viesPageCode."\n".$needleAlt, $content);
     } elseif (str_contains($content, "  'validator' =>")) {
         // Match the 'validator' => line with proper indentation
         $content = preg_replace(
             "/(\s+'validator'\s*=>\s*\n?\s*array\s*\()/",
-            $viesPageCode . "\n$1",
+            $viesPageCode."\n$1",
             $content,
             1
         );
-        if (!str_contains($content, "'vies_page'")) {
+        if (! str_contains($content, "'vies_page'")) {
             // fallback: try alternate format
             $content = preg_replace(
                 "/(\s+'validator'\s*=>\s*\[)/",
-                $viesPageCode . "\n$1",
+                $viesPageCode."\n$1",
                 $content,
                 1
             );
         }
     } else {
         // Try inserting before the last ];
-        $content = preg_replace('/\];\s*$/', $viesPageCode . "\n];\n", $content);
+        $content = preg_replace('/\];\s*$/', $viesPageCode."\n];\n", $content);
     }
 
     // Add country_page keys (validate_vat_cta, validate_vat_cta_desc)
-    if (!str_contains($content, "'validate_vat_cta'")) {
+    if (! str_contains($content, "'validate_vat_cta'")) {
         // Find 'available' key in country_page and add after it
-        $ctaCode = "";
+        $ctaCode = '';
         foreach ($trans['country_page'] as $key => $value) {
             $escaped = str_replace("'", "\\'", $value);
             $ctaCode .= "        '$key' => '$escaped',\n";
@@ -183,7 +184,7 @@ foreach ($locales as $locale) {
 
         // Try to insert after 'country_pages_desc' key
         if (preg_match("/('country_pages_desc'\s*=>\s*'[^']*',?\s*\n)/", $content, $matches)) {
-            $content = str_replace($matches[1], $matches[1] . $ctaCode, $content);
+            $content = str_replace($matches[1], $matches[1].$ctaCode, $content);
         }
     }
 

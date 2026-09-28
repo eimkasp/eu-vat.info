@@ -10,8 +10,7 @@ class CountryController extends Controller
 {
     public function __construct(
         private readonly CountryAnalyticsService $analyticsService
-    ) {
-    }
+    ) {}
 
     // this is api controller create rest endpoints
 

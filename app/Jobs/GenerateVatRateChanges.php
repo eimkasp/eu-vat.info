@@ -52,7 +52,7 @@ class GenerateVatRateChanges implements ShouldQueue
                             ->exists();
 
                         if (! $exists) {
-                            $change = new VatRateChange();
+                            $change = new VatRateChange;
                             $change->country_id = $country->id;
                             $change->vat_rate_id = $curr->id;
                             $change->rate_type = $type;
