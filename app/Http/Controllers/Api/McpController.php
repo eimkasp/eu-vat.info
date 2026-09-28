@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Country;
 use App\Services\ViesValidationService;
+use App\Support\Vat\VatCalculation;
+use App\Support\Vat\VatMode;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -12,13 +14,14 @@ use Illuminate\Support\Facades\Cache;
 class McpController extends Controller
 {
     private const PROTOCOL_VERSION = '2024-11-05';
+
     private const SERVER_NAME = 'eu-vat-info';
+
     private const SERVER_VERSION = '1.0.0';
 
     public function __construct(
         private ViesValidationService $viesService
-    ) {
-    }
+    ) {}
 
     public function handle(Request $request): JsonResponse
     {
@@ -68,7 +71,7 @@ class McpController extends Controller
                     'description' => 'Get current VAT rates for all EU member states. Returns standard, reduced, super-reduced, and parking rates for each country.',
                     'inputSchema' => [
                         'type' => 'object',
-                        'properties' => new \stdClass(),
+                        'properties' => new \stdClass,
                     ],
                 ],
                 [
@@ -173,12 +176,7 @@ class McpController extends Controller
                 'iso_code' => $c->iso_code,
                 'slug' => $c->slug,
                 'currency' => $c->currency_display,
-                'rates' => [
-                    'standard' => $c->standard_rate,
-                    'reduced' => $c->reduced_rate,
-                    'super_reduced' => $c->super_reduced_rate,
-                    'parking' => $c->parking_rate,
-                ],
+                'rates' => $c->apiRates(),
                 'last_updated' => $c->updated_at?->toIso8601String(),
             ])->toArray();
         });
@@ -203,12 +201,7 @@ class McpController extends Controller
             'iso_code' => $country->iso_code,
             'slug' => $country->slug,
             'currency' => $country->currency_display,
-            'rates' => [
-                'standard' => $country->standard_rate,
-                'reduced' => $country->reduced_rate,
-                'super_reduced' => $country->super_reduced_rate,
-                'parking' => $country->parking_rate,
-            ],
+            'rates' => $country->apiRates(),
             'last_updated' => $country->updated_at?->toIso8601String(),
         ];
 
@@ -234,27 +227,16 @@ class McpController extends Controller
             return $this->toolResult($id, "Error: Country not found for \"{$countryQuery}\".", true);
         }
 
-        $rate = match ($rateType) {
-            'reduced' => $country->reduced_rate,
-            'super_reduced' => $country->super_reduced_rate,
-            'parking' => $country->parking_rate,
-            default => $country->standard_rate,
-        };
+        $rate = $country->rateForType($rateType);
 
         if ($rate === null) {
             return $this->toolResult($id, "Error: {$country->name} does not have a {$rateType} rate.", true);
         }
 
-        $amount = (float) $amount;
-        if ($mode === 'remove') {
-            $net = round($amount / (1 + $rate / 100), 2);
-            $vat = round($amount - $net, 2);
-            $gross = $amount;
-        } else {
-            $net = $amount;
-            $vat = round($amount * $rate / 100, 2);
-            $gross = round($amount + $vat, 2);
-        }
+        $calculation = VatCalculation::make((float) $amount, $rate, $mode === 'remove' ? VatMode::Include : VatMode::Exclude);
+        $net = $calculation->net;
+        $vat = $calculation->vat;
+        $gross = $calculation->gross;
 
         $data = [
             'country' => $country->name,
@@ -285,6 +267,10 @@ class McpController extends Controller
         try {
             $result = $this->viesService->validate($countryCode, $vatNumber);
 
+            if (isset($result['error'])) {
+                return $this->toolResult($id, 'Error: '.$result['error'], true);
+            }
+
             $data = [
                 'valid' => $result['valid'] ?? false,
                 'country_code' => $result['country_code'] ?? $countryCode,
@@ -303,7 +289,9 @@ class McpController extends Controller
 
     private function compareVatRates(mixed $id, array $args): JsonResponse
     {
-        $queries = $args['countries'] ?? [];        if (count($queries) < 2) {
+        $queries = $args['countries'] ?? [];
+
+        if (count($queries) < 2) {
             return $this->toolResult($id, 'Error: Please provide at least 2 countries to compare.', true);
         }
 
@@ -315,7 +303,8 @@ class McpController extends Controller
                     'country' => $country->name,
                     'iso_code' => $country->iso_code,
                     'standard_rate' => $country->standard_rate,
-                    'reduced_rate' => $country->reduced_rate,
+                    'reduced_rate' => $country->primaryReducedRate(),
+                    'reduced_rates' => $country->reducedRates(),
                     'super_reduced_rate' => $country->super_reduced_rate,
                     'parking_rate' => $country->parking_rate,
                 ];

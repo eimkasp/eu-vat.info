@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Country;
 use App\Services\ViesValidationService;
+use App\Support\Vat\VatCalculation;
+use App\Support\Vat\VatMode;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -22,12 +24,12 @@ class V1Controller extends Controller
             'name' => 'EU VAT Info API',
             'version' => 'v1',
             'description' => 'Free EU VAT rates, calculator, and VIES validation for all 27 member states.',
-            'documentation' => $baseUrl . '/api/v1/openapi.json',
+            'documentation' => $baseUrl.'/api/v1/openapi.json',
             'endpoints' => [
-                'countries' => $baseUrl . '/api/v1/countries',
-                'country' => $baseUrl . '/api/v1/countries/{slug}',
-                'calculate' => $baseUrl . '/api/v1/calculate',
-                'validate' => $baseUrl . '/api/v1/validate',
+                'countries' => $baseUrl.'/api/v1/countries',
+                'country' => $baseUrl.'/api/v1/countries/{slug}',
+                'calculate' => $baseUrl.'/api/v1/calculate',
+                'validate' => $baseUrl.'/api/v1/validate',
             ],
         ]);
     }
@@ -55,7 +57,6 @@ class V1Controller extends Controller
         $country = Cache::remember("api_v1_country_{$slug}", 600, function () use ($slug) {
             return Country::where('slug', $slug)
                 ->orWhere('iso_code', strtoupper($slug))
-                ->orWhere('code', strtoupper($slug))
                 ->firstOrFail();
         });
 
@@ -76,7 +77,6 @@ class V1Controller extends Controller
 
         $country = Country::where('slug', $validated['country'])
             ->orWhere('iso_code', strtoupper($validated['country']))
-            ->orWhere('code', strtoupper($validated['country']))
             ->orWhere('name', $validated['country'])
             ->first();
 
@@ -88,12 +88,7 @@ class V1Controller extends Controller
         $mode = $validated['mode'] ?? 'add';
         $amount = (float) $validated['amount'];
 
-        $rate = match ($rateType) {
-            'reduced' => $country->reduced_rate,
-            'super_reduced' => $country->super_reduced_rate,
-            'parking' => $country->parking_rate,
-            default => $country->standard_rate,
-        };
+        $rate = $country->rateForType($rateType);
 
         if ($rate === null) {
             return response()->json([
@@ -101,15 +96,10 @@ class V1Controller extends Controller
             ], 422);
         }
 
-        if ($mode === 'remove') {
-            $gross = $amount;
-            $net = round($gross / (1 + $rate / 100), 2);
-            $vat = round($gross - $net, 2);
-        } else {
-            $net = $amount;
-            $vat = round($net * $rate / 100, 2);
-            $gross = round($net + $vat, 2);
-        }
+        $calculation = VatCalculation::make($amount, $rate, $mode === 'remove' ? VatMode::Include : VatMode::Exclude);
+        $net = $calculation->net;
+        $vat = $calculation->vat;
+        $gross = $calculation->gross;
 
         return response()->json([
             'data' => [
@@ -122,7 +112,7 @@ class V1Controller extends Controller
                 'net' => $net,
                 'vat' => $vat,
                 'gross' => $gross,
-                'currency' => $country->currency_code ?? 'EUR',
+                'currency' => $country->currencyCode(),
             ],
         ]);
     }
@@ -164,7 +154,7 @@ class V1Controller extends Controller
                 'license' => ['name' => 'MIT', 'url' => 'https://opensource.org/licenses/MIT'],
             ],
             'servers' => [
-                ['url' => $baseUrl . '/api/v1', 'description' => 'Production'],
+                ['url' => $baseUrl.'/api/v1', 'description' => 'Production'],
             ],
             'paths' => [
                 '/countries' => [
@@ -329,15 +319,10 @@ class V1Controller extends Controller
         return [
             'name' => $c->name,
             'iso_code' => $c->iso_code,
-            'code' => $c->code,
+            'code' => $c->iso_code,
             'slug' => $c->slug,
-            'currency' => $c->currency_code ?? $c->currency,
-            'rates' => [
-                'standard' => $c->standard_rate,
-                'reduced' => $c->reduced_rate,
-                'super_reduced' => $c->super_reduced_rate,
-                'parking' => $c->parking_rate,
-            ],
+            'currency' => $c->currencyCode(),
+            'rates' => $c->apiRates(),
             'last_updated' => $c->updated_at?->toIso8601String(),
         ];
     }

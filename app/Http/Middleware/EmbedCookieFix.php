@@ -37,7 +37,6 @@ class EmbedCookieFix
             'public/embed/*',
             'embed',
             'embed/*',
-            'embed/preview/*',
         );
 
         // Is this a Livewire (or other) request from a session that was started

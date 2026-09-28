@@ -8,30 +8,23 @@ use Illuminate\Http\Request;
 class LangController extends Controller
 {
     /**
-     * Switch the active locale and redirect back to the equivalent page.
+     * Switch the active locale and redirect back to the equivalent page on this site.
      */
     public function switch(Request $request, string $locale): RedirectResponse
     {
         $supported = array_keys(config('translation.supported_languages', []));
 
-        if (! in_array($locale, $supported)) {
-            abort(404);
-        }
+        abort_unless(in_array($locale, $supported, true), 404);
 
-        session()->put('locale', $locale);
+        $previous = parse_url(url()->previous()) ?: [];
+        $sameHost = strcasecmp($previous['host'] ?? $request->getHost(), $request->getHost()) === 0;
+        $path = $sameHost ? '/'.ltrim($previous['path'] ?? '/', '/') : '/';
+        $path = preg_replace('#^/('.implode('|', array_map('preg_quote', $supported)).')(?=/|$)#', '', $path) ?: '/';
 
-        $parsed  = parse_url(url()->previous());
-        $path    = $parsed['path'] ?? '/';
-        $default = config('translation.default_language', 'en');
-
-        // Strip any existing locale prefix from the path
-        $path = preg_replace('#^/(' . implode('|', $supported) . ')(/|$)#', '/', $path);
-        $path = $path === '' ? '/' : $path;
-
-        if ($locale === $default) {
+        if ($locale === config('translation.default_language', 'en')) {
             return redirect($path);
         }
 
-        return redirect('/' . $locale . ($path === '/' ? '' : $path));
+        return redirect('/'.$locale.($path === '/' ? '' : $path));
     }
 }

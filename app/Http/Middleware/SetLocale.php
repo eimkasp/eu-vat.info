@@ -46,35 +46,4 @@ class SetLocale
 
         return $next($request);
     }
-
-    /**
-     * Parse Accept-Language header and find best supported match.
-     */
-    private function detectBrowserLocale(Request $request, array $supported): ?string
-    {
-        $acceptLanguage = $request->header('Accept-Language', '');
-
-        if (empty($acceptLanguage)) {
-            return null;
-        }
-
-        // Parse "en-US,en;q=0.9,de;q=0.8" into sorted array
-        $locales = [];
-        foreach (explode(',', $acceptLanguage) as $part) {
-            $parts = explode(';q=', trim($part));
-            $lang = strtolower(substr(trim($parts[0]), 0, 2));
-            $quality = isset($parts[1]) ? (float) $parts[1] : 1.0;
-            $locales[$lang] = $quality;
-        }
-
-        arsort($locales);
-
-        foreach (array_keys($locales) as $lang) {
-            if (in_array($lang, $supported)) {
-                return $lang;
-            }
-        }
-
-        return null;
-    }
 }

@@ -10,60 +10,71 @@ use League\Csv\Reader;
 class VatRateSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Territory aliases used by the kdeldycke/vat-rates dataset.
      */
-    public function run()
+    private const ALIASES = ['EL' => 'GR', 'UK' => 'GB'];
+
+    /**
+     * Imports data/vat_rates.csv. Safe to re-run: rows are keyed by country, type and start date.
+     */
+    public function run(): void
     {
-        // Check if file exists
-        if (! file_exists(base_path('data/vat_rates.csv'))) {
-            $this->command->error('File data/vat_rates.csv not found.');
+        $path = base_path('data/vat_rates.csv');
+
+        if (! is_file($path)) {
+            $this->command?->error('File data/vat_rates.csv not found.');
 
             return;
         }
 
-        $csv = Reader::createFromPath(base_path('data/vat_rates.csv'), 'r');
-        $csv->setHeaderOffset(0);
+        $countries = Country::query()->pluck('id', 'iso_code')->mapWithKeys(fn ($id, $iso) => [strtoupper((string) $iso) => $id]);
 
-        foreach ($csv as $record) {
-            // CSV columns: start_date, stop_date, territory_codes, currency_code, rate, rate_type, description
-            // territory_codes can be "AT" or multiple? Assuming single for now based on head.
-            $countryCode = $record['territory_codes'];
+        $reader = Reader::createFromPath($path);
+        $reader->setHeaderOffset(0);
 
-            // Skip if no country code
-            if (empty($countryCode)) {
+        foreach ($reader->getRecords() as $record) {
+            $countryId = $this->countryIdFor((string) ($record['territory_codes'] ?? ''), $countries->all());
+
+            if ($countryId === null || blank($record['start_date'] ?? null)) {
                 continue;
             }
 
-            // Match country by ISO code (e.g. "AT", "DE")
-            $country = Country::where('iso_code', $countryCode)->first();
+            $type = strtolower(trim((string) $record['rate_type']));
+            $values = [
+                'rate' => round((float) $record['rate'] * 100, 2),
+                'effective_to' => $record['stop_date'] ?: null,
+                'source' => 'kdeldycke/vat-rates',
+            ];
 
-            if (! $country) {
-                continue;
-            }
+            $existing = VatRate::query()
+                ->where('country_id', $countryId)
+                ->where('type', $type)
+                ->whereDate('effective_from', $record['start_date'])
+                ->first();
 
-            // Rate in CSV is 0.2 for 20%, DB expects 20.00
-            $rate = floatval($record['rate']) * 100;
-
-            VatRate::updateOrCreate(
-                [
-                    'country_id' => $country->id,
-                    'type' => $this->mapRateType($record['rate_type']),
-                    'effective_from' => $record['start_date'],
-                    'rate' => $rate,
-                ],
-                [
-                    'effective_to' => $record['stop_date'] ?: null,
-                    'source' => 'kdeldycke/vat-rates',
-                ]
-            );
+            $existing
+                ? $existing->update($values)
+                : VatRate::create(['country_id' => $countryId, 'type' => $type, 'effective_from' => $record['start_date']] + $values);
         }
     }
 
-    private function mapRateType($type)
+    /**
+     * Resolves the member-state row of a territory list such as "FR\nMC" or "GR\nEL",
+     * ignoring sub-national territories like "AT-6691".
+     *
+     * @param  array<string, int>  $countries
+     */
+    private function countryIdFor(string $territories, array $countries): ?int
     {
-        // Map CSV types to our DB types
-        // CSV types might be: standard, reduced, parking, super_reduced
-        // We can normalize them here
-        return strtolower($type);
+        foreach (preg_split('/\s*[\r\n]+\s*/', trim($territories)) ?: [] as $code) {
+            $code = strtoupper(trim($code));
+            $code = self::ALIASES[$code] ?? $code;
+
+            if (preg_match('/^[A-Z]{2}$/', $code) && isset($countries[$code])) {
+                return $countries[$code];
+            }
+        }
+
+        return null;
     }
 }

@@ -64,9 +64,9 @@ class CountriesTableSeeder extends Seeder
     private function convertToDecimal($value)
     {
         if (strpos($value, '/') !== false) {
-            $numbers = explode('/', $value);
+            $rates = Country::parseRateList($value);
 
-            return array_sum($numbers) / count($numbers);
+            return implode(' / ', array_map(fn (float $rate) => Country::formatRate($rate), $rates));
         }
 
         return $value;

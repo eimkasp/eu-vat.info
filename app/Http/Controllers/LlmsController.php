@@ -67,7 +67,7 @@ class LlmsController extends Controller
 
             foreach ($countries as $c) {
                 $text .= '| '.$c->name.' | '.$c->iso_code.' | '.$c->standard_rate.'% | '
-                    .($c->reduced_rate ? $c->reduced_rate.'%' : '-').' | '
+                    .($c->formattedReducedRates() ?? '-').' | '
                     .($c->super_reduced_rate ? $c->super_reduced_rate.'%' : '-').' | '
                     .($c->parking_rate ? $c->parking_rate.'%' : '-')." |\n";
             }
