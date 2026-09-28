@@ -19,15 +19,6 @@ class SyncAllData extends Command
 
     protected $description = 'Full data sync: refresh VAT rates, validate country metadata (currency, EU membership, VIES), and generate change records';
 
-    /**
-     * Authoritative list of EU member state ISO 3166-1 alpha-2 codes.
-     */
-    private const EU_MEMBERS = [
-        'AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR',
-        'DE', 'GR', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL',
-        'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE',
-    ];
-
     public function handle(): int
     {
         $startTime = microtime(true);
@@ -124,7 +115,7 @@ class SyncAllData extends Command
             $countryFixes = [];
 
             // EU membership
-            $shouldBeEu = in_array($iso, self::EU_MEMBERS, true);
+            $shouldBeEu = in_array($iso, Country::EU_MEMBER_CODES, true);
             if ((bool) $country->is_eu_member !== $shouldBeEu) {
                 $this->line("  <comment>{$country->name}:</comment> EU Member ".($shouldBeEu ? 'No → Yes' : 'Yes → No'));
                 $countryFixes['is_eu_member'] = $shouldBeEu;

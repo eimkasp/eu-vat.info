@@ -13,19 +13,10 @@ class ValidateCountryData extends Command
     protected $description = 'Validate and fix country data (currency, EU membership, VIES) using REST Countries API';
 
     /**
-     * Authoritative list of EU member state ISO 3166-1 alpha-2 codes (as of 2026).
-     */
-    private const EU_MEMBERS = [
-        'AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR',
-        'DE', 'GR', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL',
-        'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE',
-    ];
-
-    /**
      * VIES (VAT Information Exchange System) is available for EU member states.
      * Northern Ireland (XI) also participates but we track countries by their main code.
      */
-    private const VIES_COUNTRIES = self::EU_MEMBERS;
+    private const VIES_COUNTRIES = Country::EU_MEMBER_CODES;
 
     /**
      * Authoritative VAT number format patterns per country.
@@ -92,7 +83,7 @@ class ValidateCountryData extends Command
             $countryFixes = [];
 
             // 1. Validate EU membership
-            $shouldBeEu = in_array($iso, self::EU_MEMBERS, true);
+            $shouldBeEu = in_array($iso, Country::EU_MEMBER_CODES, true);
             if ((bool) $country->is_eu_member !== $shouldBeEu) {
                 $countryIssues[] = "EU Member: {$this->boolLabel($country->is_eu_member)} → should be {$this->boolLabel($shouldBeEu)}";
                 $countryFixes['is_eu_member'] = $shouldBeEu;
