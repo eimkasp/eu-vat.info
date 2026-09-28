@@ -10,30 +10,25 @@ class CountryStatsChart extends ChartWidget
 {
     protected static ?int $sort = 3;
 
-    protected static ?string $heading = 'Analytics Over Time';
+    protected ?string $heading = 'Analytics Over Time';
 
     protected function getData(): array
     {
-        $data = CountryAnalytic::selectRaw('DATE(created_at) as date, type, COUNT(*) as count')
+        $data = CountryAnalytic::query()
+            ->selectRaw('DATE(created_at) as date, type, COUNT(*) as count')
             ->whereDate('created_at', '>=', Carbon::now()->subDays(7))
             ->groupBy('date', 'type')
             ->get();
 
-        $dates = $data->pluck('date')->unique()->sort();
-        $types = $data->pluck('type')->unique();
+        $dates = $data->pluck('date')->unique()->sort()->values();
 
-        $datasets = [];
-        foreach ($types as $type) {
-            $datasets[] = [
-                'label' => ucfirst($type),
-                'data' => $dates->map(function ($date) use ($data, $type) {
-                    return $data->where('date', $date)->where('type', $type)->first()->count ?? 0;
-                })->toArray(),
-            ];
-        }
+        $datasets = $data->pluck('type')->unique()->values()->map(fn (string $type) => [
+            'label' => ucfirst($type),
+            'data' => $dates->map(fn ($date) => (int) ($data->where('date', $date)->where('type', $type)->first()?->count ?? 0))->all(),
+        ])->all();
 
         return [
-            'labels' => $dates->map(fn ($date) => Carbon::parse($date)->format('M d'))->toArray(),
+            'labels' => $dates->map(fn ($date) => Carbon::parse($date)->format('M d'))->all(),
             'datasets' => $datasets,
         ];
     }

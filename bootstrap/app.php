@@ -1,5 +1,12 @@
 <?php
 
+use App\Http\Middleware\AddLinkHeaders;
+use App\Http\Middleware\EmbedCookieFix;
+use App\Http\Middleware\MarkdownNegotiation;
+use App\Http\Middleware\PublicDiscoveryCacheHeaders;
+use App\Http\Middleware\RedirectLegacySeoHost;
+use App\Http\Middleware\SecurityHeaders;
+use App\Http\Middleware\SetLocale;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -12,19 +19,21 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        $middleware->prepend(\App\Http\Middleware\PublicDiscoveryCacheHeaders::class);
+        $middleware->prepend(PublicDiscoveryCacheHeaders::class);
+
+        $middleware->throttleApi();
 
         $middleware->web(append: [
-            \App\Http\Middleware\RedirectLegacySeoHost::class,
-            \App\Http\Middleware\SecurityHeaders::class,
-            \App\Http\Middleware\SetLocale::class,
-            \App\Http\Middleware\AddLinkHeaders::class,
-            \App\Http\Middleware\MarkdownNegotiation::class,
+            RedirectLegacySeoHost::class,
+            SecurityHeaders::class,
+            SetLocale::class,
+            AddLinkHeaders::class,
+            MarkdownNegotiation::class,
         ]);
 
         // Must be global (not web-group) so it runs AFTER StartSession and
         // EncryptCookies have already set the session cookie on the response.
-        $middleware->append(\App\Http\Middleware\EmbedCookieFix::class);
+        $middleware->append(EmbedCookieFix::class);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

@@ -4,121 +4,130 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\CountryAnalyticResource\Pages;
 use App\Models\CountryAnalytic;
-use Filament\Forms\Form;
+use BackedEnum;
+use Filament\Actions\ViewAction;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\KeyValue;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use UnitEnum;
 
 class CountryAnalyticResource extends Resource
 {
     protected static ?string $model = CountryAnalytic::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-chart-bar';
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-chart-bar';
 
-    protected static ?string $navigationGroup = 'Analytics';
+    protected static string|UnitEnum|null $navigationGroup = 'Analytics';
+
+    public const TYPES = [
+        'view' => 'View',
+        'calculator' => 'Calculator',
+        'saved' => 'Saved Search',
+    ];
+
+    public static function typeColor(?string $state): string
+    {
+        return match ($state) {
+            'calculator' => 'success',
+            'saved' => 'warning',
+            default => 'primary',
+        };
+    }
+
+    public static function dateRangeFilter(): Filter
+    {
+        return Filter::make('created_at')
+            ->schema([
+                DatePicker::make('from'),
+                DatePicker::make('until'),
+            ])
+            ->query(fn (Builder $query, array $data): Builder => $query
+                ->when($data['from'] ?? null, fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date))
+                ->when($data['until'] ?? null, fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date)));
+    }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('country.name')
+                TextColumn::make('country.name')
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('type')
+                TextColumn::make('type')
                     ->badge()
-                    ->colors([
-                        'primary' => 'view',
-                        'success' => 'calculator',
-                        'warning' => 'saved',
-                    ])
+                    ->color(fn (?string $state): string => static::typeColor($state))
                     ->sortable(),
-                Tables\Columns\TextColumn::make('ip_address')
+                TextColumn::make('ip_address')
                     ->toggleable(),
-                Tables\Columns\TextColumn::make('location_country')
+                TextColumn::make('location_country')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('location_city')
+                TextColumn::make('location_city')
                     ->toggleable(),
-                Tables\Columns\TextColumn::make('amount')
+                TextColumn::make('amount')
                     ->money('EUR')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('rate_used')
-                    ->numeric(2)
+                TextColumn::make('rate_used')
+                    ->numeric(decimalPlaces: 2)
                     ->suffix('%')
                     ->sortable(),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('type')
-                    ->options([
-                        'view' => 'View',
-                        'calculator' => 'Calculator',
-                        'saved' => 'Saved Search',
-                    ]),
-                Tables\Filters\Filter::make('created_at')
-                    ->form([
-                        \Filament\Forms\Components\DatePicker::make('from'),
-                        \Filament\Forms\Components\DatePicker::make('until'),
-                    ])
-                    ->query(function (Builder $query, array $data): Builder {
-                        return $query
-                            ->when(
-                                $data['from'],
-                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
-                            )
-                            ->when(
-                                $data['until'],
-                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
-                            );
-                    }),
+                SelectFilter::make('type')->options(self::TYPES),
+                static::dateRangeFilter(),
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
+            ->recordActions([
+                ViewAction::make(),
             ])
             ->defaultSort('created_at', 'desc');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                \Filament\Forms\Components\Section::make('Analytics Details')
-                    ->schema([
-                        \Filament\Forms\Components\Select::make('type')
-                            ->options([
-                                'view' => 'View',
-                                'calculator' => 'Calculator',
-                                'saved' => 'Saved Search',
-                            ])
-                            ->disabled(),
-                        \Filament\Forms\Components\TextInput::make('ip_address')
-                            ->disabled(),
-                        \Filament\Forms\Components\TextInput::make('location_country')
-                            ->disabled(),
-                        \Filament\Forms\Components\TextInput::make('location_city')
-                            ->disabled(),
-                        \Filament\Forms\Components\TextInput::make('amount')
-                            ->numeric()
-                            ->prefix('€')
-                            ->disabled(),
-                        \Filament\Forms\Components\TextInput::make('rate_used')
-                            ->numeric()
-                            ->suffix('%')
-                            ->disabled(),
-                        \Filament\Forms\Components\TextInput::make('user_agent')
-                            ->columnSpanFull()
-                            ->disabled(),
-                        \Filament\Forms\Components\TextInput::make('referer')
-                            ->columnSpanFull()
-                            ->disabled(),
-                        \Filament\Forms\Components\KeyValue::make('meta_data')
-                            ->columnSpanFull()
-                            ->disabled(),
-                    ])
-                    ->columns(2),
-            ]);
+        return $schema->components([
+            Section::make('Analytics Details')
+                ->schema([
+                    Select::make('type')
+                        ->options(self::TYPES)
+                        ->disabled(),
+                    TextInput::make('ip_address')
+                        ->disabled(),
+                    TextInput::make('location_country')
+                        ->disabled(),
+                    TextInput::make('location_city')
+                        ->disabled(),
+                    TextInput::make('amount')
+                        ->numeric()
+                        ->prefix('€')
+                        ->disabled(),
+                    TextInput::make('rate_used')
+                        ->numeric()
+                        ->suffix('%')
+                        ->disabled(),
+                    TextInput::make('user_agent')
+                        ->columnSpanFull()
+                        ->disabled(),
+                    TextInput::make('referer')
+                        ->columnSpanFull()
+                        ->disabled(),
+                    KeyValue::make('meta_data')
+                        ->columnSpanFull()
+                        ->disabled(),
+                ])
+                ->columns(2)
+                ->columnSpanFull(),
+        ]);
     }
 
     public static function getPages(): array

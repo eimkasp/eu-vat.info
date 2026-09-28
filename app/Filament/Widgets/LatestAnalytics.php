@@ -2,31 +2,29 @@
 
 namespace App\Filament\Widgets;
 
+use App\Filament\Resources\CountryAnalyticResource;
 use App\Models\CountryAnalytic;
-use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Filament\Widgets\TableWidget as BaseWidget;
+use Filament\Widgets\TableWidget;
 
-class LatestAnalytics extends BaseWidget
+class LatestAnalytics extends TableWidget
 {
     protected static ?int $sort = 2;
 
     public function table(Table $table): Table
     {
         return $table
-            ->query(CountryAnalytic::latest()->limit(5))
+            ->query(CountryAnalytic::query()->with('country')->latest()->limit(5))
+            ->paginated(false)
             ->columns([
-                Tables\Columns\TextColumn::make('country.name'),
-                Tables\Columns\TextColumn::make('type')
+                TextColumn::make('country.name'),
+                TextColumn::make('type')
                     ->badge()
-                    ->colors([
-                        'primary' => 'view',
-                        'success' => 'calculator',
-                        'warning' => 'saved',
-                    ]),
-                Tables\Columns\TextColumn::make('amount')
+                    ->color(fn (?string $state): string => CountryAnalyticResource::typeColor($state)),
+                TextColumn::make('amount')
                     ->money('EUR'),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime(),
             ]);
     }

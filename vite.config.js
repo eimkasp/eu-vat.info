@@ -1,11 +1,12 @@
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
-import { readFileSync, mkdirSync, cpSync, existsSync } from 'fs';
-import { resolve, dirname } from 'path';
+import tailwindcss from '@tailwindcss/vite';
+import { readFileSync, mkdirSync, cpSync, existsSync } from 'node:fs';
+import { resolve, dirname } from 'node:path';
 
 /**
- * Vite plugin — converts resources/images/og-default.svg → public/images/og-default.png
- * during every production build so the OG image stays up-to-date automatically.
+ * Renders resources/images/og-default.svg to public/images/og-default.png on every
+ * production build so the social preview image never drifts from its source.
  */
 function ogImagePlugin() {
     return {
@@ -18,34 +19,29 @@ function ogImagePlugin() {
                 const outPath = resolve(process.cwd(), 'public/images/og-default.png');
 
                 mkdirSync(dirname(outPath), { recursive: true });
-
-                await sharp(readFileSync(svgPath))
-                    .png({ compressionLevel: 6 })
-                    .toFile(outPath);
-
-                console.log('  ✓ OG image → public/images/og-default.png');
-            } catch (err) {
-                console.warn('  ⚠ OG image generation skipped:', err.message);
+                await sharp(readFileSync(svgPath)).png({ compressionLevel: 6 }).toFile(outPath);
+            } catch (error) {
+                console.warn('  ⚠ OG image generation skipped:', error.message);
             }
         },
     };
 }
 
 /**
- * Vite plugin — copies resources/images/ → public/images/
- * so static images are deployed alongside built assets.
+ * Copies resources/images to public/images so static images (flags, backgrounds,
+ * badges) ship with the build output.
  */
 function copyImagesPlugin() {
     return {
         name: 'copy-images',
         apply: 'build',
         closeBundle() {
-            const src = resolve(process.cwd(), 'resources/images');
-            const dest = resolve(process.cwd(), 'public/images');
-            if (existsSync(src)) {
-                mkdirSync(dest, { recursive: true });
-                cpSync(src, dest, { recursive: true });
-                console.log('  ✓ Images copied → public/images/');
+            const source = resolve(process.cwd(), 'resources/images');
+            const destination = resolve(process.cwd(), 'public/images');
+
+            if (existsSync(source)) {
+                mkdirSync(destination, { recursive: true });
+                cpSync(source, destination, { recursive: true });
             }
         },
     };
@@ -57,6 +53,7 @@ export default defineConfig({
             input: ['resources/css/app.css', 'resources/js/app.js'],
             refresh: true,
         }),
+        tailwindcss(),
         ogImagePlugin(),
         copyImagesPlugin(),
     ],

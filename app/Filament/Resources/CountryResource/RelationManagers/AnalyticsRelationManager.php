@@ -2,10 +2,11 @@
 
 namespace App\Filament\Resources\CountryResource\RelationManagers;
 
+use App\Filament\Resources\CountryAnalyticResource;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 
 class AnalyticsRelationManager extends RelationManager
 {
@@ -19,52 +20,28 @@ class AnalyticsRelationManager extends RelationManager
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('type')
+                TextColumn::make('type')
                     ->badge()
-                    ->colors([
-                        'primary' => 'view',
-                        'success' => 'calculator',
-                        'warning' => 'saved',
-                    ])
+                    ->color(fn (?string $state): string => CountryAnalyticResource::typeColor($state))
                     ->sortable(),
-                Tables\Columns\TextColumn::make('amount')
+                TextColumn::make('amount')
                     ->money('EUR')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('rate_used')
-                    ->numeric(2)
+                TextColumn::make('rate_used')
+                    ->numeric(decimalPlaces: 2)
                     ->suffix('%')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('location_country')
+                TextColumn::make('location_country')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('ip_address')
+                TextColumn::make('ip_address')
                     ->toggleable(),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('type')
-                    ->options([
-                        'calculator' => 'Calculator',
-                        'saved' => 'Saved Search',
-                        'view' => 'View',
-                    ]),
-                Tables\Filters\Filter::make('created_at')
-                    ->form([
-                        \Filament\Forms\Components\DatePicker::make('from'),
-                        \Filament\Forms\Components\DatePicker::make('until'),
-                    ])
-                    ->query(function (Builder $query, array $data): Builder {
-                        return $query
-                            ->when(
-                                $data['from'],
-                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
-                            )
-                            ->when(
-                                $data['until'],
-                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
-                            );
-                    }),
+                SelectFilter::make('type')->options(CountryAnalyticResource::TYPES),
+                CountryAnalyticResource::dateRangeFilter(),
             ])
             ->defaultSort('created_at', 'desc');
     }
