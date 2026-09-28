@@ -140,10 +140,13 @@ GET  /up                              # Application health check
 - Languages without DeepL: `ga` (Irish), `hr` (Croatian), `mt` (Maltese)
 
 ### Frontend
+- **Read `DESIGN.md` before any UI change.** It is the design system and styleguide (tokens, brand surfaces, component recipes, patterns, accessibility rules). `tests/Feature/DesignSystemTest.php` enforces it, and `.claude/skills/design-system` loads it for Claude Code.
 - Interactive UI uses **Livewire 4** components with **Alpine.js** (`resources/js/app.js`) for instant client-side feedback — no SPA framework
-- Styling: **Tailwind CSS 4** with semantic OKLCH tokens and `app-*` component classes in `resources/css/app.css` (see DESIGN.md); no component library
-- Dark mode: class-based (`.dark` on `<html>`), driven by the tokens — do not add `dark:` variants
-- Icons: `<x-ui.icon name="…">` (inline Lucide paths); flags: `<x-ui.flag :iso="…">` (local SVGs)
+- Styling: **Tailwind CSS 4** with semantic OKLCH tokens and `app-*` component classes in `resources/css/app.css`; no component library
+- Look: solid and institutional — flat EU navy (`brand`) for header, heroes and footer, EU gold only as a thin accent on navy, opaque white surfaces with hairline borders; no glass, blur or decorative gradients
+- Shape: `rounded-control` (4px), `rounded-card` (6px), `rounded-panel` (8px); no pill buttons, chips or badges (`rounded-full` is for dots and spinners)
+- Dark mode: class-based (`.dark` on `<html>`), driven by the tokens — do not add `dark:` variants, raw palette colours, literal colours or default `shadow-*` utilities
+- Icons: `<x-ui.icon name="…">` (inline Lucide paths); flags: `<x-ui.flag :iso="…">` (local SVGs); pagination: return `'pagination.livewire'` from `paginationView()`
 - VAT maths: `App\Support\Vat` (PHP) mirrored by `resources/js/vat.js`; keep both in sync
 - Structured data: `<x-json-ld :data="[…]">` (never write `@context` in Blade)
 

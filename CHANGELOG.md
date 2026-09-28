@@ -7,6 +7,7 @@ All notable changes to EU VAT Info are documented here.
 ## [5.0.0] — 2026-09-28 — A faster, clearer EU VAT Info
 
 ### Added
+- **A new, more professional look** — a solid EU navy and gold identity with crisp, square-cornered controls, clean white cards and clear tables, so rates and totals are easier to read and feel more trustworthy.
 - **Dark mode** — the site follows your device's light or dark setting, and you can switch it any time from the header.
 - **Instant search** — press ⌘K, Ctrl K or / on any page to jump straight to a country calculator or tool.
 - **Open a shared calculation in the calculator** — shared result pages now reopen in the full calculator with the same amount, rate and direction.
@@ -19,7 +20,8 @@ All notable changes to EU VAT Info are documented here.
 - The VAT map can be explored with a keyboard and screen reader, and every colour is backed by a ranked table.
 - The VAT number validator detects the country from the prefix and explains results in plain language, including when a member state does not publish company details.
 - Pages load faster: fonts and flags are served from our own servers and background images are three times smaller.
-- All new interface text is available in the 24 official EU languages.
+- All new interface text is available in the 24 official EU languages, including page navigation on the rate history.
+- Code examples on the API and MCP pages can be scrolled with the keyboard, and their copy buttons are announced by screen readers.
 
 ### Fixed
 - Countries with more than one reduced rate, such as Austria (10% and 13%), now show every rate instead of an average.
@@ -29,6 +31,7 @@ All notable changes to EU VAT Info are documented here.
 - Shared calculation pages now calculate "remove VAT" comparisons correctly and show each country's own currency.
 - The embeddable widget can be placed on other websites again.
 - Fixed a security issue on the VAT number validator page.
+- Text on the donate page that was nearly invisible in light mode is readable again.
 
 ---
 
