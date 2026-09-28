@@ -109,13 +109,18 @@ routes/
 ### API Endpoints
 
 ```
-GET  /api/v1/countries           # All countries with every rate type
-GET  /api/v1/calculate           # VAT calculation (amount, country, rate_type, mode)
-GET  /api/countries              # All countries (cached 600s)
-GET  /api/countries/{slug}       # Single country
-POST /api/vat/validate           # Validate VAT number
-POST /api/vat/validate/batch     # Batch validate (max 10)
-GET  /api/health                 # Health check
+GET  /api/v1/countries                # All countries with every rate type
+GET  /api/v1/countries/{slug}         # Single country (slug or ISO code)
+GET  /api/v1/calculate                # VAT calculation (amount, country, rate_type, mode)
+POST /api/v1/validate                 # VIES validation
+GET  /api/v1/openapi.json             # OpenAPI description of v1
+GET  /api/countries                   # All countries (cached 600s)
+GET  /api/countries/{slug}            # Single country
+POST /api/vat/validation/validate     # Validate VAT number
+POST /api/vat/validation/batch        # Batch validate (max 10)
+GET  /api/vat/validation/health       # VIES service health
+POST /api/mcp                         # MCP server (JSON-RPC)
+GET  /up                              # Application health check
 ```
 
 ## Key Conventions
