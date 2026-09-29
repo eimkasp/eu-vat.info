@@ -112,7 +112,10 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
 });
 
 // MCP Server (Model Context Protocol) — read-only, no auth
-Route::post('/mcp', [McpController::class, 'handle'])->name('api.mcp');
+Route::post('/mcp', [McpController::class, 'handle'])
+    ->withoutMiddleware('throttle:api')
+    ->middleware('throttle:mcp')
+    ->name('api.mcp');
 
 // x402 Payment Protocol — info endpoint (free, describes paid routes)
 Route::get('/x402/info', [X402Controller::class, 'info'])->name('api.x402.info');

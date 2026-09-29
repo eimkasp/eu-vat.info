@@ -1,12 +1,13 @@
 # EU VAT Rates Skill
 
-Query live EU VAT rates for all 27 EU member states via the vat.businesspress.io API or MCP server.
+Query live VAT rates for the 27 EU member states and five other European countries (Iceland, Norway, Switzerland, Turkey and the United Kingdom) via the vat.businesspress.io API or MCP server.
 
 ## What You Can Do
 
 - Get current VAT rates (standard, reduced, super-reduced, parking) for any EU country
 - Calculate VAT amounts (add VAT to net price, or extract VAT from gross price)
 - Compare VAT rates across multiple EU countries
+- List recorded and upcoming VAT rate changes
 - Look up a country by name, ISO code (e.g. `DE`), or slug (e.g. `germany`)
 
 ## Authentication
@@ -76,21 +77,47 @@ Compare standard and reduced rates across multiple EU countries.
 { "jsonrpc": "2.0", "id": 1, "method": "tools/call", "params": { "name": "compare_vat_rates", "arguments": { "countries": ["DE", "FR", "LT"] } } }
 ```
 
+#### `get_vat_rate_changes`
+Recorded and upcoming VAT rate changes with old and new rates and the date each takes effect.
+
+**Input:**
+| Parameter       | Type    | Required | Description |
+|-----------------|---------|----------|-------------|
+| `country`       | string  | no       | Limit to one country (name, ISO code or slug) |
+| `upcoming_only` | boolean | no       | Only changes that take effect today or later. Default: `false` |
+| `limit`         | integer | no       | 1 to 50. Default: `20` |
+
+```json
+{ "jsonrpc": "2.0", "id": 1, "method": "tools/call", "params": { "name": "get_vat_rate_changes", "arguments": { "upcoming_only": true } } }
+```
+
+Every tool returns its data twice: as JSON text for older clients and as `structuredContent` for clients on protocol 2025-06-18.
+
 ## REST API
+
+The v1 API is described by an OpenAPI 3.1 document at `https://vat.businesspress.io/api/v1/openapi.json`.
 
 ### Get All Countries
 
 ```
-GET https://vat.businesspress.io/api/countries
+GET https://vat.businesspress.io/api/v1/countries
 ```
 
 ### Get a Single Country
 
 ```
-GET https://vat.businesspress.io/api/countries/{slug}
+GET https://vat.businesspress.io/api/v1/countries/{slug-or-iso}
 ```
 
-Example: `GET https://vat.businesspress.io/api/countries/germany`
+Example: `GET https://vat.businesspress.io/api/v1/countries/germany`
+
+### Calculate VAT
+
+```
+GET https://vat.businesspress.io/api/v1/calculate?amount=100&country=DE&rate_type=standard&mode=add
+```
+
+`mode=remove` extracts VAT from a gross amount.
 
 ### LLM-Optimised Rates List
 
@@ -102,24 +129,33 @@ Returns a compact JSON array of all countries with their rates — ideal for con
 
 ## Response Format
 
+MCP `get_country_vat_rate` result:
+
 ```json
 {
-  "country": "Germany",
-  "iso_code": "DE",
-  "slug": "germany",
+  "country": "Austria",
+  "iso_code": "AT",
+  "slug": "austria",
+  "eu_member": true,
+  "currency": "EUR",
   "rates": {
-    "standard": 19,
-    "reduced": 7,
+    "standard": 20,
+    "reduced": 10,
+    "reduced_rates": [10, 13],
     "super_reduced": null,
-    "parking": null
+    "parking": 13
   },
-  "last_updated": "2025-01-01T00:00:00Z"
+  "last_updated": "2026-09-29T00:00:00+00:00"
 }
 ```
 
+`reduced` is the lowest reduced rate; `reduced_rates` lists every one.
+
 ## Human-Readable Reference
 
-- Country pages: `https://vat.businesspress.io/country/{slug}`
+- Country calculators: `https://vat.businesspress.io/vat-calculator/{slug}`
 - VAT calculator: `https://vat.businesspress.io/vat-calculator`
+- Rate history: `https://vat.businesspress.io/vat-rates/{slug}/history`
+- Guide for AI agents: `https://vat.businesspress.io/llms.txt`
 - Full rates table: `https://vat.businesspress.io/llms-full.txt`
 - MCP server guide: `https://vat.businesspress.io/mcp-server`

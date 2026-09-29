@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\User;
+use App\Support\Mcp\VatMcpServer;
 use Filament\Facades\Filament;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
@@ -28,5 +29,6 @@ class AppServiceProvider extends ServiceProvider
 
         RateLimiter::for('api', fn (Request $request) => Limit::perMinute(120)->by($request->ip()));
         RateLimiter::for('vies', fn (Request $request) => Limit::perMinute(20)->by($request->ip()));
+        RateLimiter::for('mcp', fn (Request $request) => Limit::perMinute(VatMcpServer::REQUESTS_PER_MINUTE)->by($request->ip()));
     }
 }

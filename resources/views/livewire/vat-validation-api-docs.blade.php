@@ -3,7 +3,25 @@
         title="EU VAT Number Validation API — Free REST API Documentation"
         description="Free REST API to validate EU VAT numbers in real-time via the official VIES database. Single and batch validation, CORS headers, no API key required."
         type="website"
-        :url="url()->current()" />
+        :url="url()->current()">
+        <x-json-ld :data="[
+            '@type' => 'WebAPI',
+            'name' => 'EU VAT Info API',
+            'description' => 'Free REST API for EU VAT rates, VAT calculations and VIES VAT number validation. No API key required.',
+            'url' => url()->current(),
+            'documentation' => url()->current(),
+            'isAccessibleForFree' => true,
+            'provider' => ['@type' => 'Organization', 'name' => 'EU VAT Info', 'url' => url('/')],
+            'subjectOf' => ['@type' => 'CreativeWork', 'name' => 'OpenAPI description', 'url' => url('/api/v1/openapi.json'), 'encodingFormat' => 'application/vnd.oai.openapi+json'],
+        ]" />
+        <x-json-ld :data="[
+            '@type' => 'BreadcrumbList',
+            'itemListElement' => [
+                ['@type' => 'ListItem', 'position' => 1, 'name' => __('ui.site_name'), 'item' => url(locale_path('/'))],
+                ['@type' => 'ListItem', 'position' => 2, 'name' => __('ui.nav.api'), 'item' => url()->current()],
+            ],
+        ]" />
+    </x-seo-meta>
 @endsection
 
 <div x-data="{
