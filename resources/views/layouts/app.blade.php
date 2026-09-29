@@ -54,7 +54,7 @@
 
     <x-global-header />
 
-    <main id="main-content" tabindex="-1" class="mobile-nav-safe outline-none">
+    <main id="main-content" tabindex="-1" class="outline-none">
         @isset($slot)
             {{ $slot }}
         @else

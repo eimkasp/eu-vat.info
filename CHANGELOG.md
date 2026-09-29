@@ -4,6 +4,30 @@ All notable changes to EU VAT Info are documented here.
 
 ---
 
+## [5.0.1] — 2026-09-29 — A more polished site and better AI connections
+
+### Added
+- **A public design system** — the [design system reference](/styleguide) shows every colour, type style, component and page pattern the site is built from, with code you can copy. The same tokens download as a Design Tokens file and the full guide reads as Markdown, so AI coding agents can build with it too.
+
+### Improved
+- **A clearer MCP server page** — step-by-step setup for Claude, Claude Code, VS Code and Cursor, a live request tester and a plain description of every tool, in all 24 languages.
+- **A sixth MCP tool** — AI assistants can now list recorded and upcoming VAT rate changes, and every tool returns structured results that newer clients read directly.
+- **Easier for AI assistants to find and use** — llms.txt, the API catalog, the MCP server card and the agent skill guides now point to the current API, its OpenAPI description and every tool.
+- **Richer search results** — the VAT calculator, the API documentation and the MCP server page now describe themselves to search engines.
+- **One consistent look on every page** — rate histories, yearly and upcoming VAT changes, category comparisons, scenario guides, the dataset, the API documentation, the donate page, the Chrome extension page and the privacy policy now share the same layout, icons and number formats as the rest of the site.
+- **Calmer, more consistent wording** — menus, headings and buttons use sentence case throughout, and rates read 19% instead of 19.00%.
+- **Better on phones** — the rates table on the home page fits the screen with each country's reduced rates underneath, and the end of every page scrolls clear of the tab bar.
+- **A more useful site map** — pages and developer resources sit in two balanced columns, and link arrows no longer wrap onto a line of their own.
+
+### Fixed
+- The site map showed stray code next to each country flag.
+- Links to the privacy policy in the site's machine-readable settings pointed to a page that does not exist.
+- The "On this page" links in the API documentation went nowhere, and the example request was cut off.
+- The VAT map table and the site map were labelled "EU" while also listing other European countries.
+- The header search box cut off its own label.
+
+---
+
 ## [5.0.0] — 2026-09-29 — A faster, clearer EU VAT Info
 
 ### Added

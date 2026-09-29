@@ -21,6 +21,7 @@
             [__('ui.footer.vat_rates_api'), '/api/v1/countries'],
             [__('ui.nav.dataset'), locale_path('/datasets/eu-vat-rates')],
             [__('ui.footer.mcp_server'), locale_path('/mcp-server')],
+            [__('ui.styleguide.nav_label'), locale_path('/styleguide')],
             [__('ui.footer.llms_data'), '/llms.txt'],
             [__('ui.footer.xml_sitemap'), '/sitemap.xml'],
         ],
@@ -32,7 +33,7 @@
     ];
 @endphp
 
-<footer class="on-brand bg-brand-deep text-white">
+<footer class="on-brand mobile-nav-safe bg-brand-deep text-white">
     <div class="app-container py-12 lg:py-16">
         <div class="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,3fr)]">
             <div class="max-w-sm">
@@ -71,13 +72,13 @@
         </div>
 
         <div class="mt-12 flex flex-col gap-4 border-t border-white/10 pt-6 text-sm text-white/60 md:flex-row md:items-center md:justify-between">
-            <p>
-                &copy; {{ date('Y') }} {{ __('ui.site_name') }}. {{ __('ui.all_rights_reserved') }}
-                <span class="mx-1.5 text-white/40" aria-hidden="true">·</span>
+            <p class="flex flex-wrap items-center gap-x-3 gap-y-1">
+                <span>&copy; {{ date('Y') }} {{ __('ui.site_name') }}. {{ __('ui.all_rights_reserved') }}</span>
+                <span class="hidden text-white/40 sm:inline" aria-hidden="true">·</span>
                 <a href="https://pdfcheck.online/" target="_blank" rel="noopener noreferrer" class="transition-colors hover:text-white">{{ __('ui.footer.pdf_tools') }}</a>
             </p>
-            <p class="inline-flex items-center gap-2">
-                <x-ui.icon name="shield-check" class="size-4 text-gold" />
+            <p class="flex items-start gap-2">
+                <x-ui.icon name="shield-check" class="mt-0.5 size-4 shrink-0 text-gold" />
                 {{ __('ui.footer.data_source_note') }}
             </p>
         </div>

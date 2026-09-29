@@ -57,7 +57,7 @@ it('displays link to country guide', function () {
 
     $this->get("/vat-calculator/{$country->slug}")
         ->assertStatus(200)
-        ->assertSee($country->name.' VAT Guide');
+        ->assertSee($country->name.' VAT guide');
 });
 
 it('returns 404 for invalid country slug', function () {
@@ -185,7 +185,7 @@ it('renders country calculators as a compact reference workspace', function () {
         ->assertSee('data-atmosphere-media', false)
         ->assertSee('data-calculator-surface="country-image"', false)
         ->assertSee('data-country-reference', false)
-        ->assertSee('Germany VAT Guide')
+        ->assertSee('Germany VAT guide')
         ->assertDontSee('Full Calculator');
 
     $html = $response->getContent();

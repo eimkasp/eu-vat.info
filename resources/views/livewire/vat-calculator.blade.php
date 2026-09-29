@@ -42,7 +42,27 @@
     @endsection
 @else
     @section('seo')
-        <x-seo-meta :title="__('ui.calculator.meta_title_generic')" :description="__('ui.calculator.meta_desc_generic')" />
+        <x-seo-meta :title="__('ui.calculator.meta_title_generic')" :description="__('ui.calculator.meta_desc_generic')">
+            <x-json-ld :data="[
+                '@type' => 'WebApplication',
+                'name' => __('ui.sitemap.calculator'),
+                'description' => __('ui.calculator.meta_desc_generic'),
+                'url' => url(locale_path('/vat-calculator')),
+                'applicationCategory' => 'FinanceApplication',
+                'operatingSystem' => 'All',
+                'inLanguage' => app()->getLocale(),
+                'isAccessibleForFree' => true,
+                'offers' => ['@type' => 'Offer', 'price' => '0', 'priceCurrency' => 'EUR'],
+                'publisher' => ['@type' => 'Organization', 'name' => 'EU VAT Info', 'url' => url('/')],
+            ]" />
+            <x-json-ld :data="[
+                '@type' => 'BreadcrumbList',
+                'itemListElement' => [
+                    ['@type' => 'ListItem', 'position' => 1, 'name' => __('ui.calculator.schema_breadcrumb_home'), 'item' => url(locale_path('/'))],
+                    ['@type' => 'ListItem', 'position' => 2, 'name' => __('ui.calculator.schema_breadcrumb_calculator'), 'item' => url(locale_path('/vat-calculator'))],
+                ],
+            ]" />
+        </x-seo-meta>
     @endsection
 @endif
 

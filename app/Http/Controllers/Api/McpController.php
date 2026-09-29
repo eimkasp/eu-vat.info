@@ -4,356 +4,331 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Country;
+use App\Models\VatRateChange;
 use App\Services\ViesValidationService;
+use App\Support\Mcp\VatMcpServer;
 use App\Support\Vat\VatCalculation;
 use App\Support\Vat\VatMode;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\RateLimiter;
+use stdClass;
+use Throwable;
 
+/**
+ * Stateless MCP server over Streamable HTTP: every POST carries one JSON-RPC message
+ * (or a batch for 2025-03-26 clients) and is answered with application/json.
+ */
 class McpController extends Controller
 {
-    private const PROTOCOL_VERSION = '2024-11-05';
-
-    private const SERVER_NAME = 'eu-vat-info';
-
-    private const SERVER_VERSION = '1.0.0';
+    private const COUNTRY_ALIASES = ['EL' => 'GR', 'UK' => 'GB'];
 
     public function __construct(
         private ViesValidationService $viesService
     ) {}
 
-    public function handle(Request $request): JsonResponse
+    public function handle(Request $request): JsonResponse|Response
     {
-        $body = $request->json()->all();
+        $payload = json_decode($request->getContent(), true);
 
-        // Validate JSON-RPC structure
-        if (! isset($body['jsonrpc']) || $body['jsonrpc'] !== '2.0' || ! isset($body['method'])) {
-            return $this->errorResponse(null, -32600, 'Invalid JSON-RPC request');
+        if (! is_array($payload)) {
+            return response()->json($this->error(null, -32700, 'Parse error'));
         }
 
-        $id = $body['id'] ?? null;
-        $method = $body['method'];
-        $params = $body['params'] ?? [];
+        if ($payload === [] || ! array_is_list($payload)) {
+            $reply = $this->dispatch($payload, $request);
 
-        return match ($method) {
-            'initialize' => $this->initialize($id),
-            'notifications/initialized' => response()->json(null, 204),
-            'tools/list' => $this->toolsList($id),
-            'tools/call' => $this->toolsCall($id, $params),
-            'ping' => $this->successResponse($id, []),
-            default => $this->errorResponse($id, -32601, "Method not found: {$method}"),
+            return $reply === null ? response()->noContent(202) : response()->json($reply);
+        }
+
+        $replies = array_values(array_filter(array_map(fn (mixed $message) => $this->dispatch($message, $request), $payload)));
+
+        return $replies === [] ? response()->noContent(202) : response()->json($replies);
+    }
+
+    /**
+     * @return array<string, mixed>|null null for notifications and client responses, which get no reply
+     */
+    private function dispatch(mixed $message, Request $request): ?array
+    {
+        if (! is_array($message) || ($message['jsonrpc'] ?? null) !== '2.0') {
+            return $this->error(is_array($message) ? ($message['id'] ?? null) : null, -32600, 'Invalid Request');
+        }
+
+        if (! isset($message['method'])) {
+            return array_key_exists('result', $message) || array_key_exists('error', $message)
+                ? null
+                : $this->error($message['id'] ?? null, -32600, 'Invalid Request');
+        }
+
+        if (! array_key_exists('id', $message)) {
+            return null;
+        }
+
+        $id = $message['id'];
+        $params = is_array($message['params'] ?? null) ? $message['params'] : [];
+
+        return match ($message['method']) {
+            'initialize' => $this->result($id, [
+                'protocolVersion' => VatMcpServer::negotiate($params['protocolVersion'] ?? null),
+                'capabilities' => ['tools' => ['listChanged' => false]],
+                'serverInfo' => ['name' => VatMcpServer::NAME, 'title' => VatMcpServer::TITLE, 'version' => VatMcpServer::VERSION],
+                'instructions' => VatMcpServer::instructions(),
+            ]),
+            'ping' => $this->result($id, new stdClass),
+            'tools/list' => $this->result($id, ['tools' => VatMcpServer::tools()]),
+            'tools/call' => $this->callTool($id, $params, $request),
+            default => $this->error($id, -32601, 'Method not found: '.(is_string($message['method']) ? $message['method'] : '')),
         };
     }
 
-    private function initialize(mixed $id): JsonResponse
+    private function callTool(mixed $id, array $params, Request $request): array
     {
-        return $this->successResponse($id, [
-            'protocolVersion' => self::PROTOCOL_VERSION,
-            'capabilities' => [
-                'tools' => [
-                    'listChanged' => false,
-                ],
-            ],
-            'serverInfo' => [
-                'name' => self::SERVER_NAME,
-                'version' => self::SERVER_VERSION,
-            ],
-        ]);
-    }
+        $name = $params['name'] ?? null;
+        $arguments = is_array($params['arguments'] ?? null) ? $params['arguments'] : [];
 
-    private function toolsList(mixed $id): JsonResponse
-    {
-        return $this->successResponse($id, [
-            'tools' => [
-                [
-                    'name' => 'get_all_vat_rates',
-                    'description' => 'Get current VAT rates for all EU member states. Returns standard, reduced, super-reduced, and parking rates for each country.',
-                    'inputSchema' => [
-                        'type' => 'object',
-                        'properties' => new \stdClass,
-                    ],
-                ],
-                [
-                    'name' => 'get_country_vat_rate',
-                    'description' => 'Get VAT rate details for a specific EU country by name, ISO code, or slug.',
-                    'inputSchema' => [
-                        'type' => 'object',
-                        'properties' => [
-                            'country' => [
-                                'type' => 'string',
-                                'description' => 'Country name (e.g. "Germany"), ISO code (e.g. "DE"), or slug (e.g. "germany")',
-                            ],
-                        ],
-                        'required' => ['country'],
-                    ],
-                ],
-                [
-                    'name' => 'calculate_vat',
-                    'description' => 'Calculate VAT for a given amount and country. Can add VAT to a net amount or extract VAT from a gross amount.',
-                    'inputSchema' => [
-                        'type' => 'object',
-                        'properties' => [
-                            'amount' => [
-                                'type' => 'number',
-                                'description' => 'The monetary amount to calculate VAT for',
-                            ],
-                            'country' => [
-                                'type' => 'string',
-                                'description' => 'Country name, ISO code, or slug',
-                            ],
-                            'mode' => [
-                                'type' => 'string',
-                                'enum' => ['add', 'remove'],
-                                'description' => '"add" to add VAT to a net amount, "remove" to extract VAT from a gross amount. Default: "add"',
-                            ],
-                            'rate_type' => [
-                                'type' => 'string',
-                                'enum' => ['standard', 'reduced', 'super_reduced', 'parking'],
-                                'description' => 'Which VAT rate to use. Default: "standard"',
-                            ],
-                        ],
-                        'required' => ['amount', 'country'],
-                    ],
-                ],
-                [
-                    'name' => 'compare_vat_rates',
-                    'description' => 'Compare VAT rates between two or more EU countries.',
-                    'inputSchema' => [
-                        'type' => 'object',
-                        'properties' => [
-                            'countries' => [
-                                'type' => 'array',
-                                'items' => ['type' => 'string'],
-                                'description' => 'Array of country names, ISO codes, or slugs to compare',
-                            ],
-                        ],
-                        'required' => ['countries'],
-                    ],
-                ],
-                [
-                    'name' => 'validate_vat_number',
-                    'description' => 'Validate an EU VAT number against the official VIES (VAT Information Exchange System) database. Returns the registration status and, for valid numbers, the company name and address.',
-                    'inputSchema' => [
-                        'type' => 'object',
-                        'properties' => [
-                            'country_code' => [
-                                'type' => 'string',
-                                'description' => 'Two-letter ISO country code (e.g. "DE", "LT", "FR"). Greece uses "EL".',
-                            ],
-                            'vat_number' => [
-                                'type' => 'string',
-                                'description' => 'VAT number without the country code prefix (e.g. "123456789" for DE123456789)',
-                            ],
-                        ],
-                        'required' => ['country_code', 'vat_number'],
-                    ],
-                ],
-            ],
-        ]);
-    }
+        if (! is_string($name) || ! in_array($name, VatMcpServer::toolNames(), true)) {
+            return $this->error($id, -32602, 'Unknown tool: '.(is_string($name) ? $name : ''));
+        }
 
-    private function toolsCall(mixed $id, array $params): JsonResponse
-    {
-        $toolName = $params['name'] ?? '';
-        $arguments = $params['arguments'] ?? [];
-
-        return match ($toolName) {
-            'get_all_vat_rates' => $this->getAllVatRates($id),
-            'get_country_vat_rate' => $this->getCountryVatRate($id, $arguments),
-            'calculate_vat' => $this->calculateVat($id, $arguments),
-            'compare_vat_rates' => $this->compareVatRates($id, $arguments),
-            'validate_vat_number' => $this->validateVatNumber($id, $arguments),
-            default => $this->errorResponse($id, -32602, "Unknown tool: {$toolName}"),
-        };
-    }
-
-    private function getAllVatRates(mixed $id): JsonResponse
-    {
-        $countries = Cache::remember('mcp_all_vat_rates', 600, function () {
-            return Country::orderBy('name')->get()->map(fn ($c) => [
-                'country' => $c->name,
-                'iso_code' => $c->iso_code,
-                'slug' => $c->slug,
-                'currency' => $c->currency_display,
-                'rates' => $c->apiRates(),
-                'last_updated' => $c->updated_at?->toIso8601String(),
-            ])->toArray();
+        return $this->result($id, match ($name) {
+            'get_all_vat_rates' => $this->allRates(),
+            'get_country_vat_rate' => $this->countryRates($arguments),
+            'calculate_vat' => $this->calculate($arguments),
+            'compare_vat_rates' => $this->compare($arguments),
+            'get_vat_rate_changes' => $this->rateChanges($arguments),
+            'validate_vat_number' => $this->validateNumber($arguments, $request),
         });
-
-        return $this->toolResult($id, json_encode($countries, JSON_PRETTY_PRINT));
     }
 
-    private function getCountryVatRate(mixed $id, array $args): JsonResponse
+    private function allRates(): array
     {
-        $query = $args['country'] ?? '';
-        if (empty($query)) {
-            return $this->toolResult($id, 'Error: "country" parameter is required.', true);
-        }
+        $countries = Cache::remember('mcp_all_vat_rates_v2', 600, fn () => Country::query()
+            ->orderBy('name')
+            ->get()
+            ->map(fn (Country $country) => $this->describeCountry($country))
+            ->all());
 
-        $country = $this->findCountry($query);
-        if (! $country) {
-            return $this->toolResult($id, "Error: Country not found for \"{$query}\". Try using the full country name, ISO code (e.g. DE), or slug (e.g. germany).", true);
-        }
-
-        $data = [
-            'country' => $country->name,
-            'iso_code' => $country->iso_code,
-            'slug' => $country->slug,
-            'currency' => $country->currency_display,
-            'rates' => $country->apiRates(),
-            'last_updated' => $country->updated_at?->toIso8601String(),
-        ];
-
-        return $this->toolResult($id, json_encode($data, JSON_PRETTY_PRINT));
+        return $this->toolResult(['count' => count($countries), 'countries' => $countries]);
     }
 
-    private function calculateVat(mixed $id, array $args): JsonResponse
+    private function countryRates(array $arguments): array
     {
-        $amount = $args['amount'] ?? null;
-        $countryQuery = $args['country'] ?? '';
-        $mode = $args['mode'] ?? 'add';
-        $rateType = $args['rate_type'] ?? 'standard';
+        $country = $this->findCountry($arguments['country'] ?? null);
 
-        if ($amount === null || ! is_numeric($amount)) {
-            return $this->toolResult($id, 'Error: "amount" must be a valid number.', true);
-        }
-        if (empty($countryQuery)) {
-            return $this->toolResult($id, 'Error: "country" parameter is required.', true);
-        }
-
-        $country = $this->findCountry($countryQuery);
         if (! $country) {
-            return $this->toolResult($id, "Error: Country not found for \"{$countryQuery}\".", true);
+            return $this->countryNotFound($arguments['country'] ?? null);
+        }
+
+        return $this->toolResult($this->describeCountry($country));
+    }
+
+    private function calculate(array $arguments): array
+    {
+        $amount = $arguments['amount'] ?? null;
+        $mode = $arguments['mode'] ?? 'add';
+        $rateType = $arguments['rate_type'] ?? 'standard';
+
+        if (! is_numeric($amount) || (float) $amount < 0) {
+            return $this->toolError('"amount" must be a number of zero or more.');
+        }
+
+        if (! in_array($mode, ['add', 'remove'], true) || ! in_array($rateType, ['standard', 'reduced', 'super_reduced', 'parking'], true)) {
+            return $this->toolError('"mode" must be add or remove, and "rate_type" standard, reduced, super_reduced or parking.');
+        }
+
+        $country = $this->findCountry($arguments['country'] ?? null);
+
+        if (! $country) {
+            return $this->countryNotFound($arguments['country'] ?? null);
         }
 
         $rate = $country->rateForType($rateType);
 
         if ($rate === null) {
-            return $this->toolResult($id, "Error: {$country->name} does not have a {$rateType} rate.", true);
+            return $this->toolError("{$country->name} has no {$rateType} VAT rate.");
         }
 
         $calculation = VatCalculation::make((float) $amount, $rate, $mode === 'remove' ? VatMode::Include : VatMode::Exclude);
-        $net = $calculation->net;
-        $vat = $calculation->vat;
-        $gross = $calculation->gross;
 
-        $data = [
+        return $this->toolResult([
             'country' => $country->name,
+            'iso_code' => $country->iso_code,
+            'mode' => $mode,
             'rate_type' => $rateType,
             'rate_percent' => $rate,
-            'mode' => $mode,
-            'currency' => $country->currency_display,
-            'net_amount' => $net,
-            'vat_amount' => $vat,
-            'gross_amount' => $gross,
-        ];
-
-        return $this->toolResult($id, json_encode($data, JSON_PRETTY_PRINT));
+            'currency' => $country->currencyCode(),
+            'net_amount' => $calculation->net,
+            'vat_amount' => $calculation->vat,
+            'gross_amount' => $calculation->gross,
+        ]);
     }
 
-    private function validateVatNumber(mixed $id, array $args): JsonResponse
+    private function compare(array $arguments): array
     {
-        $countryCode = strtoupper(trim($args['country_code'] ?? ''));
-        $vatNumber = trim($args['vat_number'] ?? '');
+        $queries = array_values(array_filter((array) ($arguments['countries'] ?? []), fn (mixed $query) => is_string($query) && trim($query) !== ''));
 
-        if (! $countryCode || strlen($countryCode) !== 2) {
-            return $this->toolResult($id, 'Error: "country_code" must be a 2-letter ISO country code (e.g. "DE", "LT").', true);
+        if (count($queries) < 2) {
+            return $this->toolError('Give at least two countries to compare.');
         }
-        if (! $vatNumber || strlen($vatNumber) < 3) {
-            return $this->toolResult($id, 'Error: "vat_number" is required (without the country prefix).', true);
+
+        $countries = array_map(function (string $query) {
+            $country = $this->findCountry($query);
+
+            return $country ? $this->describeCountry($country) : ['query' => $query, 'error' => 'Country not found'];
+        }, array_slice($queries, 0, 10));
+
+        return $this->toolResult(['countries' => $countries]);
+    }
+
+    private function rateChanges(array $arguments): array
+    {
+        $country = null;
+
+        if (filled($arguments['country'] ?? null)) {
+            $country = $this->findCountry($arguments['country']);
+
+            if (! $country) {
+                return $this->countryNotFound($arguments['country']);
+            }
         }
+
+        $upcoming = filter_var($arguments['upcoming_only'] ?? false, FILTER_VALIDATE_BOOLEAN);
+        $limit = max(1, min(50, (int) ($arguments['limit'] ?? 20)));
+
+        $changes = VatRateChange::query()
+            ->with('country:id,name,iso_code,slug')
+            ->whereHas('country')
+            ->when($country, fn ($query) => $query->where('country_id', $country->id))
+            ->when($upcoming, fn ($query) => $query->whereDate('change_date', '>=', today())->orderBy('change_date'))
+            ->unless($upcoming, fn ($query) => $query->orderByDesc('change_date'))
+            ->limit($limit)
+            ->get()
+            ->map(fn (VatRateChange $change) => [
+                'country' => $change->country->name,
+                'iso_code' => $change->country->iso_code,
+                'rate_type' => $change->rate_type,
+                'old_rate' => $change->old_rate === null ? null : (float) $change->old_rate,
+                'new_rate' => $change->new_rate === null ? null : (float) $change->new_rate,
+                'effective_date' => $change->change_date?->toDateString(),
+                'direction' => $change->change_direction,
+                'description' => $change->description,
+                'source_url' => $change->source_url,
+            ])
+            ->all();
+
+        return $this->toolResult(['count' => count($changes), 'changes' => $changes]);
+    }
+
+    private function validateNumber(array $arguments, Request $request): array
+    {
+        $countryCode = strtoupper(trim((string) ($arguments['country_code'] ?? '')));
+        $vatNumber = preg_replace('/[\s.\-]/', '', (string) ($arguments['vat_number'] ?? ''));
+
+        if (! preg_match('/^[A-Z]{2}$/', $countryCode)) {
+            return $this->toolError('"country_code" must be the two-letter prefix of the VAT number, such as DE or FR. Greece uses EL.');
+        }
+
+        if (str_starts_with(strtoupper($vatNumber), $countryCode)) {
+            $vatNumber = substr($vatNumber, 2);
+        }
+
+        if (! preg_match('/^[A-Za-z0-9+*]{2,14}$/', $vatNumber)) {
+            return $this->toolError('"vat_number" must contain 2 to 14 letters or digits.');
+        }
+
+        $key = 'mcp-vies:'.$request->ip();
+
+        if (RateLimiter::tooManyAttempts($key, VatMcpServer::VIES_CHECKS_PER_MINUTE)) {
+            return $this->toolError('Too many VAT number checks. Try again in '.RateLimiter::availableIn($key).' seconds.');
+        }
+
+        RateLimiter::hit($key, 60);
 
         try {
             $result = $this->viesService->validate($countryCode, $vatNumber);
+        } catch (Throwable $exception) {
+            report($exception);
 
-            if (isset($result['error'])) {
-                return $this->toolResult($id, 'Error: '.$result['error'], true);
-            }
-
-            $data = [
-                'valid' => $result['valid'] ?? false,
-                'country_code' => $result['country_code'] ?? $countryCode,
-                'vat_number' => $result['vat_number'] ?? $vatNumber,
-                'name' => $result['name'] ?? null,
-                'address' => $result['address'] ?? null,
-                'source' => $result['source'] ?? 'vies',
-                'checked_at' => now()->toIso8601String(),
-            ];
-
-            return $this->toolResult($id, json_encode($data, JSON_PRETTY_PRINT));
-        } catch (\Exception $e) {
-            return $this->toolResult($id, 'Error: VIES validation service unavailable. Please try again later.', true);
+            return $this->toolError('The VIES service is temporarily unavailable. Please try again shortly.');
         }
+
+        if (isset($result['error'])) {
+            return $this->toolError($result['error']);
+        }
+
+        return $this->toolResult(array_filter([
+            'valid' => (bool) ($result['valid'] ?? false),
+            'country_code' => $result['country_code'] ?? $countryCode,
+            'vat_number' => $result['vat_number'] ?? $vatNumber,
+            'name' => $result['name'] ?? null,
+            'address' => $result['address'] ?? null,
+            'request_date' => $result['request_date'] ?? null,
+            'source' => $result['source'] ?? 'vies',
+            'warning' => $result['warning'] ?? null,
+        ], fn (mixed $value) => $value !== null));
     }
 
-    private function compareVatRates(mixed $id, array $args): JsonResponse
+    private function describeCountry(Country $country): array
     {
-        $queries = $args['countries'] ?? [];
-
-        if (count($queries) < 2) {
-            return $this->toolResult($id, 'Error: Please provide at least 2 countries to compare.', true);
-        }
-
-        $results = [];
-        foreach (array_slice($queries, 0, 10) as $query) {
-            $country = $this->findCountry($query);
-            if ($country) {
-                $results[] = [
-                    'country' => $country->name,
-                    'iso_code' => $country->iso_code,
-                    'standard_rate' => $country->standard_rate,
-                    'reduced_rate' => $country->primaryReducedRate(),
-                    'reduced_rates' => $country->reducedRates(),
-                    'super_reduced_rate' => $country->super_reduced_rate,
-                    'parking_rate' => $country->parking_rate,
-                ];
-            } else {
-                $results[] = ['query' => $query, 'error' => 'Country not found'];
-            }
-        }
-
-        return $this->toolResult($id, json_encode($results, JSON_PRETTY_PRINT));
+        return [
+            'country' => $country->name,
+            'iso_code' => $country->iso_code,
+            'slug' => $country->slug,
+            'eu_member' => (bool) $country->is_eu_member,
+            'currency' => $country->currencyCode(),
+            'rates' => $country->apiRates(),
+            'last_updated' => $country->updated_at?->toIso8601String(),
+        ];
     }
 
-    private function findCountry(string $query): ?Country
+    private function findCountry(mixed $query): ?Country
     {
-        $q = trim($query);
+        if (! is_string($query) || trim($query) === '') {
+            return null;
+        }
 
-        return Country::where('iso_code', strtoupper($q))
-            ->orWhere('slug', strtolower($q))
-            ->orWhereRaw('LOWER(name) = ?', [strtolower($q)])
+        $query = trim($query);
+        $code = self::COUNTRY_ALIASES[strtoupper($query)] ?? strtoupper($query);
+
+        return Country::query()
+            ->where('iso_code', $code)
+            ->orWhere('slug', strtolower($query))
+            ->orWhereRaw('LOWER(name) = ?', [mb_strtolower($query)])
             ->first();
     }
 
-    private function toolResult(mixed $id, string $text, bool $isError = false): JsonResponse
+    private function countryNotFound(mixed $query): array
     {
-        return $this->successResponse($id, [
-            'content' => [
-                ['type' => 'text', 'text' => $text],
-            ],
-            'isError' => $isError,
-        ]);
+        return $this->toolError('No country matches "'.(is_string($query) ? $query : '').'". Use an English name, an ISO code such as DE, or a slug such as czech-republic.');
     }
 
-    private function successResponse(mixed $id, array $result): JsonResponse
+    private function toolResult(array $data): array
     {
-        return response()->json([
-            'jsonrpc' => '2.0',
-            'id' => $id,
-            'result' => $result,
-        ]);
+        return [
+            'content' => [['type' => 'text', 'text' => json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)]],
+            'structuredContent' => $data,
+            'isError' => false,
+        ];
     }
 
-    private function errorResponse(mixed $id, int $code, string $message): JsonResponse
+    private function toolError(string $message): array
     {
-        return response()->json([
-            'jsonrpc' => '2.0',
-            'id' => $id,
-            'error' => [
-                'code' => $code,
-                'message' => $message,
-            ],
-        ]);
+        return [
+            'content' => [['type' => 'text', 'text' => $message]],
+            'isError' => true,
+        ];
+    }
+
+    private function result(mixed $id, array|stdClass $result): array
+    {
+        return ['jsonrpc' => '2.0', 'id' => $id, 'result' => $result];
+    }
+
+    private function error(mixed $id, int $code, string $message): array
+    {
+        return ['jsonrpc' => '2.0', 'id' => $id, 'error' => ['code' => $code, 'message' => $message]];
     }
 }

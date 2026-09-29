@@ -49,8 +49,8 @@ it('publishes a source-backed country VAT history', function () {
         ->assertOk()
         ->assertSee('<link rel="canonical" href="https://vat.businesspress.io/vat-rates/germany/history">', false)
         ->assertSee('Germany VAT rate history')
-        ->assertSee('18.00%')
-        ->assertSee('19.00%')
+        ->assertSee('18%')
+        ->assertSee('19%')
         ->assertSee('https://example.gov/vat-change')
         ->assertSee('/vat-changes/germany/standard/2026-01-01');
 });

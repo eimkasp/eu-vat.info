@@ -1,46 +1,48 @@
 @section('seo')
+    @php($base = rtrim((string) config('seo.canonical_url'), '/'))
     <x-seo-meta :title="__('ui.home_page.title')" :description="__('ui.home_page.meta_desc')" type="website">
-        <script type="application/ld+json">
-        {!! json_encode([
-            '@@context' => 'https://schema.org',
+        <x-json-ld :data="[
             '@type' => 'WebSite',
-            'name' => 'EU VAT Info',
-            'url' => url('/'),
-            'description' => 'VAT rates and calculator for all EU countries',
+            '@id' => $base.'/#website',
+            'name' => __('ui.site_name'),
+            'url' => $base.'/',
+            'description' => __('ui.home_page.meta_desc'),
+            'inLanguage' => app()->getLocale(),
+            'publisher' => ['@id' => $base.'/#organization'],
             'potentialAction' => [
                 '@type' => 'SearchAction',
-                'target' => ['@type' => 'EntryPoint', 'urlTemplate' => url('/').'?search={search_term_string}'],
+                'target' => ['@type' => 'EntryPoint', 'urlTemplate' => url(locale_path('/')).'?search={search_term_string}'],
                 'query-input' => 'required name=search_term_string',
             ],
-        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) !!}
-        </script>
-        <script type="application/ld+json">
-        {!! json_encode([
-            '@@context' => 'https://schema.org',
+        ]" />
+        <x-json-ld :data="[
             '@type' => 'Organization',
+            '@id' => $base.'/#organization',
             'name' => 'EU VAT Info',
-            'url' => url('/'),
-            'description' => 'Comprehensive EU VAT rate information, calculators, and compliance tools for all 27 EU member states.',
-        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) !!}
-        </script>
-        <script type="application/ld+json">
-        {!! json_encode([
-            '@@context' => 'https://schema.org',
+            'url' => $base.'/',
+            'logo' => $base.'/icon-512x512.png',
+            'description' => 'Current EU VAT rates, VAT calculators, VIES VAT number validation and open VAT data for the 27 EU member states.',
+            'sameAs' => [
+                'https://github.com/eimkasp/eu-vat.info',
+                'https://chromewebstore.google.com/detail/eu-vat-calculator/fifmbbpgopnifnoginhmjjedjnabdkka',
+            ],
+        ]" />
+        <x-json-ld :data="[
             '@type' => 'Dataset',
-            'name' => 'EU VAT Rates '.date('Y'),
-            'description' => 'Current Value Added Tax (VAT) rates for all 27 EU member states, including standard, reduced, super-reduced, and parking rates.',
-            'url' => url('/'),
+            '@id' => $base.'/datasets/eu-vat-rates#dataset',
+            'name' => 'EU VAT Rates Dataset',
+            'description' => 'Current standard, reduced, super-reduced and parking VAT rates for the 27 European Union member states, refreshed daily from European Commission data.',
+            'url' => $base.'/datasets/eu-vat-rates',
             'license' => 'https://creativecommons.org/licenses/by/4.0/',
             'isAccessibleForFree' => true,
-            'creator' => ['@type' => 'Organization', 'name' => 'EU VAT Info'],
+            'creator' => ['@type' => 'Organization', '@id' => $base.'/#organization', 'name' => 'EU VAT Info', 'url' => $base.'/'],
             'distribution' => [
-                ['@type' => 'DataDownload', 'encodingFormat' => 'application/json', 'contentUrl' => url('/api/countries')],
-                ['@type' => 'DataDownload', 'encodingFormat' => 'text/plain', 'contentUrl' => url('/llms-full.txt')],
+                ['@type' => 'DataDownload', 'encodingFormat' => 'text/csv', 'contentUrl' => $base.'/datasets/eu-vat-rates.csv'],
+                ['@type' => 'DataDownload', 'encodingFormat' => 'application/json', 'contentUrl' => $base.'/datasets/eu-vat-rates.json'],
             ],
             'temporalCoverage' => '2000/'.date('Y'),
             'spatialCoverage' => ['@type' => 'Place', 'name' => 'European Union'],
-        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) !!}
-        </script>
+        ]" />
     </x-seo-meta>
 @endsection
 

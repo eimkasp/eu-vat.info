@@ -18,6 +18,7 @@ The look is solid and institutional: flat EU navy for the header, heroes and foo
 - White text only on `bg-button`, never on `bg-action`. Gold only on navy, never as body text.
 - New strings go to `lang/en/ui.php` and all 24 locales.
 - A new token or component class must be documented in `DESIGN.md` in the same change.
+- A new component also gets a live example in `resources/views/styleguide/examples` and a specimen on `/styleguide`.
 
 ## Verify before you finish
 

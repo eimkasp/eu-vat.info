@@ -89,6 +89,7 @@ routes/
 | `TopCalculations` | `/top-vat-calculations/{amount?}` | Common amounts for every EU country |
 | `VatComparison` | `/compare/{a}-vs-{b}-vat` | Approved country comparisons |
 | `HtmlSitemap` | `/sitemap` | HTML sitemap for SEO |
+| `Styleguide` | `/styleguide` | Design system reference (English only, rendered from `app.css` and `DESIGN.md`) |
 
 ### Services
 
@@ -122,6 +123,8 @@ POST /api/vat/validation/validate     # Validate VAT number
 POST /api/vat/validation/batch        # Batch validate (max 10)
 GET  /api/vat/validation/health       # VIES service health
 POST /api/mcp                         # MCP server (JSON-RPC)
+GET  /styleguide/design.tokens.json   # Design tokens (DTCG 2025.10, generated from app.css)
+GET  /styleguide.md                   # DESIGN.md as Markdown
 GET  /up                              # Application health check
 ```
 
@@ -143,6 +146,7 @@ GET  /up                              # Application health check
 
 ### Frontend
 - **Read `DESIGN.md` before any UI change.** It is the design system and styleguide (tokens, brand surfaces, component recipes, patterns, accessibility rules). `tests/Feature/DesignSystemTest.php` enforces it, and `.claude/skills/design-system` loads it for Claude Code.
+- `/styleguide` renders the design system with live examples from `resources/views/styleguide/examples`; `/styleguide/design.tokens.json` (Design Tokens Community Group JSON) and `/styleguide.md` are generated from `resources/css/app.css` and `DESIGN.md` by `App\Support\DesignSystem`, so they never need editing by hand. `tests/Feature/StyleguideTest.php` keeps them in step
 - Interactive UI uses **Livewire 4** components with **Alpine.js** (`resources/js/app.js`) for instant client-side feedback — no SPA framework
 - Styling: **Tailwind CSS 4** with semantic OKLCH tokens and `app-*` component classes in `resources/css/app.css`; no component library
 - Look: solid and institutional — flat EU navy (`brand`) for header, heroes and footer, EU gold only as a thin accent on navy, opaque white surfaces with hairline borders; no glass, blur or decorative gradients
@@ -157,6 +161,10 @@ GET  /up                              # Application health check
 - Each page is `noindex, nofollow`, shows the archive bar (`public/v1/archive.css`) and loads `public/v1/archive.js`, which answers the old Livewire 3 runtime in the browser: calculations work, picking a calculator country opens that country's archived page, and server actions (VIES checks, filters, sign-ups) show a read-only notice instead of calling a server.
 - Links to pages that were not archived (other languages, shared calculations, the API) point to the live site. The footer ("Previous version") and the changelog link to `/v1/`.
 - It sits outside the design system: do not edit, restyle or reformat it. `tests/Feature/SiteArchiveTest.php` guards that it stays complete, unindexed, self-contained and free of server calls.
+
+### MCP server
+- `App\Support\Mcp\VatMcpServer` defines the public MCP server once: name, protocol versions, instructions, rate limits and every tool with its schema and annotations. `Api\McpController` serves it at `POST /api/mcp` (Streamable HTTP, stateless JSON, `throttle:mcp`).
+- The MCP server card, the OAuth protected-resource metadata, `llms.txt` and the `/mcp-server` page all read from it, so a new tool needs three changes only: its definition in `VatMcpServer::tools()`, its handler in `McpController`, and its page copy under `ui.mcp_page.tools` in all 24 locales. `tests/Feature/McpServerTest.php` checks that they stay in step.
 
 ### Testing
 - Framework: **Pest 4** (preferred) with PHPUnit 12 underneath

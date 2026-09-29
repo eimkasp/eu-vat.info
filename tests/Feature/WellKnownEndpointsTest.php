@@ -104,7 +104,7 @@ it('includes MCP server info in protected resource metadata', function () {
     $response = $this->getJson('/.well-known/oauth-protected-resource');
 
     expect($response->json('mcp.endpoint'))->toEndWith('/api/mcp');
-    expect($response->json('mcp.transport'))->toBe('http-json-rpc');
+    expect($response->json('mcp.transport'))->toBe('streamable-http');
 });
 
 // ── Key generation command ──────────────────────────────────────────────────
@@ -164,11 +164,10 @@ it('includes x402 entry in api-catalog linkset', function () {
     $response->assertHeader('Content-Type', 'application/linkset+json');
 
     $linkset = $response->json('linkset');
-    expect($linkset)->toHaveCount(4);
+    expect($linkset)->toHaveCount(6);
 
-    // Last entry should be the x402 discovery anchor
-    $x402Entry = $linkset[3];
-    expect($x402Entry['anchor'])->toContain('/api/x402/info');
+    $x402Entry = collect($linkset)->first(fn (array $entry) => str_contains($entry['anchor'], '/api/x402/info'));
+    expect($x402Entry)->not->toBeNull();
     expect($x402Entry['service-desc'][0]['href'])->toBe('https://x402.org');
     expect($x402Entry)->toHaveKey('describes');
 });

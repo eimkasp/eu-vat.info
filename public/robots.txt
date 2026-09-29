@@ -1,26 +1,30 @@
-# EU VAT Info
+# EU VAT Info: current EU VAT rates, calculators and VIES validation.
+# AI and LLM guide: https://vat.businesspress.io/llms.txt
+# MCP server: https://vat.businesspress.io/mcp-server
 
 User-agent: *
 Allow: /
 Disallow: /admin/
 Disallow: /filament/
-Disallow: /livewire/
 Disallow: /vat-change-alerts/unsubscribe/
 
+# AI crawlers and assistants are welcome. /v1/ is a frozen archive whose rates are out of date.
 User-agent: GPTBot
-Allow: /
-
+User-agent: OAI-SearchBot
 User-agent: ChatGPT-User
-Allow: /
-
-User-agent: Google-Extended
-Allow: /
-
 User-agent: ClaudeBot
-Allow: /
-
+User-agent: Claude-SearchBot
+User-agent: Claude-User
 User-agent: PerplexityBot
+User-agent: Perplexity-User
+User-agent: Google-Extended
+User-agent: Applebot-Extended
+User-agent: CCBot
 Allow: /
+Disallow: /admin/
+Disallow: /filament/
+Disallow: /vat-change-alerts/unsubscribe/
+Disallow: /v1/
 
 User-agent: MJ12bot
 Disallow: /

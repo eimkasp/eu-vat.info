@@ -10,240 +10,145 @@
     </x-seo-meta>
 @endsection
 
-<div class="app-container py-12 pb-24">
-    <x-site-breadcrumbs :items="[__('ui.breadcrumbs.sitemap') => '']" />
+@php
+    $sections = [
+        'pages' => [
+            'icon' => 'home',
+            'title' => __('ui.sitemap.main_pages'),
+            'links' => [
+                [__('ui.sitemap.home_all'), locale_path('/'), __('ui.sitemap.home_desc')],
+                [__('ui.sitemap.calculator'), locale_path('/vat-calculator'), __('ui.sitemap.calculator_desc')],
+                [__('ui.nav.vat_number_validator'), locale_path('/vat-number-validator'), __('ui.nav.validator_desc')],
+                [__('ui.sitemap.map'), locale_path('/vat-map'), __('ui.sitemap.map_desc')],
+                [__('ui.sitemap.history'), locale_path('/vat-changes'), __('ui.sitemap.history_desc')],
+                [__('ui.sitemap.top_calculations'), locale_path('/top-vat-calculations'), __('ui.sitemap.top_calculations_desc')],
+                [__('ui.sitemap.embed'), route('widget.embed'), __('ui.sitemap.embed_desc')],
+                [__('ui.nav.updates'), locale_path('/blog'), __('ui.blog.description')],
+                ...collect($blogPosts)->map(fn (array $post) => [$post['title'], locale_path('/blog/'.$post['slug']), $post['description']])->all(),
+                [__('ui.changelog.nav_label'), locale_path('/changelog'), __('ui.changelog.subheading')],
+            ],
+        ],
+        'developers' => [
+            'icon' => 'code',
+            'title' => __('ui.sitemap.api_data'),
+            'links' => [
+                [__('ui.nav.api'), locale_path('/vat-validation-api'), __('ui.nav.api_desc')],
+                [__('ui.sitemap.openapi'), '/api/v1/openapi.json', __('ui.sitemap.openapi_desc')],
+                [__('ui.nav.dataset'), locale_path('/datasets/eu-vat-rates'), __('ui.nav.dataset_desc')],
+                [__('ui.sitemap.mcp_server'), locale_path('/mcp-server'), __('ui.sitemap.mcp_server_desc')],
+                [__('ui.styleguide.nav_label'), locale_path('/styleguide'), __('ui.styleguide.nav_desc')],
+                [__('ui.sitemap.llms_txt'), '/llms.txt', __('ui.sitemap.llms_txt_desc')],
+                [__('ui.sitemap.full_vat_rates'), '/llms-full.txt', __('ui.sitemap.full_vat_rates_desc')],
+                [__('ui.sitemap.json_api'), '/api/llm/vat-rates', __('ui.sitemap.json_api_desc')],
+                [__('ui.sitemap.xml_sitemap'), '/sitemap.xml', __('ui.sitemap.xml_sitemap_desc')],
+            ],
+        ],
+        'external' => [
+            'icon' => 'globe',
+            'title' => __('ui.sitemap.external_resources'),
+            'links' => [
+                [__('ui.sitemap.vies_validation'), 'https://ec.europa.eu/taxation_customs/vies/', __('ui.sitemap.vies_desc')],
+                [__('ui.sitemap.europe_guide'), 'https://europa.eu/youreurope/business/taxation/vat/', __('ui.sitemap.europe_guide_desc')],
+                [__('ui.sitemap.github_repo'), 'https://github.com/eimkasp/eu-vat.info', __('ui.sitemap.github_desc')],
+                [__('ui.sitemap.pdf_tools'), 'https://pdfcheck.online/', __('ui.sitemap.pdf_tools_desc')],
+            ],
+        ],
+    ];
+@endphp
 
-    <div class="mb-10 mt-6">
-        <h1 class="mb-4 text-4xl font-bold tracking-[-0.03em] text-ink sm:text-5xl">
-            {{ __('ui.sitemap.heading') }} <span class="text-action">{{ __('ui.sitemap.heading_accent') }}</span>
-        </h1>
-        <p class="text-lg text-ink-muted leading-relaxed max-w-3xl">
-            {{ __('ui.sitemap.subtitle') }}
-        </p>
-    </div>
+<div>
+    <x-page-header :title="__('ui.sitemap.title')" :description="__('ui.sitemap.subtitle')" :breadcrumbs="[__('ui.breadcrumbs.sitemap') => '']" />
 
-    {{-- Main Pages --}}
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-        <div class="app-surface p-6">
-            <h2 class="text-xl font-bold text-ink mb-4 flex items-center gap-2">
-                <svg class="w-6 h-6 text-action" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
-                </svg>
-                {{ __('ui.sitemap.main_pages') }}
-            </h2>
-            <ul class="space-y-3">
-                <li>
-                    <a href="{{ locale_path('/') }}" class="flex items-center gap-2 text-action hover:text-action-deep hover:underline font-medium">
-                        <svg class="w-4 h-4 text-ink-quiet" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                        {{ __('ui.sitemap.home_all') }}
-                    </a>
-                    <p class="text-sm text-ink-muted ml-6">{{ __('ui.sitemap.home_desc') }}</p>
-                </li>
-                <li>
-                    <a href="{{ locale_path('/vat-calculator') }}" class="flex items-center gap-2 text-action hover:text-action-deep hover:underline font-medium">
-                        <svg class="w-4 h-4 text-ink-quiet" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                        {{ __('ui.sitemap.calculator') }}
-                    </a>
-                    <p class="text-sm text-ink-muted ml-6">{{ __('ui.sitemap.calculator_desc') }}</p>
-                </li>
-                <li>
-                    <a href="{{ locale_path('/vat-map') }}" class="flex items-center gap-2 text-action hover:text-action-deep hover:underline font-medium">
-                        <svg class="w-4 h-4 text-ink-quiet" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                        {{ __('ui.sitemap.map') }}
-                    </a>
-                    <p class="text-sm text-ink-muted ml-6">{{ __('ui.sitemap.map_desc') }}</p>
-                </li>
-                <li>
-                    <a href="{{ route('widget.embed') }}" class="flex items-center gap-2 text-action hover:text-action-deep hover:underline font-medium">
-                        <svg class="w-4 h-4 text-ink-quiet" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                        {{ __('ui.sitemap.embed') }}
-                    </a>
-                    <p class="text-sm text-ink-muted ml-6">{{ __('ui.sitemap.embed_desc') }}</p>
-                </li>
-                <li>
-                    <a href="{{ locale_path('/vat-changes') }}" class="flex items-center gap-2 text-action hover:text-action-deep hover:underline font-medium">
-                        <svg class="w-4 h-4 text-ink-quiet" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                        {{ __('ui.sitemap.history') }}
-                    </a>
-                    <p class="text-sm text-ink-muted ml-6">{{ __('ui.sitemap.history_desc') }}</p>
-                </li>
-                <li>
-                    <a href="{{ locale_path('/blog') }}" class="flex items-center gap-2 text-action hover:text-action-deep hover:underline font-medium">
-                        <svg class="w-4 h-4 text-ink-quiet" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                        VAT updates
-                    </a>
-                    <p class="text-sm text-ink-muted ml-6">Confirmed EU VAT changes and practical compliance guides.</p>
-                </li>
-                <li>
-                    <a href="{{ locale_path('/top-vat-calculations') }}" class="flex items-center gap-2 text-action hover:text-action-deep hover:underline font-medium">
-                        <svg class="w-4 h-4 text-ink-quiet" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                        {{ __('ui.sitemap.top_calculations') }}
-                    </a>
-                    <p class="text-sm text-ink-muted ml-6">{{ __('ui.sitemap.top_calculations_desc') }}</p>
-                </li>
-                <li>
-                    <a href="{{ locale_path('/mcp-server') }}" class="flex items-center gap-2 text-action hover:text-action-deep hover:underline font-medium">
-                        <svg class="w-4 h-4 text-ink-quiet" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                        {{ __('ui.sitemap.mcp_server') }}
-                    </a>
-                    <p class="text-sm text-ink-muted ml-6">{{ __('ui.sitemap.mcp_server_desc') }}</p>
-                </li>
-            </ul>
-        </div>
-
-        <div class="app-surface p-6">
-            <h2 class="text-xl font-bold text-ink mb-4 flex items-center gap-2">
-                <svg class="w-6 h-6 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-                {{ __('ui.sitemap.api_data') }}
-            </h2>
-            <ul class="space-y-3">
-                <li>
-                    <a href="/llms.txt" class="flex items-center gap-2 text-action hover:text-action-deep hover:underline font-medium">
-                        <svg class="w-4 h-4 text-ink-quiet" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                        {{ __('ui.sitemap.llms_txt') }}
-                    </a>
-                    <p class="text-sm text-ink-muted ml-6">{{ __('ui.sitemap.llms_txt_desc') }}</p>
-                </li>
-                <li>
-                    <a href="/llms-full.txt" class="flex items-center gap-2 text-action hover:text-action-deep hover:underline font-medium">
-                        <svg class="w-4 h-4 text-ink-quiet" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                        {{ __('ui.sitemap.full_vat_rates') }}
-                    </a>
-                    <p class="text-sm text-ink-muted ml-6">{{ __('ui.sitemap.full_vat_rates_desc') }}</p>
-                </li>
-                <li>
-                    <a href="/api/llm/vat-rates" class="flex items-center gap-2 text-action hover:text-action-deep hover:underline font-medium">
-                        <svg class="w-4 h-4 text-ink-quiet" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                        {{ __('ui.sitemap.json_api') }}
-                    </a>
-                    <p class="text-sm text-ink-muted ml-6">{{ __('ui.sitemap.json_api_desc') }}</p>
-                </li>
-                <li>
-                    <a href="/sitemap.xml" class="flex items-center gap-2 text-action hover:text-action-deep hover:underline font-medium">
-                        <svg class="w-4 h-4 text-ink-quiet" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                        {{ __('ui.sitemap.xml_sitemap') }}
-                    </a>
-                    <p class="text-sm text-ink-muted ml-6">{{ __('ui.sitemap.xml_sitemap_desc') }}</p>
-                </li>
-                @foreach($blogPosts as $post)
-                    <li>
-                        <a href="{{ locale_path('/blog/'.$post['slug']) }}" class="flex items-center gap-2 text-action hover:text-action-deep hover:underline font-medium">
-                            <svg class="w-4 h-4 text-ink-quiet" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                            {{ $post['title'] }}
-                        </a>
-                        <p class="text-sm text-ink-muted ml-6">{{ $post['description'] }}</p>
-                    </li>
-                @endforeach
-            </ul>
-        </div>
-
-        <div class="app-surface p-6">
-            <h2 class="text-xl font-bold text-ink mb-4 flex items-center gap-2">
-                <svg class="w-6 h-6 text-action" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
-                </svg>
-                {{ __('ui.sitemap.external_resources') }}
-            </h2>
-            <ul class="space-y-3">
-                <li>
-                    <a href="https://ec.europa.eu/taxation_customs/vies/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-action hover:text-action-deep hover:underline font-medium">
-                        <svg class="w-4 h-4 text-ink-quiet" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-                        {{ __('ui.sitemap.vies_validation') }}
-                    </a>
-                    <p class="text-sm text-ink-muted ml-6">{{ __('ui.sitemap.vies_desc') }}</p>
-                </li>
-                <li>
-                    <a href="https://europa.eu/youreurope/business/taxation/vat/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-action hover:text-action-deep hover:underline font-medium">
-                        <svg class="w-4 h-4 text-ink-quiet" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-                        {{ __('ui.sitemap.europe_guide') }}
-                    </a>
-                    <p class="text-sm text-ink-muted ml-6">{{ __('ui.sitemap.europe_guide_desc') }}</p>
-                </li>
-                <li>
-                    <a href="https://pdfcheck.online/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-action hover:text-action-deep hover:underline font-medium">
-                        <svg class="w-4 h-4 text-ink-quiet" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-                        {{ __('ui.sitemap.pdf_tools') }}
-                    </a>
-                    <p class="text-sm text-ink-muted ml-6">{{ __('ui.sitemap.pdf_tools_desc') }}</p>
-                </li>
-                <li>
-                    <a href="https://github.com/eimkasp/eu-vat.info" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-action hover:text-action-deep hover:underline font-medium">
-                        <svg class="w-4 h-4 text-ink-quiet" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-                        {{ __('ui.sitemap.github_repo') }}
-                    </a>
-                    <p class="text-sm text-ink-muted ml-6">{{ __('ui.sitemap.github_desc') }}</p>
-                </li>
-            </ul>
-        </div>
-    </div>
-
-    {{-- Country Pages Grid --}}
-    <div class="mb-8">
-        <h2 class="text-2xl font-bold text-ink mb-2">{{ __('ui.sitemap.all_country_pages') }}</h2>
-        <p class="text-ink-muted mb-6">{{ __('ui.sitemap.country_pages_desc') }}</p>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-        @foreach($countries as $country)
-            @php
-                $iso = strtoupper($country->iso_code);
-                $flag = '';
-                if (strlen($iso) === 2) {
-                    $flag = mb_chr(ord($iso[0]) + 127397) . mb_chr(ord($iso[1]) + 127397);
-                }
-            @endphp
-            <div class="app-surface p-5 transition-shadow hover:shadow-workflow">
-                <div class="flex items-center gap-3 mb-4 pb-3 border-b border-line">
-                    <x-ui.flag :iso="$country->iso_code" />name }} flag" 
-                         class="app-flag h-auto w-8"
-                         loading="lazy">
-                    <div>
-                        <h3 class="font-bold text-ink">{{ $country->name }}</h3>
-                        <span class="text-sm text-ink-muted">{{ __('ui.sitemap.standard_rate_label') }} <strong class="text-action">{{ $country->standard_rate }}%</strong></span>
-                    </div>
+    <div class="app-container space-y-12 py-8 sm:py-10">
+        <div class="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:items-start">
+            @foreach([Arr::only($sections, ['pages']), Arr::only($sections, ['developers', 'external'])] as $column)
+                <div class="space-y-6">
+                    @foreach($column as $key => $section)
+                        <section class="app-surface p-5 sm:p-6" aria-labelledby="sitemap-{{ $key }}">
+                            <h2 id="sitemap-{{ $key }}" class="flex items-center gap-2 text-lg font-bold text-ink">
+                                <x-ui.icon :name="$section['icon']" class="size-5 text-action" />
+                                {{ $section['title'] }}
+                            </h2>
+                            <ul class="mt-4 space-y-4">
+                                @foreach($section['links'] as [$label, $url, $description])
+                                    @php($external = str_starts_with($url, 'http') && ! str_starts_with($url, url('/')))
+                                    <li>
+                                        <a href="{{ $url }}" @if($external) target="_blank" rel="noopener noreferrer" @endif class="font-semibold text-action hover:text-action-deep hover:underline">{{ Str::contains($label, ' ') ? Str::beforeLast($label, ' ').' ' : '' }}<span class="whitespace-nowrap">{{ Str::afterLast($label, ' ') }}<x-ui.icon :name="$external ? 'arrow-up-right' : 'chevron-right'" class="ml-1 inline size-3.5 align-[-2px]" /></span></a>
+                                        <p class="mt-0.5 text-sm leading-6 text-ink-muted">{{ $description }}</p>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </section>
+                    @endforeach
                 </div>
-                <ul class="space-y-2 text-sm">
-                    <li>
-                        <a href="{{ locale_path('/vat-calculator/' . $country->slug) }}" class="text-action hover:text-action-deep hover:underline flex items-center gap-1">
-                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                            {{ __('ui.sitemap.overview_guide', ['country' => $country->name]) }}
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ locale_path('/vat-calculator/' . $country->slug) }}?tab=calculator" class="text-action hover:text-action-deep hover:underline flex items-center gap-1">
-                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                            {{ __('ui.sitemap.country_calculator', ['country' => $country->name]) }}
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ locale_path('/vat-number-validator/' . $country->slug) }}" class="text-action hover:text-action-deep hover:underline flex items-center gap-1">
-                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                            {{ $country->name }} VAT Number Validator
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        @endforeach
-    </div>
-
-    {{-- Internal Linking SEO Section --}}
-    <div class="mt-16 bg-action-soft rounded-card p-8 border border-action/25">
-        <h2 class="text-2xl font-bold text-ink mb-4">{{ __('ui.sitemap.about_title') }}</h2>
-        <div class="app-prose max-w-none">
-            <p>
-                {!! __('ui.sitemap.about_p1', [
-                    'calculator_link' => '<a href="' . locale_path('/vat-calculator') . '" class="text-action hover:underline font-medium">' . e(__('ui.sitemap.calculator')) . '</a>',
-                    'map_link' => '<a href="' . locale_path('/vat-map') . '" class="text-action hover:underline font-medium">' . e(__('ui.sitemap.map')) . '</a>',
-                ]) !!}
-            </p>
-            <p>
-                {!! __('ui.sitemap.about_p2', [
-                    'llms_link' => '<a href="/llms.txt" class="text-action hover:underline font-medium">' . e(__('ui.sitemap.about_llms_label')) . '</a>',
-                    'api_link' => '<a href="/api/llm/vat-rates" class="text-action hover:underline font-medium">' . e(__('ui.sitemap.about_api_label')) . '</a>',
-                ]) !!}
-            </p>
+            @endforeach
         </div>
+
+        <section aria-labelledby="sitemap-countries">
+            <div class="max-w-3xl">
+                <h2 id="sitemap-countries" class="text-2xl font-bold tracking-[-0.02em] text-ink">{{ __('ui.sitemap.all_country_pages') }}</h2>
+                <p class="mt-2 text-base leading-7 text-ink-muted">{{ __('ui.sitemap.country_pages_desc') }}</p>
+            </div>
+
+            @foreach($groups as $group => $countries)
+                @continue($countries->isEmpty())
+                <h3 class="app-eyebrow mt-8">{{ __('ui.calculator.groups.'.$group) }}</h3>
+                <ul class="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                    @foreach($countries as $country)
+                        <li class="app-surface p-5">
+                            <div class="flex items-center gap-3 border-b border-line pb-3">
+                                <x-ui.flag :iso="$country->iso_code" size="lg" />
+                                <div class="min-w-0">
+                                    <h4 class="font-bold text-ink">{{ $country->name }}</h4>
+                                    <p class="text-sm text-ink-muted">{{ __('ui.sitemap.standard_rate_label') }} <span class="tabular font-semibold text-ink">{{ \App\Support\Vat\Money::percent($country->standard_rate) }}</span></p>
+                                </div>
+                            </div>
+                            <ul class="mt-3 space-y-1.5 text-sm">
+                                <li>
+                                    <a href="{{ locale_path('/vat-calculator/'.$country->slug) }}" class="inline-flex min-h-6 items-center gap-1.5 text-action hover:text-action-deep hover:underline">
+                                        <x-ui.icon name="calculator" class="size-4 shrink-0 text-ink-quiet" />
+                                        {{ __('ui.sitemap.country_calculator', ['country' => $country->name]) }}
+                                    </a>
+                                </li>
+                                @if($country->is_eu_member && $country->vies_available)
+                                    <li>
+                                        <a href="{{ locale_path('/vat-number-validator/'.$country->slug) }}" class="inline-flex min-h-6 items-center gap-1.5 text-action hover:text-action-deep hover:underline">
+                                            <x-ui.icon name="shield-check" class="size-4 shrink-0 text-ink-quiet" />
+                                            {{ __('ui.sitemap.validate_numbers', ['country' => $country->name]) }}
+                                        </a>
+                                    </li>
+                                @endif
+                                @if($country->is_eu_member && $country->hasVatHistory())
+                                    <li>
+                                        <a href="{{ locale_path('/vat-rates/'.$country->slug.'/history') }}" class="inline-flex min-h-6 items-center gap-1.5 text-action hover:text-action-deep hover:underline">
+                                            <x-ui.icon name="history" class="size-4 shrink-0 text-ink-quiet" />
+                                            {{ __('ui.sitemap.country_history', ['country' => $country->name]) }}
+                                        </a>
+                                    </li>
+                                @endif
+                            </ul>
+                        </li>
+                    @endforeach
+                </ul>
+            @endforeach
+        </section>
+
+        <section class="app-surface p-5 sm:p-8" aria-labelledby="sitemap-about">
+            <h2 id="sitemap-about" class="text-xl font-bold text-ink">{{ __('ui.sitemap.about_title') }}</h2>
+            <div class="app-prose mt-3 max-w-none">
+                <p>
+                    {!! __('ui.sitemap.about_p1', [
+                        'calculator_link' => '<a href="'.e(locale_path('/vat-calculator')).'" class="app-link">'.e(__('ui.sitemap.calculator')).'</a>',
+                        'map_link' => '<a href="'.e(locale_path('/vat-map')).'" class="app-link">'.e(__('ui.sitemap.map')).'</a>',
+                    ]) !!}
+                </p>
+                <p>
+                    {!! __('ui.sitemap.about_p2', [
+                        'llms_link' => '<a href="/llms.txt" class="app-link">'.e(__('ui.sitemap.about_llms_label')).'</a>',
+                        'api_link' => '<a href="/api/llm/vat-rates" class="app-link">'.e(__('ui.sitemap.about_api_label')).'</a>',
+                    ]) !!}
+                </p>
+            </div>
+        </section>
     </div>
 </div>

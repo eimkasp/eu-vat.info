@@ -7,14 +7,6 @@ use Illuminate\Support\Facades\File;
  * so the message alone is enough to correct a template.
  */
 
-const LEGACY_INLINE_SVG_VIEWS = [
-    'livewire/chrome-extension.blade.php',
-    'livewire/donate.blade.php',
-    'livewire/html-sitemap.blade.php',
-    'livewire/mcp-server.blade.php',
-    'livewire/vat-validation-api-docs.blade.php',
-];
-
 function designSystemViews(): array
 {
     return collect(File::allFiles(resource_path('views')))
@@ -165,21 +157,14 @@ it('gives every image alternative text', function () {
     expect($violations)->toBeEmpty(implode("\n", $violations));
 });
 
-it('draws icons through x-ui.icon, with a shrinking list of legacy pages', function () {
-    $allowed = ['components/ui/icon.blade.php', 'components/ui/logo.blade.php', ...LEGACY_INLINE_SVG_VIEWS];
-
+it('draws icons through x-ui.icon', function () {
     $violations = designSystemViolations(
         '/<svg\b/',
         'Use <x-ui.icon name="…"> and add the path to components/ui/icon.blade.php if it is missing.',
-        $allowed,
+        ['components/ui/icon.blade.php', 'components/ui/logo.blade.php'],
     );
 
-    $stale = collect(LEGACY_INLINE_SVG_VIEWS)
-        ->reject(fn (string $view) => str_contains(file_get_contents(resource_path('views/'.$view)), '<svg'))
-        ->map(fn (string $view) => "{$view} no longer has inline SVG: remove it from LEGACY_INLINE_SVG_VIEWS.")
-        ->all();
-
-    expect([...$violations, ...$stale])->toBeEmpty(implode("\n", [...$violations, ...$stale]));
+    expect($violations)->toBeEmpty(implode("\n", $violations));
 });
 
 it('documents every token, utility and component class in DESIGN.md', function () {

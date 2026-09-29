@@ -34,7 +34,7 @@ Connect via the Model Context Protocol for structured tool access:
 | Parameter      | Type   | Required | Description |
 |----------------|--------|----------|-------------|
 | `country_code` | string | yes      | Two-letter ISO country code. Greece uses `"EL"`, not `"GR"`. |
-| `vat_number`   | string | yes      | VAT number **without** the country prefix (e.g. `"123456789"` for `DE123456789`) |
+| `vat_number`   | string | yes      | VAT number, with or without the country prefix (`"123456789"` or `"DE123456789"`) |
 
 ```json
 {
@@ -57,8 +57,10 @@ Connect via the Model Context Protocol for structured tool access:
   "valid": true,
   "country_code": "DE",
   "vat_number": "123456789",
-  "company_name": "Example GmbH",
-  "company_address": "Musterstraße 1, 10115 Berlin"
+  "name": "Example GmbH",
+  "address": "Musterstraße 1, 10115 Berlin",
+  "request_date": "2026-09-29",
+  "source": "vies_api"
 }
 ```
 
@@ -68,10 +70,11 @@ Connect via the Model Context Protocol for structured tool access:
   "valid": false,
   "country_code": "DE",
   "vat_number": "000000000",
-  "company_name": null,
-  "company_address": null
+  "source": "vies_api"
 }
 ```
+
+`name` and `address` are omitted when the member state does not publish them. When VIES is unavailable the tool returns an error result (`isError: true`) with a plain-language message instead of reporting the number as invalid. Each IP address can run 20 checks per minute.
 
 ## REST API
 
@@ -131,9 +134,9 @@ GET https://vat.businesspress.io/api/vat/validation/health
 
 ## Caching Behaviour
 
-Results are cached via a multi-layer strategy (Redis → Database → VIES API) to reduce load on the EU VIES service. Cache TTL is typically 1 hour for valid numbers and shorter for invalid ones.
+Results are cached via a multi-layer strategy (cache → database → VIES API) to reduce load on the EU VIES service. A confirmed answer from VIES is reused for up to 24 hours; failed lookups are never cached.
 
 ## Human-Readable Reference
 
-- Interactive validator: `https://vat.businesspress.io/country/{slug}` (Validator tab)
+- Interactive validator: `https://vat.businesspress.io/vat-number-validator/{slug}`
 - MCP server guide: `https://vat.businesspress.io/mcp-server`

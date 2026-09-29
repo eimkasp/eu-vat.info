@@ -1,8 +1,14 @@
+@use('App\Models\Country')
+
 @php
     $country = $change->country;
     $baseUrl = app(\App\Support\Seo\SeoPolicy::class)->canonicalHost();
     $canonical = $baseUrl.locale_path('/vat-changes/'.$country->slug.'/'.$change->rate_type.'/'.$change->change_date->toDateString());
-    $headline = $country->name.' '.str_replace('_', ' ', $change->rate_type).' VAT rate changed from '.number_format((float) $change->old_rate, 2).'% to '.number_format((float) $change->new_rate, 2).'%';
+    $typeLabel = str_replace('_', '-', $change->rate_type);
+    $headline = $country->name.' '.$typeLabel.' VAT rate changed from '.Country::formatRate($change->old_rate).'% to '.Country::formatRate($change->new_rate).'%';
+    $delta = (float) $change->new_rate - (float) $change->old_rate;
+    $up = $delta > 0;
+    $upcoming = $change->change_date->isFuture();
 @endphp
 
 @section('seo')
@@ -21,34 +27,95 @@
     </x-seo-meta>
 @endsection
 
-<article class="app-container pb-14 pt-8 sm:pt-12">
-    <x-site-breadcrumbs :items="['VAT changes' => locale_path('/vat-changes'), $country->name => locale_path('/vat-rates/'.$country->slug.'/history'), $change->change_date->format('M j, Y') => '']" />
+<article>
+    <x-page-header
+        :title="$headline"
+        :description="$change->editorialDescription()"
+        :eyebrow="($upcoming ? 'Takes effect ' : 'Effective ').$change->change_date->format('j F Y')"
+        :breadcrumbs="['VAT rate changes' => locale_path('/vat-changes'), $country->name => locale_path('/vat-rates/'.$country->slug.'/history'), $change->change_date->format('j M Y') => '']"
+    />
 
-    <header class="max-w-4xl border-b border-line pb-8">
-        <p class="text-sm font-semibold text-action">Effective {{ $change->change_date->format('F j, Y') }}</p>
-        <h1 class="mt-3 text-3xl font-bold tracking-tight text-ink sm:text-4xl">{{ $headline }}</h1>
-        @if($change->description)<p class="mt-4 max-w-3xl text-lg text-ink-muted">{{ $change->description }}</p>@endif
-    </header>
+    <div class="app-container py-8 sm:py-10">
+        <div class="grid grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(0,1fr)_20rem]">
+            <div class="min-w-0 space-y-8">
+                <section class="app-surface overflow-hidden" aria-label="Rate change">
+                    <div class="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-4 p-5 text-center sm:p-8">
+                        <div>
+                            <p class="text-[0.8125rem] font-semibold text-ink-muted">Previous rate</p>
+                            <p class="tabular mt-1 text-3xl font-bold tracking-[-0.02em] text-ink-muted sm:text-4xl">{{ Country::formatRate($change->old_rate) }}%</p>
+                        </div>
+                        <span class="flex size-10 items-center justify-center rounded-full bg-surface-muted text-ink-quiet" aria-hidden="true">
+                            <x-ui.icon name="arrow-right" class="size-5" />
+                        </span>
+                        <div>
+                            <p class="text-[0.8125rem] font-semibold text-ink-muted">New rate</p>
+                            <p class="tabular mt-1 text-3xl font-bold tracking-[-0.02em] text-ink sm:text-4xl">{{ Country::formatRate($change->new_rate) }}%</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 border-t border-line bg-surface-subtle px-5 py-3 text-sm">
+                        <span class="inline-flex items-center gap-2 text-ink-muted">
+                            <x-ui.flag :iso="$country->iso_code" size="sm" />
+                            {{ $country->name }} · {{ ucfirst($typeLabel) }} rate
+                        </span>
+                        @if($delta != 0)
+                            <span @class(['tabular inline-flex items-center gap-1 font-semibold', 'text-danger' => $up, 'text-success' => ! $up])>
+                                <x-ui.icon :name="$up ? 'trending-up' : 'trending-down'" class="size-4" />
+                                {{ $up ? 'Increase of' : 'Decrease of' }} {{ Country::formatRate(abs($delta)) }} percentage {{ abs($delta) == 1 ? 'point' : 'points' }}
+                            </span>
+                        @endif
+                    </div>
+                </section>
 
-    <div class="mt-8 grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_320px]">
-        <div>
-            <section class="grid grid-cols-[1fr_auto_1fr] items-center gap-4 border-y border-line py-6 text-center">
-                <div><span class="block text-sm font-semibold text-ink-muted">Previous rate</span><strong class="mt-1 block text-3xl tabular-nums text-ink">{{ number_format((float) $change->old_rate, 2) }}%</strong></div>
-                <span class="text-2xl text-ink-muted" aria-hidden="true">→</span>
-                <div><span class="block text-sm font-semibold text-ink-muted">New rate</span><strong class="mt-1 block text-3xl tabular-nums text-action-deep">{{ number_format((float) $change->new_rate, 2) }}%</strong></div>
-            </section>
+                @if($change->change_reason)
+                    <section class="app-surface p-5 sm:p-6" aria-labelledby="change-reason">
+                        <h2 id="change-reason" class="text-lg font-bold text-ink">Reason for the change</h2>
+                        <p class="mt-2 max-w-[68ch] text-base leading-7 text-ink-muted">{{ $change->change_reason }}</p>
+                    </section>
+                @endif
 
-            @if($change->change_reason)
-                <section class="mt-8"><h2 class="text-2xl font-bold text-ink">Reason for the change</h2><p class="mt-3 text-ink-muted">{{ $change->change_reason }}</p></section>
-            @endif
+                <section class="app-surface overflow-hidden" aria-labelledby="change-scope">
+                    <h2 id="change-scope" class="border-b border-line px-5 py-4 text-lg font-bold text-ink sm:px-6">Dates and scope</h2>
+                    <dl class="divide-y divide-line text-sm">
+                        <div class="flex justify-between gap-4 px-5 py-3 sm:px-6">
+                            <dt class="text-ink-muted">Country</dt>
+                            <dd class="font-semibold text-ink">{{ $country->name }}</dd>
+                        </div>
+                        <div class="flex justify-between gap-4 px-5 py-3 sm:px-6">
+                            <dt class="text-ink-muted">Rate type</dt>
+                            <dd class="font-semibold text-ink">{{ ucfirst($typeLabel) }}</dd>
+                        </div>
+                        <div class="flex justify-between gap-4 px-5 py-3 sm:px-6">
+                            <dt class="text-ink-muted">Effective date</dt>
+                            <dd class="tabular font-semibold text-ink">{{ $change->change_date->format('j F Y') }}</dd>
+                        </div>
+                        @if($change->announced_date)
+                            <div class="flex justify-between gap-4 px-5 py-3 sm:px-6">
+                                <dt class="text-ink-muted">Announced</dt>
+                                <dd class="tabular font-semibold text-ink">{{ $change->announced_date->format('j F Y') }}</dd>
+                            </div>
+                        @endif
+                    </dl>
+                </section>
+            </div>
 
-            <section class="mt-8"><h2 class="text-2xl font-bold text-ink">Dates and scope</h2><dl class="mt-4 divide-y divide-line border-y border-line text-sm"><div class="flex justify-between gap-4 py-3"><dt class="text-ink-muted">Rate type</dt><dd class="font-semibold text-ink">{{ ucfirst(str_replace('_', ' ', $change->rate_type)) }}</dd></div><div class="flex justify-between gap-4 py-3"><dt class="text-ink-muted">Effective date</dt><dd class="font-semibold text-ink">{{ $change->change_date->format('F j, Y') }}</dd></div>@if($change->announced_date)<div class="flex justify-between gap-4 py-3"><dt class="text-ink-muted">Announced</dt><dd class="font-semibold text-ink">{{ $change->announced_date->format('F j, Y') }}</dd></div>@endif</dl></section>
+            <aside class="space-y-4 lg:sticky lg:top-24">
+                <div class="app-surface space-y-3 p-5">
+                    @if($change->source_url)
+                        <a class="app-button-primary w-full" href="{{ $change->source_url }}" rel="noopener noreferrer">
+                            {{ $change->source ?: 'Open official source' }}
+                            <x-ui.icon name="arrow-up-right" class="size-4" />
+                        </a>
+                    @endif
+                    <a class="app-button-secondary w-full" href="{{ locale_path('/vat-rates/'.$country->slug.'/history') }}">
+                        <x-ui.icon name="history" class="size-4" />
+                        {{ $country->name }} VAT history
+                    </a>
+                    <a class="app-button-secondary w-full" href="{{ locale_path('/vat-calculator/'.$country->slug) }}">
+                        <x-ui.icon name="calculator" class="size-4" />
+                        Current VAT calculator
+                    </a>
+                </div>
+            </aside>
         </div>
-
-        <aside class="space-y-4">
-            @if($change->source_url)<a class="app-button-primary w-full" href="{{ $change->source_url }}" rel="noopener noreferrer">{{ $change->source ?: 'Open official source' }}</a>@endif
-            <a class="app-button-secondary w-full" href="{{ locale_path('/vat-rates/'.$country->slug.'/history') }}">{{ $country->name }} VAT history</a>
-            <a class="app-button-secondary w-full" href="{{ locale_path('/vat-calculator/'.$country->slug) }}">Current VAT calculator</a>
-        </aside>
     </div>
 </article>

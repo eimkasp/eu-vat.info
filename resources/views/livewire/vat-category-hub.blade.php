@@ -45,45 +45,62 @@
     </x-seo-meta>
 @endsection
 
-<div class="app-container pb-14 pt-8 sm:pt-12">
-    <x-site-breadcrumbs :items="['VAT rate categories' => locale_path('/vat-rates/categories'), $summary['name'] => '']" />
+<div>
+    <x-page-header
+        :title="$title"
+        :description="'Compare '.strtolower($summary['name']).' VAT rules currently verified for '.$summary['country_count'].' EU countries. Each row links to the country rule and recorded source.'"
+        eyebrow="Category comparison"
+        :breadcrumbs="['VAT rate categories' => locale_path('/vat-rates/categories'), $summary['name'] => '']"
+    >
+        <x-slot:actions>
+            <span class="inline-flex items-center gap-2 rounded-control border border-line bg-surface-subtle px-3 py-1.5 text-sm text-ink-muted">
+                <x-ui.icon name="check-circle" class="size-4" />
+                <span>Last verified <time class="tabular" datetime="{{ $dateModified->toDateString() }}">{{ $dateModified->format('j F Y') }}</time></span>
+            </span>
+        </x-slot:actions>
+    </x-page-header>
 
-    <header class="max-w-4xl border-b border-line pb-8">
-        <p class="mb-3 text-sm font-semibold text-action">Category comparison</p>
-        <h1 class="text-3xl font-bold tracking-tight text-ink sm:text-4xl">{{ $title }}</h1>
-        <p class="mt-4 max-w-3xl text-lg text-ink-muted">Compare {{ strtolower($summary['name']) }} VAT rules currently verified for {{ $summary['country_count'] }} EU countries. Each row links to the country rule and recorded source.</p>
-        <p class="mt-3 text-sm text-ink-muted">Last verified {{ $dateModified->format('F j, Y') }}.</p>
-    </header>
+    <div class="app-container space-y-6 py-8 sm:py-10">
+        <section class="app-surface overflow-hidden" aria-label="{{ $title }}">
+            <div class="relative overflow-x-auto">
+                <table class="app-table min-w-[44rem]">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="pl-5 sm:pl-6">Country</th>
+                            <th scope="col" class="text-right">Rate</th>
+                            <th scope="col">Classification</th>
+                            <th scope="col">Effective from</th>
+                            <th scope="col" class="pr-5 sm:pr-6">Source</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($rules as $rule)
+                            <tr class="transition-colors hover:bg-surface-subtle">
+                                <td class="pl-5 sm:pl-6">
+                                    <a class="flex min-h-10 items-center gap-3 font-semibold text-ink hover:text-action" href="{{ locale_path('/vat-rates/'.$rule->country->slug.'/categories/'.$rule->category_slug) }}">
+                                        <x-ui.flag :iso="$rule->country->iso_code" size="lg" class="h-5 w-[1.625rem]" />
+                                        {{ $rule->country->name }}
+                                    </a>
+                                </td>
+                                <td class="tabular text-right text-base font-bold text-ink">{{ \App\Models\Country::formatRate($rule->rate) }}%</td>
+                                <td class="text-ink">{{ str($rule->rate_type)->replace('_', '-')->ucfirst() }}</td>
+                                <td class="tabular text-ink-muted">{{ $rule->effective_from?->format('j M Y') ?? 'Not specified' }}</td>
+                                <td class="pr-5 sm:pr-6">
+                                    <a class="inline-flex items-center gap-1 font-semibold text-action hover:text-action-deep hover:underline" href="{{ $rule->source_url }}" rel="nofollow noopener">
+                                        Official source
+                                        <x-ui.icon name="arrow-up-right" class="size-3.5" />
+                                    </a>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </section>
 
-    <div class="relative mt-8 overflow-x-auto border-y border-line">
-        <table class="w-full min-w-[760px] text-left">
-            <thead class="bg-surface-subtle">
-                <tr>
-                    <th class="px-4 py-3 text-sm font-semibold text-ink-muted">Country</th>
-                    <th class="px-4 py-3 text-sm font-semibold text-ink-muted">Rate</th>
-                    <th class="px-4 py-3 text-sm font-semibold text-ink-muted">Classification</th>
-                    <th class="px-4 py-3 text-sm font-semibold text-ink-muted">Effective from</th>
-                    <th class="px-4 py-3 text-sm font-semibold text-ink-muted">Source</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-line bg-surface">
-                @foreach($rules as $rule)
-                    <tr>
-                        <td class="px-4 py-4">
-                            <a class="flex items-center gap-3 font-semibold text-ink hover:text-action" href="{{ locale_path('/vat-rates/'.$rule->country->slug.'/categories/'.$rule->category_slug) }}">
-                                <x-ui.flag :iso="$rule->country->iso_code" size="lg" class="h-5 w-7" />
-                                {{ $rule->country->name }}
-                            </a>
-                        </td>
-                        <td class="px-4 py-4 text-xl font-bold tabular-nums text-ink">{{ number_format((float) $rule->rate, 2) }}%</td>
-                        <td class="px-4 py-4 text-sm text-ink">{{ str($rule->rate_type)->replace('_', ' ')->title() }}</td>
-                        <td class="px-4 py-4 text-sm text-ink-muted">{{ $rule->effective_from?->format('M j, Y') ?? 'Not specified' }}</td>
-                        <td class="px-4 py-4 text-sm"><a class="font-semibold text-action hover:underline" href="{{ $rule->source_url }}" rel="nofollow noopener">Official source ↗</a></td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
+        <p class="app-note">
+            <x-ui.icon name="info" class="mt-1 size-4 text-action" />
+            <span>Rates are references, not transaction-specific tax advice. Product classification, customer status and place-of-supply rules can change the applicable treatment.</span>
+        </p>
     </div>
-
-    <p class="mt-8 max-w-3xl text-sm leading-6 text-ink-muted">Rates are references, not transaction-specific tax advice. Product classification, customer status and place-of-supply rules can change the applicable treatment.</p>
 </div>

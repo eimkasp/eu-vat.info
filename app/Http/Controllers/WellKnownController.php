@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Support\Mcp\VatMcpServer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
@@ -18,20 +19,29 @@ class WellKnownController extends Controller
         $linkset = [
             'linkset' => [
                 [
+                    'anchor' => $baseUrl.'/api/v1',
+                    'service-desc' => [['href' => $baseUrl.'/api/v1/openapi.json', 'type' => 'application/vnd.oai.openapi+json']],
+                    'service-doc' => [['href' => $baseUrl.'/vat-validation-api', 'type' => 'text/html'], ['href' => $baseUrl.'/llms.txt', 'type' => 'text/plain']],
+                    'status' => [['href' => $baseUrl.'/up']],
+                ],
+                [
+                    'anchor' => VatMcpServer::endpoint(),
+                    'service-meta' => [['href' => $baseUrl.'/.well-known/mcp/server-card.json', 'type' => 'application/json']],
+                    'service-doc' => [['href' => $baseUrl.'/mcp-server', 'type' => 'text/html']],
+                    'status' => [['href' => $baseUrl.'/up']],
+                ],
+                [
                     'anchor' => $baseUrl.'/api/countries',
-                    'service-desc' => [['href' => $baseUrl.'/llms.txt', 'type' => 'text/plain']],
                     'service-doc' => [['href' => $baseUrl.'/llms.txt', 'type' => 'text/plain']],
                     'status' => [['href' => $baseUrl.'/up']],
                 ],
                 [
                     'anchor' => $baseUrl.'/api/vat/validation',
-                    'service-desc' => [['href' => $baseUrl.'/llms.txt', 'type' => 'text/plain']],
                     'service-doc' => [['href' => $baseUrl.'/vat-validation-api', 'type' => 'text/html']],
                     'status' => [['href' => $baseUrl.'/api/vat/validation/health']],
                 ],
                 [
                     'anchor' => $baseUrl.'/api/llm/vat-rates',
-                    'service-desc' => [['href' => $baseUrl.'/llms.txt', 'type' => 'text/plain']],
                     'service-doc' => [['href' => $baseUrl.'/llms.txt', 'type' => 'text/plain']],
                     'status' => [['href' => $baseUrl.'/up']],
                 ],
@@ -69,8 +79,7 @@ class WellKnownController extends Controller
             'jwks_uri' => $baseUrl.'/.well-known/jwks.json',
             'service_documentation' => $baseUrl.'/llms.txt',
             'ui_locales_supported' => ['en'],
-            'op_policy_uri' => $baseUrl.'/privacy-policy',
-            'op_tos_uri' => $baseUrl.'/terms',
+            'op_policy_uri' => $baseUrl.'/privacy',
         ]);
     }
 
@@ -122,7 +131,7 @@ class WellKnownController extends Controller
             [
                 'name' => 'vat-rates',
                 'type' => 'skill-md',
-                'description' => 'Query live EU VAT rates (standard, reduced, super-reduced, parking) for all 27 EU countries. Calculate VAT and compare rates.',
+                'description' => 'Query live VAT rates (standard, reduced, super-reduced, parking) for the 27 EU member states and five other European countries. Calculate VAT, compare rates and list rate changes.',
                 'url' => '/.well-known/agent-skills/vat-rates/SKILL.md',
                 'digest' => 'sha256:'.hash_file('sha256', public_path('.well-known/agent-skills/vat-rates/SKILL.md')),
             ],
@@ -179,7 +188,7 @@ class WellKnownController extends Controller
             'bearer_methods_supported' => [],
             'resource_signing_alg_values_supported' => ['ES256'],
             'resource_documentation' => $baseUrl.'/llms.txt',
-            'resource_policy_uri' => $baseUrl.'/privacy-policy',
+            'resource_policy_uri' => $baseUrl.'/privacy',
             'jwks_uri' => $baseUrl.'/.well-known/jwks.json',
 
             // Agent skill discovery — Markdown files describing how to use each capability
@@ -190,21 +199,17 @@ class WellKnownController extends Controller
 
             // MCP (Model Context Protocol) server — freely accessible, no auth required
             'mcp' => [
-                'endpoint' => $baseUrl.'/api/mcp',
-                'transport' => 'http-json-rpc',
-                'protocol_version' => '2024-11-05',
-                'server_name' => 'eu-vat-info',
-                'server_version' => '1.0.0',
-                'description' => 'Free read-only MCP server providing live EU VAT rates, VAT calculations, country comparisons, and VIES VAT number validation for all 27 EU member states.',
+                'endpoint' => VatMcpServer::endpoint(),
+                'transport' => 'streamable-http',
+                'protocol_version' => VatMcpServer::latestProtocolVersion(),
+                'protocol_versions' => VatMcpServer::PROTOCOL_VERSIONS,
+                'server_name' => VatMcpServer::NAME,
+                'server_version' => VatMcpServer::VERSION,
+                'description' => VatMcpServer::description(),
                 'documentation' => $baseUrl.'/mcp-server',
-                'tools' => [
-                    'get_all_vat_rates',
-                    'get_country_vat_rate',
-                    'calculate_vat',
-                    'compare_vat_rates',
-                    'validate_vat_number',
-                ],
-                'clients' => ['VS Code Copilot', 'Cursor', 'Claude Desktop', 'any MCP-compatible client'],
+                'server_card' => $baseUrl.'/.well-known/mcp/server-card.json',
+                'tools' => VatMcpServer::toolNames(),
+                'clients' => ['Claude', 'Claude Code', 'ChatGPT', 'VS Code', 'Cursor', 'any client that supports remote MCP servers'],
             ],
 
             // x402 Payment Protocol — agent-native HTTP payments
@@ -231,32 +236,32 @@ class WellKnownController extends Controller
      */
     public function mcpServerCard(): JsonResponse
     {
-        $baseUrl = config('app.url');
+        $baseUrl = rtrim((string) config('app.url'), '/');
 
         return response()->json([
             'serverInfo' => [
-                'name' => 'eu-vat-info',
-                'version' => '1.0.0',
+                'name' => VatMcpServer::NAME,
+                'title' => VatMcpServer::TITLE,
+                'version' => VatMcpServer::VERSION,
             ],
+            'description' => VatMcpServer::description(),
+            'protocolVersion' => VatMcpServer::latestProtocolVersion(),
+            'protocolVersions' => VatMcpServer::PROTOCOL_VERSIONS,
             'transport' => [
-                'type' => 'http',
-                'endpoint' => $baseUrl.'/api/mcp',
+                'type' => 'streamable-http',
+                'endpoint' => VatMcpServer::endpoint(),
             ],
             'capabilities' => [
                 'tools' => [
                     'listChanged' => false,
                 ],
             ],
-            'tools' => [
-                ['name' => 'get_all_vat_rates',    'description' => 'Get current VAT rates for all 27 EU member states.'],
-                ['name' => 'get_country_vat_rate',  'description' => 'Get VAT rates for a specific EU country by name, ISO code, or slug.'],
-                ['name' => 'calculate_vat',         'description' => 'Calculate VAT for a given amount and country (add or remove VAT).'],
-                ['name' => 'compare_vat_rates',     'description' => 'Compare VAT rates between two or more EU countries.'],
-                ['name' => 'validate_vat_number',   'description' => 'Validate an EU VAT number against the official VIES database.'],
-            ],
-            'authentication' => null,
+            'authentication' => ['required' => false],
+            'instructions' => VatMcpServer::instructions(),
+            'tools' => VatMcpServer::tools(),
             'documentation' => $baseUrl.'/mcp-server',
-        ]);
+            'websiteUrl' => $baseUrl,
+        ], 200, ['Cache-Control' => 'public, max-age=3600'], JSON_UNESCAPED_SLASHES);
     }
 
     /**

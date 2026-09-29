@@ -65,12 +65,12 @@
 
                     <div class="mt-auto flex flex-wrap gap-2.5">
                         @if($calculatorAvailable)
-                            <a href="{{ $calculatorUrl }}" class="app-button-primary">
+                            <a href="{{ $calculatorUrl }}" class="app-button-primary flex-1 whitespace-nowrap">
                                 <x-ui.icon name="calculator" class="size-4" />
                                 {{ __('ui.shared_calc.open_in_calculator') }}
                             </a>
                         @endif
-                        <button type="button" x-data x-on:click="$copy(@js($shareUrl), @js(__('ui.shared_calc.link_copied')))" class="app-button-secondary">
+                        <button type="button" x-data x-on:click="$copy(@js($shareUrl), @js(__('ui.shared_calc.link_copied')))" class="app-button-secondary flex-1 whitespace-nowrap">
                             <x-ui.icon name="link" class="size-4" />
                             {{ __('ui.shared_calc.copy_share_link') }}
                         </button>

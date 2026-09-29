@@ -29,7 +29,7 @@ class SeoPolicy
     public function shouldEmitHreflang(): bool
     {
         return $this->isLocaleIndexable(app()->getLocale())
-            && ! request()->routeIs('shared-calculation', 'locale.shared-calculation');
+            && ! request()->routeIs('shared-calculation', 'locale.shared-calculation', 'styleguide', 'locale.styleguide');
     }
 
     public function localizedUrl(string $path, string $locale): string

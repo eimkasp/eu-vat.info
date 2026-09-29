@@ -31,6 +31,19 @@ it('emits valid schema.org JSON-LD on every redesigned page', function (string $
     }
 })->with(['/', '/vat-calculator/austria', '/vat-number-validator', '/vat-changes', '/tools', '/changelog', '/sitemap']);
 
+it('never prints template code as page text', function (string $path) {
+    $html = $this->get($path)->assertOk()->getContent();
+
+    $body = preg_replace('#<(script|style|template|svg|pre|code)\b.*?</\1>|<!--.*?-->#si', ' ', $html);
+    $text = html_entity_decode(strip_tags($body));
+
+    expect($text)->not->toMatch('/\{\{|\}\}|\{!!|!!\}|<x-|\b(class|alt|src|href|loading)="|@(if|foreach|endif|endforeach|php|endphp)\b/');
+})->with([
+    '/', '/vat-calculator', '/vat-calculator/austria', '/vat-number-validator', '/vat-number-validator/austria',
+    '/vat-map', '/vat-changes', '/tools', '/changelog', '/sitemap', '/de/sitemap', '/mcp-server',
+    '/vat-validation-api', '/datasets/eu-vat-rates', '/top-vat-calculations', '/blog', '/donate', '/privacy', '/chrome-extension',
+]);
+
 it('serves the v1 API with every reduced rate and correct currency', function () {
     $this->getJson('/api/v1/countries/austria')
         ->assertOk()

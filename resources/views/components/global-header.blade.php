@@ -55,7 +55,7 @@
         </nav>
 
         <div class="ml-auto flex items-center gap-1">
-            <button type="button" @click="$store.palette.show()" class="app-brand-panel pressable hidden h-10 w-60 items-center gap-2.5 rounded-control px-3 text-left text-sm text-white/80 hover:border-white/30 hover:bg-white/10 hover:text-white xl:flex" aria-label="{{ __('ui.nav.search') }}">
+            <button type="button" @click="$store.palette.show()" class="app-brand-panel pressable hidden h-10 w-72 items-center gap-2.5 rounded-control px-3 text-left text-sm text-white/80 hover:border-white/30 hover:bg-white/10 hover:text-white xl:flex" aria-label="{{ __('ui.nav.search') }}">
                 <x-ui.icon name="search" class="size-4" />
                 <span class="flex-1 truncate">{{ __('ui.nav.search_placeholder') }}</span>
                 <kbd class="rounded-xs border border-white/25 px-1.5 py-0.5 font-sans text-[0.6875rem] font-semibold text-white/80">⌘K</kbd>

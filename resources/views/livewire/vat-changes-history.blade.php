@@ -153,8 +153,8 @@
                                                     </span>
                                                 @endif
                                             </p>
-                                            @if($change->description && ! preg_match('/^Rate changed from [\d.]+% to [\d.]+%\.?$/', $change->description))
-                                                <p class="mt-0.5 line-clamp-1 text-xs text-ink-muted">{{ $change->description }}</p>
+                                            @if($change->editorialDescription())
+                                                <p class="mt-0.5 line-clamp-1 text-xs text-ink-muted">{{ $change->editorialDescription() }}</p>
                                             @endif
                                         </div>
                                     </div>

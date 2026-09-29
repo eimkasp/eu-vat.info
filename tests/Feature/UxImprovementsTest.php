@@ -55,7 +55,7 @@ it('does not show vat changelog link in header', function () {
 it('shows vat rate history link in footer', function () {
     $response = $this->get('/');
     $response->assertStatus(200);
-    expect($response->getContent())->toContain('VAT Rate History');
+    expect($response->getContent())->toContain('VAT rate history');
 });
 
 // ── VAT Map improvements ───────────────────────────────────────────────────
@@ -63,7 +63,7 @@ it('shows vat rate history link in footer', function () {
 it('loads the vat map page successfully', function () {
     $this->get('/vat-map')
         ->assertStatus(200)
-        ->assertSee('European VAT Rates Map')
+        ->assertSee('European VAT rates map')
         ->assertSee('class="eu-map"', false)
         ->assertSee('data-iso="DE"', false);
 });
@@ -71,7 +71,7 @@ it('loads the vat map page successfully', function () {
 it('vat map page displays country rate table', function () {
     $this->get('/vat-map')
         ->assertStatus(200)
-        ->assertSee('All EU VAT Rates at a Glance')
+        ->assertSee('All VAT rates at a glance')
         ->assertSee('Germany')
         ->assertSee('France')
         ->assertSee('Hungary')
@@ -115,7 +115,7 @@ it('html sitemap page includes vat history link', function () {
     $this->get('/sitemap')
         ->assertStatus(200)
         ->assertSee('Sitemap')
-        ->assertSee('VAT Rate History');
+        ->assertSee('VAT rate history');
 });
 
 // ── XML sitemap is valid and accessible ─────────────────────────────────────

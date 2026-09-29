@@ -75,6 +75,18 @@ class VatRateChange extends Model
     }
 
     /**
+     * The description, unless it only repeats the old and new rates
+     */
+    public function editorialDescription(): ?string
+    {
+        if (blank($this->description) || preg_match('/^Rate changed from [\d.]+% to [\d.]+%\.?$/', $this->description)) {
+            return null;
+        }
+
+        return $this->description;
+    }
+
+    /**
      * Scope to get recent changes
      */
     public function scopeRecent($query, $days = 30)
