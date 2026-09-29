@@ -4,7 +4,7 @@ All notable changes to EU VAT Info are documented here.
 
 ---
 
-## [5.0.0] — 2026-09-28 — A faster, clearer EU VAT Info
+## [5.0.0] — 2026-09-29 — A faster, clearer EU VAT Info
 
 ### Added
 - **A new, more professional look** — a solid EU navy and gold identity with crisp, square-cornered controls, clean white cards and clear tables, so rates and totals are easier to read and feel more trustworthy.
@@ -36,7 +36,7 @@ All notable changes to EU VAT Info are documented here.
 
 ---
 
-## [Unreleased] — 2026-04-29
+## [4.1.0] — 2026-04-29 — Shareable calculations
 
 ### Added
 - **Shareable calculation links** — every VAT calculation gets its own unique URL. Copy and send it to your accountant, client, or colleague and they'll see the exact same breakdown — country, amount, rate, and direction all preserved.
