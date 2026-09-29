@@ -826,6 +826,12 @@ return array (
     'next' => 'Sljedeća stranica',
     'page' => 'Stranica :page',
   ),
+  'styleguide' =>
+  array (
+    'nav_label' => 'Sustav dizajna',
+    'nav_desc' => 'Tokeni, komponente i predlošci stranica iza EU VAT Info',
+    'english_only' => 'Referenca sustava dizajna objavljena je na engleskom jeziku.',
+  ),
   'mcp_page' =>
   array (
     'meta_title' => 'MCP poslužitelj za PDV u EU-u: aktualni podaci o PDV-u za AI asistente | EU VAT Info',

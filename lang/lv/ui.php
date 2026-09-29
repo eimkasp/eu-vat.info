@@ -826,6 +826,12 @@ return array (
     'next' => 'Nākamā lapa',
     'page' => ':page. lapa',
   ),
+  'styleguide' =>
+  array (
+    'nav_label' => 'Dizaina sistēma',
+    'nav_desc' => 'EU VAT Info marķieri, komponenti un lapu paraugi',
+    'english_only' => 'Dizaina sistēmas rokasgrāmata ir publicēta angļu valodā.',
+  ),
   'mcp_page' =>
   array (
     'meta_title' => 'ES PVN MCP serveris: aktuāli PVN dati MI asistentiem | EU VAT Info',

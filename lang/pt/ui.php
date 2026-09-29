@@ -826,6 +826,12 @@ return array (
     'next' => 'Página seguinte',
     'page' => 'Página :page',
   ),
+  'styleguide' =>
+  array (
+    'nav_label' => 'Sistema de design',
+    'nav_desc' => 'Tokens, componentes e padrões de página do EU VAT Info',
+    'english_only' => 'A referência do sistema de design é publicada em inglês.',
+  ),
   'mcp_page' =>
   array (
     'meta_title' => 'Servidor MCP de IVA da UE: dados de IVA em tempo real para assistentes de IA | EU VAT Info',

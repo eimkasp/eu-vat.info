@@ -826,6 +826,12 @@ return array (
     'next' => 'Pagina următoare',
     'page' => 'Pagina :page',
   ),
+  'styleguide' =>
+  array (
+    'nav_label' => 'Sistem de design',
+    'nav_desc' => 'Tokenuri, componente și modele de pagină din EU VAT Info',
+    'english_only' => 'Referința sistemului de design este publicată în limba engleză.',
+  ),
   'mcp_page' =>
   array (
     'meta_title' => 'Server MCP pentru TVA în UE: date TVA actuale pentru asistenții AI | EU VAT Info',

@@ -48,8 +48,10 @@ class SitemapGenerator
         $xml .= '        xmlns:xhtml="http://www.w3.org/1999/xhtml">'."\n";
 
         foreach ($this->recordsFor($section) as $record) {
-            foreach ($this->seoPolicy->indexableLocales() as $locale) {
-                $xml .= $this->urlEntry($record['path'], $record['lastmod'], $locale);
+            $locales = $this->localesFor($record);
+
+            foreach ($locales as $locale) {
+                $xml .= $this->urlEntry($record['path'], $record['lastmod'], $locale, $locales);
             }
         }
 
@@ -116,6 +118,15 @@ class SitemapGenerator
             ['path' => '/tools', 'lastmod' => $lastmod],
             ['path' => '/top-vat-calculations', 'lastmod' => $lastmod],
             ['path' => '/datasets/eu-vat-rates', 'lastmod' => $datasetLastmod],
+            ['path' => '/mcp-server', 'lastmod' => $this->filesLastModified([
+                resource_path('views/livewire/mcp-server.blade.php'),
+                app_path('Support/Mcp/VatMcpServer.php'),
+            ])],
+            ['path' => '/styleguide', 'locales' => ['en'], 'lastmod' => $this->filesLastModified([
+                resource_path('views/livewire/styleguide.blade.php'),
+                resource_path('css/app.css'),
+                base_path('DESIGN.md'),
+            ])],
             ['path' => '/sitemap', 'lastmod' => $lastmod],
         ]);
 
@@ -287,14 +298,30 @@ class SitemapGenerator
         return $records;
     }
 
-    protected function urlEntry(string $path, string $lastmod, string $locale): string
+    /**
+     * The indexable locales a record is published in: every indexable locale unless the record names its own.
+     *
+     * @param  array{path: string, lastmod: string, locales?: array<int, string>}  $record
+     * @return array<int, string>
+     */
+    protected function localesFor(array $record): array
+    {
+        $indexable = $this->seoPolicy->indexableLocales();
+
+        return isset($record['locales']) ? array_values(array_intersect($indexable, $record['locales'])) : $indexable;
+    }
+
+    /**
+     * @param  array<int, string>  $locales
+     */
+    protected function urlEntry(string $path, string $lastmod, string $locale, array $locales): string
     {
         $url = $this->seoPolicy->localizedUrl($path, $locale);
         $entry = "    <url>\n";
         $entry .= '        <loc>'.$this->escape($url)."</loc>\n";
         $entry .= '        <lastmod>'.$this->escape($lastmod)."</lastmod>\n";
 
-        foreach ($this->seoPolicy->indexableLocales() as $alternateLocale) {
+        foreach ($locales as $alternateLocale) {
             $alternate = $this->seoPolicy->localizedUrl($path, $alternateLocale);
             $entry .= '        <xhtml:link rel="alternate" hreflang="'.$alternateLocale.'" href="'.$this->escape($alternate).'" />'."\n";
         }

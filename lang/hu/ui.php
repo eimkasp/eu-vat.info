@@ -826,6 +826,12 @@ return array (
     'next' => 'Következő oldal',
     'page' => ':page. oldal',
   ),
+  'styleguide' =>
+  array (
+    'nav_label' => 'Dizájnrendszer',
+    'nav_desc' => 'Az EU VAT Info tokenjei, komponensei és oldalmintái',
+    'english_only' => 'A dizájnrendszer referenciája angol nyelven érhető el.',
+  ),
   'mcp_page' =>
   array (
     'meta_title' => 'Uniós ÁFA MCP-szerver: friss ÁFA-adatok MI-asszisztenseknek | EU VAT Info',

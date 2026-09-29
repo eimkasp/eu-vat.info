@@ -8,6 +8,7 @@ use App\Http\Controllers\LlmsController;
 use App\Http\Controllers\RedirectController;
 use App\Http\Controllers\SearchIndexController;
 use App\Http\Controllers\SitemapController;
+use App\Http\Controllers\StyleguideController;
 use App\Http\Controllers\VatChangeSubscriptionController;
 use App\Http\Controllers\VatDatasetDownloadController;
 use App\Http\Controllers\WellKnownController;
@@ -25,6 +26,7 @@ use App\Livewire\HtmlSitemap;
 use App\Livewire\McpServer;
 use App\Livewire\PrivacyPolicy;
 use App\Livewire\SharedCalculation;
+use App\Livewire\Styleguide;
 use App\Livewire\Tools;
 use App\Livewire\TopCalculations;
 use App\Livewire\TopCalculationsAmount;
@@ -112,6 +114,7 @@ $registerRoutes = function () {
         ->name('vat-scenario-guide');
     Route::get('/changelog', Changelog::class)->name('changelog');
     Route::get('/mcp-server', McpServer::class)->name('mcp-server');
+    Route::get('/styleguide', Styleguide::class)->name('styleguide');
     Route::get('/chrome-extension', ChromeExtension::class)->name('chrome-extension');
     Route::get('/donate', Donate::class)->name('donate');
     Route::get('/privacy', PrivacyPolicy::class)->name('privacy');
@@ -197,6 +200,10 @@ Route::middleware(AllowEmbedding::class)->group(function () {
 });
 
 Route::get('/search-index.json', SearchIndexController::class)->name('search-index');
+
+// Machine-readable design system: DTCG design tokens and DESIGN.md
+Route::get('/styleguide/design.tokens.json', [StyleguideController::class, 'tokens'])->name('styleguide.tokens');
+Route::get('/styleguide.md', [StyleguideController::class, 'markdown'])->name('styleguide.markdown');
 
 // LLM-optimised site map and full VAT rates table
 Route::get('/llms.txt', [LlmsController::class, 'index']);

@@ -826,6 +826,12 @@ return array (
     'next' => 'Page suivante',
     'page' => 'Page :page',
   ),
+  'styleguide' =>
+  array (
+    'nav_label' => 'Système de design',
+    'nav_desc' => 'Jetons, composants et modèles de page d\'EU VAT Info',
+    'english_only' => 'La référence du système de design est publiée en anglais.',
+  ),
   'mcp_page' =>
   array (
     'meta_title' => 'Serveur MCP TVA UE : données de TVA en direct pour les assistants IA | EU VAT Info',

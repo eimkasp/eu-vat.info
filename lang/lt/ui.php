@@ -826,6 +826,12 @@ return array (
     'next' => 'Kitas puslapis',
     'page' => ':page puslapis',
   ),
+  'styleguide' =>
+  array (
+    'nav_label' => 'Dizaino sistema',
+    'nav_desc' => 'EU VAT Info žetonai, komponentai ir puslapių šablonai',
+    'english_only' => 'Dizaino sistemos žinynas skelbiamas anglų kalba.',
+  ),
   'mcp_page' =>
   array (
     'meta_title' => 'ES PVM MCP serveris: aktualūs PVM duomenys DI asistentams | EU VAT Info',

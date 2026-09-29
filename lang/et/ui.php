@@ -826,6 +826,12 @@ return array (
     'next' => 'Järgmine lehekülg',
     'page' => 'Lehekülg :page',
   ),
+  'styleguide' =>
+  array (
+    'nav_label' => 'Disainisüsteem',
+    'nav_desc' => 'EU VAT Info tokenid, komponendid ja lehemustrid',
+    'english_only' => 'Disainisüsteemi juhend on avaldatud inglise keeles.',
+  ),
   'mcp_page' =>
   array (
     'meta_title' => 'ELi käibemaksu MCP-server: värsked käibemaksuandmed tehisintellekti assistentidele | EU VAT Info',

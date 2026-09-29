@@ -860,6 +860,13 @@ return [
         'page' => 'Page :page',
     ],
 
+    // ── Design system page ──────────────────────────────────────────────
+    'styleguide' => [
+        'nav_label' => 'Design system',
+        'nav_desc' => 'Tokens, components and page patterns behind EU VAT Info',
+        'english_only' => 'The design system reference is published in English.',
+    ],
+
     // ── MCP server page ─────────────────────────────────────────────────
     'mcp_page' => [
         'meta_title' => 'EU VAT MCP Server: Live VAT Data for AI Assistants | EU VAT Info',

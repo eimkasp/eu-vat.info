@@ -79,7 +79,8 @@
     --color-danger-soft: var(--ui-danger-soft);
 }
 
-:root {
+:root,
+.theme-light {
     color-scheme: light;
 
     --ui-workspace: oklch(0.972 0.005 258);
@@ -455,6 +456,14 @@
 
     .app-prose {
         @apply text-base leading-7 text-ink-muted;
+
+        & > :first-child {
+            @apply mt-0;
+        }
+
+        & > :last-child {
+            @apply mb-0;
+        }
 
         & h2 {
             @apply mt-10 mb-3 text-2xl text-ink;

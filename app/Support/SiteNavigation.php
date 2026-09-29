@@ -79,7 +79,7 @@ final class SiteNavigation
     {
         $locale = app()->getLocale();
 
-        return Cache::remember("site_palette_items_v1_{$locale}", 600, function () {
+        return Cache::remember("site_palette_items_v2_{$locale}", 600, function () {
             $items = Country::calculatorAvailable()
                 ->orderByDesc('is_eu_member')
                 ->orderBy('name')
@@ -104,6 +104,8 @@ final class SiteNavigation
                     'url' => $tool['url'],
                     'icon' => $tool['icon'],
                 ], self::tools()),
+                ['title' => __('ui.sitemap.mcp_server'), 'subtitle' => __('ui.sitemap.mcp_server_desc'), 'url' => locale_path('/mcp-server'), 'icon' => 'server', 'keywords' => 'mcp ai agents claude'],
+                ['title' => __('ui.styleguide.nav_label'), 'subtitle' => __('ui.styleguide.nav_desc'), 'url' => locale_path('/styleguide'), 'icon' => 'grid', 'keywords' => 'styleguide design system tokens components'],
                 ['title' => __('ui.nav.updates'), 'subtitle' => __('ui.palette.updates_subtitle'), 'url' => locale_path('/blog'), 'icon' => 'news'],
             ];
 
@@ -112,7 +114,7 @@ final class SiteNavigation
                     'type' => 'page',
                     'title' => $page['title'],
                     'subtitle' => $page['subtitle'],
-                    'keywords' => $page['icon'],
+                    'keywords' => $page['keywords'] ?? $page['icon'],
                     'url' => $page['url'],
                     'flag' => null,
                     'icon' => $page['icon'],

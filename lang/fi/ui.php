@@ -826,6 +826,12 @@ return array (
     'next' => 'Seuraava sivu',
     'page' => 'Sivu :page',
   ),
+  'styleguide' =>
+  array (
+    'nav_label' => 'Suunnittelujärjestelmä',
+    'nav_desc' => 'EU VAT Infon tokenit, komponentit ja sivumallit',
+    'english_only' => 'Suunnittelujärjestelmän opas on julkaistu englanniksi.',
+  ),
   'mcp_page' =>
   array (
     'meta_title' => 'EU:n ALV-MCP-palvelin: ajantasaiset ALV-tiedot tekoälyavustajille | EU VAT Info',

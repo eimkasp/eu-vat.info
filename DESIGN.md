@@ -24,11 +24,11 @@ colors:
 typography:
   family: "Inter Variable (optical sizing), system-ui fallback"
   display: { size: "3rem", weight: 700, lineHeight: 1.08, letterSpacing: "-0.03em" }
-  headline: { size: "2.5rem", weight: 700, lineHeight: 1.1, letterSpacing: "-0.03em" }
+  headline: { size: "2.5rem", weight: 700, lineHeight: 1.1, letterSpacing: "-0.035em" }
   title: { size: "1.125rem", weight: 700, lineHeight: 1.35 }
   body: { size: "1rem", weight: 400, lineHeight: 1.6 }
   label: { size: "0.8125rem", weight: 600, lineHeight: 1.35 }
-  kicker: { size: "0.75rem", weight: 600, letterSpacing: "0.08em", transform: "uppercase" }
+  kicker: { size: "0.75rem", weight: 600, lineHeight: 1.67, letterSpacing: "0.08em", transform: "uppercase" }
 rounded:
   control: "4px"
   card: "6px"
@@ -41,6 +41,8 @@ motion:
 # EU VAT Info design system
 
 This file is the single source of truth for the interface. Read it before you change a Blade view, `resources/css/app.css` or an Alpine component. Rules written as **must** are checked by `tests/Feature/DesignSystemTest.php`, so a violation fails the build with the file, the line and the fix.
+
+The rendered reference lives at [`/styleguide`](https://vat.businesspress.io/styleguide): every token, component and pattern drawn with the production stylesheet, with its code. Two machine-readable companions are generated from the same sources: `/styleguide/design.tokens.json` (Design Tokens Community Group format 2025.10, built from `app.css` and the frontmatter above) and `/styleguide.md` (this file).
 
 **North star: the institutional reference desk.** People come here to get a rate, a total or a validation result they can put on an invoice. The interface should feel like a trustworthy public-sector or financial tool: flat EU navy for identity, one thin line of EU gold as the signature, white paper-like surfaces with hairline borders, square corners and figures set in tabular type. Nothing glows, floats, blurs or bounces.
 
@@ -65,7 +67,7 @@ This file is the single source of truth for the interface. Read it before you ch
 
 ## Tokens
 
-All tokens live in `resources/css/app.css`. Semantic colours are CSS variables (`--ui-*`) exposed to Tailwind through `@theme inline`, so `--ui-surface` becomes `bg-surface`, `text-surface` and `border-surface`. The `.dark` class on `<html>` swaps every value, which is why templates never need `dark:`.
+All tokens live in `resources/css/app.css`. Semantic colours are CSS variables (`--ui-*`) exposed to Tailwind through `@theme inline`, so `--ui-surface` becomes `bg-surface`, `text-surface` and `border-surface`. The `.dark` class on `<html>` swaps every value, which is why templates never need `dark:`. The `.theme-light` class restores the light values inside a dark subtree; `/styleguide` uses the pair to show both themes side by side.
 
 ### Color roles
 
@@ -352,7 +354,7 @@ Two equal segments on a bordered `surface-muted` track; the white thumb slides i
 
 **Add a page.** Choose a skeleton, build it from the components above, add strings to all 24 locales, then run the design tests and axe (see Enforcement).
 
-**Add a component.** Search this file and `resources/css/app.css` first. If nothing fits, add one `app-*` class under `@layer components`, built only from tokens, and document it in this file in the same commit. The documentation test fails until you do.
+**Add a component.** Search this file and `resources/css/app.css` first. If nothing fits, add one `app-*` class under `@layer components`, built only from tokens, and document it in this file in the same commit. The documentation test fails until you do. Then add a live example to `resources/views/styleguide/examples` and a specimen to `/styleguide`; the example file is both the preview and the code shown beside it.
 
 **Need a colour that does not exist.** Add a semantic `--ui-*` token with a light and a dark value in `app.css`, expose it in `@theme inline`, check AA contrast in both themes, and add a row to the colour table.
 
@@ -388,5 +390,9 @@ Also run an automated accessibility check on the pages you changed. The project 
 | `resources/views/pagination/livewire.blade.php` | Pagination for Livewire components |
 | `resources/views/layouts/app.blade.php` | Page shell, theme bootstrap, skip link |
 | `resources/views/layouts/embed.blade.php` | Transparent shell for the iframe widget |
+| `resources/views/livewire/styleguide.blade.php` | The `/styleguide` reference page |
+| `resources/views/styleguide/examples` | Live component and pattern examples shown on `/styleguide` |
+| `app/Support/DesignSystem` | Reads the tokens from `app.css` and this file, and exports them as Design Tokens JSON |
 | `tests/Feature/DesignSystemTest.php` | Design rule checks |
+| `tests/Feature/StyleguideTest.php` | Checks that `/styleguide` and its token and Markdown exports match the sources |
 | `public/v1` | Frozen archive of the previous design. Out of scope for these rules; never restyle it (`tests/Feature/SiteArchiveTest.php` guards it) |

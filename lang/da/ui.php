@@ -826,6 +826,12 @@ return array (
     'next' => 'Næste side',
     'page' => 'Side :page',
   ),
+  'styleguide' =>
+  array (
+    'nav_label' => 'Designsystem',
+    'nav_desc' => 'Tokens, komponenter og sidemønstre bag EU VAT Info',
+    'english_only' => 'Referencen til designsystemet er udgivet på engelsk.',
+  ),
   'mcp_page' =>
   array (
     'meta_title' => 'EU-moms-MCP-server: aktuelle momsdata til AI-assistenter | EU VAT Info',

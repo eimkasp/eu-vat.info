@@ -36,6 +36,7 @@
                 [__('ui.sitemap.openapi'), '/api/v1/openapi.json', __('ui.sitemap.openapi_desc')],
                 [__('ui.nav.dataset'), locale_path('/datasets/eu-vat-rates'), __('ui.nav.dataset_desc')],
                 [__('ui.sitemap.mcp_server'), locale_path('/mcp-server'), __('ui.sitemap.mcp_server_desc')],
+                [__('ui.styleguide.nav_label'), locale_path('/styleguide'), __('ui.styleguide.nav_desc')],
                 [__('ui.sitemap.llms_txt'), '/llms.txt', __('ui.sitemap.llms_txt_desc')],
                 [__('ui.sitemap.full_vat_rates'), '/llms-full.txt', __('ui.sitemap.full_vat_rates_desc')],
                 [__('ui.sitemap.json_api'), '/api/llm/vat-rates', __('ui.sitemap.json_api_desc')],

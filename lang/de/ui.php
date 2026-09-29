@@ -826,6 +826,12 @@ return array (
     'next' => 'Nächste Seite',
     'page' => 'Seite :page',
   ),
+  'styleguide' =>
+  array (
+    'nav_label' => 'Designsystem',
+    'nav_desc' => 'Tokens, Komponenten und Seitenmuster hinter EU VAT Info',
+    'english_only' => 'Die Referenz zum Designsystem ist auf Englisch verfügbar.',
+  ),
   'mcp_page' =>
   array (
     'meta_title' => 'EU-MwSt.-MCP-Server: Live-MwSt.-Daten für KI-Assistenten | EU VAT Info',

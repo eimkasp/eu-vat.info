@@ -826,6 +826,12 @@ return array (
     'next' => 'Następna strona',
     'page' => 'Strona :page',
   ),
+  'styleguide' =>
+  array (
+    'nav_label' => 'System projektowy',
+    'nav_desc' => 'Tokeny, komponenty i wzorce stron EU VAT Info',
+    'english_only' => 'Dokumentacja systemu projektowego jest dostępna w języku angielskim.',
+  ),
   'mcp_page' =>
   array (
     'meta_title' => 'Serwer MCP VAT UE: aktualne dane o VAT dla asystentów AI | EU VAT Info',

@@ -581,6 +581,50 @@ document.addEventListener('alpine:init', () => {
             }
         },
     }));
+
+    Alpine.data('sectionNav', () => ({
+        current: null,
+        init() {
+            const sections = [...this.$el.querySelectorAll('a[href^="#"]')]
+                .map((link) => document.getElementById(link.hash.slice(1)))
+                .filter(Boolean);
+            const visible = new Set();
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => (entry.isIntersecting ? visible.add(entry.target) : visible.delete(entry.target)));
+                const active = sections.find((section) => visible.has(section));
+
+                if (active) {
+                    this.current = active.id;
+                } else if (sections[0]?.getBoundingClientRect().top > window.innerHeight * 0.3) {
+                    this.current = null;
+                }
+            }, { rootMargin: '-15% 0px -70% 0px' });
+
+            sections.forEach((section) => observer.observe(section));
+
+            this.$watch('current', (id) => {
+                const box = this.$el.closest('aside');
+                const link = id && this.$el.querySelector(`a[href="#${CSS.escape(id)}"]`);
+
+                if (!box || box.scrollHeight <= box.clientHeight) {
+                    return;
+                }
+
+                if (!link) {
+                    box.scrollTop = 0;
+
+                    return;
+                }
+
+                const linkRect = link.getBoundingClientRect();
+                const boxRect = box.getBoundingClientRect();
+
+                if (linkRect.top < boxRect.top || linkRect.bottom > boxRect.bottom) {
+                    box.scrollTop += linkRect.top - boxRect.top - (box.clientHeight - linkRect.height) / 2;
+                }
+            });
+        },
+    }));
 });
 
 window.addEventListener('toast', (event) => {

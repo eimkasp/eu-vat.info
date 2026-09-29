@@ -826,6 +826,12 @@ return array (
     'next' => 'Volgende pagina',
     'page' => 'Pagina :page',
   ),
+  'styleguide' =>
+  array (
+    'nav_label' => 'Designsysteem',
+    'nav_desc' => 'Tokens, componenten en paginapatronen achter EU VAT Info',
+    'english_only' => 'De referentie van het designsysteem is in het Engels gepubliceerd.',
+  ),
   'mcp_page' =>
   array (
     'meta_title' => 'EU-btw-MCP-server: actuele btw-gegevens voor AI-assistenten | EU VAT Info',

@@ -826,6 +826,12 @@ return array (
     'next' => 'Naslednja stran',
     'page' => 'Stran :page',
   ),
+  'styleguide' =>
+  array (
+    'nav_label' => 'Oblikovalski sistem',
+    'nav_desc' => 'Žetoni, komponente in vzorci strani za EU VAT Info',
+    'english_only' => 'Referenca oblikovalskega sistema je objavljena v angleščini.',
+  ),
   'mcp_page' =>
   array (
     'meta_title' => 'Strežnik MCP za DDV v EU: sprotni podatki o DDV za pomočnike UI | EU VAT Info',

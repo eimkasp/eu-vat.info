@@ -826,6 +826,12 @@ return array (
     'next' => 'Nasledujúca strana',
     'page' => 'Strana :page',
   ),
+  'styleguide' =>
+  array (
+    'nav_label' => 'Dizajnový systém',
+    'nav_desc' => 'Tokeny, komponenty a vzory stránok, na ktorých stojí EU VAT Info',
+    'english_only' => 'Referenčná príručka dizajnového systému je dostupná v angličtine.',
+  ),
   'mcp_page' =>
   array (
     'meta_title' => 'MCP server DPH EÚ: aktuálne údaje o DPH pre asistentov AI | EU VAT Info',

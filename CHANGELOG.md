@@ -6,6 +6,9 @@ All notable changes to EU VAT Info are documented here.
 
 ## [5.0.1] — 2026-09-29 — A more polished site and better AI connections
 
+### Added
+- **A public design system** — the [design system reference](/styleguide) shows every colour, type style, component and page pattern the site is built from, with code you can copy. The same tokens download as a Design Tokens file and the full guide reads as Markdown, so AI coding agents can build with it too.
+
 ### Improved
 - **A clearer MCP server page** — step-by-step setup for Claude, Claude Code, VS Code and Cursor, a live request tester and a plain description of every tool, in all 24 languages.
 - **A sixth MCP tool** — AI assistants can now list recorded and upcoming VAT rate changes, and every tool returns structured results that newer clients read directly.

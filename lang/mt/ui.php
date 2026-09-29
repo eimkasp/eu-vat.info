@@ -826,6 +826,12 @@ return array (
     'next' => 'Il-paġna li jmiss',
     'page' => 'Paġna :page',
   ),
+  'styleguide' =>
+  array (
+    'nav_label' => 'Sistema tad-disinn',
+    'nav_desc' => 'Tokens, komponenti u mudelli tal-paġni wara EU VAT Info',
+    'english_only' => 'Ir-referenza tas-sistema tad-disinn hija ppubblikata bl-Ingliż.',
+  ),
   'mcp_page' =>
   array (
     'meta_title' => 'Server MCP tal-VAT tal-UE: data tal-VAT diretta għall-assistenti tal-IA | EU VAT Info',

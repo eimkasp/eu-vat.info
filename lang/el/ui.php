@@ -826,6 +826,12 @@ return array (
     'next' => 'Επόμενη σελίδα',
     'page' => 'Σελίδα :page',
   ),
+  'styleguide' =>
+  array (
+    'nav_label' => 'Σύστημα σχεδίασης',
+    'nav_desc' => 'Tokens, στοιχεία και μοτίβα σελίδων πίσω από το EU VAT Info',
+    'english_only' => 'Ο οδηγός του συστήματος σχεδίασης δημοσιεύεται στα αγγλικά.',
+  ),
   'mcp_page' =>
   array (
     'meta_title' => 'Διακομιστής MCP για τον ΦΠΑ της ΕΕ: ζωντανά δεδομένα ΦΠΑ για βοηθούς AI | EU VAT Info',

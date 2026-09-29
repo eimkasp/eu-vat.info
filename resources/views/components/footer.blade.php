@@ -21,6 +21,7 @@
             [__('ui.footer.vat_rates_api'), '/api/v1/countries'],
             [__('ui.nav.dataset'), locale_path('/datasets/eu-vat-rates')],
             [__('ui.footer.mcp_server'), locale_path('/mcp-server')],
+            [__('ui.styleguide.nav_label'), locale_path('/styleguide')],
             [__('ui.footer.llms_data'), '/llms.txt'],
             [__('ui.footer.xml_sitemap'), '/sitemap.xml'],
         ],

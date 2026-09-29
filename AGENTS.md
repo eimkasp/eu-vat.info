@@ -89,6 +89,7 @@ routes/
 | `TopCalculations` | `/top-vat-calculations/{amount?}` | Common amounts for every EU country |
 | `VatComparison` | `/compare/{a}-vs-{b}-vat` | Approved country comparisons |
 | `HtmlSitemap` | `/sitemap` | HTML sitemap for SEO |
+| `Styleguide` | `/styleguide` | Design system reference (English only, rendered from `app.css` and `DESIGN.md`) |
 
 ### Services
 
@@ -122,6 +123,8 @@ POST /api/vat/validation/validate     # Validate VAT number
 POST /api/vat/validation/batch        # Batch validate (max 10)
 GET  /api/vat/validation/health       # VIES service health
 POST /api/mcp                         # MCP server (JSON-RPC)
+GET  /styleguide/design.tokens.json   # Design tokens (DTCG 2025.10, generated from app.css)
+GET  /styleguide.md                   # DESIGN.md as Markdown
 GET  /up                              # Application health check
 ```
 
@@ -143,6 +146,7 @@ GET  /up                              # Application health check
 
 ### Frontend
 - **Read `DESIGN.md` before any UI change.** It is the design system and styleguide (tokens, brand surfaces, component recipes, patterns, accessibility rules). `tests/Feature/DesignSystemTest.php` enforces it, and `.claude/skills/design-system` loads it for Claude Code.
+- `/styleguide` renders the design system with live examples from `resources/views/styleguide/examples`; `/styleguide/design.tokens.json` (Design Tokens Community Group JSON) and `/styleguide.md` are generated from `resources/css/app.css` and `DESIGN.md` by `App\Support\DesignSystem`, so they never need editing by hand. `tests/Feature/StyleguideTest.php` keeps them in step
 - Interactive UI uses **Livewire 4** components with **Alpine.js** (`resources/js/app.js`) for instant client-side feedback — no SPA framework
 - Styling: **Tailwind CSS 4** with semantic OKLCH tokens and `app-*` component classes in `resources/css/app.css`; no component library
 - Look: solid and institutional — flat EU navy (`brand`) for header, heroes and footer, EU gold only as a thin accent on navy, opaque white surfaces with hairline borders; no glass, blur or decorative gradients

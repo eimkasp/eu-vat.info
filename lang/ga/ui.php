@@ -826,6 +826,12 @@ return array (
     'next' => 'An chéad leathanach eile',
     'page' => 'Leathanach :page',
   ),
+  'styleguide' =>
+  array (
+    'nav_label' => 'Córas dearaidh',
+    'nav_desc' => 'Comharthaí, comhpháirteanna agus patrúin leathanaigh EU VAT Info',
+    'english_only' => 'Foilsítear tagairt an chórais dearaidh i mBéarla.',
+  ),
   'mcp_page' =>
   array (
     'meta_title' => 'Freastalaí MCP CBL an AE: sonraí CBL beo do chúntóirí IS | EU VAT Info',
