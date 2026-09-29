@@ -66,6 +66,7 @@ return array (
     'eu_vat_guide' => 'EL käibemaksu juhend',
     'donate' => 'Anneta',
     'privacy' => 'Privaatsuspoliitika',
+    'previous_version' => 'Eelmine versioon',
     'developers' => 'Arendajatele',
     'mcp_server' => 'MCP server',
     'data_source_note' => 'Määrad pärinevad Euroopa Komisjonilt ja neid kontrollitakse iga päev',

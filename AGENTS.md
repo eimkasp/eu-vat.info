@@ -52,6 +52,8 @@ resources/
 ├── css/                       # Tailwind source
 └── js/                        # Alpine.js / app scripts
 lang/                          # 24 language directories (bg, cs, da, de, el, en, es, et, fi, fr, ga, hr, hu, it, lt, lv, mt, nl, pl, pt, ro, sk, sl, sv)
+public/
+└── v1/                        # Frozen static archive of the site before the 5.0 redesign (never edit)
 routes/
 ├── web.php                    # Localised routes (/{locale}/path)
 ├── api.php                    # REST API endpoints
@@ -149,6 +151,12 @@ GET  /up                              # Application health check
 - Icons: `<x-ui.icon name="…">` (inline Lucide paths); flags: `<x-ui.flag :iso="…">` (local SVGs); pagination: return `'pagination.livewire'` from `paginationView()`
 - VAT maths: `App\Support\Vat` (PHP) mirrored by `resources/js/vat.js`; keep both in sync
 - Structured data: `<x-json-ld :data="[…]">` (never write `@context` in Blade)
+
+### Site archive (`/v1`)
+- `public/v1/` is a frozen, static English snapshot of the site as it was before the 5.0 redesign (`main` at `d1670fc`, captured on 29 September 2026). The web server serves its 246 pages directly as `…/index.html`; no Laravel route is involved, so never add a `v1` route.
+- Each page is `noindex, nofollow`, shows the archive bar (`public/v1/archive.css`) and loads `public/v1/archive.js`, which answers the old Livewire 3 runtime in the browser: calculations work, picking a calculator country opens that country's archived page, and server actions (VIES checks, filters, sign-ups) show a read-only notice instead of calling a server.
+- Links to pages that were not archived (other languages, shared calculations, the API) point to the live site. The footer ("Previous version") and the changelog link to `/v1/`.
+- It sits outside the design system: do not edit, restyle or reformat it. `tests/Feature/SiteArchiveTest.php` guards that it stays complete, unindexed, self-contained and free of server calls.
 
 ### Testing
 - Framework: **Pest 4** (preferred) with PHPUnit 12 underneath

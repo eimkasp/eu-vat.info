@@ -66,6 +66,7 @@ return array (
     'eu_vat_guide' => 'EU-momsguide',
     'donate' => 'Donera',
     'privacy' => 'Integritetspolicy',
+    'previous_version' => 'Tidigare version',
     'developers' => 'Utvecklare',
     'mcp_server' => 'MCP-server',
     'data_source_note' => 'Satserna kommer från Europeiska kommissionen och kontrolleras dagligen',

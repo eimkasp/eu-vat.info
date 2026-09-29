@@ -387,3 +387,4 @@ Also run an automated accessibility check on the pages you changed. The project 
 | `resources/views/layouts/app.blade.php` | Page shell, theme bootstrap, skip link |
 | `resources/views/layouts/embed.blade.php` | Transparent shell for the iframe widget |
 | `tests/Feature/DesignSystemTest.php` | Design rule checks |
+| `public/v1` | Frozen archive of the previous design. Out of scope for these rules; never restyle it (`tests/Feature/SiteArchiveTest.php` guards it) |

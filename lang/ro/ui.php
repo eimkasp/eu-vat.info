@@ -66,6 +66,7 @@ return array (
     'eu_vat_guide' => 'Ghid TVA UE',
     'donate' => 'Donați',
     'privacy' => 'Politica de confidențialitate',
+    'previous_version' => 'Versiunea anterioară',
     'developers' => 'Dezvoltatori',
     'mcp_server' => 'Server MCP',
     'data_source_note' => 'Cote preluate de la Comisia Europeană și verificate zilnic',

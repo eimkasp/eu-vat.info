@@ -66,6 +66,7 @@ return array (
     'eu_vat_guide' => 'Guía del IVA de la UE',
     'donate' => 'Donar',
     'privacy' => 'Política de privacidad',
+    'previous_version' => 'Versión anterior',
     'developers' => 'Desarrolladores',
     'mcp_server' => 'Servidor MCP',
     'data_source_note' => 'Tipos procedentes de la Comisión Europea y verificados a diario',

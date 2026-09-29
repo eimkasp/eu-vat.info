@@ -79,6 +79,7 @@ return [
         'eu_vat_guide' => 'EU VAT Guide',
         'donate' => 'Donate',
         'privacy' => 'Privacy policy',
+        'previous_version' => 'Previous version',
         'developers' => 'Developers',
         'mcp_server' => 'MCP server',
         'data_source_note' => 'Rates sourced from the European Commission and verified daily',

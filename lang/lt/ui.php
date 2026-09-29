@@ -66,6 +66,7 @@ return array (
     'eu_vat_guide' => 'ES PVM vadovas',
     'donate' => 'Paremti',
     'privacy' => 'Privatumo politika',
+    'previous_version' => 'Ankstesnė versija',
     'developers' => 'Kūrėjams',
     'mcp_server' => 'MCP serveris',
     'data_source_note' => 'Tarifai gaunami iš Europos Komisijos ir tikrinami kasdien',

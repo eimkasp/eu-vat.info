@@ -66,6 +66,7 @@ return array (
     'eu_vat_guide' => 'Guida IVA UE',
     'donate' => 'Donazioni',
     'privacy' => 'Informativa sulla privacy',
+    'previous_version' => 'Versione precedente',
     'developers' => 'Sviluppatori',
     'mcp_server' => 'Server MCP',
     'data_source_note' => 'Aliquote provenienti dalla Commissione Europea e verificate ogni giorno',

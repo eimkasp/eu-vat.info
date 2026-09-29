@@ -66,6 +66,7 @@ return array (
     'eu_vat_guide' => 'Vodič za PDV u EU',
     'donate' => 'Donirajte',
     'privacy' => 'Pravila privatnosti',
+    'previous_version' => 'Prethodna verzija',
     'developers' => 'Za programere',
     'mcp_server' => 'MCP poslužitelj',
     'data_source_note' => 'Stope potječu od Europske komisije i svakodnevno se provjeravaju',

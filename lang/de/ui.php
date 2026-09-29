@@ -66,6 +66,7 @@ return array (
     'eu_vat_guide' => 'EU MwSt.-Leitfaden',
     'donate' => 'Spenden',
     'privacy' => 'Datenschutzerklärung',
+    'previous_version' => 'Frühere Version',
     'developers' => 'Entwickler',
     'mcp_server' => 'MCP-Server',
     'data_source_note' => 'Sätze stammen von der Europäischen Kommission und werden täglich überprüft',

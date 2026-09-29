@@ -66,6 +66,7 @@ return array (
     'eu_vat_guide' => 'Przewodnik po VAT w UE',
     'donate' => 'Wesprzyj projekt',
     'privacy' => 'Polityka prywatności',
+    'previous_version' => 'Poprzednia wersja',
     'developers' => 'Dla programistów',
     'mcp_server' => 'Serwer MCP',
     'data_source_note' => 'Stawki pochodzą od Komisji Europejskiej i są codziennie weryfikowane',

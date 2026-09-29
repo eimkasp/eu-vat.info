@@ -66,6 +66,7 @@ return array (
     'eu_vat_guide' => 'Treoir CBL an AE',
     'donate' => 'Deonaigh',
     'privacy' => 'Beartas príobháideachais',
+    'previous_version' => 'Leagan roimhe seo',
     'developers' => 'Forbróirí',
     'mcp_server' => 'Freastalaí MCP',
     'data_source_note' => 'Rátaí ón gCoimisiún Eorpach, fíoraithe go laethúil',

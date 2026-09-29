@@ -13,6 +13,7 @@ All notable changes to EU VAT Info are documented here.
 - **Open a shared calculation in the calculator** — shared result pages now reopen in the full calculator with the same amount, rate and direction.
 - **Widget builder** — choose a country and a vertical or horizontal layout, see a live preview and copy the embed code in one click.
 - **Recent lookups** — the VAT number validator remembers your latest checks on your own device, so you can re-run them with one click.
+- **The previous version, preserved** — the site as it looked before this redesign stays online as a read-only archive at [/v1](/v1/), so you can follow how EU VAT Info has evolved.
 
 ### Improved
 - Every page has been redesigned with one consistent, accessible look, including clearer tables, larger touch targets and visible keyboard focus.

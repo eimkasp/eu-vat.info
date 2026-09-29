@@ -66,6 +66,7 @@ return array (
     'eu_vat_guide' => 'Vodnik po DDV v EU',
     'donate' => 'Doniraj',
     'privacy' => 'Pravilnik o zasebnosti',
+    'previous_version' => 'Prejšnja različica',
     'developers' => 'Za razvijalce',
     'mcp_server' => 'Strežnik MCP',
     'data_source_note' => 'Stopnje so pridobljene od Evropske komisije in se dnevno preverjajo',

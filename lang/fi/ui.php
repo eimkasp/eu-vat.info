@@ -66,6 +66,7 @@ return array (
     'eu_vat_guide' => 'EU:n ALV-opas',
     'donate' => 'Lahjoita',
     'privacy' => 'Tietosuojaseloste',
+    'previous_version' => 'Aiempi versio',
     'developers' => 'Kehittäjille',
     'mcp_server' => 'MCP-palvelin',
     'data_source_note' => 'Verokannat perustuvat Euroopan komission tietoihin, ja ne tarkistetaan päivittäin',

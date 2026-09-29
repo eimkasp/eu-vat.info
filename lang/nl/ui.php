@@ -66,6 +66,7 @@ return array (
     'eu_vat_guide' => 'EU BTW-gids',
     'donate' => 'Doneren',
     'privacy' => 'Privacybeleid',
+    'previous_version' => 'Vorige versie',
     'developers' => 'Ontwikkelaars',
     'mcp_server' => 'MCP-server',
     'data_source_note' => 'Tarieven afkomstig van de Europese Commissie en dagelijks gecontroleerd',

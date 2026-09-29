@@ -66,6 +66,7 @@ return array (
     'eu_vat_guide' => 'Průvodce DPH v EU',
     'donate' => 'Přispět',
     'privacy' => 'Zásady ochrany osobních údajů',
+    'previous_version' => 'Předchozí verze',
     'developers' => 'Pro vývojáře',
     'mcp_server' => 'MCP server',
     'data_source_note' => 'Sazby pocházejí od Evropské komise a jsou denně ověřovány',
