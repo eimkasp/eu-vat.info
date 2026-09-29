@@ -10,8 +10,6 @@ use Illuminate\Support\Facades\File;
 const LEGACY_INLINE_SVG_VIEWS = [
     'livewire/chrome-extension.blade.php',
     'livewire/donate.blade.php',
-    'livewire/html-sitemap.blade.php',
-    'livewire/mcp-server.blade.php',
     'livewire/vat-validation-api-docs.blade.php',
 ];
 

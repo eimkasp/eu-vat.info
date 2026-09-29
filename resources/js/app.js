@@ -484,6 +484,58 @@ document.addEventListener('alpine:init', () => {
         },
     }));
 
+    Alpine.data('mcpPlayground', ({ endpoint, examples }) => ({
+        examples,
+        active: Object.keys(examples)[0],
+        loading: false,
+        status: null,
+        response: '',
+        elapsed: null,
+        get body() {
+            return JSON.stringify(this.examples[this.active], null, 2);
+        },
+        get ok() {
+            return this.status >= 200 && this.status < 300;
+        },
+        select(key) {
+            this.active = key;
+            this.status = null;
+            this.response = '';
+            this.elapsed = null;
+        },
+        async send() {
+            if (this.loading) {
+                return;
+            }
+
+            this.loading = true;
+            this.response = '';
+            const started = performance.now();
+
+            try {
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', Accept: 'application/json, text/event-stream' },
+                    body: this.body,
+                });
+                this.status = response.status;
+                const text = await response.text();
+
+                try {
+                    this.response = JSON.stringify(JSON.parse(text), null, 2);
+                } catch {
+                    this.response = text;
+                }
+            } catch (error) {
+                this.status = 0;
+                this.response = error.message;
+            } finally {
+                this.elapsed = Math.round(performance.now() - started);
+                this.loading = false;
+            }
+        },
+    }));
+
     Alpine.data('apiPlayground', ({ endpoint, country = 'LT', number = '100019070512' }) => ({
         country,
         number,

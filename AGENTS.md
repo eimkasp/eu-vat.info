@@ -158,6 +158,10 @@ GET  /up                              # Application health check
 - Links to pages that were not archived (other languages, shared calculations, the API) point to the live site. The footer ("Previous version") and the changelog link to `/v1/`.
 - It sits outside the design system: do not edit, restyle or reformat it. `tests/Feature/SiteArchiveTest.php` guards that it stays complete, unindexed, self-contained and free of server calls.
 
+### MCP server
+- `App\Support\Mcp\VatMcpServer` defines the public MCP server once: name, protocol versions, instructions, rate limits and every tool with its schema and annotations. `Api\McpController` serves it at `POST /api/mcp` (Streamable HTTP, stateless JSON, `throttle:mcp`).
+- The MCP server card, the OAuth protected-resource metadata, `llms.txt` and the `/mcp-server` page all read from it, so a new tool needs three changes only: its definition in `VatMcpServer::tools()`, its handler in `McpController`, and its page copy under `ui.mcp_page.tools` in all 24 locales. `tests/Feature/McpServerTest.php` checks that they stay in step.
+
 ### Testing
 - Framework: **Pest 4** (preferred) with PHPUnit 12 underneath
 - Test location: `tests/Feature/` and `tests/Unit/`

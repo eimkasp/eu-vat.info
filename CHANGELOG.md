@@ -4,6 +4,20 @@ All notable changes to EU VAT Info are documented here.
 
 ---
 
+## [5.0.1] — 2026-09-29 — Better connections for AI assistants
+
+### Improved
+- **A clearer MCP server page** — step-by-step setup for Claude, Claude Code, VS Code and Cursor, a live request tester and a plain description of every tool, in all 24 languages.
+- **A sixth MCP tool** — AI assistants can now list recorded and upcoming VAT rate changes, and every tool returns structured results that newer clients read directly.
+- **Easier for AI assistants to find and use** — llms.txt, the API catalog, the MCP server card and the agent skill guides now point to the current API, its OpenAPI description and every tool.
+- **Richer search results** — the VAT calculator, the API documentation and the MCP server page now describe themselves to search engines.
+
+### Fixed
+- The site map showed stray code next to each country flag.
+- Links to the privacy policy in the site's machine-readable settings pointed to a page that does not exist.
+
+---
+
 ## [5.0.0] — 2026-09-29 — A faster, clearer EU VAT Info
 
 ### Added
