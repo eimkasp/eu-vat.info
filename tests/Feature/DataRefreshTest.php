@@ -5,8 +5,9 @@ use App\Jobs\VerifyVatRatesIntegrity;
 use App\Models\Country;
 use App\Models\VatRate;
 use App\Models\VatRateChange;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
-uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
+uses(RefreshDatabase::class);
 
 // ── VAT History Page ──────────────────────────────────────────────────────
 
@@ -24,7 +25,9 @@ it('vat-changes page shows country filter', function () {
     $this->get('/vat-changes')
         ->assertStatus(200)
         ->assertSee('All Countries')
-        ->assertSee('Standard Rate');
+        ->assertSee('TestCountry')
+        ->assertSee('All Types')
+        ->assertSee('Standard');
 });
 
 it('vat-changes page shows empty state when no changes', function () {
@@ -65,7 +68,7 @@ it('verify integrity job syncs all rate types', function () {
         'source' => 'test',
     ]);
 
-    $job = new VerifyVatRatesIntegrity();
+    $job = new VerifyVatRatesIntegrity;
     $job->handle();
 
     $country->refresh();
@@ -91,7 +94,7 @@ it('generate changes job creates change records', function () {
         'source' => 'test',
     ]);
 
-    $job = new GenerateVatRateChanges();
+    $job = new GenerateVatRateChanges;
     $job->handle();
 
     $changes = VatRateChange::where('country_id', $country->id)->get();

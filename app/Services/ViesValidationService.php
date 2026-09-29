@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\VatValidationCache;
 use App\Models\VatValidationLog;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
@@ -14,99 +15,127 @@ class ViesValidationService
     private const CACHE_TTL = 86400; // 24 hours
 
     /**
-     * Validate VAT number with VIES API and cache results
+     * Validate a VAT number against VIES using a Redis/array cache, then the database, then the live API.
+     * Caller-specific name/address matching is computed per request and never cached.
      */
     public function validate(string $countryCode, string $vatNumber, ?string $companyName = null, ?string $address = null): array
     {
-        $countryCode = strtoupper($countryCode);
-        $vatNumber = $this->cleanVatNumber($vatNumber);
+        $countryCode = $this->viesCountryCode($countryCode);
+        $vatNumber = $this->cleanVatNumber($vatNumber, $countryCode);
         $cacheKey = "vat_validation_{$countryCode}_{$vatNumber}";
 
-        // Check cache first
         if ($cached = Cache::get($cacheKey)) {
-            return array_merge($cached, ['source' => 'cache']);
+            return $this->withMatching(array_merge($cached, ['source' => 'cache']), $companyName, $address);
         }
 
-        // Check database backup
-        if ($dbResult = $this->getFromDatabase($countryCode, $vatNumber)) {
-            if ($this->isRecentValidation($dbResult)) {
-                Cache::put($cacheKey, $dbResult, self::CACHE_TTL);
+        $dbResult = $this->getFromDatabase($countryCode, $vatNumber);
 
-                return array_merge($dbResult, ['source' => 'database']);
-            }
+        if ($dbResult && $this->isRecentValidation($dbResult)) {
+            Cache::put($cacheKey, $dbResult, self::CACHE_TTL);
+
+            return $this->withMatching(array_merge($dbResult, ['source' => 'database']), $companyName, $address);
         }
 
-        // Call VIES API
         try {
-            $response = Http::timeout(10)->post(self::VIES_API_URL, [
+            $response = Http::timeout(10)->acceptJson()->post(self::VIES_API_URL, [
                 'countryCode' => $countryCode,
                 'vatNumber' => $vatNumber,
             ]);
 
-            if ($response->successful()) {
-                $data = $response->json();
+            $data = (array) $response->json();
 
+            if ($response->successful() && ($data['actionSucceed'] ?? true) !== false && array_key_exists('valid', $data)) {
                 $result = [
-                    'valid' => $data['valid'] ?? false,
+                    'valid' => (bool) $data['valid'],
                     'country_code' => $countryCode,
                     'vat_number' => $vatNumber,
-                    'name' => $data['name'] ?? null,
-                    'address' => $data['address'] ?? null,
+                    'name' => $this->presentOrNull($data['name'] ?? null),
+                    'address' => $this->presentOrNull($data['address'] ?? null),
                     'request_date' => $data['requestDate'] ?? now()->format('Y-m-d'),
-                    'request_identifier' => $data['requestIdentifier'] ?? null,
+                    'request_identifier' => $this->presentOrNull($data['requestIdentifier'] ?? null),
                 ];
 
-                // Perform fuzzy matching if user provided data
-                if ($result['valid']) {
-                    $result['name_match'] = $this->fuzzyMatch($companyName, $result['name']);
-                    $result['address_match'] = $this->fuzzyMatch($address, $result['address']);
-                    $result['confidence'] = $this->calculateConfidence($result);
-                }
-
-                // Save to database and cache
                 $this->saveToDatabase($result);
                 Cache::put($cacheKey, $result, self::CACHE_TTL);
 
-                return array_merge($result, ['source' => 'vies_api']);
+                return $this->withMatching(array_merge($result, ['source' => 'vies_api']), $companyName, $address);
             }
 
-            // If VIES fails, try to get from database as fallback
-            if ($dbResult) {
-                return array_merge($dbResult, ['source' => 'database_fallback', 'warning' => 'VIES API unavailable']);
-            }
+            return $this->failure((string) (data_get($data, 'errorWrappers.0.error') ?? 'HTTP_'.$response->status()), $dbResult, $companyName, $address);
+        } catch (\Throwable $exception) {
+            report($exception);
 
-            return [
-                'valid' => false,
-                'error' => $response->json()['errorWrapperError'] ?? 'Validation failed',
-                'source' => 'error',
-            ];
-
-        } catch (\Exception $e) {
-            // Exception fallback to database
-            if ($dbResult) {
-                return array_merge($dbResult, ['source' => 'database_fallback', 'warning' => $e->getMessage()]);
-            }
-
-            return [
-                'valid' => false,
-                'error' => 'Service unavailable: '.$e->getMessage(),
-                'source' => 'error',
-            ];
+            return $this->failure('SERVICE_UNAVAILABLE', $dbResult, $companyName, $address);
         }
     }
 
     /**
-     * Clean VAT number - remove spaces, dashes, country prefix
+     * VIES answers most errors with HTTP 200 and "actionSucceed": false, so failures are never cached as an invalid number.
+     * A stored result is only reused when the failure is on the VIES side rather than in the submitted number.
      */
-    private function cleanVatNumber(string $vatNumber): string
+    private function failure(string $code, ?array $dbResult, ?string $companyName, ?string $address): array
     {
-        // Remove spaces, dashes, dots
-        $cleaned = str_replace([' ', '-', '.'], '', $vatNumber);
+        $invalidInput = $code === 'INVALID_INPUT' || str_starts_with($code, 'VOW-ERR');
 
-        // Remove country code prefix if present (e.g., LT123456789 -> 123456789)
-        $cleaned = preg_replace('/^[A-Z]{2}/', '', $cleaned);
+        if ($dbResult && ! $invalidInput) {
+            return $this->withMatching(array_merge($dbResult, ['source' => 'database_fallback', 'warning' => 'VIES API unavailable']), $companyName, $address);
+        }
 
-        return strtoupper(trim($cleaned));
+        return [
+            'valid' => false,
+            'error' => $invalidInput
+                ? 'The VAT number format is not valid for this member state.'
+                : 'The VIES service is temporarily unavailable. Please try again shortly.',
+            'error_code' => $code,
+            'source' => 'error',
+        ];
+    }
+
+    private function presentOrNull(mixed $value): ?string
+    {
+        $value = is_string($value) ? trim($value) : null;
+
+        return in_array($value, [null, '', '---', 'N/A'], true) ? null : $value;
+    }
+
+    /**
+     * VIES identifies Greece as EL even though its ISO 3166 code is GR.
+     */
+    public function viesCountryCode(string $countryCode): string
+    {
+        $countryCode = strtoupper(trim($countryCode));
+
+        return $countryCode === 'GR' ? 'EL' : $countryCode;
+    }
+
+    private function withMatching(array $result, ?string $companyName, ?string $address): array
+    {
+        if (! ($result['valid'] ?? false) || (! $companyName && ! $address)) {
+            return $result;
+        }
+
+        $result['name_match'] = $this->fuzzyMatch($companyName, $result['name'] ?? null);
+        $result['address_match'] = $this->fuzzyMatch($address, $result['address'] ?? null);
+        $result['confidence'] = $this->calculateConfidence($result);
+
+        return $result;
+    }
+
+    /**
+     * Normalise a VAT number and drop the member-state prefix only when it matches the country.
+     */
+    private function cleanVatNumber(string $vatNumber, string $countryCode): string
+    {
+        $cleaned = strtoupper((string) preg_replace('/[\s\-.]/', '', $vatNumber));
+        $prefixes = $countryCode === 'EL' ? ['EL', 'GR'] : [$countryCode];
+
+        foreach ($prefixes as $prefix) {
+            if (str_starts_with($cleaned, $prefix) && strlen($cleaned) > strlen($prefix) + 1) {
+                return substr($cleaned, strlen($prefix));
+            }
+        }
+
+        return $cleaned;
     }
 
     /**
@@ -270,6 +299,6 @@ class ViesValidationService
             return false;
         }
 
-        return now()->diffInDays($result['last_checked_at']) < 7;
+        return Carbon::parse($result['last_checked_at'])->greaterThan(now()->subDays(7));
     }
 }

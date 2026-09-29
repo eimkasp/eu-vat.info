@@ -37,6 +37,7 @@ class CountryFactory extends Factory
             'super_reduced_rate' => 0,
             'parking_rate' => 0,
             'is_eu_member' => true,
+            'vies_available' => true,
         ];
     }
 

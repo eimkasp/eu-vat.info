@@ -1,89 +1,40 @@
-<div class="app-surface p-4 sm:p-5">
-    <h3 class="mb-4 text-lg font-bold text-ink">{{ __('ui.rate_changes.title') }}</h3>
-    
-    @if($futureChanges->count() > 0)
-        <div class="mb-6">
-            <h4 class="mb-3 text-sm font-semibold text-ink-muted">{{ __('ui.rate_changes.upcoming') }}</h4>
-            <div class="space-y-3">
-                @foreach($futureChanges as $change)
-                    <div class="flex items-center justify-between rounded-lg border border-blue-200 bg-action-soft p-3 transition-colors hover:bg-blue-100">
-                        <div class="flex items-center gap-3 flex-1">
-                            <img src="https://flagcdn.com/h40/{{ strtolower($change->country->iso_code) }}.jpg" 
-                                 alt="{{ $change->country->name }} flag" 
-                                 class="w-8 h-5 object-cover rounded shadow-sm">
-                            <div class="flex-1">
-                                <div class="font-medium text-ink">{{ $change->country->name }}</div>
-                                <div class="text-sm text-ink-muted">
-                                    {{ ucfirst(str_replace('_', ' ', $change->type)) }} rate: 
-                                    <span class="font-semibold">{{ $change->rate }}%</span>
-                                    @if($change->diff != 0)
-                                        <span class="ml-1 text-xs font-medium {{ $change->diff > 0 ? 'text-red-600' : 'text-green-600' }}">
-                                            ({{ $change->diff > 0 ? '+' : '' }}{{ $change->diff }}%)
-                                        </span>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <div class="text-sm font-medium text-blue-800">
-                                {{ $change->effective_from->format('M Y') }}
-                            </div>
-                            <div class="text-xs text-blue-600">
-                                {{ $change->effective_from->diffForHumans() }}
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-        </div>
-    @endif
+@use('App\Models\Country')
 
-    @if($recentChanges->count() > 0)
-        <div>
-            <h4 class="mb-3 text-sm font-semibold text-ink-muted">{{ __('ui.rate_changes.recent') }}</h4>
-            <div class="space-y-3">
-                @foreach($recentChanges as $change)
-                    <div class="flex items-center justify-between rounded-lg border border-transparent p-3 transition-colors hover:border-line hover:bg-surface-subtle">
-                        <div class="flex items-center gap-3 flex-1">
-                            <img src="https://flagcdn.com/h40/{{ strtolower($change->country->iso_code) }}.jpg" 
-                                 alt="{{ $change->country->name }} flag" 
-                                 class="w-8 h-5 object-cover rounded shadow-sm">
-                            <div class="flex-1">
-                                <div class="font-medium text-ink">{{ $change->country->name }}</div>
-                                <div class="text-sm text-ink-muted">
-                                    {{ ucfirst(str_replace('_', ' ', $change->type)) }} rate: 
-                                    <span class="font-semibold">{{ $change->rate }}%</span>
-                                    @if($change->diff != 0)
-                                        <span class="ml-1 text-xs font-medium {{ $change->diff > 0 ? 'text-red-600' : 'text-green-600' }}">
-                                            ({{ $change->diff > 0 ? '+' : '' }}{{ $change->diff }}%)
-                                        </span>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <div class="text-xs text-gray-500">
-                                {{ $change->effective_from->format('M d, Y') }}
-                            </div>
-                            <div class="text-xs text-gray-500">
-                                {{ $change->effective_from->diffForHumans() }}
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-        </div>
-    @elseif($futureChanges->count() == 0)
-        <div class="text-center py-8 text-gray-500">
-            <svg class="mx-auto h-12 w-12 text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-            </svg>
-            <p>{{ __('ui.rate_changes.no_changes') }}</p>
-        </div>
-    @endif
-    
-    <div class="mt-4 flex justify-between gap-3 border-t border-line pt-4">
-        <a href="{{ locale_path('/vat-changes') }}" class="inline-flex min-h-11 items-center text-sm font-semibold text-action hover:text-action-deep">{{ __('ui.rate_changes.full_history') }} →</a>
-        <a href="{{ locale_path('/vat-map') }}" class="inline-flex min-h-11 items-center text-right text-sm font-semibold text-action hover:text-action-deep">{{ __('ui.rate_changes.explore_map') }} →</a>
+<section class="app-surface p-5" aria-labelledby="rate-changes-heading">
+    <div class="flex items-center justify-between gap-3">
+        <h2 id="rate-changes-heading" class="text-base font-bold text-ink">{{ __('ui.rate_changes.title') }}</h2>
+        <a href="{{ locale_path('/vat-changes') }}" class="text-xs font-semibold text-action hover:text-action-deep">{{ __('ui.rate_changes.full_history') }}</a>
     </div>
-</div>
+
+    @foreach([['upcoming', $upcoming, __('ui.rate_changes.upcoming')], ['recent', $recent, __('ui.rate_changes.recent')]] as [$key, $changes, $label])
+        @if($changes->isNotEmpty())
+            <h3 class="mt-4 text-xs font-semibold text-ink-muted">{{ $label }}</h3>
+            <ol class="mt-2 space-y-1">
+                @foreach($changes as $change)
+                    @php($up = (float) $change->new_rate > (float) $change->old_rate)
+                    <li>
+                        <a href="{{ locale_path('/vat-calculator/'.$change->country?->slug) }}" class="flex items-center gap-3 rounded-control px-2 py-2 transition-colors hover:bg-surface-subtle">
+                            <x-ui.flag :iso="$change->country?->iso_code" size="lg" class="h-5 w-[1.625rem]" />
+                            <span class="min-w-0 flex-1">
+                                <span class="block truncate text-sm font-semibold text-ink">{{ $change->country?->name }}</span>
+                                <span class="block text-xs text-ink-muted">{{ __('ui.rate_type.'.$change->rate_type) }} · {{ $change->change_date?->translatedFormat('M Y') }}</span>
+                            </span>
+                            <span class="text-right">
+                                <span class="tabular block text-sm font-bold text-ink">{{ Country::formatRate($change->new_rate) }}%</span>
+                                <span @class(['tabular inline-flex items-center gap-0.5 text-xs font-semibold', 'text-danger' => $up, 'text-success' => ! $up])>
+                                    <x-ui.icon :name="$up ? 'trending-up' : 'trending-down'" class="size-3" />
+                                    <span class="sr-only">{{ $up ? __('ui.rate_changes.increase') : __('ui.rate_changes.decrease') }}</span>
+                                    {{ $up ? '+' : '−' }}{{ Country::formatRate(abs((float) $change->new_rate - (float) $change->old_rate)) }} pp
+                                </span>
+                            </span>
+                        </a>
+                    </li>
+                @endforeach
+            </ol>
+        @endif
+    @endforeach
+
+    @if($upcoming->isEmpty() && $recent->isEmpty())
+        <p class="mt-4 rounded-card bg-surface-subtle px-4 py-6 text-center text-sm text-ink-muted">{{ __('ui.rate_changes.no_changes') }}</p>
+    @endif
+</section>

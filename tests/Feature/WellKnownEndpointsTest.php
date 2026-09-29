@@ -1,9 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Storage;
+use Livewire\Features\SupportDisablingBackButtonCache\SupportDisablingBackButtonCache;
 
 afterEach(function () {
-    \Livewire\Features\SupportDisablingBackButtonCache\SupportDisablingBackButtonCache::$disableBackButtonCache = false;
+    SupportDisablingBackButtonCache::$disableBackButtonCache = false;
 });
 
 // ── Web Bot Auth: /.well-known/http-message-signatures-directory ────────────
@@ -186,7 +187,7 @@ it('includes x402 in oauth-protected-resource metadata', function () {
 // ── ACP Discovery Document ──────────────────────────────────────────────────
 
 it('serves ACP discovery document at /.well-known/acp.json', function () {
-    \Livewire\Features\SupportDisablingBackButtonCache\SupportDisablingBackButtonCache::$disableBackButtonCache = true;
+    SupportDisablingBackButtonCache::$disableBackButtonCache = true;
 
     $response = $this->getJson('/.well-known/acp.json');
 

@@ -7,9 +7,7 @@ use Illuminate\Support\Facades\Http;
 
 class IndexNowService
 {
-    public function __construct(protected SeoPolicy $seoPolicy)
-    {
-    }
+    public function __construct(protected SeoPolicy $seoPolicy) {}
 
     public function submit(array $urls): bool
     {

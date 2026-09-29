@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<script src="/v1/archive.js"></script>
+<meta name="theme-color" content="#003399">
+<link rel="preload" as="style" href="/v1/build/assets/app-DorI6tKp.css" /><link rel="stylesheet" href="/v1/build/assets/app-DorI6tKp.css" data-navigate-track="reload" />
+<title>Greece VAT Number Validator — Free VIES Lookup | EU VAT Info · Archive v1</title>
+<meta name="description" content="Free Greece (GR) VAT number validator. Instantly check company registration via the official EU VIES database — get name &amp; address. No sign-up needed.">
+<!-- Livewire Styles --><style >[wire\:loading][wire\:loading], [wire\:loading\.delay][wire\:loading\.delay], [wire\:loading\.inline-block][wire\:loading\.inline-block], [wire\:loading\.inline][wire\:loading\.inline], [wire\:loading\.block][wire\:loading\.block], [wire\:loading\.flex][wire\:loading\.flex], [wire\:loading\.table][wire\:loading\.table], [wire\:loading\.grid][wire\:loading\.grid], [wire\:loading\.inline-flex][wire\:loading\.inline-flex] {display: none;}[wire\:loading\.delay\.none][wire\:loading\.delay\.none], [wire\:loading\.delay\.shortest][wire\:loading\.delay\.shortest], [wire\:loading\.delay\.shorter][wire\:loading\.delay\.shorter], [wire\:loading\.delay\.short][wire\:loading\.delay\.short], [wire\:loading\.delay\.default][wire\:loading\.delay\.default], [wire\:loading\.delay\.long][wire\:loading\.delay\.long], [wire\:loading\.delay\.longer][wire\:loading\.delay\.longer], [wire\:loading\.delay\.longest][wire\:loading\.delay\.longest] {display: none;}[wire\:offline][wire\:offline] {display: none;}[wire\:dirty]:not(textarea):not(input):not(select) {display: none;}:root {--livewire-progress-bar-color: #2299dd;}[x-cloak] {display: none !important;}[wire\:cloak] {display: none !important;}dialog#livewire-error::backdrop {background-color: rgba(0, 0, 0, .6);}</style>
+<link rel="stylesheet" href="/v1/archive.css">
+</head>
+<body class="app-workspace antialiased">
+<a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 focus:bg-blue-600 focus:text-white focus:p-3 focus:z-50 focus:rounded-br-lg">Skip to main content</a><aside class="v1-archive-bar" aria-label="Archived version"><div class="v1-archive-bar__inner"><p class="v1-archive-bar__text"><strong class="v1-archive-bar__label">Archive v1</strong> <span>EU VAT Info as it looked on 29 September 2026, before the redesign. Rates here are frozen and may be out of date.</span></p><a class="v1-archive-bar__link" href="/v1/vat-number-validator/greece/">View the current site<span aria-hidden="true">&rarr;</span></a></div></aside>
+<header x-data="{ mobileMenuOpen: false }" class="sticky top-0 z-40 border-b border-white/15 bg-brand text-white">
+<div class="container !px-4 !py-2.5 sm:!px-6">
+<div class="flex justify-between items-center">
+<div class="flex items-center">
+<a class="flex min-h-11 items-center rounded-md text-lg font-bold tracking-[-0.02em] text-white transition-colors hover:text-blue-100" href="/v1/">
+EU VAT Info
+</a>
+</div>
+<button @click="mobileMenuOpen = !mobileMenuOpen"
+class="inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg text-white transition-colors hover:bg-white/10 md:hidden"
+aria-label="Toggle navigation menu"
+aria-controls="mobile-navigation"
+:aria-expanded="mobileMenuOpen.toString()">
+<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+<path x-show="!mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+<path x-show="mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+</svg>
+</button>
+<nav class="hidden items-center gap-1 text-sm font-medium md:flex" aria-label="Primary navigation">
+<a href="/v1/" title="All Countries" class="inline-flex min-h-11 items-center rounded-lg px-3 transition-colors hover:bg-white/10 hover:text-white text-blue-100" >All Countries</a>
+<a href="/v1/vat-calculator/" class="inline-flex min-h-11 items-center rounded-lg px-3 transition-colors hover:bg-white/10 hover:text-white text-blue-100" >VAT Calculator</a>
+<div class="relative" x-data="{ open: false }" @click.outside="open = false" @keydown.escape.window="open = false">
+<button @click="open = !open"
+:aria-expanded="open.toString()"
+aria-haspopup="true"
+class="flex min-h-11 items-center gap-1 rounded-lg px-3 transition-colors hover:bg-white/10 hover:text-white bg-white/15 text-white">
+VAT Tools
+<svg class="w-3.5 h-3.5 transition-transform duration-200" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+</button>
+<div x-show="open" x-cloak
+x-transition:enter="transition ease-out duration-150"
+x-transition:enter-start="opacity-0 translate-y-1"
+x-transition:enter-end="opacity-100 translate-y-0"
+x-transition:leave="transition ease-in duration-100"
+x-transition:leave-start="opacity-100 translate-y-0"
+x-transition:leave-end="opacity-0 translate-y-1"
+class="absolute left-1/2 top-full z-50 mt-2 w-56 -translate-x-1/2 rounded-lg border border-line bg-white py-1.5 shadow-floating"
+style="display:none;">
+<a href="/v1/tools/" class="mb-1 flex min-h-11 items-center gap-2.5 border-b border-line px-4 py-2.5 text-sm font-semibold text-ink transition-colors hover:bg-action-soft hover:text-action-deep">
+<svg class="w-4 h-4 text-blue-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+All VAT Tools
+</a>
+<a href="/embed" class="flex min-h-11 items-center gap-2.5 px-4 py-2.5 text-sm text-ink-muted transition-colors hover:bg-action-soft hover:text-action-deep">
+<svg class="w-4 h-4 text-indigo-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+VAT Widget
+</a>
+<a href="/v1/vat-map/" class="flex min-h-11 items-center gap-2.5 px-4 py-2.5 text-sm text-ink-muted transition-colors hover:bg-action-soft hover:text-action-deep" >
+<svg class="w-4 h-4 text-green-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
+VAT Map
+</a>
+<a href="/v1/vat-number-validator/" class="flex min-h-11 items-center gap-2.5 px-4 py-2.5 text-sm text-ink-muted transition-colors hover:bg-action-soft hover:text-action-deep"  aria-current="page" >
+<svg class="w-4 h-4 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+VAT Number Validator
+</a>
+<a href="/v1/vat-changes/" class="flex min-h-11 items-center gap-2.5 px-4 py-2.5 text-sm text-ink-muted transition-colors hover:bg-action-soft hover:text-action-deep" >
+<svg class="w-4 h-4 text-amber-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+VAT History
+</a>
+</div>
+</div>
+<a href="/v1/blog/" class="inline-flex min-h-11 items-center rounded-lg px-3 transition-colors hover:bg-white/10 hover:text-white text-blue-100" >VAT updates</a>
+<a href="https://github.com/eimkasp/eu-vat.info" target="_blank" rel="noopener noreferrer" aria-label="EU VAT Info on GitHub" class="inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg text-blue-100 transition-colors hover:bg-white/10 hover:text-white">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>                </a>
+<div x-data="{ open: false }" @click.outside="open = false" class="relative">
+<button @click="open = !open" type="button"
+class="flex items-center gap-1.5 text-sm text-white hover:text-blue-200 transition-colors px-2 py-1 rounded-md hover:bg-white/10"
+aria-label="Current language: English">
+<img src="/v1/flags/gb.svg"
+alt="English" class="h-3.5 rounded-sm border border-white/30" width="21" height="14">
+<span class="uppercase font-medium">en</span>
+<svg class="w-3 h-3 transition-transform" :class="{ 'rotate-180': open }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+</svg>
+</button>
+<div x-show="open" x-transition:enter="transition ease-out duration-100"
+x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
+x-transition:leave="transition ease-in duration-75"
+x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95"
+class="absolute right-0 mt-2 w-48 max-h-80 overflow-y-auto bg-white rounded-lg shadow-lg border border-gray-200 z-50 py-1"
+x-cloak>
+<a href="/lang/en"
+class="flex items-center gap-2 px-3 py-1.5 text-sm hover:bg-blue-50 transition-colors bg-blue-50 text-blue-700 font-medium">
+<img src="/v1/flags/gb.svg"
+alt="English" class="h-3.5 rounded-sm border border-gray-200" width="21" height="14" loading="lazy">
+<span>English</span>
+<svg class="w-3.5 h-3.5 ml-auto text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+</svg>
+</a>
+<a href="/lang/bg"
+class="flex items-center gap-2 px-3 py-1.5 text-sm hover:bg-blue-50 transition-colors text-gray-700">
+<img src="/v1/flags/bg.svg"
+alt="Български" class="h-3.5 rounded-sm border border-gray-200" width="21" height="14" loading="lazy">
+<span>Български</span>
+</a>
+<a href="/lang/cs"
+class="flex items-center gap-2 px-3 py-1.5 text-sm hover:bg-blue-50 transition-colors text-gray-700">
+<img src="/v1/flags/cz.svg"
+alt="Čeština" class="h-3.5 rounded-sm border border-gray-200" width="21" height="14" loading="lazy">
+<span>Čeština</span>
+</a>
+<a href="/lang/da"
+class="flex items-center gap-2 px-3 py-1.5 text-sm hover:bg-blue-50 transition-colors text-gray-700">
+<img src="/v1/flags/dk.svg"
+alt="Dansk" class="h-3.5 rounded-sm border border-gray-200" width="21" height="14" loading="lazy">
+<span>Dansk</span>
+</a>
+<a href="/lang/de"
+class="flex items-center gap-2 px-3 py-1.5 text-sm hover:bg-blue-50 transition-colors text-gray-700">
+<img src="/v1/flags/de.svg"
+alt="Deutsch" class="h-3.5 rounded-sm border border-gray-200" width="21" height="14" loading="lazy">
+<span>Deutsch</span>
+</a>
+<a href="/lang/el"
+class="flex items-center gap-2 px-3 py-1.5 text-sm hover:bg-blue-50 transition-colors text-gray-700">
+<img src="/v1/flags/gr.svg"
+alt="Ελληνικά" class="h-3.5 rounded-sm border border-gray-200" width="21" height="14" loading="lazy">
+<span>Ελληνικά</span>
+</a>
+<a href="/lang/es"
+class="flex items-center gap-2 px-3 py-1.5 text-sm hover:bg-blue-50 transition-colors text-gray-700">
+<img src="/v1/flags/es.svg"
+alt="Español" class="h-3.5 rounded-sm border border-gray-200" width="21" height="14" loading="lazy">
+<span>Español</span>
+</a>
+<a href="/lang/et"
+class="flex items-center gap-2 px-3 py-1.5 text-sm hover:bg-blue-50 transition-colors text-gray-700">
+<img src="/v1/flags/ee.svg"
+alt="Eesti" class="h-3.5 rounded-sm border border-gray-200" width="21" height="14" loading="lazy">
+<span>Eesti</span>
+</a>
+<a href="/lang/fi"
+class="flex items-center gap-2 px-3 py-1.5 text-sm hover:bg-blue-50 transition-colors text-gray-700">
+<img src="/v1/flags/fi.svg"
+alt="Suomi" class="h-3.5 rounded-sm border border-gray-200" width="21" height="14" loading="lazy">
+<span>Suomi</span>
+</a>
+<a href="/lang/fr"
+class="flex items-center gap-2 px-3 py-1.5 text-sm hover:bg-blue-50 transition-colors text-gray-700">
+<img src="/v1/flags/fr.svg"
+alt="Français" class="h-3.5 rounded-sm border border-gray-200" width="21" height="14" loading="lazy">
+<span>Français</span>
+</a>
+<a href="/lang/ga"
+class="flex items-center gap-2 px-3 py-1.5 text-sm hover:bg-blue-50 transition-colors text-gray-700">
+<img src="/v1/flags/ie.svg"
+alt="Gaeilge" class="h-3.5 rounded-sm border border-gray-200" width="21" height="14" loading="lazy">
+<span>Gaeilge</span>
+</a>
+<a href="/lang/hr"
+class="flex items-center gap-2 px-3 py-1.5 text-sm hover:bg-blue-50 transition-colors text-gray-700">
+<img src="/v1/flags/hr.svg"
+alt="Hrvatski" class="h-3.5 rounded-sm border border-gray-200" width="21" height="14" loading="lazy">
+<span>Hrvatski</span>
+</a>
+<a href="/lang/hu"
+class="flex items-center gap-2 px-3 py-1.5 text-sm hover:bg-blue-50 transition-colors text-gray-700">
+<img src="/v1/flags/hu.svg"
+alt="Magyar" class="h-3.5 rounded-sm border border-gray-200" width="21" height="14" loading="lazy">
+<span>Magyar</span>
+</a>
+<a href="/lang/it"
+class="flex items-center gap-2 px-3 py-1.5 text-sm hover:bg-blue-50 transition-colors text-gray-700">
+<img src="/v1/flags/it.svg"
+alt="Italiano" class="h-3.5 rounded-sm border border-gray-200" width="21" height="14" loading="lazy">
+<span>Italiano</span>
+</a>
+<a href="/lang/lt"
+class="flex items-center gap-2 px-3 py-1.5 text-sm hover:bg-blue-50 transition-colors text-gray-700">
+<img src="/v1/flags/lt.svg"
+alt="Lietuvių" class="h-3.5 rounded-sm border border-gray-200" width="21" height="14" loading="lazy">
+<span>Lietuvių</span>
+</a>
+<a href="/lang/lv"
+class="flex items-center gap-2 px-3 py-1.5 text-sm hover:bg-blue-50 transition-colors text-gray-700">
+<img src="/v1/flags/lv.svg"
+alt="Latviešu" class="h-3.5 rounded-sm border border-gray-200" width="21" height="14" loading="lazy">
+<span>Latviešu</span>
+</a>
+<a href="/lang/mt"
+class="flex items-center gap-2 px-3 py-1.5 text-sm hover:bg-blue-50 transition-colors text-gray-700">
+<img src="/v1/flags/mt.svg"
+alt="Malti" class="h-3.5 rounded-sm border border-gray-200" width="21" height="14" loading="lazy">
+<span>Malti</span>
+</a>
+<a href="/lang/nl"
+class="flex items-center gap-2 px-3 py-1.5 text-sm hover:bg-blue-50 transition-colors text-gray-700">
+<img src="/v1/flags/nl.svg"
+alt="Nederlands" class="h-3.5 rounded-sm border border-gray-200" width="21" height="14" loading="lazy">
+<span>Nederlands</span>
+</a>
+<a href="/lang/pl"
+class="flex items-center gap-2 px-3 py-1.5 text-sm hover:bg-blue-50 transition-colors text-gray-700">
+<img src="/v1/flags/pl.svg"
+alt="Polski" class="h-3.5 rounded-sm border border-gray-200" width="21" height="14" loading="lazy">
+<span>Polski</span>
+</a>
+<a href="/lang/pt"
+class="flex items-center gap-2 px-3 py-1.5 text-sm hover:bg-blue-50 transition-colors text-gray-700">
+<img src="/v1/flags/pt.svg"
+alt="Português" class="h-3.5 rounded-sm border border-gray-200" width="21" height="14" loading="lazy">
+<span>Português</span>
+</a>
+<a href="/lang/ro"
+class="flex items-center gap-2 px-3 py-1.5 text-sm hover:bg-blue-50 transition-colors text-gray-700">
+<img src="/v1/flags/ro.svg"
+alt="Română" class="h-3.5 rounded-sm border border-gray-200" width="21" height="14" loading="lazy">
+<span>Română</span>
+</a>
+<a href="/lang/sk"
+class="flex items-center gap-2 px-3 py-1.5 text-sm hover:bg-blue-50 transition-colors text-gray-700">
+<img src="/v1/flags/sk.svg"
+alt="Slovenčina" class="h-3.5 rounded-sm border border-gray-200" width="21" height="14" loading="lazy">
+<span>Slovenčina</span>
+</a>
+<a href="/lang/sl"
+class="flex items-center gap-2 px-3 py-1.5 text-sm hover:bg-blue-50 transition-colors text-gray-700">
+<img src="/v1/flags/si.svg"
+alt="Slovenščina" class="h-3.5 rounded-sm border border-gray-200" width="21" height="14" loading="lazy">
+<span>Slovenščina</span>
+</a>
+<a href="/lang/sv"
+class="flex items-center gap-2 px-3 py-1.5 text-sm hover:bg-blue-50 transition-colors text-gray-700">
+<img src="/v1/flags/se.svg"
+alt="Svenska" class="h-3.5 rounded-sm border border-gray-200" width="21" height="14" loading="lazy">
+<span>Svenska</span>
+</a>
+</div>
+</div>
+</nav>
+</div>
+<nav id="mobile-navigation" x-cloak x-show="mobileMenuOpen"
+x-transition:enter="transition ease-out duration-200"
+x-transition:enter-start="opacity-0 -translate-y-2"
+x-transition:enter-end="opacity-100 translate-y-0"
+x-transition:leave="transition ease-in duration-150"
+x-transition:leave-start="opacity-100 translate-y-0"
+x-transition:leave-end="opacity-0 -translate-y-2"
+class="mt-2 border-t border-white/15 pb-3 pt-2 text-sm font-medium md:hidden">
+<a href="/v1/" class="flex min-h-11 items-center rounded-lg px-3 text-blue-50 transition-colors hover:bg-white/10" title="All Countries">All Countries</a>
+<a href="/v1/vat-calculator/" class="flex min-h-11 items-center rounded-lg px-3 text-blue-50 transition-colors hover:bg-white/10">VAT Calculator</a>
+<a href="/v1/blog/" class="flex min-h-11 items-center rounded-lg px-3 text-blue-50 transition-colors hover:bg-white/10">VAT updates</a>
+<div class="mt-1 border-t border-white/15 pb-1 pt-2">
+<p class="mb-1 px-3 text-sm font-semibold text-blue-200">VAT Tools</p>
+<a href="/embed" class="flex min-h-11 items-center rounded-lg px-3 text-blue-50 transition-colors hover:bg-white/10">VAT Widget</a>
+<a href="/v1/vat-map/" class="flex min-h-11 items-center rounded-lg px-3 text-blue-50 transition-colors hover:bg-white/10">VAT Map</a>
+<a href="/v1/vat-number-validator/" class="flex min-h-11 items-center rounded-lg px-3 text-blue-50 transition-colors hover:bg-white/10">VAT Number Validator</a>
+<a href="/v1/vat-changes/" class="flex min-h-11 items-center rounded-lg px-3 text-blue-50 transition-colors hover:bg-white/10">VAT History</a>
+</div>
+<a href="https://github.com/eimkasp/eu-vat.info" target="_blank" rel="noopener noreferrer" class="flex min-h-11 items-center rounded-lg px-3 text-blue-50 transition-colors hover:bg-white/10">
+GitHub <svg class="inline-block w-5 h-5 ml-1" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>            </a>
+<div class="px-3 py-2">
+<div class="px-4 py-2">
+<label class="block text-xs font-medium text-blue-200 mb-1">Language</label>
+<select onchange="window.location.href='/lang/' + this.value"
+class="w-full rounded-md border-gray-300 text-sm focus:ring-blue-500 focus:border-blue-500">
+<option value="en" selected>
+English
+</option>
+<option value="bg" >
+Български
+</option>
+<option value="cs" >
+Čeština
+</option>
+<option value="da" >
+Dansk
+</option>
+<option value="de" >
+Deutsch
+</option>
+<option value="el" >
+Ελληνικά
+</option>
+<option value="es" >
+Español
+</option>
+<option value="et" >
+Eesti
+</option>
+<option value="fi" >
+Suomi
+</option>
+<option value="fr" >
+Français
+</option>
+<option value="ga" >
+Gaeilge
+</option>
+<option value="hr" >
+Hrvatski
+</option>
+<option value="hu" >
+Magyar
+</option>
+<option value="it" >
+Italiano
+</option>
+<option value="lt" >
+Lietuvių
+</option>
+<option value="lv" >
+Latviešu
+</option>
+<option value="mt" >
+Malti
+</option>
+<option value="nl" >
+Nederlands
+</option>
+<option value="pl" >
+Polski
+</option>
+<option value="pt" >
+Português
+</option>
+<option value="ro" >
+Română
+</option>
+<option value="sk" >
+Slovenčina
+</option>
+<option value="sl" >
+Slovenščina
+</option>
+<option value="sv" >
+Svenska
+</option>
+</select>
+</div>
+</div>
+</nav>
+</div>
+</header>
+<nav class="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-white/95 pb-[env(safe-area-inset-bottom)] md:hidden" aria-label="Mobile navigation">
+<div class="mx-auto grid h-[4.5rem] max-w-lg grid-cols-3">
+<a href="/v1/"
+class="group inline-flex min-h-11 flex-col items-center justify-center gap-1 px-4 text-sm font-medium transition-colors hover:bg-surface-subtle text-ink-muted">
+<svg class="w-5 h-5 mb-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8v10a1 1 0 0 0 1 1h4v-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v5h4a1 1 0 0 0 1-1V8M1 10l9-9 9 9"/>
+</svg>
+<span>Home</span>
+</a>
+<a href="/v1/vat-calculator/"
+class="group inline-flex min-h-11 flex-col items-center justify-center gap-1 px-4 text-sm font-medium transition-colors hover:bg-surface-subtle text-ink-muted">
+<svg class="w-5 h-5 mb-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1v3m5-3v3m5-3v3M1 7h18M5 11h10M2 3h16a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/>
+</svg>
+<span>Calculator</span>
+</a>
+<a href="/v1/vat-map/"
+class="group inline-flex min-h-11 flex-col items-center justify-center gap-1 px-4 text-sm font-medium transition-colors hover:bg-surface-subtle text-ink-muted">
+<svg class="w-5 h-5 mb-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15a6 6 0 1 0 0-12 6 6 0 0 0 0 12Zm0 0v3M9.5 9.5a2.5 2.5 0 1 0 5 0 2.5 2.5 0 0 0-5 0Z"/>
+</svg>
+<span>Map</span>
+</a>
+</div>
+</nav>
+<main id="main-content" class="mobile-nav-safe min-h-screen bg-workspace">
+<div>
+<div wire:snapshot="{&quot;data&quot;:{&quot;country_code&quot;:&quot;GR&quot;,&quot;vat_number&quot;:&quot;&quot;,&quot;result&quot;:null,&quot;error&quot;:null,&quot;countries&quot;:[null,{&quot;keys&quot;:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32],&quot;class&quot;:&quot;Illuminate\\Database\\Eloquent\\Collection&quot;,&quot;modelClass&quot;:&quot;App\\Models\\Country&quot;,&quot;s&quot;:&quot;elcln&quot;}],&quot;countryObject&quot;:[null,{&quot;class&quot;:&quot;App\\Models\\Country&quot;,&quot;key&quot;:12,&quot;s&quot;:&quot;mdl&quot;}],&quot;validationCount&quot;:0,&quot;vatFormat&quot;:[{&quot;prefix&quot;:&quot;EL&quot;,&quot;guidance&quot;:&quot;EL + national identifier&quot;,&quot;note&quot;:&quot;Greece uses EL for VAT identification numbers, while GR remains the ISO country code.&quot;,&quot;source_url&quot;:&quot;https:\/\/taxation-customs.ec.europa.eu\/taxation\/vat\/vat-directive\/vat-identification-numbers_en&quot;},{&quot;s&quot;:&quot;arr&quot;}]},&quot;memo&quot;:{&quot;id&quot;:&quot;iGTa8DTpbDelB3rB06Ra&quot;,&quot;name&quot;:&quot;vies-validator-page&quot;,&quot;path&quot;:&quot;vat-number-validator\/greece&quot;,&quot;method&quot;:&quot;GET&quot;,&quot;release&quot;:&quot;a-a-a&quot;,&quot;children&quot;:[],&quot;scripts&quot;:[],&quot;assets&quot;:[],&quot;errors&quot;:[],&quot;locale&quot;:&quot;en&quot;},&quot;checksum&quot;:&quot;d3d2c2595dce14892a30767d87cd5f137dacde176c6b775c676d804796abd0fe&quot;}" wire:effects="{&quot;url&quot;:{&quot;country_code&quot;:{&quot;as&quot;:null,&quot;use&quot;:&quot;replace&quot;,&quot;alwaysShow&quot;:false,&quot;except&quot;:null},&quot;vat_number&quot;:{&quot;as&quot;:null,&quot;use&quot;:&quot;replace&quot;,&quot;alwaysShow&quot;:false,&quot;except&quot;:null}}}" wire:id="iGTa8DTpbDelB3rB06Ra" class="mx-auto max-w-5xl px-4 py-8 sm:py-12">
+<nav class="flex items-center gap-1.5 text-sm text-gray-400 mb-8 flex-wrap" aria-label="Breadcrumb">
+<a href="/v1/" class="hover:text-blue-600 transition-colors">Home</a>
+<svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" /></svg>
+<a href="/v1/vat-number-validator/" class="hover:text-blue-600 transition-colors">VAT Number Validator</a>
+<!--[if BLOCK]><![endif]-->            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" /></svg>
+<span class="text-gray-600 font-medium">Greece</span>
+<!--[if ENDBLOCK]><![endif]-->    </nav>
+<div class="relative overflow-visible rounded-2xl bg-gradient-to-br from-indigo-900 via-indigo-800 to-indigo-900 text-white mb-8">
+<div class="absolute inset-0 opacity-5">
+<svg width="100%" height="100%"><defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" stroke-width="0.5"/></pattern></defs><rect width="100%" height="100%" fill="url(#grid)"/></svg>
+</div>
+<div class="relative p-6 sm:p-10">
+<h1 class="text-2xl sm:text-3xl font-extrabold mb-2 text-white">
+<!--[if BLOCK]><![endif]-->                    Greece VAT Number Validator
+<!--[if ENDBLOCK]><![endif]-->            </h1>
+<p class="text-indigo-200 text-sm mb-6">
+<!--[if BLOCK]><![endif]-->                    Validate Greece (GR) VAT numbers using the official EU VIES database. Enter a VAT number below to verify company registration.
+<!--[if ENDBLOCK]><![endif]-->            </p>
+<form wire:submit.prevent="validateVat" class="space-y-4">
+<div class="grid sm:grid-cols-12 gap-4">
+<div class="sm:col-span-5">
+<label class="block text-xs font-semibold text-indigo-200 mb-1.5">VAT Number</label>
+<input type="text" wire:model.blur="vat_number" placeholder="e.g. LT100019070512 or 123456789" class="w-full rounded-xl bg-white/10 border border-white/20 text-white placeholder-indigo-300/50 px-4 py-3 text-sm focus:ring-2 focus:ring-indigo-400 focus:border-transparent">
+</div>
+<div class="sm:col-span-5"
+x-data="{
+open: false,
+search: '',
+countries: JSON.parse('[{\u0022iso\u0022:\u0022AT\u0022,\u0022name\u0022:\u0022Austria\u0022,\u0022slug\u0022:\u0022austria\u0022,\u0022flag\u0022:\u0022at\u0022},{\u0022iso\u0022:\u0022BE\u0022,\u0022name\u0022:\u0022Belgium\u0022,\u0022slug\u0022:\u0022belgium\u0022,\u0022flag\u0022:\u0022be\u0022},{\u0022iso\u0022:\u0022BG\u0022,\u0022name\u0022:\u0022Bulgaria\u0022,\u0022slug\u0022:\u0022bulgaria\u0022,\u0022flag\u0022:\u0022bg\u0022},{\u0022iso\u0022:\u0022HR\u0022,\u0022name\u0022:\u0022Croatia\u0022,\u0022slug\u0022:\u0022croatia\u0022,\u0022flag\u0022:\u0022hr\u0022},{\u0022iso\u0022:\u0022CY\u0022,\u0022name\u0022:\u0022Cyprus\u0022,\u0022slug\u0022:\u0022cyprus\u0022,\u0022flag\u0022:\u0022cy\u0022},{\u0022iso\u0022:\u0022CZ\u0022,\u0022name\u0022:\u0022Czech Republic\u0022,\u0022slug\u0022:\u0022czech-republic\u0022,\u0022flag\u0022:\u0022cz\u0022},{\u0022iso\u0022:\u0022DK\u0022,\u0022name\u0022:\u0022Denmark\u0022,\u0022slug\u0022:\u0022denmark\u0022,\u0022flag\u0022:\u0022dk\u0022},{\u0022iso\u0022:\u0022EE\u0022,\u0022name\u0022:\u0022Estonia\u0022,\u0022slug\u0022:\u0022estonia\u0022,\u0022flag\u0022:\u0022ee\u0022},{\u0022iso\u0022:\u0022FI\u0022,\u0022name\u0022:\u0022Finland\u0022,\u0022slug\u0022:\u0022finland\u0022,\u0022flag\u0022:\u0022fi\u0022},{\u0022iso\u0022:\u0022FR\u0022,\u0022name\u0022:\u0022France\u0022,\u0022slug\u0022:\u0022france\u0022,\u0022flag\u0022:\u0022fr\u0022},{\u0022iso\u0022:\u0022DE\u0022,\u0022name\u0022:\u0022Germany\u0022,\u0022slug\u0022:\u0022germany\u0022,\u0022flag\u0022:\u0022de\u0022},{\u0022iso\u0022:\u0022GR\u0022,\u0022name\u0022:\u0022Greece\u0022,\u0022slug\u0022:\u0022greece\u0022,\u0022flag\u0022:\u0022gr\u0022},{\u0022iso\u0022:\u0022HU\u0022,\u0022name\u0022:\u0022Hungary\u0022,\u0022slug\u0022:\u0022hungary\u0022,\u0022flag\u0022:\u0022hu\u0022},{\u0022iso\u0022:\u0022IS\u0022,\u0022name\u0022:\u0022Iceland\u0022,\u0022slug\u0022:\u0022iceland\u0022,\u0022flag\u0022:\u0022is\u0022},{\u0022iso\u0022:\u0022IE\u0022,\u0022name\u0022:\u0022Ireland\u0022,\u0022slug\u0022:\u0022ireland\u0022,\u0022flag\u0022:\u0022ie\u0022},{\u0022iso\u0022:\u0022IT\u0022,\u0022name\u0022:\u0022Italy\u0022,\u0022slug\u0022:\u0022italy\u0022,\u0022flag\u0022:\u0022it\u0022},{\u0022iso\u0022:\u0022LV\u0022,\u0022name\u0022:\u0022Latvia\u0022,\u0022slug\u0022:\u0022latvia\u0022,\u0022flag\u0022:\u0022lv\u0022},{\u0022iso\u0022:\u0022LT\u0022,\u0022name\u0022:\u0022Lithuania\u0022,\u0022slug\u0022:\u0022lithuania\u0022,\u0022flag\u0022:\u0022lt\u0022},{\u0022iso\u0022:\u0022LU\u0022,\u0022name\u0022:\u0022Luxembourg\u0022,\u0022slug\u0022:\u0022luxembourg\u0022,\u0022flag\u0022:\u0022lu\u0022},{\u0022iso\u0022:\u0022MT\u0022,\u0022name\u0022:\u0022Malta\u0022,\u0022slug\u0022:\u0022malta\u0022,\u0022flag\u0022:\u0022mt\u0022},{\u0022iso\u0022:\u0022NL\u0022,\u0022name\u0022:\u0022Netherlands\u0022,\u0022slug\u0022:\u0022netherlands\u0022,\u0022flag\u0022:\u0022nl\u0022},{\u0022iso\u0022:\u0022NO\u0022,\u0022name\u0022:\u0022Norway\u0022,\u0022slug\u0022:\u0022norway\u0022,\u0022flag\u0022:\u0022no\u0022},{\u0022iso\u0022:\u0022PL\u0022,\u0022name\u0022:\u0022Poland\u0022,\u0022slug\u0022:\u0022poland\u0022,\u0022flag\u0022:\u0022pl\u0022},{\u0022iso\u0022:\u0022PT\u0022,\u0022name\u0022:\u0022Portugal\u0022,\u0022slug\u0022:\u0022portugal\u0022,\u0022flag\u0022:\u0022pt\u0022},{\u0022iso\u0022:\u0022RO\u0022,\u0022name\u0022:\u0022Romania\u0022,\u0022slug\u0022:\u0022romania\u0022,\u0022flag\u0022:\u0022ro\u0022},{\u0022iso\u0022:\u0022SK\u0022,\u0022name\u0022:\u0022Slovakia\u0022,\u0022slug\u0022:\u0022slovakia\u0022,\u0022flag\u0022:\u0022sk\u0022},{\u0022iso\u0022:\u0022SI\u0022,\u0022name\u0022:\u0022Slovenia\u0022,\u0022slug\u0022:\u0022slovenia\u0022,\u0022flag\u0022:\u0022si\u0022},{\u0022iso\u0022:\u0022ES\u0022,\u0022name\u0022:\u0022Spain\u0022,\u0022slug\u0022:\u0022spain\u0022,\u0022flag\u0022:\u0022es\u0022},{\u0022iso\u0022:\u0022SE\u0022,\u0022name\u0022:\u0022Sweden\u0022,\u0022slug\u0022:\u0022sweden\u0022,\u0022flag\u0022:\u0022se\u0022},{\u0022iso\u0022:\u0022CH\u0022,\u0022name\u0022:\u0022Switzerland\u0022,\u0022slug\u0022:\u0022switzerland\u0022,\u0022flag\u0022:\u0022ch\u0022},{\u0022iso\u0022:\u0022TR\u0022,\u0022name\u0022:\u0022Turkey\u0022,\u0022slug\u0022:\u0022turkey\u0022,\u0022flag\u0022:\u0022tr\u0022},{\u0022iso\u0022:\u0022GB\u0022,\u0022name\u0022:\u0022United Kingdom\u0022,\u0022slug\u0022:\u0022united-kingdom\u0022,\u0022flag\u0022:\u0022gb\u0022}]'),
+get filtered() {
+if (!this.search) return this.countries;
+const q = this.search.toLowerCase();
+return this.countries.filter(c => c.name.toLowerCase().includes(q) || c.iso.toLowerCase().includes(q));
+},
+get current() {
+return this.countries.find(c => c.iso === $wire.country_code);
+},
+select(iso) {
+$wire.set('country_code', iso);
+this.open = false;
+this.search = '';
+}
+}"
+@click.outside="open = false"
+@keydown.escape.window="open = false"
+>
+<label class="block text-xs font-semibold text-indigo-200 mb-1.5">Country</label>
+<div class="relative">
+<button type="button"
+@click="open = !open; $nextTick(() => open && $refs.searchInput.focus())"
+class="w-full flex items-center gap-2.5 bg-white/10 border border-white/20 rounded-xl pl-3 pr-10 py-3 text-sm font-medium text-white focus:ring-2 focus:ring-indigo-400 focus:border-transparent hover:bg-white/15 transition-all cursor-pointer text-left h-[46px]"
+aria-haspopup="listbox" :aria-expanded="open.toString()">
+<template x-if="current">
+<img :src="'/v1/flags/' + current.flag + '.svg'" :alt="current.name" class="h-4 w-auto rounded-sm shadow-sm shrink-0">
+</template>
+<span class="truncate" x-text="current ? current.name : 'Select country'"></span>
+</button>
+<div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-indigo-300">
+<svg class="w-4 h-4 transition-transform duration-200" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+</div>
+<div x-show="open" x-transition:enter="transition ease-out duration-150" x-transition:enter-start="opacity-0 -translate-y-1" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-100" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0 -translate-y-1"
+class="absolute z-50 mt-1.5 w-full bg-white rounded-xl border border-gray-200 shadow-2xl overflow-hidden" style="display: none;">
+<div class="p-2 border-b border-gray-100">
+<div class="relative">
+<svg class="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" /></svg>
+<input x-ref="searchInput" x-model="search" type="text" placeholder="Search countries..." class="w-full pl-8 pr-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-gray-50 text-gray-900"
+@keydown.enter.prevent="if(filtered.length === 1) select(filtered[0].iso)">
+</div>
+</div>
+<div class="max-h-[240px] overflow-y-auto overscroll-contain" role="listbox">
+<template x-for="c in filtered" :key="c.iso">
+<button type="button" role="option" :aria-selected="(c.iso === $wire.country_code).toString()" @click="select(c.iso)"
+class="w-full flex items-center gap-2.5 px-3 py-2.5 text-sm text-left transition-colors"
+:class="c.iso === $wire.country_code ? 'bg-indigo-50 text-indigo-700 font-semibold' : 'text-gray-700 hover:bg-gray-50'">
+<img :src="'/v1/flags/' + c.flag + '.svg'" :alt="c.name" class="h-4 w-auto rounded-[2px] shadow-sm shrink-0" loading="lazy">
+<span x-text="c.name" class="truncate"></span>
+<span class="ml-auto text-xs text-gray-400 shrink-0" x-text="c.iso"></span>
+</button>
+</template>
+</div>
+</div>
+</div>
+</div>
+<div class="sm:col-span-2 flex items-end">
+<button type="submit" class="w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-white text-indigo-900 rounded-xl text-sm font-bold hover:bg-indigo-50 transition-all shadow-lg" wire:loading.class="opacity-50" wire:target="validateVat">
+<svg wire:loading.remove wire:target="validateVat" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
+<svg wire:loading wire:target="validateVat" class="animate-spin w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+Validate
+</button>
+</div>
+</div>
+<p class="text-xs text-indigo-300/70">
+Country is auto-detected from VAT number prefix.
+<button type="button" wire:click="prefillExample" class="text-indigo-200 hover:text-white underline">Try LT100019070512</button>
+</p>
+</form>
+</div>
+</div>
+<!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+<!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+<div class="lg:col-span-2 space-y-6">
+<div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-visible"
+x-data="{
+simCountry: 'LT',
+simVat: '100019070512',
+loading: false,
+response: null,
+error: null,
+elapsed: null,
+async runRequest() {
+this.loading = true;
+this.response = null;
+this.error = null;
+this.elapsed = null;
+const t0 = performance.now();
+try {
+const res = await fetch('/api/vat/validation/validate', {
+method: 'POST',
+headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+body: JSON.stringify({ country_code: this.simCountry, vat_number: this.simVat })
+});
+const json = await res.json();
+this.elapsed = Math.round(performance.now() - t0);
+if (!res.ok) {
+this.error = JSON.stringify(json, null, 2);
+} else {
+this.response = JSON.stringify(json, null, 2);
+}
+} catch(e) {
+this.error = e.message;
+}
+this.loading = false;
+},
+get requestBody() {
+return JSON.stringify({ country_code: this.simCountry, vat_number: this.simVat }, null, 2);
+}
+}">
+<div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+<h2 class="font-semibold text-sm text-gray-900 flex items-center gap-2">
+<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3-4.5 16.5" /></svg>
+VAT Validation API
+</h2>
+<a href="/v1/vat-validation-api/" class="inline-flex items-center gap-1 text-xs font-semibold text-indigo-600 hover:text-indigo-800 transition-colors">
+Full API Docs
+<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+</a>
+</div>
+<div class="p-6 space-y-5">
+<div class="bg-gray-50 rounded-xl border border-gray-200 p-4">
+<p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Production Endpoint</p>
+<div class="flex items-center gap-2 flex-wrap">
+<span class="inline-block bg-indigo-100 text-indigo-700 text-xs font-bold px-2 py-0.5 rounded">POST</span>
+<code class="text-sm font-mono text-gray-800 break-all">https://vat.businesspress.io/api/vat/validation/validate</code>
+<button onclick="navigator.clipboard.writeText('https://vat.businesspress.io/api/vat/validation/validate')"
+class="shrink-0 p-1.5 rounded-lg bg-white border border-gray-200 hover:bg-gray-100 text-gray-500 transition-colors" title="Copy URL">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+</button>
+</div>
+<p class="mt-2 text-xs text-gray-500">No API key required · JSON body · Free to use</p>
+</div>
+<div>
+<p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Try It Live</p>
+<div class="grid sm:grid-cols-2 gap-3 mb-3">
+<div>
+<label class="block text-xs font-medium text-gray-600 mb-1">country_code</label>
+<input x-model="simCountry" type="text" maxlength="2" placeholder="LT"
+class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg font-mono focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 uppercase bg-gray-50">
+</div>
+<div>
+<label class="block text-xs font-medium text-gray-600 mb-1">vat_number</label>
+<input x-model="simVat" type="text" placeholder="100019070512"
+class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg font-mono focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 bg-gray-50"
+@keydown.enter="runRequest()">
+</div>
+</div>
+<div class="bg-gray-900 rounded-t-xl overflow-hidden">
+<div class="flex items-center justify-between px-4 py-2 border-b border-gray-700">
+<div class="flex items-center gap-2 text-xs text-gray-400">
+<span class="text-emerald-400 font-mono font-semibold">POST</span>
+<span class="font-mono">/api/vat/validation/validate</span>
+</div>
+<button @click="runRequest()" :disabled="loading"
+class="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-500 disabled:bg-gray-600 disabled:cursor-not-allowed text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors">
+<svg x-show="!loading" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 3l14 9-14 9V3z"/></svg>
+<svg x-show="loading" class="w-3.5 h-3.5 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+<span x-text="loading ? 'Sending…' : 'Send Request'"></span>
+</button>
+</div>
+<pre class="p-4 text-xs font-mono text-amber-300 overflow-x-auto" x-text="requestBody"></pre>
+</div>
+<div class="bg-gray-950 rounded-b-xl border-t border-gray-800 min-h-[80px] overflow-hidden">
+<div x-show="!response && !error && !loading" class="p-4 text-xs text-gray-600 font-mono">
+// Response will appear here...
+</div>
+<div x-show="loading" class="p-4 text-xs text-gray-500 font-mono flex items-center gap-2">
+<svg class="w-3.5 h-3.5 animate-spin text-indigo-400" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+Validating against VIES…
+</div>
+<div x-show="response" class="relative">
+<div class="flex items-center justify-between px-4 py-2 border-b border-gray-800">
+<span class="text-xs text-emerald-400 font-semibold">200 OK</span>
+<div class="flex items-center gap-3">
+<span class="text-xs text-gray-500" x-text="elapsed ? elapsed + 'ms' : ''"></span>
+<button @click="navigator.clipboard.writeText(response)" class="text-gray-500 hover:text-gray-300 transition-colors" title="Copy response">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+</button>
+</div>
+</div>
+<pre class="p-4 text-xs font-mono text-green-300 overflow-x-auto" x-text="response"></pre>
+</div>
+<div x-show="error" class="p-4">
+<div class="flex items-center gap-2 mb-2">
+<span class="text-xs text-red-400 font-semibold">Error</span>
+</div>
+<pre class="text-xs font-mono text-red-300 overflow-x-auto" x-text="error"></pre>
+</div>
+</div>
+</div>
+<a href="/v1/vat-validation-api/"
+class="flex items-center justify-between p-3 rounded-xl bg-indigo-50 border border-indigo-200 hover:bg-indigo-100 transition-colors group">
+<div>
+<p class="text-sm font-semibold text-indigo-900">Full API Documentation</p>
+<p class="text-xs text-indigo-600">Batch validation, error codes, SDK examples</p>
+</div>
+<svg class="w-4 h-4 text-indigo-600 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+</a>
+</div>
+</div>
+<!--[if BLOCK]><![endif]-->                <section class="app-surface p-6" aria-labelledby="vat-number-format">
+<h2 id="vat-number-format" class="text-lg font-bold text-ink">Greece VAT number format</h2>
+<dl class="mt-4 divide-y divide-line border-y border-line text-sm">
+<div class="flex items-center justify-between gap-4 py-3"><dt class="text-ink-muted">Expected prefix</dt><dd class="font-mono font-bold text-ink">EL</dd></div>
+<div class="flex items-center justify-between gap-4 py-3"><dt class="text-ink-muted">Format guidance</dt><dd class="font-semibold text-ink">EL + national identifier</dd></div>
+</dl>
+<p class="mt-4 text-sm text-ink-muted">Greece uses EL for VAT identification numbers, while GR remains the ISO country code.</p>
+<p class="mt-3 text-sm text-ink-muted">Only national tax administrations can issue VAT identification numbers. VIES checks registration status but does not replace tax or legal advice.</p>
+<a class="mt-4 inline-flex text-sm font-semibold text-action hover:underline" href="https://taxation-customs.ec.europa.eu/taxation/vat/vat-directive/vat-identification-numbers_en" rel="noopener noreferrer">European Commission VAT identification guidance →</a>
+</section>
+<!--[if ENDBLOCK]><![endif]-->
+<div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+<div class="px-6 py-4 border-b border-gray-100">
+<h2 class="font-semibold text-sm text-gray-900 flex items-center gap-2">
+<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-amber-500" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" /></svg>
+<!--[if BLOCK]><![endif]-->                            VAT Validation in Greece
+<!--[if ENDBLOCK]><![endif]-->                    </h2>
+</div>
+<div class="p-6 text-sm text-gray-700 space-y-3">
+<!--[if BLOCK]><![endif]-->                        <p>Greece VAT numbers use the prefix GR followed by the registration number. You can enter the full number with or without the prefix — our tool detects the country automatically.</p>
+<p>Greece applies a standard VAT rate of 24%. Use our <a href="/v1/vat-calculator/greece/" class="text-indigo-600 hover:underline font-medium">Greece VAT Calculator</a> to calculate VAT amounts for Greece.</p>
+<!--[if ENDBLOCK]><![endif]-->                </div>
+</div>
+<div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+<div class="px-6 py-4 border-b border-gray-100">
+<h2 class="font-semibold text-sm text-gray-900">Frequently Asked Questions</h2>
+</div>
+<div class="divide-y divide-gray-100" itemscope itemtype="https://schema.org/FAQPage">
+<!--[if BLOCK]><![endif]-->                        <div class="px-6 py-4" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+<h3 class="font-semibold text-gray-900 text-sm" itemprop="name">What is a VAT number?</h3>
+<div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+<p class="mt-1.5 text-sm text-gray-600" itemprop="text">A VAT number (Value Added Tax identification number) is a unique identifier assigned to businesses registered for VAT in EU member states. It&#039;s required for intra-community trade and B2B transactions.</p>
+</div>
+</div>
+<div class="px-6 py-4" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+<h3 class="font-semibold text-gray-900 text-sm" itemprop="name">How does VIES validation work?</h3>
+<div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+<p class="mt-1.5 text-sm text-gray-600" itemprop="text">VIES connects to the national VAT databases of each EU country. When you submit a VAT number, the system verifies it against the relevant country&#039;s database and returns the registration status along with company details.</p>
+</div>
+</div>
+<div class="px-6 py-4" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+<h3 class="font-semibold text-gray-900 text-sm" itemprop="name">Why should I validate VAT numbers?</h3>
+<div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+<p class="mt-1.5 text-sm text-gray-600" itemprop="text">Validating VAT numbers is essential for B2B transactions within the EU. It ensures your business partner is legitimately registered for VAT, which is required to apply the reverse charge mechanism and zero-rate intra-community supplies.</p>
+</div>
+</div>
+<div class="px-6 py-4" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+<h3 class="font-semibold text-gray-900 text-sm" itemprop="name">How often is VIES data updated?</h3>
+<div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+<p class="mt-1.5 text-sm text-gray-600" itemprop="text">VIES data comes directly from national tax authorities and is updated in real-time. Our cached results are refreshed every 7 days to balance speed with accuracy.</p>
+</div>
+</div>
+<div class="px-6 py-4" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+<h3 class="font-semibold text-gray-900 text-sm" itemprop="name">Can I validate VAT numbers via API?</h3>
+<div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+<p class="mt-1.5 text-sm text-gray-600" itemprop="text">Yes! We offer a free REST API for single and batch VAT number validation. See the API documentation section above for endpoints and request formats.</p>
+</div>
+</div>
+<!--[if ENDBLOCK]><![endif]-->                </div>
+</div>
+</div>
+<div class="space-y-6">
+<div x-data="{
+history: [],
+init() {
+try { this.history = JSON.parse(localStorage.getItem('vat_validation_history') || '[]'); } catch(e) { this.history = []; }
+},
+fill(cc, vn) {
+$wire.set('country_code', cc);
+$wire.set('vat_number', vn);
+},
+clear() {
+this.history = [];
+localStorage.removeItem('vat_validation_history');
+}
+}"
+x-on:validation-complete.window="
+let entry = $event.detail;
+history = history.filter(h => !(h.cc === entry.cc && h.vn === entry.vn));
+history.unshift(entry);
+history = history.slice(0, 10);
+localStorage.setItem('vat_validation_history', JSON.stringify(history));
+"
+x-show="history.length > 0" x-cloak
+class="bg-white rounded-2xl shadow-sm border border-gray-200 p-5">
+<div class="flex items-center justify-between mb-3">
+<h3 class="font-bold text-gray-900 text-sm">Your Recent Lookups</h3>
+<button @click="clear()" class="text-xs text-gray-400 hover:text-red-500 transition-colors">Clear</button>
+</div>
+<div class="space-y-2">
+<template x-for="v in history" :key="v.cc + v.vn">
+<button @click="fill(v.cc, v.vn)"
+class="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs hover:bg-gray-50 transition-colors text-left border border-gray-100">
+<div>
+<span class="font-mono font-semibold text-gray-900" x-text="v.cc + v.vn"></span>
+<p class="text-gray-500 truncate max-w-[180px]" x-show="v.name && v.name !== 'N/A'" x-text="v.name"></p>
+</div>
+<span class="shrink-0 w-2 h-2 rounded-full" :class="v.valid ? 'bg-emerald-500' : 'bg-red-500'"></span>
+</button>
+</template>
+</div>
+<p class="mt-3 text-[10px] text-gray-400 flex items-center gap-1">
+<svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" /></svg>
+Saved locally on your device only. Not shared with our servers.
+</p>
+</div>
+<div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-5">
+<h3 class="font-bold text-gray-900 text-sm mb-3">Validate by Country</h3>
+<div class="space-y-1 max-h-64 overflow-y-auto">
+<!--[if BLOCK]><![endif]-->                        <a href="/v1/vat-number-validator/austria/" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs transition-colors text-gray-700 hover:bg-gray-50 hover:text-blue-600">
+<img src="/v1/flags/at.svg" alt="Austria flag" class="h-3 w-auto rounded-sm" loading="lazy">
+Austria VAT Number Validator
+<span class="ml-auto text-gray-400">AT</span>
+</a>
+<a href="/v1/vat-number-validator/belgium/" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs transition-colors text-gray-700 hover:bg-gray-50 hover:text-blue-600">
+<img src="/v1/flags/be.svg" alt="Belgium flag" class="h-3 w-auto rounded-sm" loading="lazy">
+Belgium VAT Number Validator
+<span class="ml-auto text-gray-400">BE</span>
+</a>
+<a href="/v1/vat-number-validator/bulgaria/" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs transition-colors text-gray-700 hover:bg-gray-50 hover:text-blue-600">
+<img src="/v1/flags/bg.svg" alt="Bulgaria flag" class="h-3 w-auto rounded-sm" loading="lazy">
+Bulgaria VAT Number Validator
+<span class="ml-auto text-gray-400">BG</span>
+</a>
+<a href="/v1/vat-number-validator/croatia/" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs transition-colors text-gray-700 hover:bg-gray-50 hover:text-blue-600">
+<img src="/v1/flags/hr.svg" alt="Croatia flag" class="h-3 w-auto rounded-sm" loading="lazy">
+Croatia VAT Number Validator
+<span class="ml-auto text-gray-400">HR</span>
+</a>
+<a href="/v1/vat-number-validator/cyprus/" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs transition-colors text-gray-700 hover:bg-gray-50 hover:text-blue-600">
+<img src="/v1/flags/cy.svg" alt="Cyprus flag" class="h-3 w-auto rounded-sm" loading="lazy">
+Cyprus VAT Number Validator
+<span class="ml-auto text-gray-400">CY</span>
+</a>
+<a href="/v1/vat-number-validator/czech-republic/" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs transition-colors text-gray-700 hover:bg-gray-50 hover:text-blue-600">
+<img src="/v1/flags/cz.svg" alt="Czech Republic flag" class="h-3 w-auto rounded-sm" loading="lazy">
+Czech Republic VAT Number Validator
+<span class="ml-auto text-gray-400">CZ</span>
+</a>
+<a href="/v1/vat-number-validator/denmark/" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs transition-colors text-gray-700 hover:bg-gray-50 hover:text-blue-600">
+<img src="/v1/flags/dk.svg" alt="Denmark flag" class="h-3 w-auto rounded-sm" loading="lazy">
+Denmark VAT Number Validator
+<span class="ml-auto text-gray-400">DK</span>
+</a>
+<a href="/v1/vat-number-validator/estonia/" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs transition-colors text-gray-700 hover:bg-gray-50 hover:text-blue-600">
+<img src="/v1/flags/ee.svg" alt="Estonia flag" class="h-3 w-auto rounded-sm" loading="lazy">
+Estonia VAT Number Validator
+<span class="ml-auto text-gray-400">EE</span>
+</a>
+<a href="/v1/vat-number-validator/finland/" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs transition-colors text-gray-700 hover:bg-gray-50 hover:text-blue-600">
+<img src="/v1/flags/fi.svg" alt="Finland flag" class="h-3 w-auto rounded-sm" loading="lazy">
+Finland VAT Number Validator
+<span class="ml-auto text-gray-400">FI</span>
+</a>
+<a href="/v1/vat-number-validator/france/" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs transition-colors text-gray-700 hover:bg-gray-50 hover:text-blue-600">
+<img src="/v1/flags/fr.svg" alt="France flag" class="h-3 w-auto rounded-sm" loading="lazy">
+France VAT Number Validator
+<span class="ml-auto text-gray-400">FR</span>
+</a>
+<a href="/v1/vat-number-validator/germany/" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs transition-colors text-gray-700 hover:bg-gray-50 hover:text-blue-600">
+<img src="/v1/flags/de.svg" alt="Germany flag" class="h-3 w-auto rounded-sm" loading="lazy">
+Germany VAT Number Validator
+<span class="ml-auto text-gray-400">DE</span>
+</a>
+<a href="/v1/vat-number-validator/greece/" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs transition-colors bg-indigo-50 text-indigo-700 font-semibold">
+<img src="/v1/flags/gr.svg" alt="Greece flag" class="h-3 w-auto rounded-sm" loading="lazy">
+Greece VAT Number Validator
+<span class="ml-auto text-gray-400">GR</span>
+</a>
+<a href="/v1/vat-number-validator/hungary/" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs transition-colors text-gray-700 hover:bg-gray-50 hover:text-blue-600">
+<img src="/v1/flags/hu.svg" alt="Hungary flag" class="h-3 w-auto rounded-sm" loading="lazy">
+Hungary VAT Number Validator
+<span class="ml-auto text-gray-400">HU</span>
+</a>
+<a href="/v1/vat-number-validator/iceland/" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs transition-colors text-gray-700 hover:bg-gray-50 hover:text-blue-600">
+<img src="/v1/flags/is.svg" alt="Iceland flag" class="h-3 w-auto rounded-sm" loading="lazy">
+Iceland VAT Number Validator
+<span class="ml-auto text-gray-400">IS</span>
+</a>
+<a href="/v1/vat-number-validator/ireland/" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs transition-colors text-gray-700 hover:bg-gray-50 hover:text-blue-600">
+<img src="/v1/flags/ie.svg" alt="Ireland flag" class="h-3 w-auto rounded-sm" loading="lazy">
+Ireland VAT Number Validator
+<span class="ml-auto text-gray-400">IE</span>
+</a>
+<a href="/v1/vat-number-validator/italy/" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs transition-colors text-gray-700 hover:bg-gray-50 hover:text-blue-600">
+<img src="/v1/flags/it.svg" alt="Italy flag" class="h-3 w-auto rounded-sm" loading="lazy">
+Italy VAT Number Validator
+<span class="ml-auto text-gray-400">IT</span>
+</a>
+<a href="/v1/vat-number-validator/latvia/" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs transition-colors text-gray-700 hover:bg-gray-50 hover:text-blue-600">
+<img src="/v1/flags/lv.svg" alt="Latvia flag" class="h-3 w-auto rounded-sm" loading="lazy">
+Latvia VAT Number Validator
+<span class="ml-auto text-gray-400">LV</span>
+</a>
+<a href="/v1/vat-number-validator/lithuania/" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs transition-colors text-gray-700 hover:bg-gray-50 hover:text-blue-600">
+<img src="/v1/flags/lt.svg" alt="Lithuania flag" class="h-3 w-auto rounded-sm" loading="lazy">
+Lithuania VAT Number Validator
+<span class="ml-auto text-gray-400">LT</span>
+</a>
+<a href="/v1/vat-number-validator/luxembourg/" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs transition-colors text-gray-700 hover:bg-gray-50 hover:text-blue-600">
+<img src="/v1/flags/lu.svg" alt="Luxembourg flag" class="h-3 w-auto rounded-sm" loading="lazy">
+Luxembourg VAT Number Validator
+<span class="ml-auto text-gray-400">LU</span>
+</a>
+<a href="/v1/vat-number-validator/malta/" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs transition-colors text-gray-700 hover:bg-gray-50 hover:text-blue-600">
+<img src="/v1/flags/mt.svg" alt="Malta flag" class="h-3 w-auto rounded-sm" loading="lazy">
+Malta VAT Number Validator
+<span class="ml-auto text-gray-400">MT</span>
+</a>
+<a href="/v1/vat-number-validator/netherlands/" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs transition-colors text-gray-700 hover:bg-gray-50 hover:text-blue-600">
+<img src="/v1/flags/nl.svg" alt="Netherlands flag" class="h-3 w-auto rounded-sm" loading="lazy">
+Netherlands VAT Number Validator
+<span class="ml-auto text-gray-400">NL</span>
+</a>
+<a href="/v1/vat-number-validator/norway/" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs transition-colors text-gray-700 hover:bg-gray-50 hover:text-blue-600">
+<img src="/v1/flags/no.svg" alt="Norway flag" class="h-3 w-auto rounded-sm" loading="lazy">
+Norway VAT Number Validator
+<span class="ml-auto text-gray-400">NO</span>
+</a>
+<a href="/v1/vat-number-validator/poland/" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs transition-colors text-gray-700 hover:bg-gray-50 hover:text-blue-600">
+<img src="/v1/flags/pl.svg" alt="Poland flag" class="h-3 w-auto rounded-sm" loading="lazy">
+Poland VAT Number Validator
+<span class="ml-auto text-gray-400">PL</span>
+</a>
+<a href="/v1/vat-number-validator/portugal/" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs transition-colors text-gray-700 hover:bg-gray-50 hover:text-blue-600">
+<img src="/v1/flags/pt.svg" alt="Portugal flag" class="h-3 w-auto rounded-sm" loading="lazy">
+Portugal VAT Number Validator
+<span class="ml-auto text-gray-400">PT</span>
+</a>
+<a href="/v1/vat-number-validator/romania/" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs transition-colors text-gray-700 hover:bg-gray-50 hover:text-blue-600">
+<img src="/v1/flags/ro.svg" alt="Romania flag" class="h-3 w-auto rounded-sm" loading="lazy">
+Romania VAT Number Validator
+<span class="ml-auto text-gray-400">RO</span>
+</a>
+<a href="/v1/vat-number-validator/slovakia/" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs transition-colors text-gray-700 hover:bg-gray-50 hover:text-blue-600">
+<img src="/v1/flags/sk.svg" alt="Slovakia flag" class="h-3 w-auto rounded-sm" loading="lazy">
+Slovakia VAT Number Validator
+<span class="ml-auto text-gray-400">SK</span>
+</a>
+<a href="/v1/vat-number-validator/slovenia/" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs transition-colors text-gray-700 hover:bg-gray-50 hover:text-blue-600">
+<img src="/v1/flags/si.svg" alt="Slovenia flag" class="h-3 w-auto rounded-sm" loading="lazy">
+Slovenia VAT Number Validator
+<span class="ml-auto text-gray-400">SI</span>
+</a>
+<a href="/v1/vat-number-validator/spain/" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs transition-colors text-gray-700 hover:bg-gray-50 hover:text-blue-600">
+<img src="/v1/flags/es.svg" alt="Spain flag" class="h-3 w-auto rounded-sm" loading="lazy">
+Spain VAT Number Validator
+<span class="ml-auto text-gray-400">ES</span>
+</a>
+<a href="/v1/vat-number-validator/sweden/" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs transition-colors text-gray-700 hover:bg-gray-50 hover:text-blue-600">
+<img src="/v1/flags/se.svg" alt="Sweden flag" class="h-3 w-auto rounded-sm" loading="lazy">
+Sweden VAT Number Validator
+<span class="ml-auto text-gray-400">SE</span>
+</a>
+<a href="/v1/vat-number-validator/switzerland/" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs transition-colors text-gray-700 hover:bg-gray-50 hover:text-blue-600">
+<img src="/v1/flags/ch.svg" alt="Switzerland flag" class="h-3 w-auto rounded-sm" loading="lazy">
+Switzerland VAT Number Validator
+<span class="ml-auto text-gray-400">CH</span>
+</a>
+<a href="/v1/vat-number-validator/turkey/" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs transition-colors text-gray-700 hover:bg-gray-50 hover:text-blue-600">
+<img src="/v1/flags/tr.svg" alt="Turkey flag" class="h-3 w-auto rounded-sm" loading="lazy">
+Turkey VAT Number Validator
+<span class="ml-auto text-gray-400">TR</span>
+</a>
+<a href="/v1/vat-number-validator/united-kingdom/" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs transition-colors text-gray-700 hover:bg-gray-50 hover:text-blue-600">
+<img src="/v1/flags/gb.svg" alt="United Kingdom flag" class="h-3 w-auto rounded-sm" loading="lazy">
+United Kingdom VAT Number Validator
+<span class="ml-auto text-gray-400">GB</span>
+</a>
+<!--[if ENDBLOCK]><![endif]-->                </div>
+</div>
+<div class="bg-gradient-to-br from-indigo-50 to-blue-50 rounded-2xl border border-indigo-200 p-5 space-y-3">
+<h3 class="font-bold text-indigo-900 text-sm">Related Tools</h3>
+<a href="/v1/vat-calculator/" class="flex items-center gap-2 text-sm text-indigo-700 hover:text-indigo-900 transition-colors">
+<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 15.75V18m-7.5-6.75h.008v.008H8.25v-.008Zm0 2.25h.008v.008H8.25V13.5Zm0 2.25h.008v.008H8.25v-.008Zm0 2.25h.008v.008H8.25V18Zm2.498-6.75h.007v.008h-.007v-.008Zm0 2.25h.007v.008h-.007V13.5Zm0 2.25h.007v.008h-.007v-.008Zm0 2.25h.007v.008h-.007V18Zm2.504-6.75h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V13.5Zm0 2.25h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V18Zm2.498-6.75h.008v.008H15.75v-.008Zm0 2.25h.008v.008H15.75V13.5ZM8.25 6h7.5v2.25h-7.5V6ZM12 2.25c-1.892 0-3.758.11-5.593.322C5.307 2.7 4.5 3.65 4.5 4.757V19.5a2.25 2.25 0 0 0 2.25 2.25h10.5a2.25 2.25 0 0 0 2.25-2.25V4.757c0-1.108-.806-2.057-1.907-2.185A48.507 48.507 0 0 0 12 2.25Z" /></svg>
+VAT Calculator
+</a>
+<a href="/v1/vat-map/" class="flex items-center gap-2 text-sm text-indigo-700 hover:text-indigo-900 transition-colors">
+<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 6.75V15m6-6v8.25m.503 3.498 4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 0 0-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0Z" /></svg>
+EU VAT Rate Map
+</a>
+<a href="/v1/vat-changes/" class="flex items-center gap-2 text-sm text-indigo-700 hover:text-indigo-900 transition-colors">
+<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
+VAT Rate Changes
+</a>
+</div>
+</div>
+</div>
+<div class="text-center text-xs text-gray-400 max-w-2xl mx-auto">
+<p>VAT validation results are sourced from the European Commission VIES database. While we cache results for performance, always verify critical business decisions with your local tax authority.</p>
+</div>
+</div>
+</div>
+</main>
+<footer class="border-t border-slate-700 bg-ink py-12 text-slate-300">
+<div class="container">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-8">
+<div class="col-span-1 lg:col-span-2">
+<div class="text-white text-xl font-bold mb-4">EU VAT Info</div>
+<p class="mb-4 max-w-md text-sm leading-6 text-slate-300">
+Your trusted source for current VAT rates, calculations, and compliance information across all 27 European Union member states.
+</p>
+<div class="flex space-x-4">
+<a href="https://github.com/eimkasp/eu-vat.info" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors" title="EU VAT Info on GitHub">
+<svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>                    </a>
+</div>
+<div class="mt-4">
+<a href="https://chromewebstore.google.com/detail/eu-vat-calculator/fifmbbpgopnifnoginhmjjedjnabdkka" target="_blank" rel="noopener noreferrer" class="inline-block hover:opacity-80 transition-opacity">
+<img src="/v1/images/chrome-web-store-badge.png" alt="Available in the Chrome Web Store" class="h-10" loading="lazy">
+</a>
+</div>
+</div>
+<div>
+<h3 class="text-white font-semibold mb-4">VAT Tools</h3>
+<ul class="space-y-2 text-sm">
+<li><a href="/v1/vat-calculator/" class="hover:text-white transition-colors">VAT Calculator</a></li>
+<li><a href="/v1/vat-map/" class="hover:text-white transition-colors">Interactive VAT Map</a></li>
+<li><a href="/v1/vat-changes/" class="hover:text-white transition-colors">VAT Rate History</a></li>
+<li><a href="/embed" class="hover:text-white transition-colors">Embed VAT Widget</a></li>
+<li><a href="/v1/chrome-extension/" class="hover:text-white transition-colors">Chrome Extension</a></li>
+</ul>
+</div>
+<div>
+<h3 class="text-white font-semibold mb-4">Resources</h3>
+<ul class="space-y-2 text-sm">
+<li><a href="/v1/donate/" class="hover:text-white transition-colors">Donate</a></li>
+<li><a href="/v1/blog/" class="hover:text-white transition-colors">VAT updates</a></li>
+<li><a href="/v1/sitemap/" class="hover:text-white transition-colors">Sitemap</a></li>
+<li><a href="/v1/changelog/" class="hover:text-white transition-colors">What&#039;s New</a></li>
+<li><a href="/llms.txt" class="hover:text-white transition-colors">llms.txt - AI/LLM Data</a></li>
+<li><a href="/api/llm/vat-rates" class="hover:text-white transition-colors">VAT Rates API (JSON)</a></li>
+<li><a href="/v1/mcp-server/" class="hover:text-white transition-colors">MCP Server</a></li>
+<li><a href="/sitemap.xml" class="hover:text-white transition-colors">XML Sitemap</a></li>
+</ul>
+</div>
+<div>
+<h3 class="text-white font-semibold mb-4">Partner Tools</h3>
+<ul class="space-y-2 text-sm">
+<li><a href="https://pdfcheck.online/" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors">PDF Tools - BusinessPress</a></li>
+<li><a href="https://ec.europa.eu/taxation_customs/vies/" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors">EU VIES Validation</a></li>
+<li><a href="https://europa.eu/youreurope/business/taxation/vat/" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors">EU VAT Guide</a></li>
+</ul>
+</div>
+</div>
+<div class="flex flex-col items-center justify-between border-t border-slate-700 pt-8 text-sm md:flex-row">
+<div class="mb-4 md:mb-0">
+&copy; 2026 EU VAT Info. All rights reserved.
+</div>
+<div class="flex space-x-6 items-center">
+<a href="/v1/sitemap/" class="hover:text-white transition-colors">Sitemap</a>
+<a href="/llms.txt" class="hover:text-white transition-colors">llms.txt</a>
+<a href="https://pdfcheck.online/" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors">PDF Tools</a>
+<span class="text-slate-400">Always up to date</span>
+</div>
+</div>
+</div>
+</footer>
+<div>
+<div x-persist="mary-toaster">
+<div
+x-cloak
+x-data="{
+show: false,
+toast: {},
+timer: null,
+interval: null,
+maxProgress: 100,
+progress: 100,
+initialProgress: 0,
+startTime: 0,
+remaining: 0,
+start(toast) {
+this.clearTimers();
+this.toast = toast;
+this.progress = this.maxProgress;
+this.remaining = toast.timeout;
+this.initialProgress = this.progress;
+this.startTime = Date.now();
+// delay for DOM initiation
+setTimeout(() => this.show = true, 50);
+this.startProgress();
+this.startCloseTimer();
+},
+startProgress() {
+if (this.toast.noProgress) return;
+const intervalRefreshRate = 8;
+this.startTime = Date.now();
+const startProgressValue = this.initialProgress;
+this.interval = setInterval(() => {
+const elapsed = Date.now() - this.startTime;
+const ratio = elapsed / this.remaining;
+this.progress = startProgressValue * (1 - ratio);
+if (this.progress <= 0) {
+this.progress = 0;
+clearInterval(this.interval);
+this.interval = null;
+}
+}, intervalRefreshRate);
+},
+startCloseTimer() {
+this.startTime = Date.now();
+this.timer = setTimeout(() => {
+this.close();
+}, this.remaining);
+},
+pause() {
+if (!this.show) return;
+const elapsed = Date.now() - this.startTime;
+this.remaining -= elapsed;
+this.initialProgress = this.progress;
+this.clearTimers();
+},
+resume() {
+if (!this.show || this.remaining <= 0) return;
+this.startProgress();
+this.startCloseTimer();
+},
+close() {
+this.show = false;
+this.clearTimers();
+},
+clearTimers() {
+clearTimeout(this.timer);
+clearInterval(this.interval);
+this.timer = null;
+this.interval = null;
+}
+}"
+@mary-toast.window="start($event.detail.toast)"
+>
+<div
+class="toast !whitespace-normal rounded-box fixed cursor-pointer z-[999] overflow-hidden"
+:class="toast.position || 'toast-top toast-end'"
+x-show="show"
+@mouseenter="pause()"
+@mouseleave="resume()"
+x-classes="alert alert-success alert-warning alert-error alert-info top-10 end-10 toast toast-top toast-bottom toast-center toast-end toast-middle toast-start"
+@click="show = false; clearInterval(interval)"
+>
+<div class="alert gap-2" :class="toast.css">
+<div x-html="toast.icon" class="hidden sm:inline-block"></div>
+<div class="grid">
+<div x-html="toast.title" class="font-bold"></div>
+<div x-html="toast.description" class="text-xs"></div>
+</div>
+</div>
+<progress
+x-show="!toast.noProgress"
+class="-mt-3 h-1 w-full progress"
+:class="toast.progressClass"
+:max="maxProgress"
+:value="progress">
+</progress>
+</div>
+</div>
+<script>
+        window.toast = function(payload){
+            window.dispatchEvent(new CustomEvent('mary-toast', {detail: payload}))
+        }
+
+        document.addEventListener('livewire:init', () => {
+            Livewire.hook('request', ({fail}) => {
+                fail(({status, content, preventDefault}) => {
+                    try {
+                        let result = JSON.parse(content);
+
+                        if (result?.toast && typeof window.toast === "function") {
+                            window.toast(result);
+                        }
+
+                        if ((result?.prevent_default ?? false) === true) {
+                            preventDefault();
+                        }
+                    } catch (e) {
+                        console.log(e)
+                    }
+                })
+            })
+        })
+    </script>
+</div>
+</div>
+<script src="/v1/livewire/livewire.min.js" data-csrf="archive" data-update-uri="/v1/livewire/update" data-navigate-once="true"></script>
+</body>
+</html>

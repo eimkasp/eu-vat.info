@@ -1,17 +1,19 @@
 @props([
-    'title' => 'EU VAT Info - VAT Rates Calculator & Information',
-    'description' => 'Calculate VAT for all EU countries. Current rates, historical data, and VAT compliance tools. Free calculator with real-time rates.',
-    'url' => url()->current(),
-    'image' => url('/images/og-default.png'),
+    'title' => null,
+    'description' => null,
+    'url' => null,
+    'image' => null,
     'type' => 'website',
     'robots' => null,
 ])
 
 @php
     $seoPolicy = app(\App\Support\Seo\SeoPolicy::class);
+    $title = $title ?: __('ui.seo.default_title');
+    $description = $description ?: __('ui.seo.default_description');
     $resolvedRobots = $robots ?? $seoPolicy->robotsForCurrentLocale();
-    $resolvedUrl = $seoPolicy->canonicalizeLocalUrl($url);
-    $resolvedImage = $seoPolicy->canonicalizeLocalUrl($image);
+    $resolvedUrl = $seoPolicy->canonicalizeLocalUrl($url ?: url()->current());
+    $resolvedImage = $seoPolicy->canonicalizeLocalUrl($image ?: url('/images/og-default.png'));
 @endphp
 
 <!-- Primary Meta Tags -->

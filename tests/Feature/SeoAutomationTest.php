@@ -2,9 +2,10 @@
 
 use App\Services\Seo\IndexNowService;
 use Illuminate\Support\Facades\Http;
+use Livewire\Features\SupportDisablingBackButtonCache\SupportDisablingBackButtonCache;
 
 afterEach(function () {
-    \Livewire\Features\SupportDisablingBackButtonCache\SupportDisablingBackButtonCache::$disableBackButtonCache = false;
+    SupportDisablingBackButtonCache::$disableBackButtonCache = false;
 });
 
 it('keeps IndexNow disabled until credentials are configured', function () {
@@ -43,7 +44,7 @@ it('serves the configured IndexNow key only when enabled', function () {
         ->assertSeeText('seo-test-key');
 
     config()->set('seo.indexnow.enabled', false);
-    \Livewire\Features\SupportDisablingBackButtonCache\SupportDisablingBackButtonCache::$disableBackButtonCache = true;
+    SupportDisablingBackButtonCache::$disableBackButtonCache = true;
     $response = $this->get('/indexnow-key.txt')->assertNotFound();
 
     expect($response->headers->get('Cache-Control'))->not->toContain('public');

@@ -3,186 +3,108 @@
 namespace App\Livewire;
 
 use App\Models\Country;
-use App\Models\VatRate;
+use App\Support\Vat\VatCalculation;
+use App\Support\Vat\VatMode;
+use Illuminate\Support\Collection;
+use Livewire\Attributes\Computed;
+use Livewire\Attributes\Locked;
 use Livewire\Component;
 
 class SharedCalculation extends Component
 {
-    public $country = '';
+    public const AMOUNTS = [100, 200, 500, 1000, 2500, 5000, 10000];
 
-    public $amount = 100;
+    #[Locked]
+    public string $country = '';
 
-    public $rate = 0;
+    #[Locked]
+    public float $amount = 0;
 
-    public $mode = 'exclude';
+    #[Locked]
+    public float $rate = 0;
 
-    public $countryObject = null;
+    #[Locked]
+    public string $mode = 'exclude';
 
-    public $countryRates = [];
-
-    public $net_amount = 0;
-
-    public $vat_amount = 0;
-
-    public $total = 0;
-
-    public $error_message = null;
-
-    public $rateName = '';
-
-    public $similarCountries = [];
-
-    public $similarAmounts = [100, 200, 500, 1000, 2500, 5000, 10000];
-
-    public function mount(string $country, string $amount = '100', string $rate = '0', string $mode = 'exclude')
+    public function mount(string $country, string $amount, string $rate, string $mode = 'exclude'): void
     {
+        abort_unless(is_numeric($amount) && (float) $amount <= VatCalculation::MAX_AMOUNT, 404);
+        abort_unless(is_numeric($rate) && (float) $rate <= 100, 404);
+
         $this->country = $country;
-        $this->amount = $amount;
-        $this->rate = $rate;
-        $this->mode = in_array($mode, ['include', 'exclude']) ? $mode : 'exclude';
+        $this->amount = round((float) $amount, 2);
+        $this->rate = round((float) $rate, 2);
+        $this->mode = VatMode::fromInput($mode)->value;
 
-        $this->countryObject = Country::where('slug', $this->country)->first();
-
-        if (!$this->countryObject) {
-            abort(404);
-        }
-
-        $this->loadRates();
-        $this->detectRateName();
-        $this->calculate();
-        $this->loadSimilarCountries();
+        abort_unless($this->countryModel, 404);
     }
 
-    public function getShareUrlProperty(): string
+    public static function calculationUrl(string $country, float|int|string $amount, float|int|string $rate, string $mode): string
     {
-        return url(locale_path('/vat-calculation/' . $this->country . '/' . $this->amount . '/' . $this->rate . '/' . $this->mode));
+        return locale_path('/vat-calculation/'.$country.'/'.self::segment($amount).'/'.self::segment($rate).'/'.VatMode::fromInput($mode)->value);
     }
 
-    public static function calculationUrl(string $country, $amount, $rate, string $mode): string
+    public static function segment(float|int|string $value): string
     {
-        return locale_path('/vat-calculation/' . $country . '/' . $amount . '/' . $rate . '/' . $mode);
+        return rtrim(rtrim(number_format((float) $value, 2, '.', ''), '0'), '.');
     }
 
-    private function calculate()
+    #[Computed]
+    public function countryModel(): ?Country
     {
-        $this->error_message = null;
-
-        try {
-            $amount = is_numeric($this->amount) ? round(floatval($this->amount), 2) : 0;
-
-            if ($amount < 0) {
-                throw new \InvalidArgumentException('Amount must be a positive number.');
-            }
-
-            $rate = floatval($this->rate);
-
-            if ($this->mode === 'include') {
-                $this->net_amount = round($amount / (1 + ($rate / 100)), 2);
-                $this->vat_amount = round($amount - $this->net_amount, 2);
-                $this->total = round($amount, 2);
-            } else {
-                $this->net_amount = round($amount, 2);
-                $this->vat_amount = round($amount * ($rate / 100), 2);
-                $this->total = round($amount + $this->vat_amount, 2);
-            }
-        } catch (\Exception $e) {
-            $this->error_message = $e->getMessage();
-            $this->net_amount = 0;
-            $this->vat_amount = 0;
-            $this->total = 0;
-        }
+        return Country::query()->where('slug', $this->country)->first();
     }
 
-    private function loadRates()
+    #[Computed]
+    public function calculation(): VatCalculation
     {
-        $this->countryRates = [];
-
-        if (!$this->countryObject) {
-            return;
-        }
-
-        $date = now()->format('Y-m-d');
-        $historicalRates = VatRate::where('country_id', $this->countryObject->id)
-            ->where('effective_from', '<=', $date)
-            ->where(function ($query) use ($date) {
-                $query->where('effective_to', '>=', $date)
-                    ->orWhereNull('effective_to');
-            })
-            ->get();
-
-        $addedTypes = [];
-
-        if ($historicalRates->isNotEmpty()) {
-            foreach ($historicalRates as $r) {
-                $type = strtolower($r->type);
-                if (!in_array($type, $addedTypes)) {
-                    $this->countryRates[] = [
-                        'name' => ucfirst(str_replace('_', ' ', $r->type)),
-                        'value' => $r->rate,
-                        'type' => $type,
-                    ];
-                    $addedTypes[] = $type;
-                }
-            }
-        }
-
-        if (empty($this->countryRates) || !in_array('standard', $addedTypes)) {
-            if ($this->countryObject->standard_rate && !in_array('standard', $addedTypes)) {
-                array_unshift($this->countryRates, [
-                    'name' => 'Standard',
-                    'value' => $this->countryObject->standard_rate,
-                    'type' => 'standard',
-                ]);
-            }
-        }
-
-        if ($this->countryObject->reduced_rate && !in_array('reduced', $addedTypes)) {
-            $this->countryRates[] = [
-                'name' => 'Reduced',
-                'value' => $this->countryObject->reduced_rate,
-                'type' => 'reduced',
-            ];
-        }
-
-        if ($this->countryObject->super_reduced_rate && !in_array('super_reduced', $addedTypes)) {
-            $this->countryRates[] = [
-                'name' => 'Super reduced',
-                'value' => $this->countryObject->super_reduced_rate,
-                'type' => 'super_reduced',
-            ];
-        }
-
-        if ($this->countryObject->parking_rate && !in_array('parking', $addedTypes)) {
-            $this->countryRates[] = [
-                'name' => 'Parking',
-                'value' => $this->countryObject->parking_rate,
-                'type' => 'parking',
-            ];
-        }
+        return VatCalculation::make($this->amount, $this->rate, $this->mode);
     }
 
-    private function detectRateName()
+    /**
+     * @return list<array{type: string, rate: float, label: string}>
+     */
+    #[Computed]
+    public function rateOptions(): array
     {
-        $this->rateName = 'Custom';
-        foreach ($this->countryRates as $r) {
-            if (abs($r['value'] - $this->rate) < 0.01) {
-                $this->rateName = $r['name'];
-                break;
-            }
-        }
+        return array_map(fn (array $option) => $option + ['label' => __('ui.rate_type.'.$option['type'])], $this->countryModel->rateOptions());
     }
 
-    private function loadSimilarCountries()
+    /**
+     * @return array{type: string, label: string}
+     */
+    #[Computed]
+    public function rateType(): array
     {
-        $this->similarCountries = Country::where('slug', '!=', $this->country)
-            ->orderBy('name')
-            ->get(['name', 'slug', 'iso_code', 'standard_rate'])
-            ->take(10)
-            ->toArray();
+        $match = collect($this->rateOptions)->first(fn (array $option) => abs($option['rate'] - $this->rate) < 0.001);
+
+        return $match
+            ? ['type' => $match['type'], 'label' => $match['label']]
+            : ['type' => 'custom', 'label' => __('ui.rate_type.custom')];
+    }
+
+    /**
+     * EU countries whose standard rate is closest to the shared rate.
+     *
+     * @return Collection<int, Country>
+     */
+    #[Computed]
+    public function nearbyCountries(): Collection
+    {
+        return Country::calculatorAvailable()
+            ->where('is_eu_member', true)
+            ->where('slug', '!=', $this->country)
+            ->get(['name', 'slug', 'iso_code', 'standard_rate', 'currency_code'])
+            ->sortBy([fn (Country $a, Country $b) => abs((float) $a->standard_rate - $this->rate) <=> abs((float) $b->standard_rate - $this->rate), ['name', 'asc']])
+            ->take(8)
+            ->values();
     }
 
     public function render()
     {
-        return view('livewire.shared-calculation');
+        return view('livewire.shared-calculation', [
+            'countryModel' => $this->countryModel,
+            'calculation' => $this->calculation,
+        ]);
     }
 }

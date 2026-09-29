@@ -48,7 +48,7 @@ it('displays current vat rates section on country page', function () {
 
     $this->get("/vat-calculator/{$country->slug}")
         ->assertStatus(200)
-        ->assertSee('Current VAT Rates')
+        ->assertSee('Germany VAT rates and formulas')
         ->assertSee($country->standard_rate.'%');
 });
 
@@ -109,7 +109,7 @@ it('shows multiple vat rates for country with reduced rates', function () {
 
     $this->get("/vat-calculator/{$country->slug}")
         ->assertStatus(200)
-        ->assertSee('Current VAT Rates')
+        ->assertSee('France VAT rates and formulas')
         ->assertSee($country->standard_rate.'%')
         ->assertSee($country->reduced_rate.'%')
         ->assertSee($country->super_reduced_rate.'%');
@@ -118,7 +118,8 @@ it('shows multiple vat rates for country with reduced rates', function () {
 it('displays europe map component', function () {
     $this->get('/vat-calculator')
         ->assertStatus(200)
-        ->assertSeeLivewire('europe-map');
+        ->assertSee('class="eu-map"', false)
+        ->assertSee('data-iso="FR"', false);
 });
 
 it('displays vat calculator form component', function () {
@@ -178,9 +179,9 @@ it('renders country calculators as a compact reference workspace', function () {
         ->assertOk()
         ->assertSee('data-country-atmosphere', false)
         ->assertSee('data-country-header', false)
-        ->assertSee('eu-vat-calculator-background-sm.webp', false)
-        ->assertSee('eu-vat-calculator-background-md.webp', false)
-        ->assertSee('eu-vat-calculator-background-lg.webp', false)
+        ->assertSee('hero-texture-sm.webp', false)
+        ->assertSee('hero-texture-md.webp', false)
+        ->assertSee('hero-texture-lg.webp', false)
         ->assertSee('data-atmosphere-media', false)
         ->assertSee('data-calculator-surface="country-image"', false)
         ->assertSee('data-country-reference', false)
@@ -190,13 +191,12 @@ it('renders country calculators as a compact reference workspace', function () {
     $html = $response->getContent();
 
     expect($html)
-        ->toContain('data-country-atmosphere class="relative isolate bg-[#0b2f4f]"')
+        ->toContain('data-country-atmosphere class="hero-canvas"')
         ->toContain('data-atmosphere-media class="pointer-events-none absolute inset-0 -z-10 overflow-hidden"')
-        ->not->toContain('data-country-atmosphere class="relative isolate overflow-hidden')
         ->not->toContain('imagesrcset=')
-        ->toContain('href="/images/eu-vat-calculator-background-sm.webp" media="(max-width: 639px)"')
-        ->toContain('href="/images/eu-vat-calculator-background-md.webp" media="(min-width: 640px) and (max-width: 1023px)"')
-        ->toContain('href="/images/eu-vat-calculator-background-lg.webp" media="(min-width: 1024px)"')
+        ->toContain('images/hero-texture-sm.webp" media="(max-width: 639px)"')
+        ->toContain('images/hero-texture-md.webp" media="(min-width: 640px) and (max-width: 1023px)"')
+        ->toContain('images/hero-texture-lg.webp" media="(min-width: 1024px)"')
         ->and(strpos($html, 'data-country-header'))
         ->toBeLessThan(strpos($html, 'id="hero-calculator"'))
         ->and(strpos($html, 'id="hero-calculator"'))

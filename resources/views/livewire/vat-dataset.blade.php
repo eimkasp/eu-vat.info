@@ -58,7 +58,7 @@
     </x-seo-meta>
 @endsection
 
-<div class="container pb-14 pt-8 sm:pt-12">
+<div class="app-container pb-14 pt-8 sm:pt-12">
     <x-site-breadcrumbs :items="['EU VAT rates dataset' => '']" />
 
     <header class="max-w-3xl border-b border-line pb-8">
@@ -70,7 +70,7 @@
         <p class="mt-3 text-sm text-ink-muted">Last updated {{ $dateModified->format('F j, Y') }}.</p>
     </header>
 
-    <div class="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px]">
+    <div class="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_320px]">
         <section aria-labelledby="dataset-downloads">
             <h2 id="dataset-downloads" class="text-2xl font-bold text-ink">Download the data</h2>
             <div class="mt-4 divide-y divide-line border-y border-line">

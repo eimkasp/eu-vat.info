@@ -79,7 +79,7 @@ class UpdateVatRates implements ShouldQueue
      */
     private function syncCountryRates(): void
     {
-        $job = new VerifyVatRatesIntegrity();
+        $job = new VerifyVatRatesIntegrity;
         $job->handle();
     }
 

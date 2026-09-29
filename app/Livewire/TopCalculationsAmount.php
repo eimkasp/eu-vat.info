@@ -2,36 +2,33 @@
 
 namespace App\Livewire;
 
-use App\Models\Country;
-use Illuminate\Support\Facades\Cache;
+use Livewire\Attributes\Computed;
+use Livewire\Attributes\Locked;
 use Livewire\Component;
 
 class TopCalculationsAmount extends Component
 {
+    #[Locked]
     public int $amount;
 
-    public array $countries = [];
-
-    public array $allAmounts = [100, 200, 500, 1000, 2500, 5000, 10000];
-
-    public function mount(int $amount)
+    public function mount(int $amount): void
     {
-        if (! in_array($amount, $this->allAmounts)) {
-            abort(404);
-        }
+        abort_unless(in_array($amount, TopCalculations::AMOUNTS, true), 404);
 
         $this->amount = $amount;
+    }
 
-        $this->countries = Cache::remember('top_calculations_countries', 3600, function () {
-            return Country::orderBy('name')
-                ->where('is_eu_member', true)
-                ->get(['id', 'name', 'slug', 'iso_code', 'standard_rate', 'reduced_rate', 'currency_symbol', 'currency_code'])
-                ->toArray();
-        });
+    /**
+     * @return list<array{name: string, slug: string, iso_code: string, standard_rate: float}>
+     */
+    #[Computed]
+    public function countries(): array
+    {
+        return TopCalculations::euCountries();
     }
 
     public function render()
     {
-        return view('livewire.top-calculations-amount');
+        return view('livewire.top-calculations-amount', ['amounts' => TopCalculations::AMOUNTS]);
     }
 }

@@ -54,7 +54,7 @@ it('renders donate page with locale prefix', function () {
 it('includes donate link in footer', function () {
     $this->get('/')
         ->assertSuccessful()
-        ->assertSee('href="' . locale_path('/donate') . '"', false);
+        ->assertSee('href="'.locale_path('/donate').'"', false);
 });
 
 it('shows x402 test connection section', function () {

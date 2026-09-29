@@ -70,7 +70,7 @@ class X402PaymentMiddleware
     protected function matchRoute(Request $request): ?array
     {
         $method = strtoupper($request->method());
-        $path = '/' . ltrim($request->path(), '/');
+        $path = '/'.ltrim($request->path(), '/');
         $routes = config('x402.routes', []);
 
         foreach ($routes as $routePattern => $routeConfig) {
@@ -82,7 +82,7 @@ class X402PaymentMiddleware
 
             // Convert Laravel-style {param} to regex
             $regex = preg_replace('/\{[^}]+\}/', '[^/]+', $routePath);
-            $regex = '#^' . $regex . '$#';
+            $regex = '#^'.$regex.'$#';
 
             if (preg_match($regex, $path)) {
                 return array_merge($routeConfig, ['route' => $routePattern]);

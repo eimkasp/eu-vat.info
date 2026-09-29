@@ -48,6 +48,8 @@ class CountriesTableSeeder extends Seeder
                 $isoCode = $matches[2];
             }
 
+            $isEuMember = in_array($isoCode, Country::EU_MEMBER_CODES, true);
+
             Country::updateOrCreate(
                 ['iso_code' => $isoCode],
                 [
@@ -56,6 +58,8 @@ class CountriesTableSeeder extends Seeder
                     'reduced_rate' => $reducedRate,
                     'parking_rate' => $parkingRate,
                     'standard_rate' => $standardRate,
+                    'is_eu_member' => $isEuMember,
+                    'vies_available' => $isEuMember,
                 ]
             );
         }
@@ -64,9 +68,9 @@ class CountriesTableSeeder extends Seeder
     private function convertToDecimal($value)
     {
         if (strpos($value, '/') !== false) {
-            $numbers = explode('/', $value);
+            $rates = Country::parseRateList($value);
 
-            return array_sum($numbers) / count($numbers);
+            return implode(' / ', array_map(fn (float $rate) => Country::formatRate($rate), $rates));
         }
 
         return $value;

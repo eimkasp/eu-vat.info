@@ -54,11 +54,11 @@ class Changelog extends Component
             $groups = $this->parseGroups($body);
 
             $releases[] = [
-                'version'  => $version,
-                'date'     => $date,
+                'version' => $version,
+                'date' => $date,
                 'subtitle' => $subtitle,
-                'groups'   => $groups,
-                'slug'     => 'v' . strtolower(preg_replace('/[^a-zA-Z0-9]/', '-', $version)),
+                'groups' => $groups,
+                'slug' => 'v'.strtolower(preg_replace('/[^a-zA-Z0-9]/', '-', $version)),
             ];
         }
 
@@ -79,6 +79,7 @@ class Changelog extends Component
                 }
                 $currentGroup = trim($m[1]);
                 $currentItems = [];
+
                 continue;
             }
 
@@ -88,6 +89,7 @@ class Changelog extends Component
                     $currentGroup = 'Details';
                 }
                 $currentItems[] = ['type' => 'heading', 'text' => trim($m[1])];
+
                 continue;
             }
 
@@ -97,6 +99,7 @@ class Changelog extends Component
                     $currentGroup = 'Changes';
                 }
                 $currentItems[] = ['type' => 'item', 'text' => trim($m[1])];
+
                 continue;
             }
 

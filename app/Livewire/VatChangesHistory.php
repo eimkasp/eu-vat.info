@@ -4,7 +4,10 @@ namespace App\Livewire;
 
 use App\Models\Country;
 use App\Models\VatRateChange;
+use Carbon\CarbonImmutable;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Cache;
+use Livewire\Attributes\Computed;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -13,79 +16,94 @@ class VatChangesHistory extends Component
 {
     use WithPagination;
 
-    #[Url(as: 'country')]
-    public $selectedCountry = '';
+    public const RATE_TYPES = ['standard', 'reduced', 'super_reduced', 'parking'];
 
-    #[Url(as: 'type')]
-    public $selectedType = '';
+    public const DIRECTIONS = ['increase', 'decrease'];
 
-    #[Url(as: 'direction')]
-    public $selectedDirection = '';
+    #[Url(as: 'country', except: '')]
+    public string $selectedCountry = '';
 
-    public $countryStats = [];
+    #[Url(as: 'type', except: '')]
+    public string $selectedType = '';
 
-    public function mount()
+    #[Url(as: 'direction', except: '')]
+    public string $selectedDirection = '';
+
+    public function updated(string $property): void
     {
-        $this->loadCountryStats();
+        if (in_array($property, ['selectedCountry', 'selectedType', 'selectedDirection'], true)) {
+            $this->resetPage();
+        }
     }
 
-    public function updatedSelectedCountry()
+    public function resetFilters(): void
     {
+        $this->reset('selectedCountry', 'selectedType', 'selectedDirection');
         $this->resetPage();
     }
 
-    public function updatedSelectedType()
+    /**
+     * @return list<array{slug: string, name: string, iso: string}>
+     */
+    #[Computed]
+    public function countries(): array
     {
-        $this->resetPage();
+        return Cache::remember('vat_changes_countries_v2', 3600, fn () => Country::query()
+            ->where('is_eu_member', true)
+            ->orderBy('name')
+            ->get(['name', 'slug', 'iso_code'])
+            ->map(fn (Country $country) => ['slug' => $country->slug, 'name' => $country->name, 'iso' => $country->iso_code])
+            ->all());
     }
 
-    public function updatedSelectedDirection()
+    /**
+     * @return array{total: int, increases: int, decreases: int, upcoming: int, latest: ?string}
+     */
+    #[Computed]
+    public function summary(): array
     {
-        $this->resetPage();
-    }
+        return Cache::remember('vat_changes_summary_v1', 900, function () {
+            $changes = VatRateChange::query()->whereHas('country', fn (Builder $query) => $query->where('is_eu_member', true));
 
-    public function resetFilters()
-    {
-        $this->selectedCountry = '';
-        $this->selectedType = '';
-        $this->selectedDirection = '';
-        $this->resetPage();
-    }
-
-    public function loadCountryStats()
-    {
-        $this->countryStats = Cache::remember('vat_change_stats', 3600, function () {
-            return Country::withCount(['vatRateChanges'])
-                ->where('is_eu_member', true)
-                ->get()
-                ->map(function ($country) {
-                    return [
-                        'id' => $country->id,
-                        'name' => $country->name,
-                        'slug' => $country->slug,
-                        'iso_code' => $country->iso_code,
-                        'changes_count' => $country->vat_rate_changes_count,
-                        'stability' => $this->getStabilityRating($country->vat_rate_changes_count),
-                    ];
-                })
-                ->sortBy('changes_count')
-                ->values();
+            return [
+                'total' => (clone $changes)->count(),
+                'increases' => (clone $changes)->where('change_direction', 'increase')->count(),
+                'decreases' => (clone $changes)->where('change_direction', 'decrease')->count(),
+                'upcoming' => (clone $changes)->whereDate('change_date', '>', now())->count(),
+                'latest' => (clone $changes)->whereDate('change_date', '<=', now())->max('change_date'),
+            ];
         });
     }
 
-    private function getStabilityRating($changesCount)
+    /**
+     * Countries ordered from the fewest to the most recorded changes.
+     *
+     * @return list<array{name: string, slug: string, iso: string, changes: int, stability: string, history: bool}>
+     */
+    #[Computed]
+    public function stability(): array
     {
-        if ($changesCount <= 2) {
-            return 'excellent';
-        }
-        if ($changesCount <= 5) {
-            return 'good';
-        }
-        if ($changesCount <= 10) {
-            return 'moderate';
-        }
-
-        return 'frequent';
+        return Cache::remember('vat_change_stability_v2', 3600, fn () => Country::query()
+            ->where('is_eu_member', true)
+            ->withCount('vatRateChanges')
+            ->withExists(['vatRates', 'vatRateChanges'])
+            ->orderBy('vat_rate_changes_count')
+            ->orderBy('name')
+            ->get()
+            ->map(fn (Country $country) => [
+                'name' => $country->name,
+                'slug' => $country->slug,
+                'iso' => $country->iso_code,
+                'changes' => (int) $country->vat_rate_changes_count,
+                'stability' => match (true) {
+                    $country->vat_rate_changes_count <= 2 => 'excellent',
+                    $country->vat_rate_changes_count <= 5 => 'good',
+                    $country->vat_rate_changes_count <= 10 => 'moderate',
+                    default => 'frequent',
+                },
+                'history' => $country->hasVatHistory(),
+            ])
+            ->all());
     }
 
     public function hasActiveFilters(): bool
@@ -93,39 +111,31 @@ class VatChangesHistory extends Component
         return $this->selectedCountry !== '' || $this->selectedType !== '' || $this->selectedDirection !== '';
     }
 
+    public function paginationView(): string
+    {
+        return 'pagination.livewire';
+    }
+
     public function render()
     {
-        $query = VatRateChange::with('country')
-            ->whereHas('country', fn ($countryQuery) => $countryQuery->where('is_eu_member', true))
-            ->orderBy('change_date', 'desc');
-
-        if ($this->selectedCountry) {
-            $query->where('country_id', $this->selectedCountry);
-        }
-
-        if ($this->selectedType) {
-            $query->where('rate_type', $this->selectedType);
-        }
-
-        if ($this->selectedDirection) {
-            $query->where('change_direction', $this->selectedDirection);
-        }
-
-        $changes = $query->paginate(20);
-
-        $countries = Cache::remember('countries_list_ordered', 3600, function () {
-            return Country::where('is_eu_member', true)->orderBy('name')->get();
-        });
+        $changes = VatRateChange::query()
+            ->with('country:id,name,slug,iso_code')
+            ->whereHas('country', fn (Builder $query) => $query->where('is_eu_member', true))
+            ->when($this->selectedCountry !== '', fn (Builder $query) => $query->whereHas('country', fn (Builder $country) => $country->where('slug', $this->selectedCountry)))
+            ->when(in_array($this->selectedType, self::RATE_TYPES, true), fn (Builder $query) => $query->where('rate_type', $this->selectedType))
+            ->when(in_array($this->selectedDirection, self::DIRECTIONS, true), fn (Builder $query) => $query->where('change_direction', $this->selectedDirection))
+            ->orderByDesc('change_date')
+            ->orderBy('id')
+            ->paginate(20);
 
         $datasetModified = VatRateChange::query()
-            ->whereHas('country', fn ($countryQuery) => $countryQuery->where('is_eu_member', true))
+            ->whereHas('country', fn (Builder $query) => $query->where('is_eu_member', true))
             ->max('updated_at');
 
         return view('livewire.vat-changes-history', [
             'changes' => $changes,
-            'countries' => $countries,
             'hasFilters' => $this->hasActiveFilters(),
-            'datasetModified' => $datasetModified ? \Carbon\CarbonImmutable::parse($datasetModified) : null,
+            'datasetModified' => $datasetModified ? CarbonImmutable::parse($datasetModified) : null,
         ]);
     }
 }

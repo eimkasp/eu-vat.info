@@ -26,9 +26,8 @@ it('lists EU member states only on the homepage', function () {
     ]);
 
     Livewire::test(Home::class)
-        ->assertSet('euCountries', function ($countries) {
-            return collect($countries)->pluck('name')->all() === ['Lithuania'];
-        });
+        ->assertViewHas('countries', fn ($countries) => $countries->pluck('name')->all() === ['Lithuania'])
+        ->assertSee('Lithuania');
 });
 
 it('groups supported non-EU countries separately in the homepage calculator', function () {
@@ -50,10 +49,8 @@ it('groups supported non-EU countries separately in the homepage calculator', fu
         'is_eu_member' => false,
     ]);
 
-    Livewire::test(HeroCalculator::class)
-        ->assertSet('countries', function ($countries) {
-            return collect($countries)->pluck('name')->all() === ['Germany', 'Switzerland'];
-        })
-        ->assertSet('countries.0.group', 'eu')
-        ->assertSet('countries.1.group', 'other_europe');
+    $countries = Livewire::test(HeroCalculator::class)->instance()->countries;
+
+    expect(array_column($countries, 'name'))->toBe(['Germany', 'Switzerland'])
+        ->and(array_column($countries, 'group'))->toBe(['eu', 'other_europe']);
 });

@@ -4,111 +4,118 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\BannerResource\Pages;
 use App\Models\Banner;
-use Filament\Forms;
-use Filament\Forms\Form;
+use BackedEnum;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class BannerResource extends Resource
 {
     protected static ?string $model = Banner::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-megaphone';
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-megaphone';
 
-    protected static ?string $navigationGroup = 'Content';
+    protected static string|UnitEnum|null $navigationGroup = 'Content';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Section::make()
-                    ->schema([
-                        Forms\Components\TextInput::make('title')
-                            ->maxLength(255),
+        return $schema->components([
+            Section::make()
+                ->schema([
+                    TextInput::make('title')
+                        ->maxLength(255),
 
-                        Forms\Components\Select::make('position')
-                            ->options([
-                                'sidebar' => 'Sidebar (Home)',
-                                'header_top' => 'Header Top',
-                                'footer' => 'Footer',
-                                'home_content' => 'Home Content (Before Calculator)',
-                            ])
-                            ->required()
-                            ->default('sidebar'),
+                    Select::make('position')
+                        ->options([
+                            'sidebar' => 'Sidebar (Home)',
+                            'header_top' => 'Header Top',
+                            'footer' => 'Footer',
+                            'home_content' => 'Home Content (Before Calculator)',
+                        ])
+                        ->required()
+                        ->default('sidebar'),
 
-                        Forms\Components\TextInput::make('link_url')
-                            ->label('Link URL')
-                            ->url()
-                            ->maxLength(255),
+                    TextInput::make('link_url')
+                        ->label('Link URL')
+                        ->url()
+                        ->maxLength(255),
 
-                        Forms\Components\FileUpload::make('image')
-                            ->image()
-                            ->directory('banners'),
+                    FileUpload::make('image')
+                        ->image()
+                        ->disk('public')
+                        ->visibility('public')
+                        ->directory('banners'),
 
-                        Forms\Components\Textarea::make('content')
-                            ->label('Custom HTML Content')
-                            ->columnSpanFull(),
+                    Textarea::make('content')
+                        ->label('Custom HTML Content')
+                        ->columnSpanFull(),
 
-                        Forms\Components\Toggle::make('is_active')
-                            ->default(true),
+                    Toggle::make('is_active')
+                        ->default(true),
 
-                        Forms\Components\TextInput::make('sort_order')
-                            ->numeric()
-                            ->default(0),
+                    TextInput::make('sort_order')
+                        ->numeric()
+                        ->default(0),
 
-                        Forms\Components\DateTimePicker::make('starts_at'),
-                        Forms\Components\DateTimePicker::make('ends_at'),
-                    ])->columns(2),
-            ]);
+                    DateTimePicker::make('starts_at'),
+                    DateTimePicker::make('ends_at'),
+                ])
+                ->columns(2)
+                ->columnSpanFull(),
+        ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                Tables\Columns\ImageColumn::make('image'),
-                Tables\Columns\TextColumn::make('title')
+                ImageColumn::make('image')
+                    ->disk('public'),
+                TextColumn::make('title')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('position')
+                TextColumn::make('position')
                     ->badge(),
-                Tables\Columns\IconColumn::make('is_active')
+                IconColumn::make('is_active')
                     ->boolean(),
-                Tables\Columns\TextColumn::make('sort_order')
+                TextColumn::make('sort_order')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('starts_at')
+                TextColumn::make('starts_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('ends_at')
+                TextColumn::make('ends_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->filters([
-                //
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ])
             ->defaultSort('sort_order', 'asc');
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
     }
 
     public static function getPages(): array

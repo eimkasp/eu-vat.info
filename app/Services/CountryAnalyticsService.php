@@ -6,22 +6,34 @@ use App\Models\Country;
 use Illuminate\Http\Request;
 use Stevebauman\Location\Facades\Location;
 
+use function Illuminate\Support\defer;
+
 class CountryAnalyticsService
 {
+    /**
+     * Records an interaction after the response has been sent, so the IP geolocation
+     * lookup never delays page rendering.
+     */
     public function trackView(Country $country, Request $request, string $type = 'view', array $metadata = []): void
     {
-        $location = Location::get($request->ip());
-
-        $country->analytics()->create([
+        $ip = $request->ip();
+        $attributes = [
             'type' => $type,
-            'ip_address' => $request->ip(),
+            'ip_address' => $ip,
             'user_agent' => $request->userAgent(),
             'referer' => $request->header('referer'),
-            'location_country' => $location ? $location->countryName : null,
-            'location_city' => $location ? $location->cityName : null,
             'amount' => $metadata['amount'] ?? null,
             'rate_used' => $metadata['rate_used'] ?? null,
-            'meta_data' => ! empty($metadata) ? $metadata : null,
-        ]);
+            'meta_data' => $metadata !== [] ? $metadata : null,
+        ];
+
+        defer(function () use ($country, $ip, $attributes) {
+            $location = rescue(fn () => Location::get($ip), null, false);
+
+            $country->analytics()->create($attributes + [
+                'location_country' => $location ? $location->countryName : null,
+                'location_city' => $location ? $location->cityName : null,
+            ]);
+        });
     }
 }

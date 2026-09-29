@@ -29,13 +29,12 @@ class SecurityHeaders
 
     private const STYLE_SOURCES = [
         "'self'",
-        "'unsafe-inline'", // Required by Tailwind/DaisyUI and Livewire
+        "'unsafe-inline'", // Inline style attributes set by Livewire and Alpine
     ];
 
     private const IMG_SOURCES = [
         "'self'",
         'data:',
-        'https://flagcdn.com',
     ];
 
     private const CONNECT_SOURCES = [
@@ -51,8 +50,14 @@ class SecurityHeaders
         // Prevent MIME-type sniffing
         $response->headers->set('X-Content-Type-Options', 'nosniff');
 
-        // Clickjacking protection (AllowEmbedding middleware removes this for embed routes)
-        $response->headers->set('X-Frame-Options', 'SAMEORIGIN');
+        $embeddable = in_array(AllowEmbedding::class, $request->route()?->gatherMiddleware() ?? [], true);
+
+        // Clickjacking protection everywhere except the embeddable widget routes.
+        if ($embeddable) {
+            $response->headers->remove('X-Frame-Options');
+        } else {
+            $response->headers->set('X-Frame-Options', 'SAMEORIGIN');
+        }
 
         // Force HTTPS for 1 year, include subdomains
         $response->headers->set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
@@ -64,24 +69,24 @@ class SecurityHeaders
         $response->headers->set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
 
         // Full Content-Security-Policy
-        $response->headers->set('Content-Security-Policy', $this->buildCsp());
+        $response->headers->set('Content-Security-Policy', $this->buildCsp($embeddable));
 
         return $response;
     }
 
-    private function buildCsp(): string
+    private function buildCsp(bool $embeddable = false): string
     {
         $directives = [
             "default-src 'self'",
-            'script-src ' . implode(' ', self::SCRIPT_SOURCES),
-            'style-src ' . implode(' ', self::STYLE_SOURCES),
-            'img-src ' . implode(' ', self::IMG_SOURCES),
+            'script-src '.implode(' ', self::SCRIPT_SOURCES),
+            'style-src '.implode(' ', self::STYLE_SOURCES),
+            'img-src '.implode(' ', self::IMG_SOURCES),
             "font-src 'self'",
-            'connect-src ' . implode(' ', self::CONNECT_SOURCES),
-            "frame-src 'none'",
+            'connect-src '.implode(' ', self::CONNECT_SOURCES),
+            "frame-src 'self'",    // Only the embed widget preview frames this site
             "object-src 'none'",   // No Flash/plugins
             "base-uri 'self'",     // Prevent base-tag injection
-            "frame-ancestors 'self'", // AllowEmbedding will override this for embed routes
+            $embeddable ? 'frame-ancestors *' : "frame-ancestors 'self'",
             "form-action 'self'",
         ];
 

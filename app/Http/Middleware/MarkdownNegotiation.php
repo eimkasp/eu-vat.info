@@ -94,7 +94,7 @@ class MarkdownNegotiation
             $header .= "---\n\n";
         }
 
-        return $header . trim($markdown) . "\n";
+        return $header.trim($markdown)."\n";
     }
 
     protected function estimateTokens(string $text): int

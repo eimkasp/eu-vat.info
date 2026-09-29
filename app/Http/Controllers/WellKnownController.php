@@ -18,31 +18,31 @@ class WellKnownController extends Controller
         $linkset = [
             'linkset' => [
                 [
-                    'anchor'       => $baseUrl . '/api/countries',
-                    'service-desc' => [['href' => $baseUrl . '/llms.txt', 'type' => 'text/plain']],
-                    'service-doc'  => [['href' => $baseUrl . '/llms.txt', 'type' => 'text/plain']],
-                    'status'       => [['href' => $baseUrl . '/up']],
+                    'anchor' => $baseUrl.'/api/countries',
+                    'service-desc' => [['href' => $baseUrl.'/llms.txt', 'type' => 'text/plain']],
+                    'service-doc' => [['href' => $baseUrl.'/llms.txt', 'type' => 'text/plain']],
+                    'status' => [['href' => $baseUrl.'/up']],
                 ],
                 [
-                    'anchor'       => $baseUrl . '/api/vat/validation',
-                    'service-desc' => [['href' => $baseUrl . '/llms.txt', 'type' => 'text/plain']],
-                    'service-doc'  => [['href' => $baseUrl . '/vat-validation-api', 'type' => 'text/html']],
-                    'status'       => [['href' => $baseUrl . '/api/vat/validation/health']],
+                    'anchor' => $baseUrl.'/api/vat/validation',
+                    'service-desc' => [['href' => $baseUrl.'/llms.txt', 'type' => 'text/plain']],
+                    'service-doc' => [['href' => $baseUrl.'/vat-validation-api', 'type' => 'text/html']],
+                    'status' => [['href' => $baseUrl.'/api/vat/validation/health']],
                 ],
                 [
-                    'anchor'       => $baseUrl . '/api/llm/vat-rates',
-                    'service-desc' => [['href' => $baseUrl . '/llms.txt', 'type' => 'text/plain']],
-                    'service-doc'  => [['href' => $baseUrl . '/llms.txt', 'type' => 'text/plain']],
-                    'status'       => [['href' => $baseUrl . '/up']],
+                    'anchor' => $baseUrl.'/api/llm/vat-rates',
+                    'service-desc' => [['href' => $baseUrl.'/llms.txt', 'type' => 'text/plain']],
+                    'service-doc' => [['href' => $baseUrl.'/llms.txt', 'type' => 'text/plain']],
+                    'status' => [['href' => $baseUrl.'/up']],
                 ],
                 // x402 Payment Protocol — paid endpoints
                 [
-                    'anchor'       => $baseUrl . '/api/x402/info',
+                    'anchor' => $baseUrl.'/api/x402/info',
                     'service-desc' => [['href' => 'https://x402.org', 'type' => 'text/html']],
-                    'service-doc'  => [['href' => $baseUrl . '/donate', 'type' => 'text/html']],
-                    'status'       => [['href' => $baseUrl . '/up']],
-                    'describes'    => collect(config('x402.routes', []))->map(fn ($cfg, $route) => [
-                        'href' => $baseUrl . '/' . ltrim(explode(' ', $route, 2)[1] ?? '', '/'),
+                    'service-doc' => [['href' => $baseUrl.'/donate', 'type' => 'text/html']],
+                    'status' => [['href' => $baseUrl.'/up']],
+                    'describes' => collect(config('x402.routes', []))->map(fn ($cfg, $route) => [
+                        'href' => $baseUrl.'/'.ltrim(explode(' ', $route, 2)[1] ?? '', '/'),
                         'type' => $cfg['mime_type'] ?? 'application/json',
                     ])->values()->all(),
                 ],
@@ -62,15 +62,15 @@ class WellKnownController extends Controller
         $baseUrl = config('app.url');
 
         return response()->json([
-            'issuer'                                => $baseUrl,
-            'grant_types_supported'                 => [],
-            'response_types_supported'              => [],
+            'issuer' => $baseUrl,
+            'grant_types_supported' => [],
+            'response_types_supported' => [],
             'token_endpoint_auth_methods_supported' => ['none'],
-            'jwks_uri'                              => $baseUrl . '/.well-known/jwks.json',
-            'service_documentation'                 => $baseUrl . '/llms.txt',
-            'ui_locales_supported'                  => ['en'],
-            'op_policy_uri'                         => $baseUrl . '/privacy-policy',
-            'op_tos_uri'                            => $baseUrl . '/terms',
+            'jwks_uri' => $baseUrl.'/.well-known/jwks.json',
+            'service_documentation' => $baseUrl.'/llms.txt',
+            'ui_locales_supported' => ['en'],
+            'op_policy_uri' => $baseUrl.'/privacy-policy',
+            'op_tos_uri' => $baseUrl.'/terms',
         ]);
     }
 
@@ -120,24 +120,24 @@ class WellKnownController extends Controller
     {
         $skills = [
             [
-                'name'        => 'vat-rates',
-                'type'        => 'skill-md',
+                'name' => 'vat-rates',
+                'type' => 'skill-md',
                 'description' => 'Query live EU VAT rates (standard, reduced, super-reduced, parking) for all 27 EU countries. Calculate VAT and compare rates.',
-                'url'         => '/.well-known/agent-skills/vat-rates/SKILL.md',
-                'digest'      => 'sha256:' . hash_file('sha256', public_path('.well-known/agent-skills/vat-rates/SKILL.md')),
+                'url' => '/.well-known/agent-skills/vat-rates/SKILL.md',
+                'digest' => 'sha256:'.hash_file('sha256', public_path('.well-known/agent-skills/vat-rates/SKILL.md')),
             ],
             [
-                'name'        => 'vies-validation',
-                'type'        => 'skill-md',
+                'name' => 'vies-validation',
+                'type' => 'skill-md',
                 'description' => 'Validate EU VAT numbers against the official VIES database. Single and batch validation with company name and address lookup.',
-                'url'         => '/.well-known/agent-skills/vies-validation/SKILL.md',
-                'digest'      => 'sha256:' . hash_file('sha256', public_path('.well-known/agent-skills/vies-validation/SKILL.md')),
+                'url' => '/.well-known/agent-skills/vies-validation/SKILL.md',
+                'digest' => 'sha256:'.hash_file('sha256', public_path('.well-known/agent-skills/vies-validation/SKILL.md')),
             ],
         ];
 
         return response()->json([
             '$schema' => 'https://schemas.agentskills.io/discovery/0.2.0/schema.json',
-            'skills'  => $skills,
+            'skills' => $skills,
         ])->header('Cache-Control', 'public, max-age=3600');
     }
 
@@ -173,30 +173,30 @@ class WellKnownController extends Controller
         $baseUrl = config('app.url');
 
         return response()->json([
-            'resource'                 => $baseUrl,
-            'authorization_servers'    => [$baseUrl],
-            'scopes_supported'         => [],
+            'resource' => $baseUrl,
+            'authorization_servers' => [$baseUrl],
+            'scopes_supported' => [],
             'bearer_methods_supported' => [],
             'resource_signing_alg_values_supported' => ['ES256'],
-            'resource_documentation'   => $baseUrl . '/llms.txt',
-            'resource_policy_uri'      => $baseUrl . '/privacy-policy',
-            'jwks_uri'                 => $baseUrl . '/.well-known/jwks.json',
+            'resource_documentation' => $baseUrl.'/llms.txt',
+            'resource_policy_uri' => $baseUrl.'/privacy-policy',
+            'jwks_uri' => $baseUrl.'/.well-known/jwks.json',
 
             // Agent skill discovery — Markdown files describing how to use each capability
             'agent_skills' => [
-                $baseUrl . '/.well-known/agent-skills/vat-rates/SKILL.md',
-                $baseUrl . '/.well-known/agent-skills/vies-validation/SKILL.md',
+                $baseUrl.'/.well-known/agent-skills/vat-rates/SKILL.md',
+                $baseUrl.'/.well-known/agent-skills/vies-validation/SKILL.md',
             ],
 
             // MCP (Model Context Protocol) server — freely accessible, no auth required
             'mcp' => [
-                'endpoint'         => $baseUrl . '/api/mcp',
-                'transport'        => 'http-json-rpc',
+                'endpoint' => $baseUrl.'/api/mcp',
+                'transport' => 'http-json-rpc',
                 'protocol_version' => '2024-11-05',
-                'server_name'      => 'eu-vat-info',
-                'server_version'   => '1.0.0',
-                'description'      => 'Free read-only MCP server providing live EU VAT rates, VAT calculations, country comparisons, and VIES VAT number validation for all 27 EU member states.',
-                'documentation'    => $baseUrl . '/mcp-server',
+                'server_name' => 'eu-vat-info',
+                'server_version' => '1.0.0',
+                'description' => 'Free read-only MCP server providing live EU VAT rates, VAT calculations, country comparisons, and VIES VAT number validation for all 27 EU member states.',
+                'documentation' => $baseUrl.'/mcp-server',
                 'tools' => [
                     'get_all_vat_rates',
                     'get_country_vat_rate',
@@ -209,16 +209,16 @@ class WellKnownController extends Controller
 
             // x402 Payment Protocol — agent-native HTTP payments
             'x402' => [
-                'discovery'     => $baseUrl . '/api/x402/info',
-                'protocol'      => 'https://x402.org',
+                'discovery' => $baseUrl.'/api/x402/info',
+                'protocol' => 'https://x402.org',
                 'protocol_version' => 2,
-                'donate'        => $baseUrl . '/api/x402/donate',
-                'network'       => config('x402.network'),
-                'facilitator'   => $baseUrl . '/api/x402',
-                'enabled'       => (bool) config('x402.enabled', false),
+                'donate' => $baseUrl.'/api/x402/donate',
+                'network' => config('x402.network'),
+                'facilitator' => $baseUrl.'/api/x402',
+                'enabled' => (bool) config('x402.enabled', false),
                 'paid_endpoints' => collect(config('x402.routes', []))->map(fn ($cfg, $route) => [
-                    'route'       => $route,
-                    'price'       => $cfg['price'],
+                    'route' => $route,
+                    'price' => $cfg['price'],
                     'description' => $cfg['description'],
                 ])->values()->all(),
             ],
@@ -235,12 +235,12 @@ class WellKnownController extends Controller
 
         return response()->json([
             'serverInfo' => [
-                'name'    => 'eu-vat-info',
+                'name' => 'eu-vat-info',
                 'version' => '1.0.0',
             ],
             'transport' => [
-                'type'     => 'http',
-                'endpoint' => $baseUrl . '/api/mcp',
+                'type' => 'http',
+                'endpoint' => $baseUrl.'/api/mcp',
             ],
             'capabilities' => [
                 'tools' => [
@@ -255,7 +255,7 @@ class WellKnownController extends Controller
                 ['name' => 'validate_vat_number',   'description' => 'Validate an EU VAT number against the official VIES database.'],
             ],
             'authentication' => null,
-            'documentation'  => $baseUrl . '/mcp-server',
+            'documentation' => $baseUrl.'/mcp-server',
         ]);
     }
 
@@ -270,20 +270,20 @@ class WellKnownController extends Controller
 
         return response()->json([
             'protocol' => [
-                'name'               => 'acp',
-                'version'            => '2026-01-30',
+                'name' => 'acp',
+                'version' => '2026-01-30',
                 'supported_versions' => ['2026-01-30'],
-                'documentation_url'  => 'https://agenticcommerce.dev',
+                'documentation_url' => 'https://agenticcommerce.dev',
             ],
-            'api_base_url' => $baseUrl . '/api',
-            'transports'   => ['rest'],
+            'api_base_url' => $baseUrl.'/api',
+            'transports' => ['rest'],
             'capabilities' => [
-                'services'             => ['checkout'],
-                'extensions'           => [
-                    ['name' => 'vat_calculation', 'spec' => $baseUrl . '/api/v1/openapi.json'],
+                'services' => ['checkout'],
+                'extensions' => [
+                    ['name' => 'vat_calculation', 'spec' => $baseUrl.'/api/v1/openapi.json'],
                 ],
                 'supported_currencies' => ['eur', 'usd'],
-                'supported_locales'    => ['en', 'de', 'fr', 'es', 'it', 'nl', 'pl', 'pt', 'sv', 'da', 'fi', 'el', 'cs', 'hu', 'ro', 'bg', 'hr', 'sk', 'sl', 'lt', 'lv', 'et', 'ga', 'mt'],
+                'supported_locales' => ['en', 'de', 'fr', 'es', 'it', 'nl', 'pl', 'pt', 'sv', 'da', 'fi', 'el', 'cs', 'hu', 'ro', 'bg', 'hr', 'sk', 'sl', 'lt', 'lv', 'et', 'ga', 'mt'],
             ],
         ], 200, [
             'Cache-Control' => 'public, max-age=3600',

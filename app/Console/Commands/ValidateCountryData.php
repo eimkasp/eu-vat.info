@@ -13,19 +13,10 @@ class ValidateCountryData extends Command
     protected $description = 'Validate and fix country data (currency, EU membership, VIES) using REST Countries API';
 
     /**
-     * Authoritative list of EU member state ISO 3166-1 alpha-2 codes (as of 2026).
-     */
-    private const EU_MEMBERS = [
-        'AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR',
-        'DE', 'GR', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL',
-        'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE',
-    ];
-
-    /**
      * VIES (VAT Information Exchange System) is available for EU member states.
      * Northern Ireland (XI) also participates but we track countries by their main code.
      */
-    private const VIES_COUNTRIES = self::EU_MEMBERS;
+    private const VIES_COUNTRIES = Country::EU_MEMBER_CODES;
 
     /**
      * Authoritative VAT number format patterns per country.
@@ -92,7 +83,7 @@ class ValidateCountryData extends Command
             $countryFixes = [];
 
             // 1. Validate EU membership
-            $shouldBeEu = in_array($iso, self::EU_MEMBERS, true);
+            $shouldBeEu = in_array($iso, Country::EU_MEMBER_CODES, true);
             if ((bool) $country->is_eu_member !== $shouldBeEu) {
                 $countryIssues[] = "EU Member: {$this->boolLabel($country->is_eu_member)} → should be {$this->boolLabel($shouldBeEu)}";
                 $countryFixes['is_eu_member'] = $shouldBeEu;
@@ -144,7 +135,7 @@ class ValidateCountryData extends Command
             return self::SUCCESS;
         }
 
-        $this->warn(count($issues) . ' countries have data issues.');
+        $this->warn(count($issues).' countries have data issues.');
         $this->newLine();
 
         if ($dryRun) {
@@ -181,7 +172,7 @@ class ValidateCountryData extends Command
 
         try {
             $response = Http::timeout(15)
-                ->get("https://restcountries.com/v3.1/alpha", [
+                ->get('https://restcountries.com/v3.1/alpha', [
                     'codes' => $codes,
                     'fields' => 'cca2,currencies',
                 ]);
@@ -194,16 +185,16 @@ class ValidateCountryData extends Command
                         continue;
                     }
 
-                    // When API returns multiple currencies, prefer canonical from fallback
-                    $currencies = array_keys($item['currencies']);
-                    if (count($currencies) > 1 && isset($fallbackForLookup[$cca2])) {
-                        $currencyCode = $fallbackForLookup[$cca2]['currency_code'];
-                    } else {
-                        $currencyCode = $currencies[0];
-                    }
+                    // The curated list decides the currency: the API lists several for some countries
+                    // and lags behind changeovers such as Bulgaria adopting the euro.
+                    $currencyCode = $fallbackForLookup[$cca2]['currency_code'] ?? array_key_first($item['currencies']);
+                    $currencyInfo = $item['currencies'][$currencyCode] ?? null;
 
-                    $currencyInfo = $item['currencies'][$currencyCode]
-                        ?? $item['currencies'][array_key_first($item['currencies'])];
+                    if ($currencyInfo === null) {
+                        $data[$cca2] = $fallbackForLookup[$cca2];
+
+                        continue;
+                    }
 
                     $data[$cca2] = [
                         'currency_code' => $currencyCode,
@@ -212,7 +203,7 @@ class ValidateCountryData extends Command
                     ];
                 }
 
-                $this->info("  Fetched data for " . count($data) . " countries from API.");
+                $this->info('  Fetched data for '.count($data).' countries from API.');
             } else {
                 $this->error("  API request failed with status {$response->status()}. Using fallback data.");
                 $data = $this->getFallbackCurrencyData();
@@ -241,7 +232,7 @@ class ValidateCountryData extends Command
         return [
             'AT' => ['currency_code' => 'EUR', 'currency_name' => 'Euro', 'currency_symbol' => '€'],
             'BE' => ['currency_code' => 'EUR', 'currency_name' => 'Euro', 'currency_symbol' => '€'],
-            'BG' => ['currency_code' => 'BGN', 'currency_name' => 'Bulgarian lev', 'currency_symbol' => 'лв'],
+            'BG' => ['currency_code' => 'EUR', 'currency_name' => 'Euro', 'currency_symbol' => '€'],
             'HR' => ['currency_code' => 'EUR', 'currency_name' => 'Euro', 'currency_symbol' => '€'],
             'CY' => ['currency_code' => 'EUR', 'currency_name' => 'Euro', 'currency_symbol' => '€'],
             'CZ' => ['currency_code' => 'CZK', 'currency_name' => 'Czech koruna', 'currency_symbol' => 'Kč'],

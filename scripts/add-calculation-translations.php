@@ -4,8 +4,7 @@
  * Add shared_calc and top_calc translation keys to all non-English locale files.
  * Run: php scripts/add-calculation-translations.php
  */
-
-$basePath = __DIR__ . '/../lang';
+$basePath = __DIR__.'/../lang';
 $locales = ['bg', 'cs', 'da', 'de', 'el', 'es', 'et', 'fi', 'fr', 'ga', 'hr', 'hu', 'it', 'lt', 'lv', 'mt', 'nl', 'pl', 'pt', 'ro', 'sk', 'sl', 'sv'];
 
 $translations = [
@@ -1150,9 +1149,10 @@ $translations = [
 ];
 
 foreach ($locales as $locale) {
-    $file = $basePath . '/' . $locale . '/ui.php';
-    if (!file_exists($file)) {
+    $file = $basePath.'/'.$locale.'/ui.php';
+    if (! file_exists($file)) {
         echo "SKIP: $file not found\n";
+
         continue;
     }
 
@@ -1161,19 +1161,21 @@ foreach ($locales as $locale) {
     // Check if already added
     if (str_contains($content, "'shared_calc'")) {
         echo "SKIP: $locale already has shared_calc\n";
+
         continue;
     }
 
     $trans = $translations[$locale] ?? null;
-    if (!$trans) {
+    if (! $trans) {
         // Use English as fallback
         echo "WARN: No translation for $locale, using English\n";
         $trans = [
-            'shared_calc' => require($basePath . '/en/ui.php'),
-            'top_calc' => require($basePath . '/en/ui.php'),
+            'shared_calc' => require ($basePath.'/en/ui.php'),
+            'top_calc' => require ($basePath.'/en/ui.php'),
         ];
         // Actually let's skip and just add English keys
         $sharedCalc = var_export($translations['da']['shared_calc'] ?? [], true); // fallback
+
         continue;
     }
 
@@ -1186,7 +1188,7 @@ foreach ($locales as $locale) {
     // Insert before final ");"
     $pos = strrpos($content, ');');
     if ($pos !== false) {
-        $content = substr($content, 0, $pos) . $insert . substr($content, $pos);
+        $content = substr($content, 0, $pos).$insert.substr($content, $pos);
         file_put_contents($file, $content);
         echo "OK: $locale\n";
     } else {

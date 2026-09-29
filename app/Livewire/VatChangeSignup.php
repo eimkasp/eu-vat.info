@@ -33,7 +33,7 @@ class VatChangeSignup extends Component
     {
         if ($this->website !== '') {
             $this->email = '';
-            $this->statusMessage = 'Thanks. Check your inbox for future VAT change alerts.';
+            $this->statusMessage = __('ui.alerts.check_inbox');
 
             return;
         }
@@ -44,7 +44,7 @@ class VatChangeSignup extends Component
         $key = 'vat-change-signup:'.sha1((request()->ip() ?? 'unknown').'|'.$this->email);
 
         if (RateLimiter::tooManyAttempts($key, 5)) {
-            $this->addError('email', 'Too many signup attempts. Please try again later.');
+            $this->addError('email', __('ui.alerts.too_many_attempts'));
 
             return;
         }
@@ -62,8 +62,8 @@ class VatChangeSignup extends Component
 
         $this->messageType = 'success';
         $this->statusMessage = $alreadyActive
-            ? 'You are already subscribed to VAT change alerts.'
-            : 'You are subscribed. We will email you when important European VAT changes are published.';
+            ? __('ui.alerts.already_subscribed')
+            : __('ui.alerts.subscribed');
         $this->email = '';
     }
 

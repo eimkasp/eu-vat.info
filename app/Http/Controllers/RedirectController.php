@@ -15,7 +15,7 @@ class RedirectController extends Controller
     {
         $slug = request()->route('slug');
 
-        return redirect(locale_path('/vat-calculator/' . $slug), 301);
+        return redirect(locale_path('/vat-calculator/'.$slug), 301);
     }
 
     /**
@@ -32,7 +32,7 @@ class RedirectController extends Controller
             ->first();
 
         if ($country) {
-            return redirect(locale_path('/vat-calculator/' . $country->slug), 301);
+            return redirect(locale_path('/vat-calculator/'.$country->slug), 301);
         }
 
         return redirect(locale_path('/vat-calculator'), 301);
@@ -45,9 +45,9 @@ class RedirectController extends Controller
     public function legacyCalculation(Request $request): RedirectResponse
     {
         $country = $request->query('country', '');
-        $amount  = $request->query('amount', '100');
-        $rate    = $request->query('rate', '0');
-        $mode    = $request->query('mode', 'exclude');
+        $amount = $request->query('amount', '100');
+        $rate = $request->query('rate', '0');
+        $mode = $request->query('mode', 'exclude');
 
         if (! $country) {
             abort(404);

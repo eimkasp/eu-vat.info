@@ -28,9 +28,9 @@ class VerifyVatRatesIntegrity implements ShouldQueue
         $issues = 0;
         $fixed = 0;
 
+        // Reduced rates are an editorial list (e.g. "10 / 13") and are verified by hand, not overwritten here.
         $rateTypeMapping = [
             'standard' => 'standard_rate',
-            'reduced' => 'reduced_rate',
             'super_reduced' => 'super_reduced_rate',
             'parking' => 'parking_rate',
         ];
@@ -42,14 +42,14 @@ class VerifyVatRatesIntegrity implements ShouldQueue
                     ->where('effective_from', '<=', now())
                     ->where(function ($query) {
                         $query->whereNull('effective_to')
-                            ->orWhere('effective_to', '>=', now());
+                            ->orWhere('effective_to', '>', now());
                     })
                     ->orderBy('effective_from', 'desc')
                     ->first();
 
                 if ($latestRate) {
                     $countryRate = $country->{$countryField};
-                    if ($countryRate !== null && abs($countryRate - $latestRate->rate) > 0.01) {
+                    if ($countryRate !== null && abs((float) $countryRate - (float) $latestRate->rate) > 0.01) {
                         Log::warning("Mismatch for {$country->name} ({$vatType}): Country rate {$countryRate} vs VatRate {$latestRate->rate}");
 
                         $country->{$countryField} = $latestRate->rate;

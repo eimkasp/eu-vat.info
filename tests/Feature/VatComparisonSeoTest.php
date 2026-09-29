@@ -25,8 +25,9 @@ it('publishes only allowlisted VAT country comparisons', function () {
         ->assertOk()
         ->assertSee('<link rel="canonical" href="https://vat.businesspress.io/compare/germany-vs-france-vat">', false)
         ->assertSee('Germany vs France VAT rates')
-        ->assertSee('19.00%')
-        ->assertSee('20.00%')
+        ->assertSee('19%')
+        ->assertSee('20%')
+        ->assertSee('1 pp higher')
         ->assertSee('/vat-rates/germany/history')
         ->assertSee('/vat-rates/france/history');
 

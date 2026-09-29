@@ -13,7 +13,7 @@
         :description="'The verified '.$rule->category_name.' VAT rate in '.$country->name.' is '.number_format((float) $rule->rate, 2).'%. Review its classification, effective period and source.'"
         :url="$canonical">
         <script type="application/ld+json">{!! json_encode([
-            '@context' => 'https://schema.org',
+            '@@context' => 'https://schema.org',
             '@graph' => [
                 [
                     '@type' => 'BreadcrumbList',
@@ -42,24 +42,24 @@
                     'isBasedOn' => $rule->source_url,
                 ],
             ],
-        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
+        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) !!}</script>
     </x-seo-meta>
 @endsection
 
-<div class="container pb-14 pt-8 sm:pt-12">
+<div class="app-container pb-14 pt-8 sm:pt-12">
     <x-site-breadcrumbs :items="[$country->name.' VAT calculator' => locale_path('/vat-calculator/'.$country->slug), $rule->category_name => '']" />
 
     <header class="max-w-4xl border-b border-line pb-8">
         <div class="flex items-center gap-3">
-            <img src="https://flagcdn.com/h80/{{ strtolower($country->iso_code) }}.jpg" alt="" class="h-7 w-10 rounded-sm object-cover">
+            <x-ui.flag :iso="$country->iso_code" size="xl" :lazy="false" class="h-7 w-10" />
             <p class="text-sm font-semibold text-action">Verified country rule</p>
         </div>
         <h1 class="mt-4 text-3xl font-bold tracking-tight text-ink sm:text-4xl">{{ $title }}</h1>
         <p class="mt-4 max-w-3xl text-lg text-ink-muted">A source-backed reference for the currently published {{ strtolower($rule->category_name) }} classification in {{ $country->name }}.</p>
     </header>
 
-    <div class="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px]">
-        <main>
+    <div class="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_320px]">
+        <div>
             <dl class="divide-y divide-line border-y border-line">
                 <div class="grid gap-2 py-5 sm:grid-cols-[180px_minmax(0,1fr)] sm:items-baseline">
                     <dt class="text-sm font-semibold text-ink-muted">VAT rate</dt>
@@ -90,7 +90,7 @@
                     <a class="text-action hover:underline" href="{{ locale_path('/vat-rates/'.$country->slug.'/history') }}">View rate history</a>
                 @endif
             </div>
-        </main>
+        </div>
 
         <aside class="app-surface p-5">
             <h2 class="text-lg font-bold text-ink">Source and verification</h2>

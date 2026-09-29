@@ -24,10 +24,10 @@ class AllowEmbedding
             $newCsp = preg_replace('/frame-ancestors[^;]+(;|$)/', 'frame-ancestors *$1', $existingCsp);
             // If no frame-ancestors directive existed yet, append one
             if ($newCsp === $existingCsp && ! str_contains($existingCsp, 'frame-ancestors')) {
-                $newCsp = rtrim($existingCsp, '; ') . '; frame-ancestors *';
+                $newCsp = rtrim($existingCsp, '; ').'; frame-ancestors *';
             }
         } else {
-            $newCsp = "frame-ancestors *";
+            $newCsp = 'frame-ancestors *';
         }
 
         $response->headers->set('Content-Security-Policy', $newCsp);

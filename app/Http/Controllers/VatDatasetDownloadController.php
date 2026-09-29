@@ -19,10 +19,11 @@ class VatDatasetDownloadController extends Controller
                 'slug' => $country->slug,
                 'iso_code' => $country->iso_code,
                 'standard_rate' => $country->standard_rate,
-                'reduced_rate' => $country->reduced_rate,
+                'reduced_rate' => $country->primaryReducedRate(),
+                'reduced_rates' => $country->reducedRates(),
                 'super_reduced_rate' => $country->super_reduced_rate,
                 'parking_rate' => $country->parking_rate,
-                'currency_code' => $country->currency_code,
+                'currency_code' => $country->currencyCode(),
                 'last_updated' => $country->updated_at?->toIso8601String(),
             ]);
 
@@ -43,6 +44,7 @@ class VatDatasetDownloadController extends Controller
                 'parking_rate',
                 'currency_code',
                 'last_updated',
+                'reduced_rates',
             ]);
 
             Country::query()
@@ -53,11 +55,12 @@ class VatDatasetDownloadController extends Controller
                         $country->name,
                         $country->iso_code,
                         $country->standard_rate,
-                        $country->reduced_rate,
+                        $country->primaryReducedRate(),
                         $country->super_reduced_rate,
                         $country->parking_rate,
-                        $country->currency_code,
+                        $country->currencyCode(),
                         $country->updated_at?->toIso8601String(),
+                        implode(';', array_map(fn (float $rate) => Country::formatRate($rate), $country->reducedRates())),
                     ]);
                 });
 

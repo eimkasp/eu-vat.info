@@ -4,6 +4,7 @@
 /public/hot
 /public/storage
 /storage/*.key
+/storage/debugbar
 /vendor
 /public/sitemap.xml
 .env
@@ -26,6 +27,11 @@ public/ads.txt
 
 # Generated during npm run build from resources/images/
 /public/images
+
+# Published by `php artisan filament:upgrade` during composer install
+/public/css/filament
+/public/fonts/filament
+/public/js/filament
 .github/agents/website-optimizer.agent.md
 /eu-vat-mobile
 /eu-vat-ios

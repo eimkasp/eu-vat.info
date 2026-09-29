@@ -1,55 +1,40 @@
+@use('App\Models\Country')
+@use('App\Support\Seo\SeoPolicy')
+
 @php
-    $historyCanonical = app(\App\Support\Seo\SeoPolicy::class)->canonicalHost().locale_path('/vat-changes');
+    $seo = app(SeoPolicy::class);
+    $historyCanonical = $seo->canonicalHost().locale_path('/vat-changes');
     $historyRobots = request()->query() ? 'noindex, follow' : null;
+    $summary = $this->summary;
+    $stability = $this->stability;
+    $maxChanges = max([1, ...array_column($stability, 'changes')]);
+    $today = now()->startOfDay();
+    $selectClass = 'app-select h-10 min-h-10 text-sm';
 @endphp
 
-@section('title', __('ui.history.meta_title'))
-@section('meta_description', __('ui.history.meta_desc'))
 @section('seo')
-    <x-seo-meta 
-        :title="__('ui.history.meta_title')"
-        :description="__('ui.history.meta_desc')"
-        :url="$historyCanonical"
-        :robots="$historyRobots">
-        <script type="application/ld+json">
-        {
-            "@@context": "https://schema.org",
-            "@type": "WebPage",
-            "name": "{{ __('ui.history.meta_title') }}",
-            "description": "{{ __('ui.history.meta_desc') }}",
-            "url": "{{ $historyCanonical }}",
-            "inLanguage": "{{ app()->getLocale() }}",
-            "isPartOf": {
-                "@type": "WebSite",
-                "name": "{{ __('ui.site_name') }}",
-                "url": "{{ url(locale_path('/')) }}"
-            },
-            "breadcrumb": {
-                "@type": "BreadcrumbList",
-                "itemListElement": [
-                    {
-                        "@type": "ListItem",
-                        "position": 1,
-                        "name": "{{ __('ui.site_name') }}",
-                        "item": "{{ url(locale_path('/')) }}"
-                    },
-                    {
-                        "@type": "ListItem",
-                        "position": 2,
-                        "name": "{{ __('ui.history.title') }}",
-                        "item": "{{ url(locale_path('/vat-changes')) }}"
-                    }
-                ]
-            }
-        }
-        </script>
-        <script type="application/ld+json">{!! json_encode([
-            '@context' => 'https://schema.org',
+    <x-seo-meta :title="__('ui.history.meta_title')" :description="__('ui.history.meta_desc')" :url="$historyCanonical" :robots="$historyRobots">
+        <x-json-ld :data="[
+            '@type' => 'WebPage',
+            'name' => __('ui.history.meta_title'),
+            'description' => __('ui.history.meta_desc'),
+            'url' => $historyCanonical,
+            'inLanguage' => app()->getLocale(),
+            'isPartOf' => ['@type' => 'WebSite', 'name' => __('ui.site_name'), 'url' => url(locale_path('/'))],
+            'breadcrumb' => [
+                '@type' => 'BreadcrumbList',
+                'itemListElement' => [
+                    ['@type' => 'ListItem', 'position' => 1, 'name' => __('ui.site_name'), 'item' => url(locale_path('/'))],
+                    ['@type' => 'ListItem', 'position' => 2, 'name' => __('ui.history.title'), 'item' => url(locale_path('/vat-changes'))],
+                ],
+            ],
+        ]" />
+        <x-json-ld :data="array_filter([
             '@type' => 'Dataset',
             'name' => 'EU VAT Rate Changes 2000–'.now()->year,
             'description' => __('ui.history.meta_desc'),
             'url' => $historyCanonical,
-            'creator' => ['@type' => 'Organization', 'name' => __('ui.site_name'), 'url' => app(\App\Support\Seo\SeoPolicy::class)->canonicalHost()],
+            'creator' => ['@type' => 'Organization', 'name' => __('ui.site_name'), 'url' => $seo->canonicalHost()],
             'dateModified' => $datasetModified?->toIso8601String(),
             'license' => 'https://creativecommons.org/licenses/by/4.0/',
             'keywords' => ['VAT rate changes', 'EU VAT history', 'European VAT rates', 'tax rate changes'],
@@ -59,181 +44,190 @@
                 ['@type' => 'PropertyValue', 'name' => 'Standard VAT Rate', 'unitText' => 'percent'],
                 ['@type' => 'PropertyValue', 'name' => 'Reduced VAT Rate', 'unitText' => 'percent'],
             ],
-        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
+        ])" />
     </x-seo-meta>
 @endsection
 
-<div class="container pb-12">
-    <x-site-breadcrumbs :items="[__('ui.breadcrumbs.vat_changelog') => '']" />
-
-    <!-- Header -->
-    <div class="mb-6">
-        <h1 class="text-3xl font-bold mb-1 text-gray-900 dark:text-white">{{ __('ui.history.title') }}</h1>
-        <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('ui.history.subtitle') }}</p>
-    </div>
-
-    <div class="mb-6">
-        @livewire('vat-change-signup', ['source' => 'vat-changes'])
-    </div>
-
-    <!-- Filters -->
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 mb-6">
-        <div class="grid sm:grid-cols-3 gap-3">
-            <div>
-                <label for="filter-country" class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">{{ __('ui.country') }}</label>
-                <select id="filter-country" wire:model.live="selectedCountry" class="w-full text-sm rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 focus:border-blue-500 focus:ring-blue-500">
-                    <option value="">{{ __('ui.history.all_countries') }}</option>
-                    @foreach($countries as $country)
-                        <option value="{{ $country->id }}">{{ $country->name }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div>
-                <label for="filter-type" class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">{{ __('ui.history.rate_type') }}</label>
-                <select id="filter-type" wire:model.live="selectedType" class="w-full text-sm rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 focus:border-blue-500 focus:ring-blue-500">
-                    <option value="">{{ __('ui.history.all_types') }}</option>
-                    <option value="standard">{{ __('ui.history.standard_rate') }}</option>
-                    <option value="reduced">{{ __('ui.history.reduced_rate') }}</option>
-                    <option value="super_reduced">{{ __('ui.history.super_reduced_rate') }}</option>
-                    <option value="parking">{{ __('ui.history.parking_rate') }}</option>
-                </select>
-            </div>
-            <div>
-                <label for="filter-direction" class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">{{ __('ui.history.direction') }}</label>
-                <select id="filter-direction" wire:model.live="selectedDirection" class="w-full text-sm rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 focus:border-blue-500 focus:ring-blue-500">
-                    <option value="">{{ __('ui.history.all_directions') }}</option>
-                    <option value="increase">{{ __('ui.history.increases') }}</option>
-                    <option value="decrease">{{ __('ui.history.decreases') }}</option>
-                </select>
-            </div>
-        </div>
-        @if($hasFilters)
-            <div class="mt-3 flex items-center justify-between">
-                <span class="text-xs text-gray-500 dark:text-gray-400">
-                    {{ trans_choice('ui.history.results_count', $changes->total(), ['count' => $changes->total()]) }}
+<div>
+    <x-page-header :title="__('ui.history.title')" :description="__('ui.history.subtitle')" :eyebrow="__('ui.nav.vat_tools')" :breadcrumbs="[__('ui.breadcrumbs.vat_changelog') => '']">
+        @if($summary['latest'])
+            <x-slot:actions>
+                <span class="inline-flex items-center gap-2 rounded-control border border-line bg-surface-subtle px-3 py-1.5 text-sm text-ink-muted">
+                    <x-ui.icon name="clock" class="size-4" />
+                    {{ __('ui.history.latest_change', ['date' => \Illuminate\Support\Carbon::parse($summary['latest'])->translatedFormat('j M Y')]) }}
                 </span>
-                <button wire:click="resetFilters" class="text-xs text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1">
-                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                    {{ __('ui.history.clear_filters') }}
-                </button>
-            </div>
+            </x-slot:actions>
         @endif
-    </div>
+    </x-page-header>
 
-    <!-- Changes List -->
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden mb-8" wire:loading.class="opacity-60">
-        <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 flex items-center justify-between">
-            <h2 class="text-sm font-semibold text-gray-700 dark:text-gray-300">{{ __('ui.history.all_changes') }}</h2>
-            <div wire:loading class="flex items-center gap-1.5 text-xs text-blue-600 dark:text-blue-400">
-                <svg class="animate-spin h-3 w-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                {{ __('ui.history.loading') }}
-            </div>
+    <div class="app-container space-y-8 py-8 sm:py-10">
+        <div class="grid grid-cols-2 gap-3 lg:grid-cols-4">
+            @foreach([
+                ['history', __('ui.history.stat_total'), $summary['total'], 'text-action'],
+                ['trending-up', __('ui.history.stat_increases'), $summary['increases'], 'text-danger'],
+                ['trending-down', __('ui.history.stat_decreases'), $summary['decreases'], 'text-success'],
+                ['clock', __('ui.history.stat_upcoming'), $summary['upcoming'], 'text-warning'],
+            ] as [$icon, $label, $value, $tone])
+                <div class="app-surface flex items-start gap-3 p-4">
+                    <span class="flex size-9 shrink-0 items-center justify-center rounded-control bg-surface-muted {{ $tone }}" aria-hidden="true">
+                        <x-ui.icon :name="$icon" class="size-4" />
+                    </span>
+                    <dl>
+                        <dt class="text-xs font-semibold text-ink-muted">{{ $label }}</dt>
+                        <dd class="tabular mt-0.5 text-2xl font-bold text-ink">{{ number_format($value) }}</dd>
+                    </dl>
+                </div>
+            @endforeach
         </div>
-        
-        @if($changes->count() > 0)
-            <div class="divide-y divide-gray-100 dark:divide-gray-700">
-                @foreach($changes as $change)
-                    <div class="px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                        <div class="flex items-center justify-between gap-3">
-                            <div class="flex items-center gap-3 flex-1 min-w-0">
-                                <img src="https://flagcdn.com/h40/{{ strtolower($change->country->iso_code) }}.jpg" 
-                                     alt="{{ $change->country->name }}" 
-                                     loading="lazy"
-                                     class="w-8 h-5 object-cover rounded shadow-sm shrink-0">
-                                <div class="flex-1 min-w-0">
-                                    <div class="flex items-center gap-2 flex-wrap">
-                                        <h3 class="font-semibold text-sm text-gray-900 dark:text-gray-100">{{ $change->country->name }}</h3>
-                                        <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[11px] font-medium bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
-                                            {{ ucfirst(str_replace('_', ' ', $change->rate_type)) }}
+
+        <div class="grid grid-cols-1 items-start gap-8 xl:grid-cols-[minmax(0,1fr)_22rem]">
+            <section class="app-surface min-w-0 overflow-clip" aria-labelledby="changes-heading">
+                <div class="border-b border-line p-4 sm:px-6">
+                    <div class="flex flex-wrap items-center justify-between gap-3">
+                        <h2 id="changes-heading" class="text-lg font-bold text-ink">{{ __('ui.history.all_changes') }}</h2>
+                        <p class="flex items-center gap-2 text-sm text-ink-muted" aria-live="polite">
+                            <span wire:loading class="size-3.5 animate-spin rounded-full border-2 border-action/30 border-t-action" aria-hidden="true"></span>
+                            {{ trans_choice('ui.history.results_count', $changes->total(), ['count' => number_format($changes->total())]) }}
+                        </p>
+                    </div>
+
+                    <div role="group" aria-label="{{ __('ui.history.filters_label') }}" class="mt-4 grid gap-3 sm:grid-cols-[repeat(3,minmax(0,1fr))_auto] sm:items-end">
+                        <div>
+                            <label for="filter-country" class="mb-1 block text-xs font-semibold text-ink-muted">{{ __('ui.country') }}</label>
+                            <select id="filter-country" wire:model.live="selectedCountry" class="{{ $selectClass }}">
+                                <option value="">{{ __('ui.history.all_countries') }}</option>
+                                @foreach($this->countries as $option)
+                                    <option value="{{ $option['slug'] }}">{{ $option['name'] }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div>
+                            <label for="filter-type" class="mb-1 block text-xs font-semibold text-ink-muted">{{ __('ui.history.rate_type') }}</label>
+                            <select id="filter-type" wire:model.live="selectedType" class="{{ $selectClass }}">
+                                <option value="">{{ __('ui.history.all_types') }}</option>
+                                @foreach(\App\Livewire\VatChangesHistory::RATE_TYPES as $type)
+                                    <option value="{{ $type }}">{{ __('ui.rate_type.'.$type) }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div>
+                            <label for="filter-direction" class="mb-1 block text-xs font-semibold text-ink-muted">{{ __('ui.history.direction') }}</label>
+                            <select id="filter-direction" wire:model.live="selectedDirection" class="{{ $selectClass }}">
+                                <option value="">{{ __('ui.history.all_directions') }}</option>
+                                <option value="increase">{{ __('ui.history.increases') }}</option>
+                                <option value="decrease">{{ __('ui.history.decreases') }}</option>
+                            </select>
+                        </div>
+                        @if($hasFilters)
+                            <button type="button" wire:click="resetFilters" class="app-button-ghost h-10 min-h-10 px-3">
+                                <x-ui.icon name="x" class="size-4" />
+                                {{ __('ui.history.clear_filters') }}
+                            </button>
+                        @endif
+                    </div>
+                </div>
+
+                <div wire:loading.class="opacity-60" class="transition-opacity">
+                    @forelse($changes->groupBy(fn ($change) => $change->change_date?->year) as $year => $yearChanges)
+                        <h3 class="app-sticky-bar tabular px-4 py-2 text-xs font-bold tracking-[0.08em] text-ink-muted sm:px-6">{{ $year }}</h3>
+                        <ol class="divide-y divide-line">
+                            @foreach($yearChanges as $change)
+                                @php
+                                    $delta = (float) $change->new_rate - (float) $change->old_rate;
+                                    $up = $delta > 0;
+                                    $upcoming = $change->change_date?->gt($today);
+                                @endphp
+                                <li wire:key="change-{{ $change->id }}" class="flex flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3.5 sm:flex-nowrap sm:px-6">
+                                    <time datetime="{{ $change->change_date?->toDateString() }}" class="tabular w-24 shrink-0 text-sm text-ink-muted">{{ $change->change_date?->translatedFormat('j M Y') }}</time>
+
+                                    <div class="flex min-w-0 flex-1 items-center gap-3">
+                                        <x-ui.flag :iso="$change->country?->iso_code" size="lg" class="h-5 w-[1.625rem]" />
+                                        <div class="min-w-0">
+                                            <p class="flex flex-wrap items-center gap-2">
+                                                <span class="truncate font-semibold text-ink">{{ $change->country?->name }}</span>
+                                                <span class="rounded-control bg-surface-muted px-1.5 py-0.5 text-[0.6875rem] font-semibold text-ink-muted">{{ __('ui.rate_type.'.$change->rate_type) }}</span>
+                                                @if($upcoming)
+                                                    <span class="inline-flex items-center gap-1 rounded-control bg-warning-soft px-1.5 py-0.5 text-[0.6875rem] font-semibold text-warning">
+                                                        <x-ui.icon name="clock" class="size-3" />
+                                                        {{ __('ui.history.upcoming_badge') }}
+                                                    </span>
+                                                @endif
+                                            </p>
+                                            @if($change->description && ! preg_match('/^Rate changed from [\d.]+% to [\d.]+%\.?$/', $change->description))
+                                                <p class="mt-0.5 line-clamp-1 text-xs text-ink-muted">{{ $change->description }}</p>
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                    <div class="flex shrink-0 items-center gap-3">
+                                        <span class="tabular text-sm text-ink-muted">
+                                            {{ Country::formatRate($change->old_rate) }}%
+                                            <x-ui.icon name="arrow-right" class="inline size-3.5 align-[-2px] text-ink-quiet" />
+                                            <span class="font-bold text-ink">{{ Country::formatRate($change->new_rate) }}%</span>
                                         </span>
-                                        @if($change->change_direction === 'increase')
-                                            <span class="inline-flex items-center gap-0.5 text-xs font-semibold text-red-600 dark:text-red-400">
-                                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
-                                                {{ $change->old_rate }}% → {{ $change->new_rate }}%
-                                            </span>
-                                        @elseif($change->change_direction === 'decrease')
-                                            <span class="inline-flex items-center gap-0.5 text-xs font-semibold text-green-600 dark:text-green-400">
-                                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                                                {{ $change->old_rate }}% → {{ $change->new_rate }}%
+                                        @if($delta != 0)
+                                            <span @class(['tabular inline-flex min-w-16 items-center justify-end gap-0.5 text-xs font-semibold', 'text-danger' => $up, 'text-success' => ! $up])>
+                                                <x-ui.icon :name="$up ? 'trending-up' : 'trending-down'" class="size-3.5" />
+                                                <span class="sr-only">{{ $up ? __('ui.rate_changes.increase') : __('ui.rate_changes.decrease') }}</span>
+                                                {{ $up ? '+' : '−' }}{{ Country::formatRate(abs($delta)) }} pp
                                             </span>
                                         @else
-                                            <span class="text-xs font-semibold text-gray-500 dark:text-gray-400">
-                                                {{ $change->old_rate }}% → {{ $change->new_rate }}%
-                                            </span>
+                                            <span class="min-w-16"></span>
                                         @endif
+                                        <a href="{{ locale_path('/vat-calculator/'.$change->country?->slug) }}" class="app-button-ghost size-9 min-h-9 p-0" aria-label="{{ __('ui.history.view_calculator') }}: {{ $change->country?->name }}">
+                                            <x-ui.icon name="calculator" class="size-4" />
+                                        </a>
                                     </div>
-                                    <div class="flex items-center gap-2 mt-0.5 text-xs text-gray-500 dark:text-gray-400">
-                                        <span>{{ __('ui.history.changed_on', ['date' => $change->change_date->format('M d, Y')]) }}</span>
-                                        @if($change->description)
-                                            <span class="text-gray-400">·</span>
-                                            <span class="truncate">{{ $change->description }}</span>
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
-                            <a href="{{ locale_path('/vat-calculator/' . $change->country->slug) }}" 
-                               class="text-xs text-blue-600 dark:text-blue-400 hover:underline whitespace-nowrap shrink-0">
-                                {{ __('ui.history.view_calculator') }} →
-                            </a>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-
-            <!-- Pagination -->
-            <div class="px-4 py-3 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
-                {{ $changes->links() }}
-            </div>
-        @else
-            <div class="p-8 text-center text-gray-500 dark:text-gray-400">
-                <svg class="mx-auto h-10 w-10 text-gray-300 dark:text-gray-600 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                </svg>
-                <p class="text-sm">{{ __('ui.history.no_changes') }}</p>
-            </div>
-        @endif
-    </div>
-
-    <!-- Country Stability Overview -->
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4">
-        <div class="flex items-center justify-between mb-3">
-            <div>
-                <h2 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">📊 {{ __('ui.history.stability_title') }}</h2>
-                <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('ui.history.stability_desc') }}</p>
-            </div>
-            <div class="hidden sm:flex items-center gap-3 text-[10px] text-gray-500 dark:text-gray-400">
-                <span class="flex items-center gap-1"><span class="inline-block w-2 h-2 rounded-full bg-green-400"></span> {{ __('ui.history.excellent') }}</span>
-                <span class="flex items-center gap-1"><span class="inline-block w-2 h-2 rounded-full bg-blue-400"></span> {{ __('ui.history.good') }}</span>
-                <span class="flex items-center gap-1"><span class="inline-block w-2 h-2 rounded-full bg-yellow-400"></span> {{ __('ui.history.moderate') }}</span>
-                <span class="flex items-center gap-1"><span class="inline-block w-2 h-2 rounded-full bg-red-400"></span> {{ __('ui.history.frequent') }}</span>
-            </div>
-        </div>
-        
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
-            @foreach($countryStats as $stat)
-                <a href="{{ locale_path('/vat-calculator/' . $stat['slug']) }}"
-                   class="flex items-center gap-2 px-2.5 py-2 border border-gray-100 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                    <img src="https://flagcdn.com/h40/{{ strtolower($stat['iso_code']) }}.jpg" 
-                         alt="{{ $stat['name'] }}" 
-                         loading="lazy"
-                         class="w-6 h-4 object-cover rounded shadow-sm shrink-0">
-                    <div class="flex-1 min-w-0">
-                        <div class="text-xs font-medium truncate text-gray-900 dark:text-gray-100">{{ $stat['name'] }}</div>
-                        <div class="flex items-center gap-1">
-                            <span class="text-[10px] text-gray-400 dark:text-gray-500">{{ $stat['changes_count'] }} {{ __('ui.history.changes') }}</span>
-                            @if($stat['stability'] === 'excellent')
-                                <span class="inline-block w-1.5 h-1.5 rounded-full bg-green-400"></span>
-                            @elseif($stat['stability'] === 'good')
-                                <span class="inline-block w-1.5 h-1.5 rounded-full bg-blue-400"></span>
-                            @elseif($stat['stability'] === 'moderate')
-                                <span class="inline-block w-1.5 h-1.5 rounded-full bg-yellow-400"></span>
-                            @else
-                                <span class="inline-block w-1.5 h-1.5 rounded-full bg-red-400"></span>
+                                </li>
+                            @endforeach
+                        </ol>
+                    @empty
+                        <div class="px-6 py-14 text-center">
+                            <span class="mx-auto flex size-12 items-center justify-center rounded-full bg-surface-muted text-ink-quiet" aria-hidden="true">
+                                <x-ui.icon name="search" class="size-5" />
+                            </span>
+                            <p class="mt-4 text-sm text-ink-muted">{{ __('ui.history.no_changes') }}</p>
+                            @if($hasFilters)
+                                <button type="button" wire:click="resetFilters" class="app-button-secondary mt-4">{{ __('ui.history.clear_filters') }}</button>
                             @endif
                         </div>
+                    @endforelse
+                </div>
+
+                @if($changes->hasPages())
+                    <div class="border-t border-line px-4 py-3 sm:px-6">
+                        {{ $changes->links() }}
                     </div>
-                </a>
-            @endforeach
+                @endif
+            </section>
+
+            <aside class="space-y-6 xl:sticky xl:top-24">
+                @livewire('vat-change-signup', ['source' => 'vat-changes', 'compact' => true])
+
+                <section class="app-surface p-5" aria-labelledby="stability-heading">
+                    <h2 id="stability-heading" class="text-base font-bold text-ink">{{ __('ui.history.stability_title') }}</h2>
+                    <p class="mt-1 text-sm leading-6 text-ink-muted">{{ __('ui.history.stability_desc') }}</p>
+                    <div class="mt-4 flex items-center justify-between border-b border-line pb-2 text-xs font-semibold text-ink-muted">
+                        <span>{{ __('ui.history.col_country') }}</span>
+                        <span>{{ __('ui.history.col_changes') }}</span>
+                    </div>
+                    <ol class="mt-1 max-h-[34rem] space-y-0.5 overflow-y-auto overscroll-contain">
+                        @foreach($stability as $row)
+                            <li>
+                                <a href="{{ locale_path($row['history'] ? '/vat-rates/'.$row['slug'].'/history' : '/vat-calculator/'.$row['slug']) }}" class="group -mx-2 grid grid-cols-[1.125rem_minmax(0,7.5rem)_minmax(0,1fr)_1.75rem] items-center gap-2.5 rounded-control px-2 py-1.5 transition-colors hover:bg-surface-subtle" title="{{ __('ui.history.col_stability') }}: {{ __('ui.history.'.$row['stability']) }}">
+                                    <x-ui.flag :iso="$row['iso']" size="sm" />
+                                    <span class="truncate text-[0.8125rem] font-medium text-ink group-hover:text-action">{{ $row['name'] }}</span>
+                                    <span class="h-1.5 overflow-hidden rounded-xs bg-action-soft" aria-hidden="true">
+                                        <span class="block h-full bg-action" style="width: {{ max(4, round($row['changes'] / $maxChanges * 100)) }}%"></span>
+                                    </span>
+                                    <span class="tabular text-right text-[0.8125rem] font-semibold text-ink">{{ $row['changes'] }}</span>
+                                </a>
+                            </li>
+                        @endforeach
+                    </ol>
+                    <p class="mt-3 text-xs text-ink-muted">{{ __('ui.history.stability_scale') }}</p>
+                </section>
+            </aside>
         </div>
     </div>
 </div>

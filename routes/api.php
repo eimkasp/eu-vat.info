@@ -6,7 +6,9 @@ use App\Http\Controllers\Api\V1Controller;
 use App\Http\Controllers\Api\VatValidationController;
 use App\Http\Controllers\Api\X402Controller;
 use App\Http\Controllers\CountryController;
+use App\Http\Middleware\X402PaymentMiddleware;
 use App\Models\Country;
+use App\Models\VatRateChange;
 use Illuminate\Support\Facades\Route;
 
 // API root — discovery index for all available endpoints
@@ -16,33 +18,33 @@ Route::get('/', function () {
     return response()->json([
         'name' => 'EU VAT Info API',
         'description' => 'Free, open-source EU VAT data for developers, businesses, and AI agents.',
-        'documentation' => $baseUrl . '/api/v1/openapi.json',
-        'api_catalog' => $baseUrl . '/.well-known/api-catalog',
+        'documentation' => $baseUrl.'/api/v1/openapi.json',
+        'api_catalog' => $baseUrl.'/.well-known/api-catalog',
         'versions' => [
-            'v1' => $baseUrl . '/api/v1',
+            'v1' => $baseUrl.'/api/v1',
         ],
         'endpoints' => [
-            'countries'       => $baseUrl . '/api/countries',
-            'country'         => $baseUrl . '/api/countries/{slug}',
-            'llm_vat_rates'   => $baseUrl . '/api/llm/vat-rates',
-            'vat_changes'     => $baseUrl . '/api/vat-changes',
-            'vat_validate'    => $baseUrl . '/api/vat/validation/validate',
-            'vat_batch'       => $baseUrl . '/api/vat/validation/batch',
-            'health'          => $baseUrl . '/api/vat/validation/health',
-            'mcp'             => $baseUrl . '/api/mcp',
+            'countries' => $baseUrl.'/api/countries',
+            'country' => $baseUrl.'/api/countries/{slug}',
+            'llm_vat_rates' => $baseUrl.'/api/llm/vat-rates',
+            'vat_changes' => $baseUrl.'/api/vat-changes',
+            'vat_validate' => $baseUrl.'/api/vat/validation/validate',
+            'vat_batch' => $baseUrl.'/api/vat/validation/batch',
+            'health' => $baseUrl.'/api/vat/validation/health',
+            'mcp' => $baseUrl.'/api/mcp',
         ],
         'x402' => [
-            'info'        => $baseUrl . '/api/x402/info',
-            'discovery'   => $baseUrl . '/api/x402/discovery/resources',
-            'facilitator' => $baseUrl . '/api/x402',
-            'protocol'    => 'https://x402.org',
-            'version'     => 2,
-            'network'     => config('x402.network'),
-            'enabled'     => (bool) config('x402.enabled', false),
-            'endpoints'   => collect(config('x402.routes', []))->map(fn ($cfg, $route) => [
-                'route'       => $route,
-                'url'         => $baseUrl . '/' . ltrim(explode(' ', $route, 2)[1] ?? '', '/'),
-                'price'       => $cfg['price'],
+            'info' => $baseUrl.'/api/x402/info',
+            'discovery' => $baseUrl.'/api/x402/discovery/resources',
+            'facilitator' => $baseUrl.'/api/x402',
+            'protocol' => 'https://x402.org',
+            'version' => 2,
+            'network' => config('x402.network'),
+            'enabled' => (bool) config('x402.enabled', false),
+            'endpoints' => collect(config('x402.routes', []))->map(fn ($cfg, $route) => [
+                'route' => $route,
+                'url' => $baseUrl.'/'.ltrim(explode(' ', $route, 2)[1] ?? '', '/'),
+                'price' => $cfg['price'],
                 'description' => $cfg['description'],
             ])->values(),
         ],
@@ -51,8 +53,8 @@ Route::get('/', function () {
 
 // VAT Validation API
 Route::prefix('vat/validation')->group(function () {
-    Route::post('/validate', [VatValidationController::class, 'validate'])->name('api.vat.validate');
-    Route::post('/batch', [VatValidationController::class, 'batchValidate'])->name('api.vat.batch');
+    Route::post('/validate', [VatValidationController::class, 'validate'])->middleware('throttle:vies')->name('api.vat.validate');
+    Route::post('/batch', [VatValidationController::class, 'batchValidate'])->middleware('throttle:vies')->name('api.vat.batch');
     Route::get('/health', [VatValidationController::class, 'health'])->name('api.vat.health');
 });
 
@@ -68,12 +70,7 @@ Route::get('/llm/vat-rates', function () {
         return [
             'country' => $c->name,
             'iso' => $c->iso_code,
-            'rates' => [
-                'standard' => $c->standard_rate,
-                'reduced' => $c->reduced_rate,
-                'super_reduced' => $c->super_reduced_rate,
-                'parking' => $c->parking_rate,
-            ],
+            'rates' => $c->apiRates(),
             'last_updated' => $c->updated_at->toIso8601String(),
         ];
     });
@@ -81,7 +78,7 @@ Route::get('/llm/vat-rates', function () {
 
 // VAT Rate Changes API
 Route::get('/vat-changes', function () {
-    return \App\Models\VatRateChange::with('country:id,name,code,slug')
+    return VatRateChange::with('country:id,name,iso_code,slug')
         ->orderByDesc('change_date')
         ->limit(100)
         ->get()
@@ -90,7 +87,7 @@ Route::get('/vat-changes', function () {
                 'id' => $change->id,
                 'country' => [
                     'name' => $change->country->name ?? '',
-                    'code' => $change->country->code ?? '',
+                    'code' => $change->country->iso_code ?? '',
                     'slug' => $change->country->slug ?? '',
                 ],
                 'rate_type' => $change->rate_type,
@@ -110,7 +107,7 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
     Route::get('/countries', [V1Controller::class, 'countries'])->name('countries');
     Route::get('/countries/{slug}', [V1Controller::class, 'country'])->name('country');
     Route::get('/calculate', [V1Controller::class, 'calculate'])->name('calculate');
-    Route::post('/validate', [V1Controller::class, 'validateVat'])->name('validate');
+    Route::post('/validate', [V1Controller::class, 'validateVat'])->middleware('throttle:vies')->name('validate');
     Route::get('/openapi.json', [V1Controller::class, 'openapi'])->name('openapi');
 });
 
@@ -124,7 +121,7 @@ Route::get('/x402/info', [X402Controller::class, 'info'])->name('api.x402.info')
 Route::get('/x402/discovery/resources', [X402Controller::class, 'discoveryResources'])->name('api.x402.discovery');
 
 // x402 Payment Protocol — paid endpoints (require x402 payment when enabled)
-Route::middleware(\App\Http\Middleware\X402PaymentMiddleware::class)->group(function () {
+Route::middleware(X402PaymentMiddleware::class)->group(function () {
     Route::get('/x402/donate', [X402Controller::class, 'donate'])->name('api.x402.donate');
     Route::get('/x402/premium/vat-rates', [X402Controller::class, 'premiumVatRates'])->name('api.x402.premium.vat-rates');
     Route::get('/x402/premium/country/{slug}', [X402Controller::class, 'premiumCountry'])->name('api.x402.premium.country');

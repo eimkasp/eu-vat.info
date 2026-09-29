@@ -3,6 +3,7 @@
 use App\Models\Country;
 use App\Models\VatRate;
 use App\Models\VatRateChange;
+use Carbon\CarbonImmutable;
 
 function seoCountry(array $overrides = []): Country
 {
@@ -123,7 +124,7 @@ it('keeps non-EU changes out of the canonical changes page and freshness data', 
     $germany = seoCountry();
     $euChange = seoChange($germany, ['description' => 'EU change visible']);
     $euChange->timestamps = false;
-    $euChange->forceFill(['updated_at' => \Carbon\CarbonImmutable::parse('2026-04-01T10:00:00+00:00')])->saveQuietly();
+    $euChange->forceFill(['updated_at' => CarbonImmutable::parse('2026-04-01T10:00:00+00:00')])->saveQuietly();
 
     $switzerland = seoCountry([
         'name' => 'Switzerland',
@@ -136,7 +137,7 @@ it('keeps non-EU changes out of the canonical changes page and freshness data', 
         'description' => 'Non-EU change hidden',
     ]);
     $nonEuChange->timestamps = false;
-    $nonEuChange->forceFill(['updated_at' => \Carbon\CarbonImmutable::parse('2026-06-01T10:00:00+00:00')])->saveQuietly();
+    $nonEuChange->forceFill(['updated_at' => CarbonImmutable::parse('2026-06-01T10:00:00+00:00')])->saveQuietly();
 
     $this->get('/vat-changes')
         ->assertOk()

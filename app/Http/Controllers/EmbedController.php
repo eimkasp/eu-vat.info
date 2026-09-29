@@ -7,26 +7,36 @@ use Illuminate\Http\Request;
 
 class EmbedController extends Controller
 {
-    //
-    public function index(Request $request)
+    private const DEFAULT_COUNTRY = 'united-kingdom';
+
+    public function index(?string $country = null)
     {
-        $country = $request->country;
-        if ($country == null) {
-            $country = 'united-kingdom';
-        }
+        $selectedCountry = $country === null
+            ? $this->defaultCountry()
+            : Country::calculatorAvailable()->where('slug', $country)->first();
 
-        $selectedCountry = Country::where('slug', $country)->first();
+        abort_unless($selectedCountry, 404);
 
-        return view('widget.embed', compact(['country', 'selectedCountry']));
+        return view('widget.embed', [
+            'selectedCountry' => $selectedCountry,
+            'countries' => Country::calculatorAvailable()->orderByDesc('is_eu_member')->orderBy('name')->get(['name', 'slug']),
+        ]);
     }
 
-    public function iframe(Request $request)
+    public function iframe(Request $request, ?string $country = null)
     {
-        $country = $request->country;
-        if ($country == null) {
-            $country = 'united-kingdom';
-        }
+        $selectedCountry = ($country ? Country::calculatorAvailable()->where('slug', $country)->first() : null)
+            ?? $this->defaultCountry();
 
-        return view('widget.iframe', compact('country'));
+        return view('widget.iframe', [
+            'country' => $selectedCountry?->slug,
+            'style' => $request->query('style') === 'horizontal' ? 'horizontal' : 'vertical',
+        ]);
+    }
+
+    private function defaultCountry(): ?Country
+    {
+        return Country::calculatorAvailable()->where('slug', self::DEFAULT_COUNTRY)->first()
+            ?? Country::calculatorAvailable()->orderByDesc('is_eu_member')->orderBy('name')->first();
     }
 }

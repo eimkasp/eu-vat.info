@@ -1,344 +1,248 @@
+@use('App\Livewire\SharedCalculation')
+@use('App\Models\Country')
+@use('App\Support\Seo\SeoPolicy')
+@use('App\Support\Vat\Money')
+@use('App\Support\Vat\VatCalculation')
+
+@php
+    $currency = $countryModel->currencyCode();
+    $money = fn (float $value, ?string $code = null) => Money::format($value, $code ?? $currency);
+    $adding = $mode === 'exclude';
+    $rateText = Money::percent($rate);
+    $inputText = $money($calculation->input());
+    $headline = __($adding ? 'ui.shared_calc.heading_add' : 'ui.shared_calc.heading_remove', ['amount' => $inputText, 'rate' => Country::formatRate($rate), 'country' => $countryModel->name]);
+    $shareUrl = url(SharedCalculation::calculationUrl($country, $amount, $rate, $mode));
+    $calculatorUrl = locale_path('/vat-calculator/'.$countryModel->slug).'?'.http_build_query(['amount' => SharedCalculation::segment($amount), 'rate' => SharedCalculation::segment($rate), 'mode' => $mode]);
+    $netShare = $calculation->gross > 0 ? round($calculation->net / $calculation->gross * 100, 1) : 100;
+    $calculatorAvailable = $countryModel->isCalculatorAvailable();
+@endphp
+
 @section('seo')
     <x-seo-meta
-        :title="($mode === 'exclude' ? 'Add' : 'Remove') . ' ' . $rate . '% VAT on ' . ($countryObject?->currency_display ?? '€') . number_format((float)$amount, 2) . ' — ' . $countryObject->name . ' VAT Calculation'"
-        :description="'Detailed VAT calculation for ' . $countryObject->name . '. ' . ($mode === 'exclude' ? 'Adding' : 'Removing') . ' ' . $rate . '% VAT on ' . ($countryObject?->currency_display ?? '€') . number_format((float)$amount, 2) . '. Net: ' . ($countryObject?->currency_display ?? '€') . number_format($net_amount, 2) . ', VAT: ' . ($countryObject?->currency_display ?? '€') . number_format($vat_amount, 2) . ', Total: ' . ($countryObject?->currency_display ?? '€') . number_format($total, 2)"
-        :url="app(\App\Support\Seo\SeoPolicy::class)->localizedUrl('/vat-calculator/' . $countryObject->slug, config('translation.default_language', 'en'))"
+        :title="__('ui.shared_calc.meta_title', ['mode' => __($adding ? 'ui.shared_calc.meta_add' : 'ui.shared_calc.meta_remove'), 'rate' => Country::formatRate($rate), 'amount' => $inputText, 'country' => $countryModel->name])"
+        :description="__('ui.shared_calc.meta_description', ['country' => $countryModel->name, 'mode' => mb_strtolower(__($adding ? 'ui.shared_calc.meta_add' : 'ui.shared_calc.meta_remove')), 'rate' => Country::formatRate($rate), 'amount' => $inputText, 'net' => $money($calculation->net), 'vat' => $money($calculation->vat), 'gross' => $money($calculation->gross)])"
+        :url="app(SeoPolicy::class)->localizedUrl('/vat-calculator/'.$countryModel->slug, config('translation.default_language', 'en'))"
         robots="noindex, follow"
         type="website"
     />
 @endsection
 
-<div class="mx-auto max-w-5xl px-4 py-8 sm:py-12">
+<div>
+    <section class="hero-canvas">
+        <x-hero-backdrop />
+        <div class="app-container relative pb-12 pt-6 sm:pb-16 sm:pt-8">
+            <x-site-breadcrumbs variant="dark" :items="array_filter([
+                __('ui.calculator.breadcrumb_label') => locale_path('/vat-calculator'),
+                $countryModel->name => $calculatorAvailable ? locale_path('/vat-calculator/'.$countryModel->slug) : '',
+                __('ui.shared_calc.breadcrumb', ['rate' => Country::formatRate($rate), 'amount' => $inputText]) => '',
+            ], fn ($url, $label) => $label !== '', ARRAY_FILTER_USE_BOTH)" />
 
-    {{-- Breadcrumbs --}}
-    <nav class="flex items-center gap-1.5 text-sm text-gray-400 mb-8 flex-wrap" aria-label="Breadcrumb">
-        <a href="{{ locale_path('/') }}" class="hover:text-blue-600 transition-colors">{{ __('ui.breadcrumbs.home') }}</a>
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" /></svg>
-        <a href="{{ locale_path('/vat-calculator/' . $countryObject->slug) }}" class="hover:text-blue-600 transition-colors">{{ $countryObject->name }} VAT</a>
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" /></svg>
-        <span class="text-gray-600 font-medium">{{ $rate }}% VAT on {{ ($countryObject?->currency_display ?? '€') }}{{ number_format((float)$amount, 2) }}</span>
-    </nav>
+            <div class="mx-auto mb-8 mt-6 max-w-3xl text-center">
+                <x-ui.flag :iso="$countryModel->iso_code" size="lg" :lazy="false" class="mx-auto mb-4" />
+                <h1 class="text-3xl font-bold tracking-[-0.03em] text-white sm:text-4xl sm:leading-[1.1]">{{ $headline }}</h1>
+            </div>
 
-    {{-- Hero Result --}}
-    <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white mb-8">
-        <div class="absolute inset-0 opacity-5">
-            <svg width="100%" height="100%"><defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" stroke-width="0.5"/></pattern></defs><rect width="100%" height="100%" fill="url(#grid)"/></svg>
-        </div>
+            <div class="app-surface-raised mx-auto grid max-w-4xl grid-cols-1 overflow-hidden text-ink md:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
+                <div class="flex flex-col gap-4 p-5 sm:p-7">
+                    <div class="flex flex-wrap items-center gap-2">
+                        <span class="app-badge bg-action-soft text-action-deep">
+                            <x-ui.icon :name="$adding ? 'plus' : 'minus'" class="size-3.5" />
+                            {{ $adding ? __('ui.shared_calc.vat_added') : __('ui.shared_calc.vat_extracted') }}
+                        </span>
+                        <span class="app-badge bg-surface-muted text-ink-muted">{{ $this->rateType['label'] }} · {{ $rateText }}</span>
+                        <span class="app-badge bg-surface-muted text-ink-muted">{{ $currency }}</span>
+                    </div>
 
-        <div class="relative p-6 sm:p-10">
-            <h1 class="text-2xl sm:text-3xl font-extrabold mb-4">
-                {{ ($countryObject->currency_display ?? '€') }}{{ number_format((float)$amount, 2) }}
-                {{ $mode === 'exclude' ? __('ui.shared_calc.plus') : __('ui.shared_calc.minus') }} {{ $rate }}% VAT in {{ $countryObject->name }}
-            </h1>
-            <div class="flex items-center justify-between mb-6 flex-wrap gap-3">
-                <div class="flex items-center gap-3">
-                    <img src="https://flagcdn.com/h80/{{ strtolower($countryObject->iso_code) }}.jpg"
-                         alt="{{ $countryObject->name }} flag"
-                         class="h-8 w-auto rounded shadow-lg" loading="lazy">
                     <div>
-                        <p class="text-lg sm:text-xl font-bold">{{ $countryObject->name }}</p>
-                        <p class="text-slate-400 text-xs">{{ __('ui.shared_calc.rate_label', ['name' => $rateName]) }} &middot; {{ $rate }}% VAT &middot; {{ $countryObject->currency_display ?? 'EUR (€)' }}</p>
+                        <p class="text-sm font-semibold text-ink-muted">{{ $adding ? __('ui.shared_calc.total_incl_vat') : __('ui.shared_calc.net_excl_vat') }}</p>
+                        <p class="tabular mt-1 text-4xl font-bold tracking-[-0.035em] text-ink sm:text-5xl">{{ $money($adding ? $calculation->gross : $calculation->net) }}</p>
                     </div>
-                </div>
-                @php
-                    $oppositeMode = $mode === 'exclude' ? 'include' : 'exclude';
-                    $oppositeUrl = locale_path('/vat-calculation/' . $country . '/' . $amount . '/' . $rate . '/' . $oppositeMode);
-                @endphp
-                <div class="flex items-center gap-2">
-                    <a href="{{ $oppositeUrl }}"
-                       class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-white/10 text-slate-300 hover:bg-white/20 ring-1 ring-white/10 transition-all"
-                       title="Switch to {{ $oppositeMode === 'exclude' ? 'Add VAT' : 'Extract VAT' }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" /></svg>
-                        {{ $oppositeMode === 'exclude' ? __('ui.shared_calc.switch_to_add') : __('ui.shared_calc.switch_to_extract') }}
-                    </a>
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold {{ $mode === 'exclude' ? 'bg-emerald-500/20 text-emerald-300 ring-1 ring-emerald-500/30' : 'bg-amber-500/20 text-amber-300 ring-1 ring-amber-500/30' }}">
-                        @if($mode === 'exclude')
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
-                            {{ __('ui.shared_calc.vat_added') }}
-                        @else
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14" /></svg>
-                            {{ __('ui.shared_calc.vat_extracted') }}
-                        @endif
-                    </span>
-                </div>
-            </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 items-center">
-                <div class="text-center p-5 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10">
-                    <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">
-                        {{ $mode === 'exclude' ? __('ui.shared_calc.net_amount') : __('ui.shared_calc.gross_amount') }}
-                    </div>
-                    <div class="text-2xl sm:text-3xl font-extrabold tabular-nums tracking-tight">
-                        {{ $countryObject->currency_display ?? '€' }}{{ number_format((float)$amount, 2) }}
-                    </div>
-                </div>
+                    <p class="app-note">
+                        <x-ui.icon name="info" class="mt-1 size-4 text-action" />
+                        {{ __('ui.rate_type_desc.'.$this->rateType['type']) }}
+                    </p>
 
-                <div class="text-center">
-                    <div class="inline-flex items-center gap-3 px-5 py-3 rounded-xl {{ $mode === 'exclude' ? 'bg-emerald-500/10 border border-emerald-500/20' : 'bg-amber-500/10 border border-amber-500/20' }}">
-                        <span class="text-lg {{ $mode === 'exclude' ? 'text-emerald-400' : 'text-amber-400' }}">{{ $mode === 'exclude' ? '+' : '−' }}</span>
-                        <div>
-                            <div class="text-[10px] font-bold {{ $mode === 'exclude' ? 'text-emerald-400/70' : 'text-amber-400/70' }} uppercase tracking-widest">{{ __('ui.shared_calc.vat_percent', ['rate' => $rate]) }}</div>
-                            <div class="text-xl sm:text-2xl font-extrabold {{ $mode === 'exclude' ? 'text-emerald-300' : 'text-amber-300' }} tabular-nums">
-                                {{ $countryObject->currency_display ?? '€' }}{{ number_format($vat_amount, 2) }}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="text-center p-5 rounded-xl bg-blue-500/10 border-2 border-blue-400/30 relative">
-                    <div class="absolute -top-2.5 left-1/2 -translate-x-1/2 px-2 py-0.5 bg-blue-500 rounded-full text-[10px] font-bold uppercase tracking-wider">{{ __('ui.shared_calc.result') }}</div>
-                    <div class="text-[10px] font-bold text-blue-300/70 uppercase tracking-widest mb-2 mt-1">
-                        {{ $mode === 'exclude' ? __('ui.shared_calc.total_incl_vat') : __('ui.shared_calc.net_excl_vat') }}
-                    </div>
-                    <div class="text-3xl sm:text-4xl font-black tabular-nums tracking-tight text-blue-100">
-                        {{ $countryObject->currency_display ?? '€' }}{{ number_format($mode === 'exclude' ? $total : $net_amount, 2) }}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    {{-- Two-column layout --}}
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-        <div class="lg:col-span-2 space-y-6">
-            {{-- Breakdown Table --}}
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-                <div class="px-6 py-4 border-b border-gray-100">
-                    <h2 class="font-semibold text-sm text-gray-900 flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 0 1 0 3.75H5.625a1.875 1.875 0 0 1 0-3.75Z" />
-                        </svg>
-                        Calculation Breakdown
-                    </h2>
-                </div>
-                <table class="w-full text-sm">
-                    <tbody class="divide-y divide-gray-100">
-                        <tr>
-                            <td class="px-6 py-3.5 text-gray-500">{{ __('ui.shared_calc.country') }}</td>
-                            <td class="px-6 py-3.5 text-right font-semibold text-gray-900">
-                                <a href="{{ locale_path('/country/' . $countryObject->slug) }}" class="inline-flex items-center gap-2 hover:text-blue-600 transition-colors">
-                                    <img src="https://flagcdn.com/h40/{{ strtolower($countryObject->iso_code) }}.jpg" alt="{{ $countryObject->name }} flag" class="h-4 w-auto rounded-sm" loading="lazy">
-                                    {{ $countryObject->name }}
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="px-6 py-3.5 text-gray-500">{{ __('ui.shared_calc.vat_rate') }}</td>
-                            <td class="px-6 py-3.5 text-right font-semibold text-gray-900">{{ $rate }}% <span class="text-gray-400 font-normal">({{ $rateName }})</span></td>
-                        </tr>
-                        <tr>
-                            <td class="px-6 py-3.5 text-gray-500">{{ __('ui.shared_calc.mode') }}</td>
-                            <td class="px-6 py-3.5 text-right font-semibold text-gray-900">{{ $mode === 'exclude' ? __('ui.shared_calc.add_vat_to_net') : __('ui.shared_calc.extract_vat_from_gross') }}</td>
-                        </tr>
-                        <tr>
-                            <td class="px-6 py-3.5 text-gray-500">{{ __('ui.shared_calc.net_excl_label') }}</td>
-                            <td class="px-6 py-3.5 text-right font-bold text-gray-900 text-base tabular-nums">{{ $countryObject->currency_display ?? '€' }}{{ number_format($net_amount, 2) }}</td>
-                        </tr>
-                        <tr>
-                            <td class="px-6 py-3.5 text-gray-500">{{ __('ui.shared_calc.vat_amount') }}</td>
-                            <td class="px-6 py-3.5 text-right font-bold {{ $mode === 'exclude' ? 'text-emerald-600' : 'text-amber-600' }} text-base tabular-nums">{{ $mode === 'exclude' ? '+' : '−' }}{{ $countryObject->currency_display ?? '€' }}{{ number_format($vat_amount, 2) }}</td>
-                        </tr>
-                        <tr class="bg-slate-900">
-                            <td class="px-6 py-4 font-semibold text-white">{{ __('ui.shared_calc.total_incl') }}</td>
-                            <td class="px-6 py-4 text-right font-black text-white text-lg tabular-nums">{{ $countryObject->currency_display ?? '€' }}{{ number_format($total, 2) }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            {{-- Formula --}}
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-                <div class="px-6 py-4 border-b border-gray-100">
-                    <h2 class="font-semibold text-sm text-gray-900 flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-amber-500" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
-                        </svg>
-                        How This Was Calculated
-                    </h2>
-                </div>
-                <div class="p-6">
-                    @if($mode === 'exclude')
-                        <div class="space-y-3 text-sm text-gray-700">
-                            <p><strong>{{ __('ui.shared_calc.mode') }}:</strong> {{ __('ui.shared_calc.formula_add_mode') }}</p>
-                            <div class="bg-gray-50 rounded-xl p-5 font-mono text-xs sm:text-sm space-y-1.5 border border-gray-200">
-                                <p class="text-gray-400">// Formula: VAT = Net × (Rate ÷ 100)</p>
-                                <p>VAT = {{ $countryObject->currency_display ?? '€' }}{{ number_format((float)$amount, 2) }} × {{ number_format($rate / 100, 4) }}</p>
-                                <p class="font-bold text-emerald-700">VAT = {{ $countryObject->currency_display ?? '€' }}{{ number_format($vat_amount, 2) }}</p>
-                                <div class="border-t border-gray-200 my-2"></div>
-                                <p class="text-gray-400">// Formula: Total = Net + VAT</p>
-                                <p>Total = {{ $countryObject->currency_display ?? '€' }}{{ number_format((float)$amount, 2) }} + {{ $countryObject->currency_display ?? '€' }}{{ number_format($vat_amount, 2) }}</p>
-                                <p class="font-bold text-blue-700 text-base">Total = {{ $countryObject->currency_display ?? '€' }}{{ number_format($total, 2) }}</p>
-                            </div>
-                        </div>
-                    @else
-                        <div class="space-y-3 text-sm text-gray-700">
-                            <p><strong>{{ __('ui.shared_calc.mode') }}:</strong> {{ __('ui.shared_calc.formula_extract_mode') }}</p>
-                            <div class="bg-gray-50 rounded-xl p-5 font-mono text-xs sm:text-sm space-y-1.5 border border-gray-200">
-                                <p class="text-gray-400">// Formula: Net = Gross ÷ (1 + Rate ÷ 100)</p>
-                                <p>Net = {{ $countryObject->currency_display ?? '€' }}{{ number_format((float)$amount, 2) }} ÷ {{ number_format(1 + $rate / 100, 4) }}</p>
-                                <p class="font-bold text-emerald-700">Net = {{ $countryObject->currency_display ?? '€' }}{{ number_format($net_amount, 2) }}</p>
-                                <div class="border-t border-gray-200 my-2"></div>
-                                <p class="text-gray-400">// Formula: VAT = Gross − Net</p>
-                                <p>VAT = {{ $countryObject->currency_display ?? '€' }}{{ number_format((float)$amount, 2) }} − {{ $countryObject->currency_display ?? '€' }}{{ number_format($net_amount, 2) }}</p>
-                                <p class="font-bold text-amber-700 text-base">VAT = {{ $countryObject->currency_display ?? '€' }}{{ number_format($vat_amount, 2) }}</p>
-                            </div>
-                        </div>
-                    @endif
-                </div>
-            </div>
-        </div>
-
-        {{-- Right sidebar --}}
-        <div class="space-y-6">
-            {{-- Actions --}}
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-5 space-y-3"
-                 x-data="{ copied: false, shareUrl: '{{ $this->shareUrl }}' }">
-                <h3 class="font-bold text-gray-900 text-sm mb-3">{{ __('ui.shared_calc.actions') }}</h3>
-
-                <button
-                    @click="navigator.clipboard.writeText(shareUrl).then(() => { copied = true; setTimeout(() => copied = false, 2000) })"
-                    class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm font-semibold text-gray-700 hover:bg-gray-50 hover:border-gray-300 shadow-sm transition-all"
-                >
-                    <svg x-show="!copied" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244" />
-                    </svg>
-                    <svg x-show="copied" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                    </svg>
-                    <span x-text="copied ? '{{ __('ui.shared_calc.link_copied') }}' : '{{ __('ui.shared_calc.copy_share_link') }}'"></span>
-                </button>
-
-                <a href="{{ locale_path('/vat-calculator/' . $countryObject->slug . '?amount=' . $amount . '&selectedRate=' . $rate . '&vat_included=' . $mode) }}"
-                   class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-semibold shadow-sm transition-all">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 15.75V18m-7.5-6.75h.008v.008H8.25v-.008Zm0 2.25h.008v.008H8.25V13.5Zm0 2.25h.008v.008H8.25v-.008Zm0 2.25h.008v.008H8.25V18Zm2.498-6.75h.007v.008h-.007v-.008Zm0 2.25h.007v.008h-.007V13.5Zm0 2.25h.007v.008h-.007v-.008Zm0 2.25h.007v.008h-.007V18Zm2.504-6.75h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V13.5Zm0 2.25h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V18Zm2.498-6.75h.008v.008H15.75v-.008Zm0 2.25h.008v.008H15.75V13.5ZM8.25 6h7.5v2.25h-7.5V6ZM12 2.25c-1.892 0-3.758.11-5.593.322C5.307 2.7 4.5 3.65 4.5 4.757V19.5a2.25 2.25 0 0 0 2.25 2.25h10.5a2.25 2.25 0 0 0 2.25-2.25V4.757c0-1.108-.806-2.057-1.907-2.185A48.507 48.507 0 0 0 12 2.25Z" />
-                    </svg>
-                    Open Full Calculator
-                </a>
-
-                <a href="{{ locale_path('/vat-calculator/' . $countryObject->slug) }}"
-                   class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm font-semibold text-gray-700 hover:bg-gray-50 hover:border-gray-300 shadow-sm transition-all">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0 1 21 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0 1 12 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 0 1 3 12c0-1.605.42-3.113 1.157-4.418" />
-                    </svg>
-                    {{ __('ui.shared_calc.country_vat_guide', ['country' => $countryObject->name]) }}
-                </a>
-            </div>
-
-            {{-- Rate switcher --}}
-            @if(count($countryRates) > 0)
-                <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-5">
-                    <h3 class="font-bold text-gray-900 text-sm mb-3">{{ __('ui.shared_calc.all_rates_title', ['country' => $countryObject->name]) }}</h3>
-                    <div class="space-y-2">
-                        @foreach($countryRates as $r)
-                            <a href="{{ locale_path('/vat-calculation/' . $country . '/' . $amount . '/' . $r['value'] . '/' . $mode) }}"
-                               class="flex items-center justify-between px-4 py-2.5 rounded-xl border text-sm font-semibold transition-all
-                                   {{ abs($r['value'] - $rate) < 0.01
-                                       ? 'bg-blue-600 border-blue-600 text-white shadow-md'
-                                       : 'bg-gray-50 border-gray-200 text-gray-700 hover:border-blue-300 hover:bg-blue-50' }}">
-                                <span>{{ $r['name'] }}</span>
-                                <span>{{ $r['value'] }}%</span>
+                    <div class="mt-auto flex flex-wrap gap-2.5">
+                        @if($calculatorAvailable)
+                            <a href="{{ $calculatorUrl }}" class="app-button-primary">
+                                <x-ui.icon name="calculator" class="size-4" />
+                                {{ __('ui.shared_calc.open_in_calculator') }}
                             </a>
-                        @endforeach
+                        @endif
+                        <button type="button" x-data x-on:click="$copy(@js($shareUrl), @js(__('ui.shared_calc.link_copied')))" class="app-button-secondary">
+                            <x-ui.icon name="link" class="size-4" />
+                            {{ __('ui.shared_calc.copy_share_link') }}
+                        </button>
                     </div>
                 </div>
-            @endif
 
-            {{-- Mode switcher --}}
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-5">
-                <h3 class="font-bold text-gray-900 text-sm mb-3">{{ __('ui.shared_calc.switch_mode') }}</h3>
-                <div class="space-y-2">
-                    <a href="{{ locale_path('/vat-calculation/' . $country . '/' . $amount . '/' . $rate . '/exclude') }}"
-                       class="flex items-center gap-3 px-4 py-2.5 rounded-xl border text-sm font-semibold transition-all
-                           {{ $mode === 'exclude'
-                               ? 'bg-emerald-50 border-emerald-300 text-emerald-700'
-                               : 'bg-gray-50 border-gray-200 text-gray-700 hover:border-emerald-300 hover:bg-emerald-50' }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
-                        {{ __('ui.shared_calc.add_vat_to_amount') }}
-                    </a>
-                    <a href="{{ locale_path('/vat-calculation/' . $country . '/' . $amount . '/' . $rate . '/include') }}"
-                       class="flex items-center gap-3 px-4 py-2.5 rounded-xl border text-sm font-semibold transition-all
-                           {{ $mode === 'include'
-                               ? 'bg-amber-50 border-amber-300 text-amber-700'
-                               : 'bg-gray-50 border-gray-200 text-gray-700 hover:border-amber-300 hover:bg-amber-50' }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14" /></svg>
-                        {{ __('ui.shared_calc.remove_vat_from_amount') }}
-                    </a>
+                <div class="border-t border-line bg-surface-subtle p-5 sm:p-7 md:border-l md:border-t-0">
+                    <dl class="divide-y divide-line overflow-hidden rounded-control border border-line bg-surface text-sm">
+                        <div class="flex items-center justify-between gap-4 px-4 py-3">
+                            <dt class="text-ink-muted">{{ __('ui.shared_calc.net_excl_label') }}</dt>
+                            <dd class="tabular font-semibold text-ink">{{ $money($calculation->net) }}</dd>
+                        </div>
+                        <div class="flex items-center justify-between gap-4 px-4 py-3">
+                            <dt class="text-ink-muted">{{ __('ui.shared_calc.vat_percent', ['rate' => Country::formatRate($rate)]) }}</dt>
+                            <dd class="tabular font-semibold text-action">{{ $adding ? '+' : '' }}{{ $money($calculation->vat) }}</dd>
+                        </div>
+                        <div class="flex items-center justify-between gap-4 px-4 py-3">
+                            <dt class="font-semibold text-ink">{{ __('ui.shared_calc.total_incl') }}</dt>
+                            <dd class="tabular font-bold text-ink">{{ $money($calculation->gross) }}</dd>
+                        </div>
+                    </dl>
+
+                    <div class="mt-4" aria-hidden="true">
+                        <div class="flex h-1.5 gap-0.5 overflow-hidden rounded-xs">
+                            <span class="bg-action" style="width: {{ $netShare }}%"></span>
+                            <span class="flex-1 bg-action/25"></span>
+                        </div>
+                        <div class="mt-1.5 flex justify-between text-xs text-ink-muted">
+                            <span>{{ __('ui.calculator.net_short') }} {{ Money::percent($netShare) }}</span>
+                            <span>{{ __('ui.calculator.vat_short') }} {{ Money::percent(100 - $netShare) }}</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-5 rounded-control border border-line bg-surface p-4">
+                        <h2 class="text-sm font-semibold text-ink">{{ __('ui.shared_calc.formula_heading') }}</h2>
+                        <div class="mt-2 space-y-1.5 font-mono text-xs leading-5 text-ink-muted">
+                            @if($adding)
+                                <p>{{ __('ui.shared_calc.formula_vat_label') }}</p>
+                                <p class="text-ink">{{ $money($calculation->net) }} × {{ $rateText }} = {{ $money($calculation->vat) }}</p>
+                                <p class="pt-1.5">{{ __('ui.shared_calc.formula_total_label') }}</p>
+                                <p class="text-ink">{{ $money($calculation->net) }} + {{ $money($calculation->vat) }} = <strong>{{ $money($calculation->gross) }}</strong></p>
+                            @else
+                                <p>{{ __('ui.shared_calc.formula_net_label') }}</p>
+                                <p class="text-ink">{{ $money($calculation->gross) }} ÷ {{ rtrim(rtrim(number_format(1 + $rate / 100, 4, '.', ''), '0'), '.') }} = <strong>{{ $money($calculation->net) }}</strong></p>
+                                <p class="pt-1.5">{{ __('ui.shared_calc.formula_vat_extract_label') }}</p>
+                                <p class="text-ink">{{ $money($calculation->gross) }} − {{ $money($calculation->net) }} = {{ $money($calculation->vat) }}</p>
+                            @endif
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            {{-- Top calculations link --}}
-            <a href="{{ locale_path('/top-vat-calculations') }}" class="block bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl border border-blue-200 p-5 hover:border-blue-300 hover:shadow-sm transition-all group">
-                <h3 class="font-bold text-blue-900 text-sm flex items-center gap-2 mb-1.5">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z" />
-                    </svg>
-                    {{ __('ui.shared_calc.popular_calculations') }}
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 ml-auto text-blue-400 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" /></svg>
-                </h3>
-                <p class="text-xs text-blue-700/70">{{ __('ui.shared_calc.popular_calculations_desc') }}</p>
-            </a>
         </div>
-    </div>
+    </section>
 
-    {{-- Similar Calculations --}}
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        {{-- Same amount, other countries --}}
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-100">
-                <h2 class="font-semibold text-sm text-gray-900">
-                    {{ __('ui.shared_calc.same_amount_other_countries', ['amount' => ($countryObject->currency_display ?? '€') . number_format((float)$amount, 2)]) }}
-                </h2>
-            </div>
-            <div class="divide-y divide-gray-100">
-                @foreach($similarCountries as $sc)
-                    @php
-                        $scVat = round((float)$amount * ($sc['standard_rate'] / 100), 2);
-                        $scTotal = round((float)$amount + $scVat, 2);
-                    @endphp
-                    <a href="{{ locale_path('/vat-calculation/' . $sc['slug'] . '/' . $amount . '/' . $sc['standard_rate'] . '/' . $mode) }}"
-                       class="flex items-center justify-between px-6 py-3 hover:bg-gray-50 transition-colors">
-                        <div class="flex items-center gap-2">
-                            <img src="https://flagcdn.com/h40/{{ strtolower($sc['iso_code']) }}.jpg" alt="{{ $sc['name'] }} flag" class="h-3.5 w-auto rounded-sm" loading="lazy">
-                            <span class="text-sm font-medium text-gray-900">{{ $sc['name'] }}</span>
-                            <span class="text-xs text-gray-400">{{ $sc['standard_rate'] }}%</span>
+    <div class="app-container py-10 sm:py-14">
+        <div class="grid grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(0,1fr)_20rem]">
+            <div class="min-w-0 space-y-8">
+                <section class="app-surface overflow-hidden" aria-labelledby="other-amounts">
+                    <h2 id="other-amounts" class="border-b border-line px-5 py-4 text-lg font-bold text-ink sm:px-6">{{ __('ui.shared_calc.same_country_other_amounts', ['country' => $countryModel->name]) }}</h2>
+                    <div class="relative overflow-x-auto">
+                        <table class="app-table min-w-[28rem]">
+                            <thead>
+                                <tr>
+                                    <th scope="col" class="pl-5 sm:pl-6">{{ $adding ? __('ui.shared_calc.net_amount') : __('ui.shared_calc.gross_amount') }}</th>
+                                    <th scope="col" class="text-right">{{ __('ui.shared_calc.vat_percent', ['rate' => Country::formatRate($rate)]) }}</th>
+                                    <th scope="col" class="pr-5 text-right sm:pr-6">{{ $adding ? __('ui.shared_calc.total_incl_vat') : __('ui.shared_calc.net_excl_vat') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach(SharedCalculation::AMOUNTS as $option)
+                                    @continue(abs($option - $amount) < 0.001)
+                                    @php($row = VatCalculation::make($option, $rate, $mode))
+                                    <tr class="transition-colors hover:bg-surface-subtle">
+                                        <td class="pl-5 sm:pl-6">
+                                            <a href="{{ SharedCalculation::calculationUrl($country, $option, $rate, $mode) }}" class="tabular font-semibold text-ink hover:text-action">{{ $money($row->input()) }}</a>
+                                        </td>
+                                        <td class="tabular text-right text-ink-muted">{{ $money($row->vat) }}</td>
+                                        <td class="tabular pr-5 text-right font-semibold text-ink sm:pr-6">{{ $money($adding ? $row->gross : $row->net) }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                @if($this->nearbyCountries->isNotEmpty())
+                    <section class="app-surface overflow-hidden" aria-labelledby="nearby-rates">
+                        <div class="border-b border-line px-5 py-4 sm:px-6">
+                            <h2 id="nearby-rates" class="text-lg font-bold text-ink">{{ __('ui.shared_calc.nearby_heading') }}</h2>
+                            <p class="mt-1 text-sm text-ink-muted">{{ __('ui.shared_calc.nearby_note') }}</p>
                         </div>
-                        <span class="text-sm font-semibold text-emerald-600 tabular-nums">+€{{ number_format($scVat, 2) }}</span>
-                    </a>
-                @endforeach
-            </div>
-        </div>
+                        <div class="relative overflow-x-auto">
+                            <table class="app-table min-w-[32rem]">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" class="pl-5 sm:pl-6">{{ __('ui.shared_calc.country') }}</th>
+                                        <th scope="col" class="text-right">{{ __('ui.shared_calc.vat_rate') }}</th>
+                                        <th scope="col" class="text-right">{{ __('ui.shared_calc.vat_amount') }}</th>
+                                        <th scope="col" class="pr-5 text-right sm:pr-6">{{ $adding ? __('ui.shared_calc.total_incl_vat') : __('ui.shared_calc.net_excl_vat') }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($this->nearbyCountries as $other)
+                                        @php($row = VatCalculation::make($amount, $other->standard_rate, $mode))
+                                        <tr class="transition-colors hover:bg-surface-subtle">
+                                            <td class="pl-5 sm:pl-6">
+                                                <a href="{{ SharedCalculation::calculationUrl($other->slug, $amount, $other->standard_rate, $mode) }}" class="flex items-center gap-2.5 font-semibold text-ink hover:text-action">
+                                                    <x-ui.flag :iso="$other->iso_code" />
+                                                    {{ $other->name }}
+                                                </a>
+                                            </td>
+                                            <td class="tabular text-right text-ink-muted">{{ Country::formatRate($other->standard_rate) }}%</td>
+                                            <td class="tabular text-right text-ink-muted">{{ $money($row->vat, $other->currencyCode()) }}</td>
+                                            <td class="tabular pr-5 text-right font-semibold text-ink sm:pr-6">{{ $money($adding ? $row->gross : $row->net, $other->currencyCode()) }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                @endif
 
-        {{-- Same country, other amounts --}}
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-100">
-                <h2 class="font-semibold text-sm text-gray-900">
-                    {{ __('ui.shared_calc.same_country_other_amounts', ['country' => $countryObject->name]) }}
-                </h2>
+                <p class="max-w-[72ch] text-xs leading-5 text-ink-muted">
+                    {{ __('ui.shared_calc.disclaimer') }}
+                    {{ __('ui.shared_calc.calculated_on', ['date' => now()->locale(app()->getLocale())->isoFormat('LL')]) }}
+                </p>
             </div>
-            <div class="divide-y divide-gray-100">
-                @foreach($similarAmounts as $sa)
-                    @if($sa != $amount)
-                        @php
-                            $saVat = round($sa * ($rate / 100), 2);
-                            $saTotal = round($sa + $saVat, 2);
-                        @endphp
-                        <a href="{{ locale_path('/vat-calculation/' . $country . '/' . $sa . '/' . $rate . '/' . $mode) }}"
-                           class="flex items-center justify-between px-6 py-3 hover:bg-gray-50 transition-colors">
-                            <span class="text-sm font-medium text-gray-900">€{{ number_format($sa, 2) }}</span>
-                            <div class="flex items-center gap-3">
-                                <span class="text-sm text-emerald-600 font-semibold tabular-nums">+€{{ number_format($saVat, 2) }}</span>
-                                <span class="text-sm text-gray-500 tabular-nums">= €{{ number_format($saTotal, 2) }}</span>
-                            </div>
-                        </a>
-                    @endif
-                @endforeach
-            </div>
-        </div>
-    </div>
 
-    {{-- Disclaimer --}}
-    <div class="text-center text-xs text-gray-400 max-w-2xl mx-auto">
-        <p>{{ __('ui.shared_calc.disclaimer') }} {{ __('ui.shared_calc.calculated_on', ['date' => now()->format('F j, Y \a\t H:i')]) }} UTC.</p>
+            <aside class="space-y-6">
+                @if(count($this->rateOptions) > 1)
+                    <nav class="app-surface p-5" aria-labelledby="country-rates">
+                        <h2 id="country-rates" class="text-base font-bold text-ink">{{ __('ui.shared_calc.all_rates_title', ['country' => $countryModel->name]) }}</h2>
+                        <ul class="mt-3 space-y-1.5">
+                            @foreach($this->rateOptions as $option)
+                                @php($current = abs($option['rate'] - $rate) < 0.001)
+                                <li>
+                                    <a href="{{ SharedCalculation::calculationUrl($country, $amount, $option['rate'], $mode) }}" @if($current) aria-current="page" @endif @class(['flex min-h-11 items-center justify-between rounded-card border px-3.5 text-sm font-semibold transition-colors', 'border-action/40 bg-action-soft text-action-deep' => $current, 'border-line text-ink hover:border-line-strong hover:bg-surface-subtle' => ! $current])>
+                                        <span>{{ $option['label'] }}</span>
+                                        <span class="tabular">{{ Country::formatRate($option['rate']) }}%</span>
+                                    </a>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </nav>
+                @endif
+
+                <nav class="app-surface p-5" aria-labelledby="switch-mode">
+                    <h2 id="switch-mode" class="text-base font-bold text-ink">{{ __('ui.shared_calc.switch_mode') }}</h2>
+                    <ul class="mt-3 space-y-1.5">
+                        @foreach(['exclude' => ['plus', __('ui.shared_calc.add_vat_to_amount')], 'include' => ['minus', __('ui.shared_calc.remove_vat_from_amount')]] as $value => [$icon, $label])
+                            @php($current = $mode === $value)
+                            <li>
+                                <a href="{{ SharedCalculation::calculationUrl($country, $amount, $rate, $value) }}" @if($current) aria-current="page" @endif @class(['flex min-h-11 items-center gap-2.5 rounded-card border px-3.5 text-sm font-semibold transition-colors', 'border-action/40 bg-action-soft text-action-deep' => $current, 'border-line text-ink hover:border-line-strong hover:bg-surface-subtle' => ! $current])>
+                                    <x-ui.icon :name="$icon" class="size-4" />
+                                    {{ $label }}
+                                </a>
+                            </li>
+                        @endforeach
+                    </ul>
+                </nav>
+
+                <a href="{{ locale_path('/top-vat-calculations') }}" class="group app-surface flex items-start gap-3 p-5 transition-colors hover:border-action/40">
+                    <span class="flex size-9 shrink-0 items-center justify-center rounded-control bg-action-soft text-action" aria-hidden="true"><x-ui.icon name="trending-up" class="size-4" /></span>
+                    <span class="min-w-0">
+                        <span class="flex items-center gap-1.5 text-sm font-semibold text-ink group-hover:text-action">
+                            {{ __('ui.shared_calc.popular_calculations') }}
+                            <x-ui.icon name="arrow-right" class="size-3.5" />
+                        </span>
+                        <span class="mt-0.5 block text-sm leading-6 text-ink-muted">{{ __('ui.shared_calc.popular_calculations_desc') }}</span>
+                    </span>
+                </a>
+            </aside>
+        </div>
     </div>
 </div>

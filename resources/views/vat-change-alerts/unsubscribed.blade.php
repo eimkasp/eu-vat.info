@@ -1,22 +1,21 @@
-<x-layouts.app>
-    @section('seo')
-        <x-seo-meta
-            title="Unsubscribed from VAT Change Alerts"
-            description="You have been unsubscribed from EU VAT Info VAT change alerts."
-            :url="url()->current()">
-            <meta name="robots" content="noindex, nofollow">
-        </x-seo-meta>
-    @endsection
+@extends('layouts.app')
 
-    <div class="container py-16">
-        <div class="mx-auto max-w-xl rounded-xl border border-gray-200 bg-white p-8 text-center shadow-sm dark:border-gray-700 dark:bg-gray-800">
-            <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-3">You are unsubscribed</h1>
-            <p class="text-gray-600 dark:text-gray-300 mb-6">
-                {{ $subscription->email }} will no longer receive VAT change alerts from EU VAT Info.
-            </p>
-            <a href="{{ locale_path('/vat-changes') }}" class="inline-flex items-center justify-center rounded-lg bg-blue-700 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-800">
-                View VAT changes
+@section('seo')
+    <x-seo-meta :title="__('ui.alerts.unsubscribed_meta')" :description="__('ui.alerts.unsubscribed_meta')" :url="url()->current()" robots="noindex, nofollow" />
+@endsection
+
+@section('content')
+    <div class="app-container py-16 sm:py-24">
+        <div class="app-surface mx-auto max-w-xl p-8 text-center">
+            <span class="mx-auto flex size-12 items-center justify-center rounded-full bg-success-soft text-success" aria-hidden="true">
+                <x-ui.icon name="check" class="size-6" />
+            </span>
+            <h1 class="mt-5 text-2xl font-bold text-ink">{{ __('ui.alerts.unsubscribed_title') }}</h1>
+            <p class="mt-3 text-ink-muted">{{ __('ui.alerts.unsubscribed_desc', ['email' => $subscription->email]) }}</p>
+            <a href="{{ locale_path('/vat-changes') }}" class="app-button-primary mt-6">
+                {{ __('ui.alerts.view_changes') }}
+                <x-ui.icon name="arrow-right" class="size-4" />
             </a>
         </div>
     </div>
-</x-layouts.app>
+@endsection

@@ -8,7 +8,7 @@
 @section('seo')
     <x-seo-meta :title="$headline.' | EU VAT Info'" :description="$change->description ?: $headline" :url="$canonical" type="article">
         <script type="application/ld+json">{!! json_encode([
-            '@context' => 'https://schema.org',
+            '@@context' => 'https://schema.org',
             '@graph' => [
                 ['@type' => 'BreadcrumbList', '@id' => $canonical.'#breadcrumbs', 'itemListElement' => [
                     ['@type' => 'ListItem', 'position' => 1, 'name' => 'EU VAT Info', 'item' => $baseUrl.'/'],
@@ -17,11 +17,11 @@
                 ]],
                 ['@type' => 'Article', '@id' => $canonical.'#article', 'headline' => $headline, 'description' => $change->description ?: $headline, 'datePublished' => ($change->announced_date ?? $change->change_date)->toIso8601String(), 'dateModified' => $change->updated_at->toIso8601String(), 'mainEntityOfPage' => $canonical, 'author' => ['@type' => 'Organization', 'name' => 'EU VAT Info'], 'citation' => array_values(array_filter([$change->source_url, $change->official_document]))],
             ],
-        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
+        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) !!}</script>
     </x-seo-meta>
 @endsection
 
-<article class="container pb-14 pt-8 sm:pt-12">
+<article class="app-container pb-14 pt-8 sm:pt-12">
     <x-site-breadcrumbs :items="['VAT changes' => locale_path('/vat-changes'), $country->name => locale_path('/vat-rates/'.$country->slug.'/history'), $change->change_date->format('M j, Y') => '']" />
 
     <header class="max-w-4xl border-b border-line pb-8">
@@ -30,7 +30,7 @@
         @if($change->description)<p class="mt-4 max-w-3xl text-lg text-ink-muted">{{ $change->description }}</p>@endif
     </header>
 
-    <div class="mt-8 grid gap-10 lg:grid-cols-[minmax(0,1fr)_320px]">
+    <div class="mt-8 grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_320px]">
         <div>
             <section class="grid grid-cols-[1fr_auto_1fr] items-center gap-4 border-y border-line py-6 text-center">
                 <div><span class="block text-sm font-semibold text-ink-muted">Previous rate</span><strong class="mt-1 block text-3xl tabular-nums text-ink">{{ number_format((float) $change->old_rate, 2) }}%</strong></div>

@@ -3,6 +3,7 @@
 use App\Livewire\ViesValidatorPage;
 use App\Models\Country;
 use App\Models\VatRateRule;
+use Illuminate\Support\Facades\Http;
 use Livewire\Livewire;
 
 it('shows maintained country-specific VAT number guidance with an official source', function () {
@@ -15,8 +16,8 @@ it('shows maintained country-specific VAT number guidance with an official sourc
 
     $this->get('/vat-number-validator/germany')
         ->assertOk()
-        ->assertSee('DE + national identifier')
-        ->assertSee('Only national tax administrations can issue VAT identification numbers')
+        ->assertSee('DE followed by the national identifier')
+        ->assertSee('Only national tax administrations issue VAT identification numbers')
         ->assertSee('taxation-customs.ec.europa.eu/taxation/vat/vat-directive/vat-identification-numbers_en');
 });
 
@@ -30,15 +31,22 @@ it('uses the EL VAT prefix guidance for Greece', function () {
 
     $this->get('/vat-number-validator/greece')
         ->assertOk()
-        ->assertSee('EL + national identifier')
+        ->assertSee('EL followed by the national identifier')
         ->assertSee('Greece uses EL for VAT identification numbers');
 });
 
-it('refreshes VAT format guidance after detecting a typed country prefix', function () {
+it('moves a typed EL prefix into the Greek country field before validating', function () {
+    Country::factory()->create(['name' => 'Greece', 'slug' => 'greece', 'iso_code' => 'GR']);
+    Http::fake(['ec.europa.eu/*' => Http::response(['valid' => true, 'name' => 'ACME', 'address' => 'Athens', 'requestIdentifier' => ''])]);
+
     Livewire::test(ViesValidatorPage::class)
-        ->set('vat_number', 'EL123456789')
+        ->set('vat_number', 'EL 123-456-789')
+        ->call('validateVat')
         ->assertSet('country_code', 'GR')
-        ->assertSet('vatFormat.prefix', 'EL');
+        ->assertSet('vat_number', '123456789')
+        ->assertSet('result.prefix', 'EL');
+
+    Http::assertSent(fn ($request) => $request['countryCode'] === 'EL' && $request['vatNumber'] === '123456789');
 });
 
 it('publishes only sourced and verified category VAT rules', function () {

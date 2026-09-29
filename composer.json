@@ -1,38 +1,42 @@
 {
-    "name": "laravel/laravel",
+    "name": "eimkasp/eu-vat-info",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
-    "keywords": ["laravel", "framework"],
+    "description": "EU VAT rates, calculators, VIES validation and historical VAT data for all 27 EU member states.",
+    "keywords": [
+        "vat",
+        "eu",
+        "vies",
+        "laravel",
+        "livewire"
+    ],
     "license": "MIT",
     "require": {
-        "php": "^8.2",
-        "brunocfalcao/blade-feather-icons": "^5.0",
-        "deeplcom/deepl-php": "^1.14",
-        "filament/filament": "^3.3.54",
-        "laravel/framework": "^12.61.1",
-        "laravel/pulse": "^1.0@beta",
-        "laravel/sanctum": "^4.0",
-        "laravel/tinker": "^2.9",
-        "league/csv": "^9.15",
+        "php": "^8.3",
+        "deeplcom/deepl-php": "^1.20",
+        "filament/filament": "^5.9",
+        "laravel/framework": "^13.33",
+        "laravel/pulse": "^1.8.1",
+        "laravel/sanctum": "^4.3",
+        "laravel/tinker": "^3.0",
+        "league/csv": "^9.28",
         "league/html-to-markdown": "^5.1",
-        "livewire/livewire": "^3.6.1",
-        "livewire/volt": "^1.11.2",
-        "robsontenorio/mary": "^2.9.9",
-        "spatie/laravel-sitemap": "^7.2",
-        "spatie/laravel-sluggable": "^3.6",
-        "stevebauman/location": "^7.4",
-        "tapp/filament-auditing": "^3.0"
+        "livewire/livewire": "^4.4.6",
+        "owen-it/laravel-auditing": "^14.0",
+        "spatie/laravel-sitemap": "^7.4",
+        "spatie/laravel-sluggable": "^3.8",
+        "stevebauman/location": "^7.6",
+        "tapp/filament-auditing": "^4.1"
     },
     "require-dev": {
-        "barryvdh/laravel-debugbar": "^3.13",
-        "fakerphp/faker": "^1.23",
-        "laravel/pint": "^1.13",
-        "laravel/sail": "^1.26",
-        "mockery/mockery": "^1.6",
-        "nunomaduro/collision": "^8.9.5",
-        "pestphp/pest": "^3.8",
-        "phpunit/phpunit": "^11.5",
-        "spatie/laravel-ignition": "^2.4"
+        "barryvdh/laravel-debugbar": "^4.4",
+        "fakerphp/faker": "^1.24",
+        "laravel/pint": "^1.32",
+        "laravel/sail": "^1.68",
+        "mockery/mockery": "^1.6.15",
+        "nunomaduro/collision": "^8.9",
+        "pestphp/pest": "^4.7",
+        "pestphp/pest-plugin-laravel": "^4.1",
+        "phpunit/phpunit": "^12.5"
     },
     "autoload": {
         "files": [
@@ -79,8 +83,11 @@
         "allow-plugins": {
             "pestphp/pest-plugin": true,
             "php-http/discovery": true
+        },
+        "platform": {
+            "php": "8.3.0"
         }
     },
-    "minimum-stability": "beta",
+    "minimum-stability": "stable",
     "prefer-stable": true
 }

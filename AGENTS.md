@@ -2,21 +2,21 @@
 
 ## Project Overview
 
-EU VAT Info (`eu-vat.info`) is a Laravel 11 web application providing comprehensive EU VAT rate information, calculators, validators, and country-specific guides. It serves developers, businesses, and tax professionals with real-time data sourced from the European Commission.
+EU VAT Info (`eu-vat.info`) is a Laravel 13 web application providing comprehensive EU VAT rate information, calculators, validators, and country-specific guides. It serves developers, businesses, and tax professionals with real-time data sourced from the European Commission.
 
 ## Tech Stack
 
 | Layer | Technology |
 |-------|-----------|
-| Backend | PHP 8.2+, Laravel 11 |
-| Frontend | Livewire 3, Volt, Blade, Tailwind CSS 3, DaisyUI 4, MaryUI |
-| Admin | Filament 3 |
-| Testing | Pest 2 / PHPUnit 10 |
+| Backend | PHP 8.3+, Laravel 13 |
+| Frontend | Livewire 4, Alpine.js, Blade components, Tailwind CSS 4 (semantic tokens, see DESIGN.md) |
+| Admin | Filament 5 |
+| Testing | Pest 4 / PHPUnit 12 |
 | Database | MySQL (production), SQLite (testing) |
 | API | Laravel Sanctum, REST JSON endpoints |
 | i18n | 24 EU languages, DeepL API integration |
 | SEO | Spatie Sitemap, hreflang, `llms.txt`, structured data |
-| Deploy | Laravel Forge, Vite 5 |
+| Deploy | Laravel Forge, Vite 8 |
 | Monitoring | Laravel Pulse |
 
 ## Architecture
@@ -26,7 +26,7 @@ EU VAT Info (`eu-vat.info`) is a Laravel 11 web application providing comprehens
 ```
 app/
 ├── Console/Commands/          # Artisan commands
-├── Filament/                  # Admin panel (Filament 3)
+├── Filament/                  # Admin panel (Filament 5)
 │   ├── Pages/                 # Dashboard
 │   ├── Resources/             # Country, Analytics, Banner resources
 │   └── Widgets/               # Admin dashboard widgets
@@ -38,7 +38,8 @@ app/
 ├── Livewire/                  # 18 reactive components (core UI)
 ├── Models/                    # 10 Eloquent models
 ├── Providers/                 # Service providers
-├── Services/                  # 4 business logic services
+├── Services/                  # Business logic services
+├── Support/                   # VAT maths (Support/Vat), SiteNavigation, EuropeMapSvg
 ├── Traits/                    # HasAnalytics, TracksCountryViews
 ├── View/                      # View composers
 └── helpers.php                # 4 global helper functions
@@ -51,6 +52,8 @@ resources/
 ├── css/                       # Tailwind source
 └── js/                        # Alpine.js / app scripts
 lang/                          # 24 language directories (bg, cs, da, de, el, en, es, et, fi, fr, ga, hr, hu, it, lt, lv, mt, nl, pl, pt, ro, sk, sl, sv)
+public/
+└── v1/                        # Frozen static archive of the site before the 5.0 redesign (never edit)
 routes/
 ├── web.php                    # Localised routes (/{locale}/path)
 ├── api.php                    # REST API endpoints
@@ -76,16 +79,16 @@ routes/
 
 | Component | Route | Purpose |
 |-----------|-------|---------|
-| `Home` | `/` | Landing page with country grid |
-| `CountryPage` | `/country/{slug}/{tab?}` | Country detail with tabs (overview, calculator, validator, history, guide) |
-| `VatCalculator` | `/vat-calculator/{slug?}` | Full VAT calculator with URL params |
-| `VatValidator` | — | VIES VAT number validation |
-| `VatMap` | `/vat-map` | Interactive Europe map |
-| `VatChangesHistory` | `/vat-changes` | Timeline of VAT rate changes |
+| `Home` | `/` | Landing page: hero calculator, rates table, map card |
+| `HeroCalculator` | embedded | The calculator (country page, generic page, home, embed widget) |
+| `VatCalculator` | `/vat-calculator/{slug?}` | Calculator pages; `?amount=&rate=&mode=` prefills |
+| `ViesValidatorPage` | `/vat-number-validator/{slug?}` | VIES VAT number validation |
+| `VatMap` | `/vat-map` | Accessible Europe choropleth and ranked table |
+| `VatChangesHistory` | `/vat-changes` | Filterable timeline of VAT rate changes |
+| `SharedCalculation` | `/vat-calculation/{country}/{amount}/{rate}/{mode}` | Shareable result pages (noindex) |
+| `TopCalculations` | `/top-vat-calculations/{amount?}` | Common amounts for every EU country |
+| `VatComparison` | `/compare/{a}-vs-{b}-vat` | Approved country comparisons |
 | `HtmlSitemap` | `/sitemap` | HTML sitemap for SEO |
-| `EuropeMap` | embedded | SVG interactive map component |
-| `VatRateHistoryChart` | embedded | Chart.js rate history |
-| `VatCalculatorSimple` | embedded | Simplified calculator widget |
 
 ### Services
 
@@ -108,11 +111,18 @@ routes/
 ### API Endpoints
 
 ```
-GET  /api/countries              # All countries (cached 600s)
-GET  /api/countries/{slug}       # Single country
-POST /api/vat/validate           # Validate VAT number
-POST /api/vat/validate/batch     # Batch validate (max 10)
-GET  /api/health                 # Health check
+GET  /api/v1/countries                # All countries with every rate type
+GET  /api/v1/countries/{slug}         # Single country (slug or ISO code)
+GET  /api/v1/calculate                # VAT calculation (amount, country, rate_type, mode)
+POST /api/v1/validate                 # VIES validation
+GET  /api/v1/openapi.json             # OpenAPI description of v1
+GET  /api/countries                   # All countries (cached 600s)
+GET  /api/countries/{slug}            # Single country
+POST /api/vat/validation/validate     # Validate VAT number
+POST /api/vat/validation/batch        # Batch validate (max 10)
+GET  /api/vat/validation/health       # VIES service health
+POST /api/mcp                         # MCP server (JSON-RPC)
+GET  /up                              # Application health check
 ```
 
 ## Key Conventions
@@ -132,20 +142,30 @@ GET  /api/health                 # Health check
 - Languages without DeepL: `ga` (Irish), `hr` (Croatian), `mt` (Maltese)
 
 ### Frontend
-- All interactive UI uses **Livewire 3 components** — no SPA framework
-- Styling: **Tailwind CSS 3** + **DaisyUI 4** (custom theme `mytheme`) + **MaryUI** components
-- Dark mode: class-based (`darkMode: 'class'`)
-- Icons: Blade Feather Icons
-- Charts: Chart.js (via Livewire)
+- **Read `DESIGN.md` before any UI change.** It is the design system and styleguide (tokens, brand surfaces, component recipes, patterns, accessibility rules). `tests/Feature/DesignSystemTest.php` enforces it, and `.claude/skills/design-system` loads it for Claude Code.
+- Interactive UI uses **Livewire 4** components with **Alpine.js** (`resources/js/app.js`) for instant client-side feedback — no SPA framework
+- Styling: **Tailwind CSS 4** with semantic OKLCH tokens and `app-*` component classes in `resources/css/app.css`; no component library
+- Look: solid and institutional — flat EU navy (`brand`) for header, heroes and footer, EU gold only as a thin accent on navy, opaque white surfaces with hairline borders; no glass, blur or decorative gradients
+- Shape: `rounded-control` (4px), `rounded-card` (6px), `rounded-panel` (8px); no pill buttons, chips or badges (`rounded-full` is for dots and spinners)
+- Dark mode: class-based (`.dark` on `<html>`), driven by the tokens — do not add `dark:` variants, raw palette colours, literal colours or default `shadow-*` utilities
+- Icons: `<x-ui.icon name="…">` (inline Lucide paths); flags: `<x-ui.flag :iso="…">` (local SVGs); pagination: return `'pagination.livewire'` from `paginationView()`
+- VAT maths: `App\Support\Vat` (PHP) mirrored by `resources/js/vat.js`; keep both in sync
+- Structured data: `<x-json-ld :data="[…]">` (never write `@context` in Blade)
+
+### Site archive (`/v1`)
+- `public/v1/` is a frozen, static English snapshot of the site as it was before the 5.0 redesign (`main` at `d1670fc`, captured on 29 September 2026). The web server serves its 246 pages directly as `…/index.html`; no Laravel route is involved, so never add a `v1` route.
+- Each page is `noindex, nofollow`, shows the archive bar (`public/v1/archive.css`) and loads `public/v1/archive.js`, which answers the old Livewire 3 runtime in the browser: calculations work, picking a calculator country opens that country's archived page, and server actions (VIES checks, filters, sign-ups) show a read-only notice instead of calling a server.
+- Links to pages that were not archived (other languages, shared calculations, the API) point to the live site. The footer ("Previous version") and the changelog link to `/v1/`.
+- It sits outside the design system: do not edit, restyle or reformat it. `tests/Feature/SiteArchiveTest.php` guards that it stays complete, unindexed, self-contained and free of server calls.
 
 ### Testing
-- Framework: **Pest 2** (preferred) with PHPUnit 10 underneath
+- Framework: **Pest 4** (preferred) with PHPUnit 12 underneath
 - Test location: `tests/Feature/` and `tests/Unit/`
 - Run tests: `php artisan test` or `./vendor/bin/pest`
 - Lint: `./vendor/bin/pint` (Laravel Pint)
 
 ### Admin Panel
-- **Filament 3** at `/admin`
+- **Filament 5** at `/admin`
 - Resources: Country, CountryAnalytic, Banner
 - Widgets: Dashboard stats, charts
 - Auditing: `owen-it/laravel-auditing` on Country model
@@ -157,8 +177,8 @@ GET  /api/health                 # Health check
 ```bash
 # Development
 php artisan serve                    # Start dev server
-npm run dev                          # Vite HMR
-npm run build                        # Production build
+yarn dev                             # Vite HMR
+yarn build                           # Production build
 
 # Testing
 php artisan test                     # Run all tests

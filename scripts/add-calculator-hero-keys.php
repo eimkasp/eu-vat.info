@@ -4,8 +4,7 @@
  * Add new calculator hero keys and trust section to all language files.
  * Run: php scripts/add-calculator-hero-keys.php
  */
-
-$basePath = dirname(__DIR__) . '/lang';
+$basePath = dirname(__DIR__).'/lang';
 
 $translations = [
     'bg' => [
@@ -890,8 +889,9 @@ $errors = [];
 foreach ($translations as $locale => $data) {
     $filePath = "$basePath/$locale/ui.php";
 
-    if (!file_exists($filePath)) {
+    if (! file_exists($filePath)) {
         $errors[] = "File not found: $filePath";
+
         continue;
     }
 
@@ -934,7 +934,7 @@ foreach ($translations as $locale => $data) {
             $escaped = str_replace("'", "\\'", $value);
             $trustLines[] = "    '$key' => '$escaped',";
         }
-        $trustLines[] = "  ),";
+        $trustLines[] = '  ),';
         $trustBlock = implode("\n", $trustLines);
 
         // Insert before 'map' section

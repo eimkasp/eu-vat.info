@@ -1,19 +1,23 @@
-{{-- Sidebar: VAT changes, banners, links, recent countries, map --}}
-<aside class="space-y-5" aria-label="VAT updates and resources">
-    <!-- VAT Rate Changes Widget -->
+<aside class="space-y-5" aria-label="{{ __('ui.home_page.sidebar_label') }}">
     <livewire:vat-rate-changes />
 
-    <!-- Sidebar Banners -->
     <x-banner-display position="sidebar" />
 
-    <!-- Useful Links Widget -->
-    <x-useful-vat-links />
+    <livewire:recent-countries />
 
-    <!-- Recent Countries & Map -->
-    <div class="space-y-5">
-        <livewire:recent-countries />
-        <div class="app-surface p-4 sm:p-5">
-            <livewire:europe-map />
+    <section class="app-surface overflow-hidden" aria-labelledby="map-card-heading">
+        <div class="bg-brand px-5 pb-5 pt-6 text-white">
+            <x-ui.icon name="map" class="size-6 text-gold" />
+            <h2 id="map-card-heading" class="mt-3 text-base font-bold text-white">{{ __('ui.home_page.map_card_title') }}</h2>
+            <p class="mt-1 text-sm leading-6 text-white/75">{{ __('ui.home_page.map_card_text') }}</p>
         </div>
-    </div>
+        <div class="p-3">
+            <a href="{{ locale_path('/vat-map') }}" class="app-button-secondary w-full">
+                {{ __('ui.rate_changes.explore_map') }}
+                <x-ui.icon name="arrow-right" class="size-4" />
+            </a>
+        </div>
+    </section>
+
+    <x-useful-vat-links />
 </aside>

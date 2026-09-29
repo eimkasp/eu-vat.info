@@ -72,7 +72,7 @@ it('streams an EU-only CSV distribution', function () {
 
     $content = $response->streamedContent();
     expect($content)
-        ->toContain('country,iso_code,standard_rate,reduced_rate,super_reduced_rate,parking_rate,currency_code,last_updated')
+        ->toContain('country,iso_code,standard_rate,reduced_rate,super_reduced_rate,parking_rate,currency_code,last_updated,reduced_rates')
         ->toContain('Germany,DE,19')
         ->not->toContain('Switzerland');
 });

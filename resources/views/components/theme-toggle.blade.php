@@ -1,0 +1,25 @@
+@props(['withLabel' => false])
+
+@php
+    $labels = [
+        'system' => __('ui.theme.system'),
+        'light' => __('ui.theme.light'),
+        'dark' => __('ui.theme.dark'),
+    ];
+@endphp
+
+<button
+    type="button"
+    x-data="{ labels: @js($labels) }"
+    @click="$store.theme.cycle()"
+    :title="@js(__('ui.theme.label')) + ': ' + labels[$store.theme.mode]"
+    :aria-label="@js(__('ui.theme.toggle')) + ' (' + labels[$store.theme.mode] + ')'"
+    {{ $attributes->merge(['class' => 'h-10 items-center justify-center gap-2 rounded-control px-2.5 text-sm font-medium text-white/85 transition-colors hover:bg-white/10 hover:text-white '.($withLabel ? 'inline-flex' : 'min-w-10')]) }}
+>
+    <x-ui.icon name="monitor" class="size-[1.125rem]" x-show="$store.theme.mode === 'system'" />
+    <x-ui.icon name="sun" class="size-[1.125rem]" x-show="$store.theme.mode === 'light'" x-cloak />
+    <x-ui.icon name="moon" class="size-[1.125rem]" x-show="$store.theme.mode === 'dark'" x-cloak />
+    @if($withLabel)
+        <span x-text="labels[$store.theme.mode]">{{ $labels['system'] }}</span>
+    @endif
+</button>
