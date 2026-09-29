@@ -52,7 +52,7 @@
 
     <div class="app-container space-y-12 py-10 sm:py-12">
         <section aria-labelledby="core-tools">
-            <h2 id="core-tools" class="text-sm font-semibold text-ink-muted">{{ __('ui.tools.core_heading') }}</h2>
+            <h2 id="core-tools" class="app-eyebrow">{{ __('ui.tools.core_heading') }}</h2>
             <div class="mt-4 grid gap-5 md:grid-cols-2">
                 @foreach($featured as $tool)
                     <a href="{{ $tool['url'] }}" class="group app-surface flex flex-col p-6 transition-[border-color,box-shadow] duration-200 hover:border-action/40 hover:shadow-workflow sm:p-7">
@@ -81,7 +81,7 @@
         </section>
 
         <section aria-labelledby="more-tools">
-            <h2 id="more-tools" class="text-sm font-semibold text-ink-muted">{{ __('ui.tools.more_heading') }}</h2>
+            <h2 id="more-tools" class="app-eyebrow">{{ __('ui.tools.more_heading') }}</h2>
             <div class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 @foreach($more as $tool)
                     <a href="{{ $tool['url'] }}" class="group app-surface flex gap-4 p-5 transition-[border-color,box-shadow] duration-200 hover:border-action/40 hover:shadow-workflow">
@@ -107,13 +107,13 @@
                     <p class="mt-1.5 max-w-xl text-sm leading-6 text-white/80">{{ __('ui.tools.cta_desc') }}</p>
                 </div>
                 <div class="flex shrink-0 flex-wrap gap-3">
-                    <a href="{{ locale_path('/vat-validation-api') }}" class="app-button-secondary border-transparent">
+                    <a href="{{ locale_path('/vat-validation-api') }}" class="app-button-inverse">
                         <x-ui.icon name="code" class="size-4" />
                         {{ __('ui.tools.cta_api') }}
                     </a>
-                    <a href="{{ locale_path('/vat-number-validator') }}" class="inline-flex min-h-11 items-center gap-2 rounded-control border border-white/25 bg-white/10 px-5 text-sm font-semibold text-white transition-colors hover:bg-white/20">
-                        <x-ui.icon name="shield-check" class="size-4" />
-                        {{ __('ui.nav.vat_number_validator') }}
+                    <a href="{{ locale_path('/datasets/eu-vat-rates') }}" class="app-button-on-brand">
+                        <x-ui.icon name="database" class="size-4" />
+                        {{ __('ui.nav.dataset') }}
                     </a>
                 </div>
             </div>

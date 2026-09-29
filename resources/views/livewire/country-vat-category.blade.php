@@ -10,7 +10,7 @@
 @section('seo')
     <x-seo-meta
         :title="$title.' — Verified Rate and Source'"
-        :description="'The verified '.$rule->category_name.' VAT rate in '.$country->name.' is '.number_format((float) $rule->rate, 2).'%. Review its classification, effective period and source.'"
+        :description="'The verified '.$rule->category_name.' VAT rate in '.$country->name.' is '.\App\Models\Country::formatRate($rule->rate).'%. Review its classification, effective period and source.'"
         :url="$canonical">
         <script type="application/ld+json">{!! json_encode([
             '@@context' => 'https://schema.org',
@@ -46,66 +46,86 @@
     </x-seo-meta>
 @endsection
 
-<div class="app-container pb-14 pt-8 sm:pt-12">
-    <x-site-breadcrumbs :items="[$country->name.' VAT calculator' => locale_path('/vat-calculator/'.$country->slug), $rule->category_name => '']" />
+<div>
+    <x-page-header
+        :title="$title"
+        :description="'A source-backed reference for the currently published '.strtolower($rule->category_name).' classification in '.$country->name.'.'"
+        eyebrow="Verified country rule"
+        :breadcrumbs="[$country->name.' VAT calculator' => locale_path('/vat-calculator/'.$country->slug), $rule->category_name => '']"
+    />
 
-    <header class="max-w-4xl border-b border-line pb-8">
-        <div class="flex items-center gap-3">
-            <x-ui.flag :iso="$country->iso_code" size="xl" :lazy="false" class="h-7 w-10" />
-            <p class="text-sm font-semibold text-action">Verified country rule</p>
-        </div>
-        <h1 class="mt-4 text-3xl font-bold tracking-tight text-ink sm:text-4xl">{{ $title }}</h1>
-        <p class="mt-4 max-w-3xl text-lg text-ink-muted">A source-backed reference for the currently published {{ strtolower($rule->category_name) }} classification in {{ $country->name }}.</p>
-    </header>
-
-    <div class="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_320px]">
-        <div>
-            <dl class="divide-y divide-line border-y border-line">
-                <div class="grid gap-2 py-5 sm:grid-cols-[180px_minmax(0,1fr)] sm:items-baseline">
-                    <dt class="text-sm font-semibold text-ink-muted">VAT rate</dt>
-                    <dd class="text-3xl font-bold tabular-nums text-ink">{{ number_format((float) $rule->rate, 2) }}%</dd>
-                </div>
-                <div class="grid gap-2 py-5 sm:grid-cols-[180px_minmax(0,1fr)]">
-                    <dt class="text-sm font-semibold text-ink-muted">Classification</dt>
-                    <dd class="font-semibold text-ink">{{ str($rule->rate_type)->replace('_', ' ')->title() }} rate</dd>
-                </div>
-                <div class="grid gap-2 py-5 sm:grid-cols-[180px_minmax(0,1fr)]">
-                    <dt class="text-sm font-semibold text-ink-muted">Effective period</dt>
-                    <dd class="text-ink">{{ $rule->effective_from?->format('F j, Y') ?? 'Start date not specified' }} – {{ $rule->effective_to?->format('F j, Y') ?? 'Current' }}</dd>
-                </div>
-                @if($rule->legal_basis)
-                    <div class="grid gap-2 py-5 sm:grid-cols-[180px_minmax(0,1fr)]">
-                        <dt class="text-sm font-semibold text-ink-muted">Legal basis</dt>
-                        <dd class="max-w-2xl leading-7 text-ink">{{ $rule->legal_basis }}</dd>
+    <div class="app-container space-y-6 py-8 sm:py-10">
+        <div class="grid grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(0,1fr)_20rem]">
+            <div class="min-w-0 space-y-6">
+                <section class="app-surface overflow-hidden" aria-label="{{ $title }}">
+                    <div class="flex items-center gap-4 border-b border-line p-5 sm:p-6">
+                        <x-ui.flag :iso="$country->iso_code" size="xl" :lazy="false" />
+                        <div>
+                            <p class="text-[0.8125rem] font-semibold text-ink-muted">VAT rate</p>
+                            <p class="tabular text-4xl font-bold tracking-[-0.03em] text-ink">{{ \App\Models\Country::formatRate($rule->rate) }}%</p>
+                        </div>
                     </div>
-                @endif
-            </dl>
+                    <dl class="divide-y divide-line text-sm">
+                        <div class="grid gap-1 px-5 py-3.5 sm:grid-cols-[11rem_minmax(0,1fr)] sm:px-6">
+                            <dt class="text-ink-muted">Classification</dt>
+                            <dd class="font-semibold text-ink">{{ str($rule->rate_type)->replace('_', '-')->ucfirst() }} rate</dd>
+                        </div>
+                        <div class="grid gap-1 px-5 py-3.5 sm:grid-cols-[11rem_minmax(0,1fr)] sm:px-6">
+                            <dt class="text-ink-muted">Effective period</dt>
+                            <dd class="tabular text-ink">{{ $rule->effective_from?->format('j F Y') ?? 'Start date not specified' }} – {{ $rule->effective_to?->format('j F Y') ?? 'Current' }}</dd>
+                        </div>
+                        @if($rule->legal_basis)
+                            <div class="grid gap-1 px-5 py-3.5 sm:grid-cols-[11rem_minmax(0,1fr)] sm:px-6">
+                                <dt class="text-ink-muted">Legal basis</dt>
+                                <dd class="max-w-2xl leading-6 text-ink">{{ $rule->legal_basis }}</dd>
+                            </div>
+                        @endif
+                    </dl>
+                </section>
 
-            <div class="mt-8 flex flex-wrap gap-x-5 gap-y-3 text-sm font-semibold">
-                <a class="text-action hover:underline" href="{{ locale_path('/vat-calculator/'.$country->slug) }}">Calculate {{ $country->name }} VAT</a>
-                @if($categoryHubAvailable)
-                    <a class="text-action hover:underline" href="{{ locale_path('/vat-rates/categories/'.$rule->category_slug) }}">Compare {{ strtolower($rule->category_name) }} rates</a>
-                @endif
-                @if($country->hasVatHistory())
-                    <a class="text-action hover:underline" href="{{ locale_path('/vat-rates/'.$country->slug.'/history') }}">View rate history</a>
-                @endif
+                <nav class="flex flex-wrap gap-2" aria-label="Related pages">
+                    <a class="app-button-secondary" href="{{ locale_path('/vat-calculator/'.$country->slug) }}">
+                        <x-ui.icon name="calculator" class="size-4" />
+                        Calculate {{ $country->name }} VAT
+                    </a>
+                    @if($categoryHubAvailable)
+                        <a class="app-button-secondary" href="{{ locale_path('/vat-rates/categories/'.$rule->category_slug) }}">
+                            <x-ui.icon name="grid" class="size-4" />
+                            Compare {{ strtolower($rule->category_name) }} rates
+                        </a>
+                    @endif
+                    @if($country->hasVatHistory())
+                        <a class="app-button-secondary" href="{{ locale_path('/vat-rates/'.$country->slug.'/history') }}">
+                            <x-ui.icon name="history" class="size-4" />
+                            View rate history
+                        </a>
+                    @endif
+                </nav>
             </div>
+
+            <aside class="app-surface p-5 lg:sticky lg:top-24">
+                <h2 class="text-base font-bold text-ink">Source and verification</h2>
+                <dl class="mt-3 divide-y divide-line border-t border-line text-sm">
+                    <div class="flex justify-between gap-4 py-2.5">
+                        <dt class="text-ink-muted">Verified</dt>
+                        <dd class="tabular font-semibold text-ink">{{ $rule->verified_at->format('j F Y') }}</dd>
+                    </div>
+                    <div class="flex justify-between gap-4 py-2.5">
+                        <dt class="text-ink-muted">Recorded source</dt>
+                        <dd>
+                            <a class="inline-flex items-center gap-1 font-semibold text-action hover:text-action-deep hover:underline" href="{{ $rule->source_url }}" rel="noopener">
+                                Official source
+                                <x-ui.icon name="arrow-up-right" class="size-3.5" />
+                            </a>
+                        </dd>
+                    </div>
+                </dl>
+            </aside>
         </div>
 
-        <aside class="app-surface p-5">
-            <h2 class="text-lg font-bold text-ink">Source and verification</h2>
-            <dl class="mt-4 space-y-4 text-sm">
-                <div>
-                    <dt class="font-semibold text-ink">Verified</dt>
-                    <dd class="mt-1 text-ink-muted">{{ $rule->verified_at->format('F j, Y') }}</dd>
-                </div>
-                <div>
-                    <dt class="font-semibold text-ink">Recorded source</dt>
-                    <dd class="mt-1"><a class="font-semibold text-action hover:underline" href="{{ $rule->source_url }}" rel="noopener">Official source ↗</a></dd>
-                </div>
-            </dl>
-        </aside>
+        <p class="app-note">
+            <x-ui.icon name="info" class="mt-1 size-4 text-action" />
+            <span>This page is a data reference, not transaction-specific tax advice. The applicable treatment can depend on precise product classification, customer status, place of supply, exemptions and current national guidance.</span>
+        </p>
     </div>
-
-    <p class="mt-10 max-w-3xl text-sm leading-6 text-ink-muted">This page is a data reference, not transaction-specific tax advice. The applicable treatment can depend on precise product classification, customer status, place of supply, exemptions and current national guidance.</p>
 </div>

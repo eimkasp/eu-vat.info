@@ -142,6 +142,8 @@ Inter Variable is self-hosted with the optical-size axis, so large text automati
 
 Headings are always one solid colour: never highlight words in a headline. Use `tabular` for every figure that can change or be compared: rates, money, counts, dates in tables.
 
+Write interface text in sentence case: headings, buttons, labels, menus and table heads capitalise only the first word and proper nouns (EU, VAT, VIES, country names, EU VAT Info). Rates drop trailing zeros (`19%`, `5.5%`) through `Country::formatRate` or `Money::percent`, and dates read day first (`1 Aug 2025`, `1 August 2025`).
+
 ### Shape
 
 | Token | Utility | Size | Use |
@@ -180,7 +182,7 @@ Enter popovers with `x-transition:enter="transition duration-150 ease-out-quint"
 - Section rhythm: `py-8 sm:py-10` between content sections, `pb-12 sm:pb-16` at the bottom of heroes.
 - Grids start from one column (`grid grid-cols-1 md:grid-cols-2`). A grid without a base `grid-cols-*` can overflow on phones.
 - Wrap wide tables in `relative overflow-x-auto`. No page may scroll horizontally at 320px.
-- `mobile-nav-safe` on `<main>` reserves the height of the mobile tab bar on phones.
+- `mobile-nav-safe` on the footer reserves the height of the mobile tab bar on phones, so the end of every page scrolls clear of it.
 - A card that holds a sticky bar uses `overflow-clip`, not `overflow-hidden`, so the bar can stick to the viewport.
 
 ## Components
@@ -354,7 +356,7 @@ Two equal segments on a bordered `surface-muted` track; the white thumb slides i
 
 **Need a colour that does not exist.** Add a semantic `--ui-*` token with a light and a dark value in `app.css`, expose it in `@theme inline`, check AA contrast in both themes, and add a row to the colour table.
 
-**Migrate a legacy page.** Replace inline SVGs with `<x-ui.icon>` and remove the file from `LEGACY_INLINE_SVG_VIEWS` in the design test. The list may only shrink.
+**Need an icon that does not exist.** Copy the Lucide path into `components/ui/icon.blade.php` in alphabetical order; never paste an inline `<svg>` into a template.
 
 ## Enforcement
 
@@ -370,7 +372,7 @@ Two equal segments on a bordered `surface-muted` track; the white thumb slides i
 8. makes a pill (`rounded-full` together with horizontal padding);
 9. writes an unescaped `@context` outside a PHP block;
 10. has an `<img>` without `alt`;
-11. adds inline `<svg>` outside the icon and logo components and the shrinking legacy list;
+11. adds inline `<svg>` outside the icon and logo components;
 12. or when a token, utility or component class in `app.css` is missing from this file.
 
 Also run an automated accessibility check on the pages you changed. The project was verified with axe-core (WCAG 2.2 A/AA) in both themes and with a horizontal-overflow check at 320px and 390px.

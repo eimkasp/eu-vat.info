@@ -59,23 +59,27 @@
     <x-page-header :title="__('ui.sitemap.title')" :description="__('ui.sitemap.subtitle')" :breadcrumbs="[__('ui.breadcrumbs.sitemap') => '']" />
 
     <div class="app-container space-y-12 py-8 sm:py-10">
-        <div class="grid gap-6 lg:grid-cols-3">
-            @foreach($sections as $key => $section)
-                <section class="app-surface p-5 sm:p-6" aria-labelledby="sitemap-{{ $key }}">
-                    <h2 id="sitemap-{{ $key }}" class="flex items-center gap-2 text-lg font-bold text-ink">
-                        <x-ui.icon :name="$section['icon']" class="size-5 text-action" />
-                        {{ $section['title'] }}
-                    </h2>
-                    <ul class="mt-4 space-y-4">
-                        @foreach($section['links'] as [$label, $url, $description])
-                            @php($external = str_starts_with($url, 'http') && ! str_starts_with($url, url('/')))
-                            <li>
-                                <a href="{{ $url }}" @if($external) target="_blank" rel="noopener noreferrer" @endif class="font-semibold text-action hover:text-action-deep hover:underline">{{ $label }}<x-ui.icon :name="$external ? 'arrow-up-right' : 'chevron-right'" class="ml-1 inline size-3.5 align-[-2px]" /></a>
-                                <p class="mt-0.5 text-sm leading-6 text-ink-muted">{{ $description }}</p>
-                            </li>
-                        @endforeach
-                    </ul>
-                </section>
+        <div class="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:items-start">
+            @foreach([Arr::only($sections, ['pages']), Arr::only($sections, ['developers', 'external'])] as $column)
+                <div class="space-y-6">
+                    @foreach($column as $key => $section)
+                        <section class="app-surface p-5 sm:p-6" aria-labelledby="sitemap-{{ $key }}">
+                            <h2 id="sitemap-{{ $key }}" class="flex items-center gap-2 text-lg font-bold text-ink">
+                                <x-ui.icon :name="$section['icon']" class="size-5 text-action" />
+                                {{ $section['title'] }}
+                            </h2>
+                            <ul class="mt-4 space-y-4">
+                                @foreach($section['links'] as [$label, $url, $description])
+                                    @php($external = str_starts_with($url, 'http') && ! str_starts_with($url, url('/')))
+                                    <li>
+                                        <a href="{{ $url }}" @if($external) target="_blank" rel="noopener noreferrer" @endif class="font-semibold text-action hover:text-action-deep hover:underline">{{ Str::contains($label, ' ') ? Str::beforeLast($label, ' ').' ' : '' }}<span class="whitespace-nowrap">{{ Str::afterLast($label, ' ') }}<x-ui.icon :name="$external ? 'arrow-up-right' : 'chevron-right'" class="ml-1 inline size-3.5 align-[-2px]" /></span></a>
+                                        <p class="mt-0.5 text-sm leading-6 text-ink-muted">{{ $description }}</p>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </section>
+                    @endforeach
+                </div>
             @endforeach
         </div>
 

@@ -35,8 +35,8 @@
 <div>
     <x-page-header :title="__('ui.changelog.heading')" :description="__('ui.changelog.subheading')" :eyebrow="__('ui.changelog.eyebrow')" :breadcrumbs="[__('ui.changelog.nav_label') => '']" />
 
-    <div class="app-container py-10 sm:py-12">
-        <div class="mx-auto max-w-3xl">
+    <div class="app-container py-8 sm:py-10">
+        <div class="max-w-3xl">
             @if(app()->getLocale() !== 'en')
                 <p class="mb-8 inline-flex items-center gap-2 text-sm text-ink-muted"><x-ui.icon name="languages" class="size-4" />{{ __('ui.changelog.english_only') }}</p>
             @endif
@@ -44,7 +44,7 @@
             @if(empty($releases))
                 <p class="app-surface p-10 text-center text-sm text-ink-muted">{{ __('ui.changelog.empty') }}</p>
             @else
-                <ol class="relative space-y-12 border-l border-line pl-8" lang="en">
+                <ol class="relative ml-2 space-y-12 border-l border-line pl-8" lang="en">
                     @foreach($releases as $release)
                         @php($unreleased = $release['version'] === 'Unreleased')
                         <li id="{{ $release['slug'] }}" class="relative scroll-mt-24">
@@ -81,7 +81,7 @@
                                                         @else
                                                             <li class="flex items-start gap-3 text-[0.9375rem] leading-7 text-ink-muted">
                                                                 <span class="mt-3 size-1 shrink-0 rounded-full bg-ink-quiet" aria-hidden="true"></span>
-                                                                <span class="[&_a]:text-action [&_a]:underline [&_code]:rounded [&_code]:bg-surface-muted [&_code]:px-1 [&_strong]:font-semibold [&_strong]:text-ink">{!! Str::inlineMarkdown($item['text'], ['html_input' => 'escape', 'allow_unsafe_links' => false]) !!}</span>
+                                                                <span class="[&_a]:text-action [&_a]:underline [&_code]:rounded-xs [&_code]:bg-surface-muted [&_code]:px-1 [&_strong]:font-semibold [&_strong]:text-ink">{!! Str::inlineMarkdown($item['text'], ['html_input' => 'escape', 'allow_unsafe_links' => false]) !!}</span>
                                                             </li>
                                                         @endif
                                                     @endforeach

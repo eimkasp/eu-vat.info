@@ -429,11 +429,13 @@
                             <li>
                                 <a
                                     href="{{ locale_path('/vat-number-validator/'.$option['slug']) }}"
+                                    title="{{ __('ui.vies_page.country_h1', ['country' => $option['name']]) }}"
+                                    aria-label="{{ __('ui.vies_page.country_h1', ['country' => $option['name']]) }}"
                                     @if($current) aria-current="page" @endif
                                     @class(['flex min-h-10 items-center gap-2.5 rounded-control px-2 text-[0.8125rem] transition-colors', 'bg-action-soft font-semibold text-action-deep' => $current, 'text-ink-muted hover:bg-surface-subtle hover:text-ink' => ! $current])
                                 >
                                     <x-ui.flag :iso="$option['iso']" size="xs" />
-                                    <span class="min-w-0 flex-1 truncate">{{ __('ui.vies_page.country_h1', ['country' => $option['name']]) }}</span>
+                                    <span class="min-w-0 flex-1 truncate">{{ $option['name'] }}</span>
                                     <span class="font-mono text-xs text-ink-quiet">{{ $option['prefix'] }}</span>
                                 </a>
                             </li>
@@ -449,7 +451,7 @@
                                 <span class="flex size-8 shrink-0 items-center justify-center rounded-control bg-action-soft text-action"><x-ui.icon name="calculator" class="size-4" /></span>
                                 <span class="min-w-0">
                                     <span class="block text-sm font-semibold text-ink">{{ __('ui.nav.vat_calculator') }}</span>
-                                    <span class="block text-xs leading-5 text-ink-muted">{{ __('ui.calculator.generic_subtitle') }}</span>
+                                    <span class="block text-xs leading-5 text-ink-muted">{{ __('ui.palette.calculator_subtitle') }}</span>
                                 </span>
                             </a>
                         </li>

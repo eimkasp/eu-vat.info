@@ -58,48 +58,78 @@
     </x-seo-meta>
 @endsection
 
-<div class="app-container pb-14 pt-8 sm:pt-12">
-    <x-site-breadcrumbs :items="['EU VAT rates dataset' => '']" />
+<div>
+    <x-page-header
+        title="EU VAT rates dataset"
+        :description="'Current VAT rate data for '.$countries->count().' EU member states, available in formats suited to analysis, integrations and research.'"
+        eyebrow="Open VAT data"
+        :breadcrumbs="['EU VAT rates dataset' => '']"
+    >
+        <x-slot:actions>
+            <span class="inline-flex items-center gap-2 rounded-control border border-line bg-surface-subtle px-3 py-1.5 text-sm text-ink-muted">
+                <x-ui.icon name="clock" class="size-4" />
+                <span>Last updated <time class="tabular" datetime="{{ $dateModified->toDateString() }}">{{ $dateModified->format('j M Y') }}</time></span>
+            </span>
+        </x-slot:actions>
+    </x-page-header>
 
-    <header class="max-w-3xl border-b border-line pb-8">
-        <p class="mb-3 text-sm font-semibold text-action">Open VAT data</p>
-        <h1 class="text-3xl font-bold tracking-tight text-ink sm:text-4xl">EU VAT rates dataset</h1>
-        <p class="mt-4 max-w-2xl text-lg text-ink-muted">
-            Current VAT rate data for {{ $countries->count() }} EU member states, available in formats suited to analysis, integrations and research.
-        </p>
-        <p class="mt-3 text-sm text-ink-muted">Last updated {{ $dateModified->format('F j, Y') }}.</p>
-    </header>
+    <div class="app-container py-8 sm:py-10">
+        <div class="grid grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(0,1fr)_20rem]">
+            <div class="min-w-0 space-y-8">
+                <section class="app-surface overflow-hidden" aria-labelledby="dataset-downloads">
+                    <h2 id="dataset-downloads" class="border-b border-line px-5 py-4 text-lg font-bold text-ink sm:px-6">Download the data</h2>
+                    <ul class="divide-y divide-line">
+                        @foreach([
+                            ['CSV', 'Spreadsheet and analysis workflows', '/datasets/eu-vat-rates.csv', 'Download', 'download', 'table'],
+                            ['JSON', 'Applications and data pipelines', '/datasets/eu-vat-rates.json', 'Open', 'arrow-right', 'braces'],
+                            ['Markdown', 'Research and language-model context', '/llms-full.txt', 'Open', 'arrow-right', 'file-text'],
+                        ] as [$format, $use, $href, $action, $actionIcon, $icon])
+                            <li class="flex items-center gap-4 px-5 py-4 sm:px-6">
+                                <span class="flex size-10 shrink-0 items-center justify-center rounded-control bg-action-soft text-action" aria-hidden="true">
+                                    <x-ui.icon :name="$icon" class="size-5" />
+                                </span>
+                                <span class="min-w-0 flex-1">
+                                    <span class="block font-semibold text-ink">{{ $format }}</span>
+                                    <span class="block text-sm text-ink-muted">{{ $use }}</span>
+                                </span>
+                                <a href="{{ $href }}" class="app-button-secondary h-10 min-h-10 shrink-0 px-4" aria-label="{{ $action }} the {{ $format }} file">
+                                    {{ $action }}
+                                    <x-ui.icon :name="$actionIcon" class="size-4" />
+                                </a>
+                            </li>
+                        @endforeach
+                    </ul>
+                </section>
 
-    <div class="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_320px]">
-        <section aria-labelledby="dataset-downloads">
-            <h2 id="dataset-downloads" class="text-2xl font-bold text-ink">Download the data</h2>
-            <div class="mt-4 divide-y divide-line border-y border-line">
-                <a href="/datasets/eu-vat-rates.csv" class="flex min-h-16 items-center justify-between gap-4 py-4 text-ink hover:text-action">
-                    <span><strong class="block">CSV</strong><span class="text-sm text-ink-muted">Spreadsheet and analysis workflows</span></span>
-                    <span aria-hidden="true">Download →</span>
-                </a>
-                <a href="/datasets/eu-vat-rates.json" class="flex min-h-16 items-center justify-between gap-4 py-4 text-ink hover:text-action">
-                    <span><strong class="block">JSON API</strong><span class="text-sm text-ink-muted">Applications and data pipelines</span></span>
-                    <span aria-hidden="true">Open →</span>
-                </a>
-                <a href="/llms-full.txt" class="flex min-h-16 items-center justify-between gap-4 py-4 text-ink hover:text-action">
-                    <span><strong class="block">Markdown</strong><span class="text-sm text-ink-muted">Research and language-model context</span></span>
-                    <span aria-hidden="true">Open →</span>
-                </a>
+                <section class="app-surface p-5 sm:p-6" aria-labelledby="dataset-contents">
+                    <h2 id="dataset-contents" class="text-lg font-bold text-ink">What is included</h2>
+                    <p class="mt-2 max-w-[68ch] text-base leading-7 text-ink-muted">Each row includes the country, ISO code, standard rate, available reduced-rate fields, currency and record update time. Historical records are published separately through each country’s VAT history.</p>
+                    <p class="mt-4 flex flex-wrap gap-2">
+                        @foreach(['country', 'iso_code', 'standard_rate', 'reduced_rate', 'super_reduced_rate', 'parking_rate', 'currency_code', 'last_updated'] as $column)
+                            <code class="rounded-xs border border-line bg-surface-subtle px-1.5 py-0.5 font-mono text-xs text-ink-muted">{{ $column }}</code>
+                        @endforeach
+                    </p>
+                </section>
             </div>
 
-            <h2 class="mt-10 text-2xl font-bold text-ink">What is included</h2>
-            <p class="mt-3 max-w-3xl text-ink-muted">Each row includes the country, ISO code, standard rate, available reduced-rate fields, currency and record update time. Historical records are published separately through each country’s VAT history.</p>
-        </section>
-
-        <aside class="app-surface p-5">
-            <h2 class="text-lg font-bold text-ink">Provenance</h2>
-            <p class="mt-3 text-sm text-ink-muted">Rates are aggregated from European Commission material and the open VAT Rates dataset, then checked by the project’s data-integrity workflow.</p>
-            <dl class="mt-5 space-y-4 text-sm">
-                <div><dt class="font-semibold text-ink">Coverage</dt><dd class="text-ink-muted">European Union</dd></div>
-                <div><dt class="font-semibold text-ink">License</dt><dd><a class="text-action hover:underline" href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></dd></div>
-                <div><dt class="font-semibold text-ink">Member states</dt><dd class="text-ink-muted">{{ $countries->count() }}</dd></div>
-            </dl>
-        </aside>
+            <aside class="app-surface p-5 lg:sticky lg:top-24">
+                <h2 class="text-base font-bold text-ink">Provenance</h2>
+                <p class="mt-2 text-sm leading-6 text-ink-muted">Rates are aggregated from European Commission material and the open VAT Rates dataset, then checked by the project’s data-integrity workflow.</p>
+                <dl class="mt-4 divide-y divide-line border-t border-line text-sm">
+                    <div class="flex justify-between gap-4 py-2.5">
+                        <dt class="text-ink-muted">Coverage</dt>
+                        <dd class="font-semibold text-ink">European Union</dd>
+                    </div>
+                    <div class="flex justify-between gap-4 py-2.5">
+                        <dt class="text-ink-muted">Member states</dt>
+                        <dd class="tabular font-semibold text-ink">{{ $countries->count() }}</dd>
+                    </div>
+                    <div class="flex justify-between gap-4 py-2.5">
+                        <dt class="text-ink-muted">License</dt>
+                        <dd><a class="app-link font-semibold" href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></dd>
+                    </div>
+                </dl>
+            </aside>
+        </div>
     </div>
 </div>

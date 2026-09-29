@@ -19,7 +19,7 @@ it('has correct SEO meta on donate page', function () {
 it('shows x402 agent payment section', function () {
     $this->get('/donate')
         ->assertSuccessful()
-        ->assertSee('x402 Micropayment')
+        ->assertSee('x402 micropayment')
         ->assertSee('/api/x402/donate')
         ->assertSee('PAYMENT-SIGNATURE');
 });
@@ -60,7 +60,7 @@ it('includes donate link in footer', function () {
 it('shows x402 test connection section', function () {
     $this->get('/donate')
         ->assertSuccessful()
-        ->assertSee('Test x402 Connection')
-        ->assertSee('Test Connection')
+        ->assertSee('Test the x402 connection')
+        ->assertSee('Test connection')
         ->assertSee('curl -i');
 });

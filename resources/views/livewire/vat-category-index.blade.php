@@ -27,26 +27,33 @@
     </x-seo-meta>
 @endsection
 
-<div class="app-container pb-14 pt-8 sm:pt-12">
-    <x-site-breadcrumbs :items="['VAT rate categories' => '']" />
+<div>
+    <x-page-header
+        title="EU VAT rates by category"
+        description="Compare published category-specific VAT rules only where country coverage and source verification meet our indexing standard."
+        eyebrow="Verified category rules"
+        :breadcrumbs="['VAT rate categories' => '']"
+    />
 
-    <header class="max-w-3xl border-b border-line pb-8">
-        <p class="mb-3 text-sm font-semibold text-action">Verified category rules</p>
-        <h1 class="text-3xl font-bold tracking-tight text-ink sm:text-4xl">EU VAT rates by category</h1>
-        <p class="mt-4 max-w-2xl text-lg text-ink-muted">Compare published category-specific VAT rules only where country coverage and source verification meet our indexing standard.</p>
-    </header>
+    <div class="app-container space-y-6 py-8 sm:py-10">
+        <ul class="app-surface divide-y divide-line overflow-hidden">
+            @foreach($categories as $category)
+                <li>
+                    <a href="{{ locale_path('/vat-rates/categories/'.$category['slug']) }}" class="group flex items-center gap-4 px-5 py-4 transition-colors hover:bg-surface-subtle sm:px-6">
+                        <span class="min-w-0 flex-1">
+                            <span class="block font-semibold text-ink group-hover:text-action">{{ $category['name'] }}</span>
+                            <span class="tabular mt-0.5 block text-sm text-ink-muted">{{ $category['country_count'] }} EU countries · {{ \App\Models\Country::formatRate($category['minimum_rate']) }}–{{ \App\Models\Country::formatRate($category['maximum_rate']) }}%</span>
+                        </span>
+                        <span class="hidden text-sm font-semibold text-action sm:inline">Compare rates</span>
+                        <x-ui.icon name="chevron-right" class="size-4 text-ink-quiet group-hover:text-action" />
+                    </a>
+                </li>
+            @endforeach
+        </ul>
 
-    <div class="mt-8 divide-y divide-line border-y border-line">
-        @foreach($categories as $category)
-            <a href="{{ locale_path('/vat-rates/categories/'.$category['slug']) }}" class="grid gap-3 py-5 text-ink transition-colors hover:text-action sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
-                <span>
-                    <strong class="block text-lg">{{ $category['name'] }}</strong>
-                    <span class="mt-1 block text-sm text-ink-muted">{{ $category['country_count'] }} EU countries · {{ number_format($category['minimum_rate'], 2) }}–{{ number_format($category['maximum_rate'], 2) }}%</span>
-                </span>
-                <span class="text-sm font-semibold" aria-hidden="true">Compare rates →</span>
-            </a>
-        @endforeach
+        <p class="app-note">
+            <x-ui.icon name="info" class="mt-1 size-4 text-action" />
+            <span>Category treatment can depend on product definitions, transaction details and national law. Every published rule links to its recorded source and verification date.</span>
+        </p>
     </div>
-
-    <p class="mt-8 max-w-3xl text-sm leading-6 text-ink-muted">Category treatment can depend on product definitions, transaction details and national law. Every published rule links to its recorded source and verification date.</p>
 </div>

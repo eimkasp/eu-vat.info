@@ -55,12 +55,12 @@
     </div>
 
     <div class="relative overflow-x-auto">
-        <table class="app-table min-w-[34rem]">
+        <table class="app-table sm:min-w-[34rem]">
             <thead>
                 <tr>
                     <th scope="col" class="pl-5 sm:pl-6">{{ __('ui.home_page.th_country') }}</th>
                     <th scope="col">{{ __('ui.home_page.th_standard') }}</th>
-                    <th scope="col">{{ __('ui.home_page.th_reduced') }}</th>
+                    <th scope="col" class="hidden sm:table-cell">{{ __('ui.home_page.th_reduced') }}</th>
                     <th scope="col" class="pr-5 text-right sm:pr-6"><span class="sr-only">{{ __('ui.home_page.th_actions') }}</span></th>
                 </tr>
             </thead>
@@ -82,6 +82,17 @@
                                 <x-ui.flag :iso="$country->iso_code" size="md" />
                                 <span class="truncate">{{ $country->name }}</span>
                             </a>
+                            <div class="mb-1 flex flex-wrap items-center gap-1 pl-[2.125rem] sm:hidden">
+                                <span class="sr-only">{{ __('ui.home_page.th_reduced') }}:</span>
+                                @forelse($country->reducedRates() as $rate)
+                                    <span class="tabular rounded-control bg-surface-muted px-1.5 py-px text-[0.6875rem] font-semibold text-ink-muted">{{ Country::formatRate($rate) }}%</span>
+                                @empty
+                                    <span class="text-xs text-ink-quiet">—</span>
+                                @endforelse
+                                @if((float) $country->super_reduced_rate > 0)
+                                    <span class="tabular rounded-control border border-dashed border-line-strong px-1.5 text-[0.6875rem] font-medium text-ink-quiet" title="{{ __('ui.rate_type.super_reduced') }}">{{ Country::formatRate($country->super_reduced_rate) }}%</span>
+                                @endif
+                            </div>
                         </td>
                         <td>
                             <div class="flex items-center gap-3">
@@ -91,7 +102,7 @@
                                 </span>
                             </div>
                         </td>
-                        <td>
+                        <td class="hidden sm:table-cell">
                             <div class="flex flex-wrap items-center gap-1.5">
                                 @forelse($country->reducedRates() as $rate)
                                     <span class="tabular rounded-control bg-surface-muted px-2 py-0.5 text-xs font-semibold text-ink-muted">{{ Country::formatRate($rate) }}%</span>
@@ -119,12 +130,12 @@
     </p>
 
     <div class="flex flex-wrap items-center justify-between gap-2 border-t border-line bg-surface-subtle px-5 py-3 text-xs text-ink-muted sm:px-6">
-        <span class="inline-flex items-center gap-1.5">
+        <span class="hidden items-center gap-1.5 sm:inline-flex">
             <span class="inline-block h-1.5 w-4 rounded-xs bg-action" aria-hidden="true"></span>
             {{ __('ui.home_page.meter_legend', ['max' => Country::formatRate($maxRate)]) }}
         </span>
         <span class="inline-flex items-center gap-1.5">
-            <span class="inline-block rounded border border-dashed border-line-strong px-1" aria-hidden="true">%</span>
+            <span class="inline-block rounded-control border border-dashed border-line-strong px-1" aria-hidden="true">%</span>
             {{ __('ui.rate_type.super_reduced') }}
         </span>
     </div>

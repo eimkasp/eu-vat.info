@@ -15,8 +15,8 @@ it('loads vat-changes page with correct layout', function () {
     $this->get('/vat-changes')
         ->assertStatus(200)
         ->assertSee('VAT Rate Changes History')
-        ->assertSee('Country Stability Indicators')
-        ->assertSee('All Countries');
+        ->assertSee('Country stability')
+        ->assertSee('All countries');
 });
 
 it('vat-changes page shows country filter', function () {
@@ -24,9 +24,9 @@ it('vat-changes page shows country filter', function () {
 
     $this->get('/vat-changes')
         ->assertStatus(200)
-        ->assertSee('All Countries')
+        ->assertSee('All countries')
         ->assertSee('TestCountry')
-        ->assertSee('All Types')
+        ->assertSee('All types')
         ->assertSee('Standard');
 });
 
@@ -41,13 +41,13 @@ it('vat-changes page shows empty state when no changes', function () {
 it('header navigation includes vat history link', function () {
     $response = $this->get('/');
     $response->assertStatus(200);
-    expect($response->getContent())->toContain('VAT History');
+    expect($response->getContent())->toContain('VAT history');
 });
 
 it('homepage widget has full history link', function () {
     $response = $this->get('/');
     $response->assertStatus(200);
-    expect($response->getContent())->toContain('Full VAT History');
+    expect($response->getContent())->toContain('Full history');
 });
 
 // ── Data Refresh Jobs ──────────────────────────────────────────────────────
