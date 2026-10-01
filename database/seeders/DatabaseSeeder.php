@@ -14,5 +14,6 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(CountriesTableSeeder::class);
         $this->call(VatRateSeeder::class);
+        $this->call(VatChangeSeeder::class);
     }
 }

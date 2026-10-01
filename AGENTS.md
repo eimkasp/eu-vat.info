@@ -38,7 +38,7 @@ app/
 ├── Livewire/                  # 18 reactive components (core UI)
 ├── Models/                    # 10 Eloquent models
 ├── Providers/                 # Service providers
-├── Services/                  # Business logic services
+├── Services/                  # Business logic services (Services/VatChanges: change ledger, TEDB audit)
 ├── Support/                   # VAT maths (Support/Vat), SiteNavigation, EuropeMapSvg
 ├── Traits/                    # HasAnalytics, TracksCountryViews
 ├── View/                      # View composers
@@ -99,6 +99,8 @@ routes/
 | `ViesValidationService` | Multi-layer cache: Redis → DB → VIES API, fuzzy matching, confidence scoring |
 | `SitemapGenerator` | 24-language XML sitemap with locale alternates |
 | `TranslationService` | DeepL + DB + cache fallback chain |
+| `VatChanges\VatChangeImporter` | Publishes the enacted rows of `data/vat_changes.csv` to `vat_rate_changes` and `vat_rates` |
+| `VatChanges\RateAudit` | Compares stored rates with the European Commission's TEDB (`TedbClient`) |
 
 ### Jobs (Queue)
 
@@ -170,6 +172,13 @@ GET  /up                              # Application health check
 ### MCP server
 - `App\Support\Mcp\VatMcpServer` defines the public MCP server once: name, protocol versions, instructions, rate limits and every tool with its schema and annotations. `Api\McpController` serves it at `POST /api/mcp` (Streamable HTTP, stateless JSON, `throttle:mcp`).
 - The MCP server card, the OAuth protected-resource metadata, `llms.txt` and the `/mcp-server` page all read from it, so a new tool needs three changes only: its definition in `VatMcpServer::tools()`, its handler in `McpController`, and its page copy under `ui.mcp_page.tools` in all 24 locales. `tests/Feature/McpServerTest.php` checks that they stay in step.
+
+### VAT change tracking
+- `data/vat_changes.csv` is the reviewed, sourced ledger of VAT rate changes (columns, rules and the weekly review are in `docs/vat-change-updates.md`; the `vat-change-update` skill carries the procedure). `LedgerReader` validates it strictly; `VatChangeImporter` publishes the `enacted` rows (`announced` rows are a watchlist) and is idempotent, keyed by country, rate type and effective date.
+- `vat-changes:import` runs daily 03:30 (`--notify` leaves new rows for the 05:00 subscriber alert; the migration and `VatChangeSeeder` import silently), `vat-changes:audit` runs Mondays 06:00 and exits 1 when stored rates differ from TEDB (`VAT_CHANGES_ALERT_EMAIL` receives the output of a failed import or an audit with differences).
+- `data/vat_rates.csv` is downloaded every Monday; never edit it. Rows curated from official sources keep their `source`, and `GenerateVatRateChanges` skips events the ledger already covers.
+- `countries.reduced_rate` is an editorial list. Correct it in Filament or with a guarded data migration modelled on `2026_10_01_000000_apply_verified_vat_changes.php`; the audit tells you when it drifts.
+- `tests/Feature/VatChangeLedgerTest.php` keeps the committed ledger valid and every `source_url` on an official publisher listed in `config/vat-changes.php`.
 
 ### Testing
 - Framework: **Pest 4** (preferred) with PHPUnit 12 underneath

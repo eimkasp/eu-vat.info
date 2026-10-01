@@ -14,8 +14,11 @@ class VatRateSeeder extends Seeder
      */
     private const ALIASES = ['EL' => 'GR', 'UK' => 'GB'];
 
+    public const SOURCE = 'kdeldycke/vat-rates';
+
     /**
-     * Imports data/vat_rates.csv. Safe to re-run: rows are keyed by country, type and start date.
+     * Imports data/vat_rates.csv. Safe to re-run: rows are keyed by country, type and start date,
+     * and rows curated from official sources (see vat-changes:import) are left as they are.
      */
     public function run(): void
     {
@@ -43,7 +46,7 @@ class VatRateSeeder extends Seeder
             $values = [
                 'rate' => round((float) $record['rate'] * 100, 2),
                 'effective_to' => $record['stop_date'] ?: null,
-                'source' => 'kdeldycke/vat-rates',
+                'source' => self::SOURCE,
             ];
 
             $existing = VatRate::query()
@@ -52,9 +55,11 @@ class VatRateSeeder extends Seeder
                 ->whereDate('effective_from', $record['start_date'])
                 ->first();
 
-            $existing
-                ? $existing->update($values)
-                : VatRate::create(['country_id' => $countryId, 'type' => $type, 'effective_from' => $record['start_date']] + $values);
+            if ($existing === null) {
+                VatRate::create(['country_id' => $countryId, 'type' => $type, 'effective_from' => $record['start_date']] + $values);
+            } elseif ($existing->source === self::SOURCE) {
+                $existing->update($values);
+            }
         }
     }
 

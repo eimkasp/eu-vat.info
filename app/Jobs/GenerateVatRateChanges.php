@@ -16,6 +16,8 @@ class GenerateVatRateChanges implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public const SAME_EVENT_WINDOW_DAYS = 200;
+
     public function __construct()
     {
         //
@@ -46,9 +48,17 @@ class GenerateVatRateChanges implements ShouldQueue
                     $curr = $rates[$i];
 
                     if ($prev->rate != $curr->rate) {
-                        // Check if change record exists
                         $exists = VatRateChange::where('country_id', $country->id)
-                            ->where('vat_rate_id', $curr->id)
+                            ->where(fn ($query) => $query
+                                ->where('vat_rate_id', $curr->id)
+                                ->orWhere(fn ($query) => $query
+                                    ->where('rate_type', $type)
+                                    ->where('old_rate', $prev->rate)
+                                    ->where('new_rate', $curr->rate)
+                                    ->whereBetween('change_date', [
+                                        $curr->effective_from->copy()->subDays(self::SAME_EVENT_WINDOW_DAYS)->toDateString(),
+                                        $curr->effective_from->copy()->addDays(self::SAME_EVENT_WINDOW_DAYS)->toDateString(),
+                                    ])))
                             ->exists();
 
                         if (! $exists) {

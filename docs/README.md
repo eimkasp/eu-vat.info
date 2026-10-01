@@ -41,6 +41,8 @@ EU VAT Info is a web application that provides information about Value Added Tax
   - [TracksCountryViews](./traits/tracks-country-views.md) - Country view tracking functionality
   - [HasAnalytics](./traits/has-analytics.md) - Analytics relationship functionality
 
+- [VAT change updates](./vat-change-updates.md) - The sourced change ledger, the schedule, the audit against the European Commission and the weekly review
+
 ## Key Features
 
 1. **VAT Calculator** - Calculate VAT for different EU countries with various rates

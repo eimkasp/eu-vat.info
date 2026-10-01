@@ -1,5 +1,6 @@
 <?php
 
+use App\Services\VatChanges\LedgerReader;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -48,4 +49,44 @@ expect()->extend('toBeOne', function () {
 function something()
 {
     // ..
+}
+
+/**
+ * @param  array<string, string>  $overrides
+ * @return array<string, string>
+ */
+function vatLedgerRow(array $overrides = []): array
+{
+    return array_merge([
+        'country' => 'EE',
+        'rate_type' => 'standard',
+        'old_rate' => '22',
+        'new_rate' => '24',
+        'effective_date' => '2025-07-01',
+        'announced_date' => '2025-03-01',
+        'status' => 'enacted',
+        'reason' => 'Budget consolidation',
+        'description' => 'The standard rate rose from 22% to 24%.',
+        'source' => 'Riigi Teataja',
+        'source_url' => 'https://www.riigiteataja.ee/akt/example',
+        'official_document' => 'Value Added Tax Act amendment, RT I, 2025',
+    ], $overrides);
+}
+
+/**
+ * @param  list<array<string, string>>  $rows
+ */
+function vatLedgerFile(array $rows, ?string $header = null): string
+{
+    $path = tempnam(sys_get_temp_dir(), 'vat-ledger');
+    $handle = fopen($path, 'w');
+    fwrite($handle, ($header ?? implode(',', LedgerReader::COLUMNS))."\n");
+
+    foreach ($rows as $row) {
+        fputcsv($handle, array_values($row), ',', '"', '');
+    }
+
+    fclose($handle);
+
+    return $path;
 }
