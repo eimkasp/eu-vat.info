@@ -44,7 +44,7 @@
     @stack('head')
 
     @if (config('app.data_domain') && app()->isProduction())
-        <script defer data-domain="{{ config('app.data_domain') }}" src="{{ config('app.plausible_script') ?: 'https://stats.businesspress.io/js/script.js' }}"></script>
+        <script defer data-domain="{{ config('app.plausible_domain') }}" src="{{ config('app.plausible_script') ?: 'https://stats.businesspress.io/js/script.js' }}"></script>
     @endif
 </head>
 

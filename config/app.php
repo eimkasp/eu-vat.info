@@ -125,7 +125,10 @@ return [
 
     'adsense_id' => env('ADSENSE_ID', null),
     'cookiebot_id' => env('COOKIEBOT_ID', null),
+    // Plausible: DATA_DOMAIN turns analytics on in production and names the embed widget's site;
+    // PLAUSIBLE_DOMAIN names the main site's.
     'data_domain' => env('DATA_DOMAIN', null),
+    'plausible_domain' => env('PLAUSIBLE_DOMAIN', 'vat.businesspress.io'),
     'plausible_script' => env('PLAUSIBLE_SCRIPT', null),
     'plausible_outbound_script' => env('PLAUSIBLE_OUTBOUND_SCRIPT', null),
 
