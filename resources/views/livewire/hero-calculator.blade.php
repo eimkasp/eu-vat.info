@@ -234,7 +234,7 @@
                 @endunless
 
                 <div class="mt-auto flex flex-wrap gap-2 pt-5">
-                    <a :href="shareUrl(@js(url(locale_path('/vat-calculation'))), $wire.selectedCountrySlug)" href="{{ url(locale_path('/vat-calculation/'.$country->slug.'/'.number_format($calculation->input(), 2, '.', '').'/'.\App\Models\Country::formatRate($customRate ?? $selectedRate).'/'.$mode)) }}" @if($embedded) target="_blank" rel="noopener" @endif class="app-button-primary h-10 min-h-10 flex-1 whitespace-nowrap px-4">
+                    <a :href="shareUrl(@js(url(locale_path('/vat-calculation'))), $wire.selectedCountrySlug)" href="{{ url(\App\Livewire\SharedCalculation::calculationUrl($country->slug, $calculation->input(), $customRate ?? $selectedRate, $mode)) }}" @if($embedded) target="_blank" rel="noopener" @endif class="app-button-primary h-10 min-h-10 flex-1 whitespace-nowrap px-4">
                         <x-ui.icon name="share" class="size-4" />
                         {{ __('ui.calculator.share_details') }}
                     </a>

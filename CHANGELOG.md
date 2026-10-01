@@ -4,6 +4,18 @@ All notable changes to EU VAT Info are documented here.
 
 ---
 
+## [5.0.2] — 2026-10-01 — Every language and popular calculations in search
+
+### Added
+- **Every language is open to search engines** — translated pages in all 24 languages can now appear in Google, each linked to its translations. Pages that are still English-only point search engines to their English version.
+- **Popular calculations can be found in search** — VAT on the top amounts, from €100 to €10,000, at each country's standard rate now has its own page in every language. Other amounts still work and can be shared, but stay out of search results.
+
+### Improved
+- **Tidier calculation links** — addresses such as `/vat-calculation/germany/1000.00/19.00/exclude` now redirect to `/vat-calculation/germany/1000/19/exclude`, and the share button builds the short form directly.
+- **A fuller site map for search engines** — the top calculation pages and the MCP server page are listed, and each page is listed in exactly the languages it is translated into.
+
+---
+
 ## [5.0.1] — 2026-09-29 — A more polished site and better AI connections
 
 ### Added

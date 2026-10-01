@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Livewire\TopCalculations;
 use App\Models\Country;
 use App\Models\VatRateChange;
 use App\Support\Seo\SeoPolicy;
@@ -113,16 +114,17 @@ class SitemapGenerator
             ['path' => '/', 'lastmod' => $lastmod],
             ['path' => '/vat-calculator', 'lastmod' => $lastmod],
             ['path' => '/vat-number-validator', 'lastmod' => $lastmod],
-            ['path' => '/vat-validation-api', 'lastmod' => $lastmod],
+            ['path' => '/vat-validation-api', 'lastmod' => $lastmod, 'locales' => $this->englishOnly()],
             ['path' => '/vat-map', 'lastmod' => $lastmod],
             ['path' => '/tools', 'lastmod' => $lastmod],
             ['path' => '/top-vat-calculations', 'lastmod' => $lastmod],
-            ['path' => '/datasets/eu-vat-rates', 'lastmod' => $datasetLastmod],
+            ...array_map(fn (int $amount) => ['path' => '/top-vat-calculations/'.$amount, 'lastmod' => $lastmod], TopCalculations::AMOUNTS),
+            ['path' => '/datasets/eu-vat-rates', 'lastmod' => $datasetLastmod, 'locales' => $this->englishOnly()],
             ['path' => '/mcp-server', 'lastmod' => $this->filesLastModified([
                 resource_path('views/livewire/mcp-server.blade.php'),
                 app_path('Support/Mcp/VatMcpServer.php'),
             ])],
-            ['path' => '/styleguide', 'locales' => ['en'], 'lastmod' => $this->filesLastModified([
+            ['path' => '/styleguide', 'locales' => $this->englishOnly(), 'lastmod' => $this->filesLastModified([
                 resource_path('views/livewire/styleguide.blade.php'),
                 resource_path('css/app.css'),
                 base_path('DESIGN.md'),
@@ -155,6 +157,7 @@ class SitemapGenerator
                     config_path('vat-scenarios.php'),
                     resource_path('views/livewire/vat-scenario-guide.blade.php'),
                 ]),
+                'locales' => $this->englishOnly(),
             ]);
         }
 
@@ -215,6 +218,7 @@ class SitemapGenerator
                 $records->push([
                     'path' => '/vat-rates/'.$country->slug.'/history',
                     'lastmod' => ($lastModified ?? now()->startOfDay()->toImmutable())->toAtomString(),
+                    'locales' => $this->englishOnly(),
                 ]);
             });
 
@@ -227,6 +231,7 @@ class SitemapGenerator
             $records->push([
                 'path' => '/vat-changes/'.$change->country->slug.'/'.$change->rate_type.'/'.$change->change_date->toDateString(),
                 'lastmod' => $change->updated_at->toAtomString(),
+                'locales' => $this->englishOnly(),
             ]);
         }
 
@@ -235,6 +240,7 @@ class SitemapGenerator
             $records->push([
                 'path' => '/vat-changes/year/'.$year,
                 'lastmod' => $yearLastmod->toAtomString(),
+                'locales' => $this->englishOnly(),
             ]);
         }
 
@@ -243,6 +249,7 @@ class SitemapGenerator
             $records->push([
                 'path' => '/vat-changes/upcoming',
                 'lastmod' => $upcoming->max('updated_at')->toAtomString(),
+                'locales' => $this->englishOnly(),
             ]);
         }
 
@@ -255,12 +262,14 @@ class SitemapGenerator
             [
                 'path' => '/blog',
                 'lastmod' => $this->filesLastModified([resource_path('views/livewire/blog-index.blade.php')]),
+                'locales' => $this->englishOnly(),
             ],
         ]);
 
         return $records->concat($this->blogPosts->all()->map(fn (array $post) => [
             'path' => '/blog/'.$post['slug'],
             'lastmod' => $post['updated_at']->toAtomString(),
+            'locales' => $this->englishOnly(),
         ]));
     }
 
@@ -274,12 +283,14 @@ class SitemapGenerator
             $records->push([
                 'path' => '/vat-rates/categories',
                 'lastmod' => $lastModified,
+                'locales' => $this->englishOnly(),
             ]);
 
             foreach ($categories as $category) {
                 $records->push([
                     'path' => '/vat-rates/categories/'.$category['slug'],
                     'lastmod' => CarbonImmutable::parse($category['last_verified_at'])->toAtomString(),
+                    'locales' => $this->englishOnly(),
                 ]);
             }
         }
@@ -292,10 +303,21 @@ class SitemapGenerator
             $records->push([
                 'path' => '/vat-rates/'.$rule->country->slug.'/categories/'.$rule->category_slug,
                 'lastmod' => $lastModified->toAtomString(),
+                'locales' => $this->englishOnly(),
             ]);
         }
 
         return $records;
+    }
+
+    /**
+     * The locales for a page whose body is English everywhere: only its English URL is listed.
+     *
+     * @return array<int, string>
+     */
+    protected function englishOnly(): array
+    {
+        return [config('translation.default_language', 'en')];
     }
 
     /**

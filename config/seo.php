@@ -2,7 +2,7 @@
 
 $indexableLocales = array_values(array_filter(array_map(
     'trim',
-    explode(',', env('SEO_INDEXABLE_LOCALES', 'en'))
+    explode(',', (string) env('SEO_INDEXABLE_LOCALES', ''))
 )));
 
 return [
@@ -13,7 +13,8 @@ return [
         explode(',', env('SEO_LEGACY_HOSTS', 'eu-vat.info'))
     ))),
 
-    'indexable_locales' => $indexableLocales ?: ['en'],
+    // Leave SEO_INDEXABLE_LOCALES empty to index every supported language, or list codes ("en,de") to limit it.
+    'indexable_locales' => $indexableLocales,
 
     'category_minimum_country_coverage' => (int) env('SEO_CATEGORY_MIN_COUNTRIES', 3),
 

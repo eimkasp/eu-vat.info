@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Country;
+use App\Support\Seo\CalculationIndexing;
 use App\Support\Vat\VatCalculation;
 use App\Support\Vat\VatMode;
 use Illuminate\Support\Collection;
@@ -53,6 +54,12 @@ class SharedCalculation extends Component
     public function countryModel(): ?Country
     {
         return Country::query()->where('slug', $this->country)->first();
+    }
+
+    #[Computed]
+    public function indexable(): bool
+    {
+        return CalculationIndexing::isTopCalculation($this->country, $this->amount, $this->rate);
     }
 
     #[Computed]
