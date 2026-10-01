@@ -85,7 +85,7 @@ routes/
 | `ViesValidatorPage` | `/vat-number-validator/{slug?}` | VIES VAT number validation |
 | `VatMap` | `/vat-map` | Accessible Europe choropleth and ranked table |
 | `VatChangesHistory` | `/vat-changes` | Filterable timeline of VAT rate changes |
-| `SharedCalculation` | `/vat-calculation/{country}/{amount}/{rate}/{mode}` | Shareable result pages (noindex) |
+| `SharedCalculation` | `/vat-calculation/{country}/{amount}/{rate}/{mode}` | Shareable result pages (indexable only for top calculations, see SEO indexing) |
 | `TopCalculations` | `/top-vat-calculations/{amount?}` | Common amounts for every EU country |
 | `VatComparison` | `/compare/{a}-vs-{b}-vat` | Approved country comparisons |
 | `HtmlSitemap` | `/sitemap` | HTML sitemap for SEO |
@@ -143,6 +143,11 @@ GET  /up                              # Application health check
 - Language files in `lang/{locale}/ui.php`
 - Config: `config/translation.php`
 - Languages without DeepL: `ga` (Irish), `hr` (Croatian), `mt` (Maltese)
+
+### SEO indexing
+- Every supported language is indexable by default (`config/seo.php`); `SEO_INDEXABLE_LOCALES=en,de` limits it. Translated pages are self-canonical and carry hreflang for every indexable language.
+- Pages whose body text is English in every language are listed in `SeoPolicy::ENGLISH_BODY_ROUTES`. Their translated URLs canonicalize to the English page, carry no hreflang and appear in the XML sitemap only in English. Remove a route from the list once its page is translated; `tests/Feature/SeoBodyLanguageTest.php` checks the sitemap against the list.
+- Shared calculations are indexable only when `CalculationIndexing::isTopCalculation()` accepts them: a top amount (`TopCalculations::AMOUNTS`) at an EU member's standard rate, in either direction, which are exactly the links on the top calculations pages. Every other value is `noindex, follow` and canonicalizes to the country's calculator. Non-canonical segments (`1000.00`, `19.0`) redirect with a 301 (`CanonicalizeSharedCalculation`).
 
 ### Frontend
 - **Read `DESIGN.md` before any UI change.** It is the design system and styleguide (tokens, brand surfaces, component recipes, patterns, accessibility rules). `tests/Feature/DesignSystemTest.php` enforces it, and `.claude/skills/design-system` loads it for Claude Code.

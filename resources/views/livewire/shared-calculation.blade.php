@@ -21,8 +21,8 @@
     <x-seo-meta
         :title="__('ui.shared_calc.meta_title', ['mode' => __($adding ? 'ui.shared_calc.meta_add' : 'ui.shared_calc.meta_remove'), 'rate' => Country::formatRate($rate), 'amount' => $inputText, 'country' => $countryModel->name])"
         :description="__('ui.shared_calc.meta_description', ['country' => $countryModel->name, 'mode' => mb_strtolower(__($adding ? 'ui.shared_calc.meta_add' : 'ui.shared_calc.meta_remove')), 'rate' => Country::formatRate($rate), 'amount' => $inputText, 'net' => $money($calculation->net), 'vat' => $money($calculation->vat), 'gross' => $money($calculation->gross)])"
-        :url="app(SeoPolicy::class)->localizedUrl('/vat-calculator/'.$countryModel->slug, config('translation.default_language', 'en'))"
-        robots="noindex, follow"
+        :url="$this->indexable ? $shareUrl : app(SeoPolicy::class)->localizedUrl('/vat-calculator/'.$countryModel->slug, config('translation.default_language', 'en'))"
+        :robots="$this->indexable ? null : 'noindex, follow'"
         type="website"
     />
 @endsection

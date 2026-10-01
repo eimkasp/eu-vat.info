@@ -402,7 +402,7 @@ document.addEventListener('alpine:init', () => {
         shareUrl(base, slug) {
             const amount = this.mode === 'include' ? this.result.gross : this.result.net;
 
-            return `${base}/${slug}/${amount.toFixed(2)}/${Number(this.effectiveRate.toFixed(2))}/${this.mode}`;
+            return `${base}/${slug}/${Number(amount.toFixed(2))}/${Number(this.effectiveRate.toFixed(2))}/${this.mode}`;
         },
         persist(immediately = false) {
             clearTimeout(this.persistTimer);

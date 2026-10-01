@@ -108,8 +108,7 @@ it('computes shared calculations in both directions with the country currency', 
     $this->get('/vat-calculation/sweden/1000/25/include')
         ->assertOk()
         ->assertSee("SEK\u{00A0}800.00")
-        ->assertSee("SEK\u{00A0}200.00")
-        ->assertSee('noindex, follow', false);
+        ->assertSee("SEK\u{00A0}200.00");
 
     $this->get('/vat-calculation/sweden/100/150/exclude')->assertNotFound();
     $this->get('/vat-calculation/atlantis/100/20/exclude')->assertNotFound();

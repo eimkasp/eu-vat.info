@@ -13,6 +13,7 @@ use App\Http\Controllers\VatChangeSubscriptionController;
 use App\Http\Controllers\VatDatasetDownloadController;
 use App\Http\Controllers\WellKnownController;
 use App\Http\Middleware\AllowEmbedding;
+use App\Http\Middleware\CanonicalizeSharedCalculation;
 use App\Http\Middleware\CanonicalizeVatComparison;
 use App\Livewire\BlogIndex;
 use App\Livewire\BlogShow;
@@ -81,6 +82,7 @@ $registerRoutes = function () {
     Route::get('/vat-calculator/{slug}', VatCalculator::class)->name('vat-calculator.country');
     Route::get('/vat-calculation/{country}/{amount}/{rate}/{mode}', SharedCalculation::class)
         ->where(['amount' => '[0-9]+(\.[0-9]{1,2})?', 'rate' => '[0-9]+(\.[0-9]{1,2})?', 'mode' => 'exclude|include'])
+        ->middleware(CanonicalizeSharedCalculation::class)
         ->name('shared-calculation');
     Route::get('/top-vat-calculations', TopCalculations::class)->name('top-calculations');
     Route::get('/top-vat-calculations/{amount}', TopCalculationsAmount::class)
