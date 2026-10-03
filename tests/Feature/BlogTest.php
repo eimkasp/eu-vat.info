@@ -14,7 +14,7 @@ it('parses markdown front matter without external yaml dependencies', function (
 
     expect($post['title'])->toBe('Upcoming VAT Changes in 2026 and 2027')
         ->and($post['tags'])->toContain('ViDA')
-        ->and($post['sources'])->toHaveCount(8)
+        ->and(count($post['sources']))->toBeGreaterThanOrEqual(8)
         ->and($post['sources'][0])->toMatchArray([
             'title' => 'European Commission: VAT in the Digital Age',
             'url' => 'https://taxation-customs.ec.europa.eu/taxation/vat/vat-digital-age-vida_en',

@@ -31,6 +31,8 @@ final class LedgerReader
 
     private const SINGLE_RATE_TYPES = ['standard', 'super_reduced', 'parking'];
 
+    private const MAX_STANDARD_RATE_CHANGE = 6.0;
+
     /**
      * @return list<LedgerRow>
      *
@@ -154,8 +156,16 @@ final class LedgerReader
             $problems[] = 'official_document (the legal act or official notice) is required for enacted changes.';
         }
 
-        if (is_numeric($record['old_rate']) && is_numeric($record['new_rate']) && (float) $record['old_rate'] === (float) $record['new_rate']) {
-            $problems[] = 'old_rate and new_rate are identical.';
+        if (is_numeric($record['old_rate']) && is_numeric($record['new_rate'])) {
+            $change = abs((float) $record['new_rate'] - (float) $record['old_rate']);
+
+            if ($change === 0.0) {
+                $problems[] = 'old_rate and new_rate are identical.';
+            }
+
+            if ($record['rate_type'] === 'standard' && $change > self::MAX_STANDARD_RATE_CHANGE) {
+                $problems[] = 'a standard-rate change of more than '.self::MAX_STANDARD_RATE_CHANGE.' percentage points is not credible: regional and territorial rates (islands, overseas departments) are not recorded, and a typing error is more likely.';
+            }
         }
 
         if ($problems !== []) {

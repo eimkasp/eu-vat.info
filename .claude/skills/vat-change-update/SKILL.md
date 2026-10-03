@@ -12,6 +12,7 @@ description: Weekly review of EU VAT rate changes against official sources. Use 
 - Accuracy over coverage. A row needs a primary source you have opened: the official gazette, the tax authority, the finance ministry or government, parliament, or the European Commission. News, consultancies and the community dataset are leads only.
 - `enacted` means adopted and published (or confirmed by a government decision) with a fixed effective date. Everything else is `announced`. Say "not found" rather than guess a date.
 - Never edit `data/vat_rates.csv` (it is downloaded every Monday) or `public/v1`.
+- Record national rates only: never a regional or territorial rate (islands, overseas departments, special zones). A temporary rate with a legal end date is two rows (start and scheduled end); a measure that depends on a future condition or has no fixed date stays `announced` or out of the file.
 - One row per country, rate type and effective date. Describe what the rate applies to at the start of `description`. Use `reduced` for any category that moves to another rate; `super_reduced` and `parking` only when that band's own value changes.
 
 ## Procedure

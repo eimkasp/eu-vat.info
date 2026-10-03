@@ -6,7 +6,6 @@ use App\Services\VatChanges\RateAudit;
 use Carbon\CarbonImmutable;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
-use RuntimeException;
 use Throwable;
 
 class AuditVatChanges extends Command
@@ -22,7 +21,7 @@ class AuditVatChanges extends Command
         try {
             $date = $this->option('date') ? CarbonImmutable::parse($this->option('date')) : CarbonImmutable::today();
             $findings = $audit->findings($date);
-        } catch (RuntimeException|Throwable $exception) {
+        } catch (Throwable $exception) {
             Log::error('VAT rate audit failed: '.$exception->getMessage());
             $this->error('The audit could not run: '.$exception->getMessage());
 

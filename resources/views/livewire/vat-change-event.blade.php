@@ -94,6 +94,12 @@
                                 <dd class="tabular font-semibold text-ink">{{ $change->announced_date->format('j F Y') }}</dd>
                             </div>
                         @endif
+                        @if($change->official_document)
+                            <div class="flex justify-between gap-6 px-5 py-3 sm:px-6">
+                                <dt class="shrink-0 text-ink-muted">Legal basis</dt>
+                                <dd class="text-right font-semibold text-ink">{{ $change->official_document }}</dd>
+                            </div>
+                        @endif
                     </dl>
                 </section>
             </div>

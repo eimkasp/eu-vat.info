@@ -22,7 +22,7 @@ final class VatChangeImporter
         'sidebar_vat_rate_changes_v2',
         'vat_changes_countries_v2',
         'vat_changes_summary_v1',
-        'vat_change_stability_v2',
+        'vat_change_stability_v3',
         'vies_validator_countries_v1',
         'api_countries',
         'api_v1_countries',

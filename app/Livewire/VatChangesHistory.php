@@ -76,16 +76,16 @@ class VatChangesHistory extends Component
     }
 
     /**
-     * Countries ordered from the fewest to the most recorded changes.
+     * Countries ordered from the fewest to the most standard-rate changes, the one kind recorded completely since 2000.
      *
      * @return list<array{name: string, slug: string, iso: string, changes: int, stability: string, history: bool}>
      */
     #[Computed]
     public function stability(): array
     {
-        return Cache::remember('vat_change_stability_v2', 3600, fn () => Country::query()
+        return Cache::remember('vat_change_stability_v3', 3600, fn () => Country::query()
             ->where('is_eu_member', true)
-            ->withCount('vatRateChanges')
+            ->withCount(['vatRateChanges' => fn (Builder $query) => $query->where('rate_type', 'standard')])
             ->withExists(['vatRates', 'vatRateChanges'])
             ->orderBy('vat_rate_changes_count')
             ->orderBy('name')

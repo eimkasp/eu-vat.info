@@ -29,6 +29,7 @@ it('rejects invalid rows and names the line', function (array $overrides, string
     'unknown rate type' => [['rate_type' => 'zero'], 'rate_type must be one of'],
     'rate that is not a number' => [['new_rate' => 'high'], 'new_rate must be a percentage'],
     'identical rates' => [['old_rate' => '24', 'new_rate' => '24'], 'old_rate and new_rate are identical'],
+    'regional standard rate' => [['old_rate' => '24', 'new_rate' => '17'], 'a standard-rate change of more than 6 percentage points'],
     'impossible date' => [['effective_date' => '2026-02-30'], 'effective_date must be a valid YYYY-MM-DD date'],
     'announced after effective' => [['announced_date' => '2026-02-01'], 'announced_date cannot be after effective_date'],
     'unknown status' => [['status' => 'proposed'], 'status must be enacted or announced'],
@@ -74,6 +75,8 @@ it('keeps the committed ledger valid, sourced from official publishers and tied 
     $rows = (new LedgerReader)->read(config('vat-changes.ledger'));
     $members = Country::query()->where('is_eu_member', true)->pluck('iso_code')->all();
     $hosts = config('vat-changes.official_hosts');
+
+    expect($rows)->not->toBeEmpty();
 
     foreach ($rows as $row) {
         $host = strtolower(parse_url($row->sourceUrl, PHP_URL_HOST));

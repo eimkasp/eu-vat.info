@@ -2,12 +2,14 @@
 
 use App\Jobs\GenerateVatRateChanges;
 use App\Jobs\VerifyVatRatesIntegrity;
+use App\Livewire\VatChangesHistory;
 use App\Models\Country;
 use App\Models\VatRate;
 use App\Models\VatRateChange;
 use App\Services\VatChanges\VatChangeImporter;
 use Database\Seeders\CountriesTableSeeder;
 use Database\Seeders\VatRateSeeder;
+use Livewire\Livewire;
 
 beforeEach(function () {
     $this->seed(CountriesTableSeeder::class);
@@ -161,6 +163,28 @@ it('does not generate a second row when the community date differs slightly from
     (new GenerateVatRateChanges)->handle();
 
     expect(VatRateChange::where('country_id', $this->estonia->id)->count())->toBe(1);
+});
+
+it('shows an imported change with its legal basis and official source on its page', function () {
+    app(VatChangeImporter::class)->import(vatLedgerFile([vatLedgerRow()]));
+
+    $this->get('/vat-changes/estonia/standard/2025-07-01')
+        ->assertOk()
+        ->assertSee('The standard rate rose from 22% to 24%.')
+        ->assertSee('Legal basis')
+        ->assertSee('Value Added Tax Act amendment, RT I, 2025')
+        ->assertSee('href="https://www.riigiteataja.ee/akt/example"', false);
+});
+
+it('counts only standard-rate changes in the country stability ranking', function () {
+    app(VatChangeImporter::class)->import(vatLedgerFile([
+        vatLedgerRow(),
+        vatLedgerRow(['rate_type' => 'reduced', 'old_rate' => '9', 'new_rate' => '13', 'effective_date' => '2025-01-01', 'announced_date' => '']),
+    ]));
+
+    $estonia = collect(Livewire::test(VatChangesHistory::class)->instance()->stability)->firstWhere('iso', 'EE');
+
+    expect($estonia['changes'])->toBe(1);
 });
 
 it('imports from the command and reports invalid ledgers with a failing exit code', function () {

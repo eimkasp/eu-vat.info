@@ -25,7 +25,7 @@ One row per change, keyed by country, rate type and effective date (these three 
 |--------|------|
 | `country` | ISO 3166-1 alpha-2 code as stored in `countries.iso_code`. Greece is `GR` |
 | `rate_type` | `standard` for the general rate. `reduced` for anything else that moves to or from another rate (say what in `description`). `super_reduced` or `parking` only when the country's own super-reduced or parking rate changes value |
-| `old_rate`, `new_rate` | Percentages the goods or services paid before and after, such as `21` or `13.5` |
+| `old_rate`, `new_rate` | Percentages the goods or services paid before and after, such as `21` or `13.5`. Only national rates are recorded: regional and territorial rates (Greek islands, Canary Islands, French overseas departments, Madeira and the Azores, Jungholz and Mittelberg) never appear in the ledger, and a `standard` change of more than 6 percentage points is rejected |
 | `effective_date` | The day the new rate applies, `YYYY-MM-DD` |
 | `announced_date` | The day the act was published or the decision announced, or empty |
 | `status` | `enacted`: adopted and published in the official gazette, or confirmed by the government in a decision with a fixed effective date. `announced`: proposed, announced or approved by one chamber only |
@@ -36,6 +36,8 @@ One row per change, keyed by country, rate type and effective date (these three 
 | `official_document` | The legal act or official notice, required for enacted rows |
 
 Only `enacted` rows reach the site. `announced` rows are the watchlist: they stay in the file, the import counts them, and it warns when one is still announced after its effective date. Promote a row by changing its status once the act is published, or delete it if the plan is dropped.
+
+A change that depends on a future condition (a price index threshold, a government review) stays `announced` until the condition is met. A temporary rate with a legal end date is recorded as two rows: the start and the scheduled end, which becomes void if the law is extended. A change whose date is not fixed yet is not recorded; keep it as a lead in the pull request.
 
 A chain of `standard`, `super_reduced` or `parking` rows for one country must connect (each `old_rate` equals the previous `new_rate`); a gap means a change is missing.
 
@@ -53,6 +55,8 @@ EE,standard,22,24,2025-07-01,2025-02-12,enacted,Budget consolidation,The standar
 5. **Validate.** `php artisan vat-changes:import --dry-run` lists what would be created or updated and prints every ledger error with its line. `./vendor/bin/pest --filter=VatChange` runs the ledger checks, including that every `source_url` belongs to an official publisher.
 6. **Update the editorial tracker** `content/blog/upcoming-vat-changes-2026-2027.md` for anything upcoming.
 7. **Open a pull request.** After the merge and deploy, the 03:30 import publishes the rows and subscribers are alerted at 05:00 (changes effective within the last 30 days or in the future). To publish at once, run `php artisan vat-changes:import --notify` on the server.
+
+Most announcements appear with the autumn budgets (September to December): check the budget speeches and tax bills of each government as they are presented, and re-check the acts after parliament votes.
 
 If the audit stays red for a difference that is real and intended (the Commission files a single-category rate under another type, or the site lists a rate the Commission does not), add it to `audit.ignore` in `config/vat-changes.php` with the country and rate type.
 
@@ -98,6 +102,24 @@ The `vat-change-update` skill (`.claude/skills/vat-change-update`) carries this 
 ```
 Run the vat-change-update skill: audit the stored rates, research the official sources for every EU member state, update data/vat_changes.csv and the editorial tracker, validate, and open a pull request that lists each change with its source.
 ```
+
+## Open leads from the first review (1 October 2026)
+
+The first review recorded what could be confirmed from a primary source. These leads were not confirmed and are the first items of the next review; delete each one once it is checked.
+
+- **Belgium:** the Moniteur belge act behind the accommodation move to 12% on 1 March 2026 (the row rests on the Commission's TEDB); pesticides and fossil fuels dropped from the 12% list in 2025.
+- **Croatia:** the rate after the temporary 5% on gas, district heating and firewood ends on 31 March 2027 (13% expected, not stated in an official page); whether it is extended again.
+- **Cyprus:** the decree for the zero rate renewed from 12 October 2026; the announced cut on residential photovoltaic systems from 19% to 9%.
+- **Czechia:** publication and date of effect of the EET 2.0 act (12% on non-alcoholic drinks in catering); a reported 0% on prescription medicines.
+- **Denmark:** the government's plan to halve VAT on food and remove it on fruit and vegetables, and the bill on books (expected from 2027); no dates yet.
+- **France:** the 2027 finance bill presented on 1 October 2026; the Budget Law 2026 articles beyond arts. 81, 93 and 96.
+- **Ireland:** Budget 2027 on 6 October 2026.
+- **Italy:** the Budget Laws 2025 and 2026 and the new VAT code (Legislative Decree 10/2026, in force from 2027) were not read; no Italian change is recorded, which does not mean there was none.
+- **Portugal:** changes with an inferred previous rate (household electricity up to 200 kWh from 2025, game species and olive-oil services from 2026, the 6% rate for housing works under Decree-Law 97/2026) and the 2027 State Budget.
+- **Romania:** whether a 2026 act extended the 9% rate on first-home purchases beyond 31 July 2026.
+- **Slovenia:** a reported emergency law with 5% on staple foods and 9.5% on energy, not confirmed by an official source.
+- **Spain:** the November and December 2026 results of the conditional 10% rate (Real Decreto-ley 25/2026) and the validation of Real Decreto-ley 26/2026.
+- **Greece, Croatia, Malta:** nothing found for Budget 2027 announcements. Greek island rates are regional and are not recorded.
 
 ## Troubleshooting
 

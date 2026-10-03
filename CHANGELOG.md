@@ -4,6 +4,20 @@ All notable changes to EU VAT Info are documented here.
 
 ---
 
+## [5.1.0] — 2026-10-01 — VAT changes recorded from official sources
+
+### Added
+- **47 VAT rate changes with their official source** — the [VAT rate change history](/vat-changes) now covers national changes from 2025 to 2028 in 20 countries, from Germany's 7% rate on restaurant food and Austria's 4.9% rate on basic foods to Poland's temporary fuel rate and Spain's energy relief. Every change links to the law or official notice behind it, and its page shows the legal basis.
+- **Scheduled changes** — enacted changes with a future date, such as the end of Latvia's pilot food rate in July 2027, now appear as scheduled. Announced measures that are not law yet stay out of the history until they are adopted.
+- **A weekly check against the European Commission** — every Monday the site compares the rates it shows with the rates Member States report to the Commission, so a difference is found within a week.
+
+### Fixed
+- **Rates that were out of date** — Estonia (13% on accommodation), Finland (13.5%), Lithuania (12%), Romania (a single 11% reduced rate), Slovakia (19% and 5%), Austria (4.9%), Cyprus (3%), Malta (12%) and Luxembourg (14%).
+- **A fairer country stability ranking** — it counts standard-rate changes only, so it no longer depends on how many smaller changes were researched.
+- A broken Finnish Tax Administration link in the upcoming VAT changes guide.
+
+---
+
 ## [5.0.2] — 2026-10-01 — Every language and popular calculations in search
 
 ### Added
